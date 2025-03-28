@@ -8,7 +8,7 @@ const AddInventoryItem = () => {
   const [category, setCategory] = useState('');
   const [quantity, setQuantity] = useState('');
   const [buyingPrice, setBuyingPrice] = useState('');
-  const [sellingPrice, setSellingPrice] = useState(false);
+  const [sellingPrice, setSellingPrice] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -51,20 +51,15 @@ const AddInventoryItem = () => {
         </div>
         <div className="form-group">
           <label htmlFor="category" className="form-label">Category</label>
-          <select
+          <input
+            type="text"
             className="form-control"
             id="category"
+            placeholder="Enter category"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             required
-          >
-            <option value=""></option>
-            <option value="Electronics">Electronics</option>
-            <option value="Furniture">Furniture</option>
-            <option value="Clothing">Clothing</option>
-            <option value="Food">Food</option>
-            <option value="Other">Other</option>
-          </select>
+          />
         </div>
         <div className="form-group">
           <label htmlFor="quantity" className="form-label">Quantity</label>
@@ -73,7 +68,7 @@ const AddInventoryItem = () => {
             className="form-control"
             id="quantity"
             value={quantity}
-            onChange={(e) => setBuyingPrice(e.target.value)}
+            onChange={(e) => setQuantity(e.target.value)}
             required
           />
         </div>

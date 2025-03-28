@@ -85,18 +85,22 @@ const ManageInventories = () => {
         <table className="table table-bordered">
           <thead>
             <tr>
-              <th>Name</th>
+              <th>Product Name</th>
+              <th>Category</th>
               <th>Quantity</th>
-              <th>Price</th>
+              <th>Buying Price</th>
+              <th>Selling Price</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredItems.map((item) => (
               <tr key={item._id}>
-                <td>{item.name}</td>
+                <td>{item.productName}</td>
+                <td>{item.category}</td>
                 <td>{item.quantity}</td>
-                <td>{item.price}</td>
+                <td>{item.buyingPrice}</td>
+                <td>{item.sellingPrice}</td>
                 <td>
                   <button
                     className="btn btn-warning btn-sm me-2"
@@ -122,14 +126,27 @@ const ManageInventories = () => {
           <h4>Edit Item</h4>
           <form onSubmit={handleUpdate}>
             <div className="mb-3">
-              <label htmlFor="editName" className="form-label">Item Name</label>
+              <label htmlFor="editProductName" className="form-label">Product Name</label>
               <input
                 type="text"
                 className="form-control"
-                id="editName"
-                value={editItem.name}
+                id="editProductName"
+                value={editItem.productName}
                 onChange={(e) =>
-                  setEditItem({ ...editItem, name: e.target.value })
+                  setEditItem({ ...editItem, productName: e.target.value })
+                }
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="editCategory" className="form-label">Category</label>
+              <input
+                type="text"
+                className="form-control"
+                id="editCategory"
+                value={editItem.category}
+                onChange={(e) =>
+                  setEditItem({ ...editItem, category: e.target.value })
                 }
                 required
               />
@@ -148,17 +165,26 @@ const ManageInventories = () => {
               />
             </div>
             <div className="mb-3">
-              <label htmlFor="editPrice" className="form-label">Price</label>
+              <label htmlFor="editBuyingPrice" className="form-label">Buying Price</label>
               <input
                 type="number"
                 className="form-control"
-                id="editPrice"
-                value={editItem.price}
-                onChange={(e) =>
-                  setEditItem({ ...editItem, price: e.target.value })
-                }
+                id="editBuyingPrice"
+                value={editItem.buyingPrice}
+                onChange={(e) => setEditItem({...editItem, buyingPrice: Number(e.target.value) })}
                 required
-              />
+                />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="editSellingPrice" className="form-label">Selling Price</label>
+              <input
+                type="number"
+                className="form-control"
+                id="editSellingPrice"
+                value={editItem.sellingPrice}
+                onChange={(e) => setEditItem({...editItem, sellingPrice: Number(e.target.value) })}
+                required
+                />
             </div>
             <button type="submit" className="btn btn-success">Update Item</button>
             <button
