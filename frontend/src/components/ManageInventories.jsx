@@ -141,7 +141,7 @@ const ManageInventories = () => {
             <div className="mb-3">
               <label htmlFor="editCategory" className="form-label">Category</label>
               <input
-                type="text"
+                type="number"
                 className="form-control"
                 id="editCategory"
                 value={editItem.category}
