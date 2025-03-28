@@ -8,6 +8,8 @@ const User = require('./models/User'); // Ensure this path is correct
 const supplierRoutes = require('./routes/supplierRoutes'); // Ensure this path is correct
 const inventoryRoutes = require('./routes/inventoryRoutes');
 const employeeRoutes = require('./routes/employeeRoutes');
+const customerRoutes = require('./routes/customerRoutes');
+ // Ensure this path is correct
 
 const app = express();
 const PORT = 5000;
@@ -35,6 +37,8 @@ mongoose.connect('mongodb://127.0.0.1:27017/mern-vite-app', {
 app.use('/api/suppliers', supplierRoutes);
 
 app.use('/api/inventory', inventoryRoutes);
+
+app.use('/api/customers', customerRoutes); // Ensure this path is correct
 
 
 // Routes
