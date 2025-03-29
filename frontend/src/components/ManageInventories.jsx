@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const ManageInventories = () => {
   const [items, setItems] = useState([]);
@@ -176,7 +177,7 @@ const ManageInventories = () => {
                 />
             </div>
             <div className="mb-3">
-              <label htmlFor="editSellingPrice" className="form-label">Selling Price</label>
+            <label htmlFor="editSellingPrice" className="form-label">Selling Price</label>
               <input
                 type="number"
                 className="form-control"
