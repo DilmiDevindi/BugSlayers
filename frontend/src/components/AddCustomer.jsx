@@ -1,8 +1,7 @@
-// src/components/AddCustomer.js
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const AddCustomer = ({ onCustomerAdded }) => {
+const AddCustomer = () => {
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [contact, setContact] = useState('');
@@ -10,15 +9,28 @@ const AddCustomer = ({ onCustomerAdded }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const newCustomer = { name, address, contact, email };
+
     try {
-      const newCustomer = { name, address, contact, email };
-      await axios.post('http://localhost:5000/api/customers', newCustomer);
-      onCustomerAdded();
+      const response = await axios.post('http://localhost:5000/api/customers', newCustomer);
+      const data = response.data;
+
+      if (data.success) {
+        // Customer added successfully
+        alert(data.message); // Shows "Customer added successfully!"
+      } else {
+        // Customer already exists
+        alert(data.message); // Shows "Customer already exists!"
+      }
+
+      // Clear form after submission
       setName('');
       setAddress('');
       setContact('');
       setEmail('');
     } catch (error) {
+      alert('Something went wrong. Please try again!');
       console.error('Error adding customer:', error);
     }
   };

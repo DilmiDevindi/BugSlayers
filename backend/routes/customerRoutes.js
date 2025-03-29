@@ -5,7 +5,7 @@ const Customer = require('../models/customerModel');
 // @route   GET /api/customers
 // @desc    Get all customers
 // @access  Public
-router.get('/', async (req, res) => {
+router.get('/api/customers', async (req, res) => {
   try {
     const customers = await Customer.find();
     res.json(customers);
@@ -30,53 +30,54 @@ router.get('/count', async (req, res) => {
 // @route   POST /api/customers
 // @desc    Add a new customer
 // @access  Public
-router.post('/', async (req, res) => {
+app.post('/', async (req, res) => {
   try {
     const { name, address, contact, email } = req.body;
 
-    // Create a new customer
-    const newCustomer = new Customer({
-      name,
-      address,
-      contact,
-      email,
-    });
+    // Check if customer exists
+    const existingCustomer = await Customer.findOne({ name, address, contact, email });
 
-    // Save the customer to the database
+    if (existingCustomer) {
+      return res.status(200).json({ exists: true, success: false });
+    }
+
+    // Create new customer
+    const newCustomer = new Customer({ name, address, contact, email });
     await newCustomer.save();
 
-    res.status(201).json({ message: 'Customer added successfully', customer: newCustomer });
+    res.status(201).json({ success: true, exists: false });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server Error' });
+    console.error('Error:', error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 });
+
 
 // @route   PUT /api/customers/:id
 // @desc    Update a customer
 // @access  Public
-router.put('/:id', async (req, res) => {
+app.post('/api/customers', async (req, res) => {
   try {
-    const { id } = req.params;
     const { name, address, contact, email } = req.body;
 
-    // Find the customer by id and update it
-    const updatedCustomer = await Customer.findByIdAndUpdate(
-      id,
-      { name, address, contact, email },
-      { new: true } // Returns the updated document
-    );
+    // Check if a customer with the same name, address, contact, and email already exists
+    const existingCustomer = await Customer.findOne({ name, address, contact, email });
 
-    if (!updatedCustomer) {
-      return res.status(404).json({ message: 'Customer not found' });
+    if (existingCustomer) {
+      return res.status(200).json({ exists: true, success: false });
     }
 
-    res.json({ message: 'Customer updated successfully', customer: updatedCustomer });
+    // Create new customer if doesn't exist
+    const newCustomer = new Customer({ name, address, contact, email });
+    await newCustomer.save();
+
+    res.status(201).json({ success: true, exists: false });
   } catch (error) {
-    console.error('Error updating customer:', error);
-    res.status(500).json({ message: 'Server Error' });
+    console.error('Error:', error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 });
+
 
 // @route   DELETE /api/customers/:id
 // @desc    Delete a customer
