@@ -67,6 +67,9 @@ const ManageInventories = () => {
     <div className="container mt-4">
       <h5>Manage Inventory</h5>
       {error && <div className="alert alert-danger">{error}</div>}
+
+      <div className="row">
+      <div className="col-md-4">
       <input
         type="text"
         className="form-control mb-3"
@@ -74,6 +77,9 @@ const ManageInventories = () => {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
+      </div>
+
+      <div className="col-md-8">
       {loading ? (
         <div>Loading...</div>
       ) : filteredItems.length === 0 ? (
@@ -117,6 +123,8 @@ const ManageInventories = () => {
           </tbody>
         </table>
       )}
+      </div>
+    </div>
 
       {editItem && (
         <div className="edit-form mt-4">
