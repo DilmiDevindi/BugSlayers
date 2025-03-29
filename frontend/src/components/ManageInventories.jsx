@@ -15,7 +15,7 @@ const ManageInventories = () => {
 
   const fetchItems = async () => {
     setLoading(true);
-    setError(null);
+    setError('');
     try {
       const response = await axios.get('http://localhost:5000/api/inventory');
       setItems(Array.isArray(response.data) ? response.data : []);
@@ -30,7 +30,6 @@ const ManageInventories = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this item?')) return;
 
-    setError(null);
     try {
       await axios.delete(`http://localhost:5000/api/inventory/${id}`);
       setItems((prevItems) => prevItems.filter((item) => item._id !== id)); // Optimistic update
@@ -47,13 +46,10 @@ const ManageInventories = () => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    setError(null);
     try {
       await axios.put(`http://localhost:5000/api/inventory/${editItem._id}`, editItem);
       setItems((prevItems) =>
-        prevItems.map((item) =>
-          item._id === editItem._id ? editItem : item
-        )
+        prevItems.map((item) => (item._id === editItem._id ? editItem : item))
       ); // Optimistic update
       setEditItem(null);
       alert('Item updated successfully!');
@@ -64,12 +60,12 @@ const ManageInventories = () => {
   };
 
   const filteredItems = items.filter((item) =>
-    item.name.toLowerCase().includes(search.toLowerCase())
+    item.productName.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
     <div className="container mt-4">
-      <h3>Manage Inventory</h3>
+      <h5>Manage Inventory</h5>
       {error && <div className="alert alert-danger">{error}</div>}
       <input
         type="text"
@@ -142,7 +138,7 @@ const ManageInventories = () => {
             <div className="mb-3">
               <label htmlFor="editCategory" className="form-label">Category</label>
               <input
-                type="number"
+                type="text"
                 className="form-control"
                 id="editCategory"
                 value={editItem.category}
@@ -160,7 +156,7 @@ const ManageInventories = () => {
                 id="editQuantity"
                 value={editItem.quantity}
                 onChange={(e) =>
-                  setEditItem({ ...editItem, quantity: e.target.value })
+                  setEditItem({ ...editItem, quantity: Number(e.target.value) })
                 }
                 required
               />
@@ -171,6 +167,8 @@ const ManageInventories = () => {
                 type="number"
                 className="form-control"
                 id="editBuyingPrice"
+                min="0"
+                step="0.01"
                 value={editItem.buyingPrice}
                 onChange={(e) => setEditItem({...editItem, buyingPrice: Number(e.target.value) })}
                 required
