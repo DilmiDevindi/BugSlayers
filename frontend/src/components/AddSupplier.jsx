@@ -11,6 +11,7 @@ const AddSupplier = () => {
     address: '',
     supplyProducts: '',
     paymentTerms: '',
+    fax:'',
   });
 
   // Handle form submission
