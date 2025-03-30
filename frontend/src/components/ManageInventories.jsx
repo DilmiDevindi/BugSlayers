@@ -102,8 +102,8 @@ const ManageInventories = () => {
                 <td>{item.productName}</td>
                 <td>{item.category}</td>
                 <td>{item.quantity}</td>
-                <td>{item.buyingPrice}</td>
-                <td>{item.sellingPrice}</td>
+                <td>{parseFloat(item.buyingPrice).toFixed(2)}</td>
+                <td>{parseFloat(item.sellingPrice).toFixed(2)}</td>
                 <td>
                   <button
                     className="btn btn-warning btn-sm me-2"
