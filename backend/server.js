@@ -8,7 +8,7 @@ const User = require('./models/User'); // Ensure this path is correct
 const supplierRoutes = require('./routes/supplierRoutes'); // Ensure this path is correct
 const inventoryRoutes = require('./routes/inventoryRoutes');
 const employeeRoutes = require('./routes/employeeRoutes');
-const customerRoutes = require('./routes/customerRoutes');
+const customerRoutes = require('./routes/customerRoutes'); // Ensure this path is correct
  // Ensure this path is correct
 
 const app = express();

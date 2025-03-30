@@ -10,27 +10,33 @@ const AddCustomer = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const newCustomer = { name, address, contact, email };
-
     try {
-      const response = await axios.post('http://localhost:5000/api/customers', newCustomer);
-      const data = response.data;
+      // Check if the customer name already exists
+      const checkResponse = await axios.get(`http://localhost:5000/api/customers/check-name?name=${name}`);
+      const nameExists = checkResponse.data.exists;
 
-      if (data.success) {
-        // Customer added successfully
-        alert(data.message); // Shows "Customer added successfully!"
-      } else {
-        // Customer already exists
-        alert(data.message); // Shows "Customer already exists!"
+      if (nameExists) {
+        alert("Customer already exists!");
+        return; // Stop further execution
       }
 
-      // Clear form after submission
-      setName('');
-      setAddress('');
-      setContact('');
-      setEmail('');
+      // Add the new customer
+      const newCustomer = { name, address, contact, email };
+      const addResponse = await axios.post(
+        'http://localhost:5000/api/customers',
+        newCustomer,
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+
+      if (addResponse.data.success) {
+        alert("Customer added successfully!");
+        setName('');
+        setAddress('');
+        setContact('');
+        setEmail('');
+      }
     } catch (error) {
-      alert('Something went wrong. Please try again!');
+      alert(error.response?.data?.message || "Something went wrong. Please try again!");
       console.error('Error adding customer:', error);
     }
   };
