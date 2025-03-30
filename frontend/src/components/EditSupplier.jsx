@@ -1,4 +1,3 @@
-// components/EditSupplier.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -55,12 +54,15 @@ const EditSupplier = () => {
     try {
       if (id) {
         await axios.put(`http://localhost:5000/api/suppliers/${id}`, supplier);
+        alert('Supplier updated successfully!');
       } else {
         await axios.post('http://localhost:5000/api/suppliers', supplier);
+        alert('Supplier added successfully!');
       }
       navigate('/dashboard/suppliers/manage'); // Redirect after successful update
     } catch (error) {
       console.error('Error saving supplier:', error);
+      alert('Error saving supplier. Please try again.');
     }
   };
 
@@ -107,7 +109,7 @@ const EditSupplier = () => {
           />
         </div>
 
-        {/* Fax Number (New Field) */}
+        {/* Fax Number */}
         <div className="mb-3">
           <label className="form-label">Fax</label>
           <input
