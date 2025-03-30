@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShoppingCart, faBriefcase, faSquarePlus, faDollarSign } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import './inventory.css';
 
@@ -10,7 +12,6 @@ const AddInventoryItem = () => {
   const [sellingPrice, setSellingPrice] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [showForm, setShowForm] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,7 +27,6 @@ const AddInventoryItem = () => {
       setBuyingPrice('');
       setSellingPrice('');
       alert('Item added successfully!');
-      setShowForm(false);
     } catch (error) {
       console.error('Error adding item:', error);
       setError('Failed to add item. Please try again.');
@@ -37,13 +37,9 @@ const AddInventoryItem = () => {
 
   return (
     <div className="container mt-4">
-      <button className="btn btn-success mb-3" onClick={() => setShowForm(!showForm)}>
-        {showForm ? 'Close Form' : 'Add New Product'}
-      </button>
-
-      {showForm && (
-        <div className="card p-3">
-          <h5 className="form-heading">Add New Product</h5>
+      <div className='form-title'>
+        <span className='form-icon'><FontAwesomeIcon icon={faSquarePlus} /></span> Add New Product
+      </div>
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <input
@@ -71,7 +67,7 @@ const AddInventoryItem = () => {
 
             <div className="form-row">
               <div className="form-group input-icon">
-                <span className="icon">🛒</span>
+                <span className="icon"><FontAwesomeIcon icon={faShoppingCart} /></span>
                 <input
                   type="number"
                   className="form-control"
@@ -85,7 +81,7 @@ const AddInventoryItem = () => {
 
             <div className="form-row">
               <div className="form-group input-icon">
-                <span className="icon">$</span>
+                <span className="icon"><FontAwesomeIcon icon={faDollarSign} /></span>
                 <input
                   type="number"
                   className="form-control"
@@ -99,7 +95,7 @@ const AddInventoryItem = () => {
               </div>
 
               <div className="form-group input-icon">
-                <span className="icon">$</span>
+                <span className="icon"><FontAwesomeIcon icon={faDollarSign} /></span>
                 <input
                   type="number"
                   className="form-control"
@@ -120,8 +116,4 @@ const AddInventoryItem = () => {
           </form>
         </div>
       )}
-    </div>
-  );
-};
-
 export default AddInventoryItem;
