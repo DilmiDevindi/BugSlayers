@@ -101,8 +101,14 @@ const ManageSuppliers = () => {
                 <td>{supplier.supplyProducts}</td>
                 <td>{supplier.paymentTerms}</td>
                 <td>
-                  <Link to={`/dashboard/suppliers/edit/${supplier._id}`} className="btn btn-warning me-2">Edit</Link>
-                  <button className="btn btn-danger" onClick={() => handleDelete(supplier._id)}>Delete</button>
+                    <div className="d-flex gap-2">
+                      <Link to={`/dashboard/suppliers/edit/${supplier._id}`} className="btn btn-warning">
+                        Edit
+                      </Link>
+                      <button className="btn btn-danger" onClick={() => handleDelete(supplier._id)}>
+                        Delete
+                      </button>
+                    </div>
                 </td>
               </tr>
             ))}
