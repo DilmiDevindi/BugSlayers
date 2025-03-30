@@ -18,7 +18,7 @@ const ManageInventories = () => {
     setError('');
     try {
       const response = await axios.get('http://localhost:5000/api/inventory');
-      setItems(Array.isArray(response.data) ? response.data : []);
+      setItems(Array.isArray(response.data) ? response.data.reverse() : []);
     } catch (err) {
       setError('Error fetching inventory items');
       console.error('Error fetching inventory items:', err);
@@ -49,7 +49,7 @@ const ManageInventories = () => {
     try {
       await axios.put(`http://localhost:5000/api/inventory/${editItem._id}`, editItem);
       setItems((prevItems) =>
-        prevItems.map((item) => (item._id === editItem._id ? editItem : item))
+      [editItem, ...prevItems.filter(item => item.id !== editItem._id)]
       ); // Optimistic update
       setEditItem(null);
       alert('Item updated successfully!');
