@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Login.css'; // Import CSS file
@@ -18,7 +18,7 @@ const Login = () => {
         alert(response.data.message);
       }
     } catch (error) {
-      alert('Login failed');
+      alert('Login failed',error);
     }
   };
 
@@ -50,7 +50,7 @@ const Login = () => {
         </div>
         <button type="submit" className="btn btn-primary">Login</button>
       </form>
-      <p>Don't have an account? <a href="/signup">Sign up</a></p>
+      <p>Don&apos;t have an account? <a href="/signup">Sign up</a></p>
     </div>
   );
 };

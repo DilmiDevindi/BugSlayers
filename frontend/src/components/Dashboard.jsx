@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -10,7 +10,6 @@ import axios from 'axios';
 const Dashboard = () => {
   const [totalSuppliers, setTotalSuppliers] = useState(0);
   const [totalInventory, setTotalInventory] = useState(0);
-  const [totalEmployees, setTotalEmployees] = useState(0);
   const [totalCustomers, setTotalCustomers] = useState(0);
 
   useEffect(() => {
@@ -24,9 +23,6 @@ const Dashboard = () => {
 
       const inventoryResponse = await axios.get('http://localhost:5000/api/inventory');
       setTotalInventory(inventoryResponse.data.length);
-
-      const employeesResponse = await axios.get('http://localhost:5000/api/employees');
-      setTotalEmployees(employeesResponse.data.length);
 
       const customersResponse = await axios.get('http://localhost:5000/api/customers');
       setTotalCustomers(customersResponse.data.length);
@@ -63,14 +59,6 @@ const Dashboard = () => {
                     <Card.Body>
                       <Card.Title>Total Inventory</Card.Title>
                       <Card.Text>{totalInventory}</Card.Text>
-                    </Card.Body>
-                  </Card>
-                </div>
-                <div className="col-md-3">
-                  <Card className="custom-card-3 text-center mb-4">
-                    <Card.Body>
-                      <Card.Title>Total Employees</Card.Title>
-                      <Card.Text>{totalEmployees}</Card.Text>
                     </Card.Body>
                   </Card>
                 </div>

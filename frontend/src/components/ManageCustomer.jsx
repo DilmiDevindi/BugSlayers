@@ -1,6 +1,7 @@
-// src/components/ManageCustomer.js
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 
 const ManageCustomer = () => {
   const [customers, setCustomers] = useState([]);
@@ -15,7 +16,7 @@ const ManageCustomer = () => {
   const fetchCustomers = async () => {
     try {
       const response = await axios.get('http://localhost:5000/api/customers');
-      setCustomers(response.data);
+      setCustomers(response.data.reverse()); // Reverse the array to show latest first
     } catch (error) {
       console.error('Error fetching customers:', error);
     }
@@ -96,13 +97,13 @@ const ManageCustomer = () => {
                   className="btn btn-primary me-2"
                   onClick={() => handleEdit(customer)}
                 >
-                  Edit
+                  <FontAwesomeIcon icon={faEdit} />
                 </button>
                 <button
                   className="btn btn-danger"
                   onClick={() => handleDelete(customer._id)}
                 >
-                  Delete
+                  <FontAwesomeIcon icon={faTrash} />
                 </button>
               </td>
             </tr>
