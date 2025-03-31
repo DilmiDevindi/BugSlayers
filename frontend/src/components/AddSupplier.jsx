@@ -4,10 +4,11 @@ import axios from 'axios';
 
 const AddSupplier = () => {
   const [supplier, setSupplier] = useState({
-    date: new Date().toISOString().split('T')[0], // Default to today's date
+    date: new Date().toISOString().split('T')[0],
     supplierName: '',
     phone: '',
-    fax: '', // Added fax field (not required)
+    phone2: '', // Optional second phone number
+    fax: '',
     email: '',
     address: '',
     supplyProducts: '',
@@ -17,15 +18,18 @@ const AddSupplier = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate Date Field
     if (!supplier.date) {
       alert('Date is required.');
       return;
     }
 
-    // Validate phone number length
     if (supplier.phone.length !== 10) {
-      alert('Contact Number must be exactly 10 digits.');
+      alert('Primary Contact Number must be exactly 10 digits.');
+      return;
+    }
+
+    if (supplier.phone2 && supplier.phone2.length !== 10) {
+      alert('Secondary Contact Number must be exactly 10 digits if entered.');
       return;
     }
 
@@ -33,10 +37,11 @@ const AddSupplier = () => {
       await axios.post('http://localhost:5000/api/suppliers', supplier);
       alert('Supplier added successfully');
       setSupplier({
-        date: new Date().toISOString().split('T')[0], // Reset to today's date
+        date: new Date().toISOString().split('T')[0],
         supplierName: '',
         phone: '',
-        fax: '', // Reset fax
+        phone2: '',
+        fax: '',
         email: '',
         address: '',
         supplyProducts: '',
@@ -48,80 +53,80 @@ const AddSupplier = () => {
   };
 
   const handlePhoneChange = (e) => {
-    const value = e.target.value;
+    const { name, value } = e.target;
     if (/^\d{0,10}$/.test(value)) {
-      setSupplier({ ...supplier, phone: value });
+      setSupplier({ ...supplier, [name]: value });
     } else {
-      alert('Contact Number cannot exceed 10 digits.');
+      alert('Phone Number cannot exceed 10 digits.');
     }
   };
 
   return (
     <div className="container mt-5">
       <h2>Add Supplier</h2>
-      <form onSubmit={handleSubmit}>
-
-        {/* Date Field */}
-        <div className="mb-3 d-flex align-items-center">
-          <label className="form-label me-3" style={{ minWidth: "150px" }}>Date</label>
+      <form onSubmit={handleSubmit} autoComplete="off">
+        <div className="mb-3">
+          <label className="form-label">Date</label>
           <input
             type="date"
-            className="form-control w-50"
+            className="form-control"
             value={supplier.date}
             onChange={(e) => setSupplier({ ...supplier, date: e.target.value })}
             required
+            autoComplete="off"
           />
         </div>
 
-        {/* Other Input Fields */}
-        {[
-          { label: "Supplier Name", key: "supplierName", type: "text" },
-          { label: "Contact Number", key: "phone", type: "tel", onChange: handlePhoneChange },
-          { label: "Fax Number", key: "fax", type: "text", required: false }, // Added Fax field (optional)
-          { label: "Email Address", key: "email", type: "email" },
-          { label: "Address", key: "address", type: "text" },
-        ].map((field) => (
-          <div key={field.key} className="mb-3 d-flex align-items-center">
-            <label className="form-label me-3" style={{ minWidth: "150px" }}>
-              {field.label}
-            </label>
+        {[{ label: "Supplier Name", key: "supplierName" }, { label: "Contact Number (Primary)", key: "phone", required: true }, { label: "Contact Number (Secondary)", key: "phone2", required: false }, { label: "Fax Number", key: "fax", required: false }, { label: "Email Address", key: "email" }, { label: "Address", key: "address" }].map(field => (
+          <div key={field.key} className="mb-3">
+            <label className="form-label">{field.label}</label>
             <input
-              type={field.type}
-              className="form-control w-50"
+              type="text"
+              className="form-control"
+              name={field.key}
               value={supplier[field.key]}
-              onChange={field.onChange || ((e) => setSupplier({ ...supplier, [field.key]: e.target.value }))}
-              {...(field.required === false ? {} : { required: true })} // Make Fax optional
+              onChange={field.key.includes('phone') ? handlePhoneChange : (e) => setSupplier({ ...supplier, [field.key]: e.target.value })}
+              {...(field.required === false ? {} : { required: true })}
+              autoComplete="off"
             />
           </div>
         ))}
 
-        {/* Supply Products - Dropdown Selection */}
-        <div className="mb-3 d-flex align-items-center">
-          <label className="form-label me-3" style={{ minWidth: "150px" }}>Supply Products</label>
+        <div className="mb-3">
+          <label className="form-label">Supply Products</label>
           <select
-            className="form-control w-50"
+            className="form-control"
             value={supplier.supplyProducts}
             onChange={(e) => setSupplier({ ...supplier, supplyProducts: e.target.value })}
             required
+            autoComplete="off"
           >
             <option value="" disabled>Select a product</option>
             <option value="Mattress">Mattress</option>
-            <option value="Cushion">Cushion</option>
+            <option value="Cupboard">Cupboard</option>
+            <option value="Scupboard">Steel Melamine Cupboard</option>
+            <option value="Chair">Chair</option>
+            <option value="Pchair">Plastic Chair</option>
+            <option value="Table">Table</option>
+            <option value="Wtable">Writing Table</option>
+            <option value="Iron Board">Iron Board</option>
+            <option value="Clothes Rack">Clothes Rack</option>
           </select>
         </div>
 
-        {/* Payment Methods - Dropdown Selection */}
-        <div className="mb-3 d-flex align-items-center">
-          <label className="form-label me-3" style={{ minWidth: "150px" }}>Payment Method</label>
+        <div className="mb-3">
+          <label className="form-label">Payment Method</label>
           <select
-            className="form-control w-50"
+            className="form-control"
             value={supplier.paymentTerms}
             onChange={(e) => setSupplier({ ...supplier, paymentTerms: e.target.value })}
             required
+            autoComplete="off"
           >
             <option value="" disabled>Select a payment method</option>
             <option value="Cash">Cash</option>
             <option value="Card">Card</option>
+          
           </select>
         </div>
 
