@@ -92,10 +92,10 @@ const ManageSuppliers = () => {
           <tbody>
             {suppliers.map(supplier => (
               <tr key={supplier._id}>
-                <td>{supplier.date ? new Date(supplier.date).toLocaleDateString() : 'N/A'}</td>
+                <td>{supplier.date}</td>
                 <td>{supplier.supplierName}</td>
                 <td>{supplier.phone}</td>
-                <td>{supplier.fax || 'N/A'}</td>
+                <td>{supplier.fax || '-'}</td>
                 <td>{supplier.email}</td>
                 <td>{supplier.address}</td>
                 <td>{supplier.supplyProducts}</td>
