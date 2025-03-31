@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBarsProgress, faBucket, faDeleteLeft, faEdit, faRemove } from '@fortawesome/free-solid-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const ManageInventories = () => {
@@ -64,11 +66,13 @@ const ManageInventories = () => {
   );
 
   return (
-    <div className="container mt-4">
-      <h5>Manage Inventory</h5>
+    <div className="container-fluid mt-4 inventory-container">
+      <div className='inventory-title'>
+        <span className='inventory-title-icon'><FontAwesomeIcon icon={faBarsProgress} /></span> Add New Product
+      </div>
       {error && <div className="alert alert-danger">{error}</div>}
 
-      <div className="row">
+      <div className="row mb-3">
       <div className="col-md-4">
       <input
         type="text"
@@ -79,15 +83,16 @@ const ManageInventories = () => {
       />
       </div>
 
-      <div className="col-md-8">
+      <div className="table-responsive inventory-table-container">
       {loading ? (
         <div>Loading...</div>
       ) : filteredItems.length === 0 ? (
-        <div>No items found</div>
+        <div className='no-items'>No items found</div>
       ) : (
-        <table className="table table-bordered">
+        <table className="table table-striped table-bordered inventory-table">
           <thead>
             <tr>
+              <th>ID</th>
               <th>Product Name</th>
               <th>Category</th>
               <th>Quantity</th>
@@ -97,26 +102,17 @@ const ManageInventories = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredItems.map((item) => (
+            {filteredItems.map((item, index) => (
               <tr key={item._id}>
+                <td>{index + 1}</td>
                 <td>{item.productName}</td>
                 <td>{item.category}</td>
                 <td>{item.quantity}</td>
                 <td>{parseFloat(item.buyingPrice).toFixed(2)}</td>
                 <td>{parseFloat(item.sellingPrice).toFixed(2)}</td>
                 <td>
-                  <button
-                    className="btn btn-warning btn-sm me-2"
-                    onClick={() => handleEdit(item)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={() => handleDelete(item._id)}
-                  >
-                    Delete
-                  </button>
+                <span className='inventory-edit-icon' onClick={() => handleEdit(item)}><FontAwesomeIcon icon={faEdit} /></span>
+                <span className='inventory-delete-icon' onClick={() => handleDelete(item._id)}><FontAwesomeIcon icon={faRemove} /></span>    
                 </td>
               </tr>
             ))}
@@ -131,11 +127,11 @@ const ManageInventories = () => {
           <h4>Edit Item</h4>
           <form onSubmit={handleUpdate}>
             <div className="mb-3">
-              <label htmlFor="editProductName" className="form-label">Product Name</label>
+              <label  className="form-label">Product Name</label>
               <input
                 type="text"
                 className="form-control"
-                id="editProductName"
+
                 value={editItem.productName}
                 onChange={(e) =>
                   setEditItem({ ...editItem, productName: e.target.value })
@@ -144,11 +140,11 @@ const ManageInventories = () => {
               />
             </div>
             <div className="mb-3">
-              <label htmlFor="editCategory" className="form-label">Category</label>
+              <label className="form-label">Category</label>
               <input
                 type="text"
                 className="form-control"
-                id="editCategory"
+                
                 value={editItem.category}
                 onChange={(e) =>
                   setEditItem({ ...editItem, category: e.target.value })
@@ -157,11 +153,11 @@ const ManageInventories = () => {
               />
             </div>
             <div className="mb-3">
-              <label htmlFor="editQuantity" className="form-label">Quantity</label>
+              <label className="form-label">Quantity</label>
               <input
                 type="number"
                 className="form-control"
-                id="editQuantity"
+                
                 value={editItem.quantity}
                 onChange={(e) =>
                   setEditItem({ ...editItem, quantity: Number(e.target.value) })
@@ -170,11 +166,11 @@ const ManageInventories = () => {
               />
             </div>
             <div className="mb-3">
-              <label htmlFor="editBuyingPrice" className="form-label">Buying Price</label>
+              <label className="form-label">Buying Price</label>
               <input
                 type="number"
                 className="form-control"
-                id="editBuyingPrice"
+                
                 min="0"
                 step="0.01"
                 value={editItem.buyingPrice}
@@ -183,11 +179,11 @@ const ManageInventories = () => {
                 />
             </div>
             <div className="mb-3">
-            <label htmlFor="editSellingPrice" className="form-label">Selling Price</label>
+            <label className="form-label">Selling Price</label>
               <input
                 type="number"
                 className="form-control"
-                id="editSellingPrice"
+                
                 value={editItem.sellingPrice}
                 onChange={(e) => setEditItem({...editItem, sellingPrice: Number(e.target.value) })}
                 required

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart, faSquarePlus, faDollarSign } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
-import './inventory.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const AddInventoryItem = () => {
   const [productName, setProductName] = useState('');
@@ -36,12 +36,12 @@ const AddInventoryItem = () => {
   };
 
   return (
-    <div className="container mt-4">
-      <div className='form-title'>
-        <span className='form-icon'><FontAwesomeIcon icon={faSquarePlus} /></span> Add New Product
+    <div className="container-i mt-4">
+      <div className='form-title-i'>
+        <span className='form-icon-i'><FontAwesomeIcon icon={faSquarePlus} /></span> Add New Product
       </div>
           <form onSubmit={handleSubmit}>
-            <div className="form-group">
+            <div className="form-group-i">
               <input
                 type="text"
                 className="form-control"
@@ -52,11 +52,11 @@ const AddInventoryItem = () => {
               />
             </div>
 
-            <div className="form-row">
-              <div className="form-group col">
+            <div className="form-row-i">
+              <div className="form-group-i col">
                 <input
                   type="text"
-                  className="form-control"
+                  className="form-control-i"
                   placeholder="Product Category"
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
@@ -65,12 +65,12 @@ const AddInventoryItem = () => {
               </div>
             </div>
 
-            <div className="form-row">
-              <div className="form-group input-icon">
+            <div className="form-row-i">
+              <div className="form-group-i input-icon-i">
                 <span className="icon"><FontAwesomeIcon icon={faShoppingCart} /></span>
                 <input
                   type="number"
-                  className="form-control"
+                  className="form-control-i"
                   placeholder="Product Quantity"
                   value={quantity}
                   onChange={(e) => setQuantity(e.target.value)}
@@ -79,12 +79,12 @@ const AddInventoryItem = () => {
               </div>
             </div>
 
-            <div className="form-row">
-              <div className="form-group input-icon">
+            <div className="form-row-i">
+              <div className="form-group-i input-icon-i">
                 <span className="icon"><FontAwesomeIcon icon={faDollarSign} /></span>
                 <input
                   type="number"
-                  className="form-control"
+                  className="form-control-i"
                   placeholder="Buying Price"
                   min="0"
                   step="0.01"
@@ -94,11 +94,11 @@ const AddInventoryItem = () => {
                 />
               </div>
 
-              <div className="form-group input-icon">
+              <div className="form-group-i input-icon-i">
                 <span className="icon"><FontAwesomeIcon icon={faDollarSign} /></span>
                 <input
                   type="number"
-                  className="form-control"
+                  className="form-control-i"
                   placeholder="Selling Price"
                   min="0"
                   step="0.01"
@@ -109,10 +109,10 @@ const AddInventoryItem = () => {
               </div>
             </div>
 
-            <button type="submit" className="btn btn-primary" disabled={loading}>
+            <button type="submit" className="btn btn-primary-i" disabled={loading}>
               {loading ? 'Adding...' : 'Add Product'}
             </button>
-            {error && <div className="alert alert-danger mt-3">{error}</div>}
+            {error && <div className="alert alert-danger-i mt-3">{error}</div>}
           </form>
         </div>
       )}
