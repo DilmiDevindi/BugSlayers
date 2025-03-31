@@ -17,6 +17,7 @@ const Login = () => {
       } else {
         alert(response.data.message);
       }
+    // eslint-disable-next-line no-unused-vars
     } catch (error) {
       alert('Login failed');
     }
@@ -50,7 +51,7 @@ const Login = () => {
         </div>
         <button type="submit" className="btn btn-primary">Login</button>
       </form>
-      <p>Don't have an account? <a href="/signup">Sign up</a></p>
+      <p>Don&apos;t have an account? <a href="/signup">Sign up</a></p>
     </div>
   );
 };
