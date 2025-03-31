@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../App.css';
+import { FaEdit, FaTrash } from "react-icons/fa";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUsers } from "@fortawesome/free-solid-svg-icons"; 
+
 
 const ManageCustomer = () => {
   const [customers, setCustomers] = useState([]);
@@ -75,6 +79,7 @@ const ManageCustomer = () => {
       setEditingCustomer(null);
       setFormData({ _id: '', name: '', address: '', contact: '', email: '' });
       fetchCustomers();
+      alert('Customer updated successfully.');
     } catch (error) {
       console.error('Error updating customer:', error);
       alert('Failed to update customer');
@@ -89,7 +94,7 @@ const ManageCustomer = () => {
 
   return (
     <div className="container1">
-      <h3>Manage Customers</h3>
+      <h3><FontAwesomeIcon icon={faUsers} className="cus-icon"/>Manage Customers</h3>
       <input
         type="text"
         className="form-control mb-3"
@@ -99,60 +104,68 @@ const ManageCustomer = () => {
       />
 
       {loading ? <p>Loading customers...</p> : (
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Address</th>
-              <th>Contact</th>
-              <th>Email</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredCustomers.map((customer,index) => (
-              <tr key={customer._id}>
-                <td>{index + 1}</td>
-                <td>{customer.name}</td>
-                <td>{customer.address}</td>
-                <td>{customer.contact}</td>
-                <td>{customer.email}</td>
-                <td>
-                  <button className="btn btn-primary me-2" onClick={() => handleEdit(customer)}>Edit</button>
-                  <button className="btn btn-danger" onClick={() => handleDelete(customer._id)}>Delete</button>
-                </td>
+        <>
+          <table className="table table-striped">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Contact</th>
+                <th>Email</th>
+                <th>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filteredCustomers.length > 0 ? (
+                filteredCustomers.map((customer, index) => (
+                  <tr key={customer._id}>
+                    <td>{index + 1}</td>
+                    <td>{customer.name}</td>
+                    <td>{customer.address}</td>
+                    <td>{customer.contact}</td>
+                    <td>{customer.email}</td>
+                    <td>
+                      <button className="btn1" onClick={() => handleEdit(customer)}>
+                      <FaEdit/>
+                      </button>
+                      <button className="btn2" onClick={() => handleDelete(customer._id)}>
+                      <FaTrash/>
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6" className="text-center text-danger">Customer Not Found</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </>
       )}
 
       {editingCustomer && (
         <form onSubmit={handleUpdate} className="container1 mt-4">
           <h4>Edit Customer</h4>
           <div className="mb-3">
-            <label htmlFor="id" className="form-label">Customer ID</label>
-            <input type="text" className="form-control" id="id" name="_id" value={formData._id} readOnly />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="name" className="form-label">Name</label>
+            <label htmlFor="name" className="form-label1">Name</label>
             <input type="text" className="form-control" id="name" name="name" value={formData.name} onChange={handleChange} required />
           </div>
           <div className="mb-3">
-            <label htmlFor="address" className="form-label">Address</label>
+            <label htmlFor="address" className="form-label1">Address</label>
             <input type="text" className="form-control" id="address" name="address" value={formData.address} onChange={handleChange} required />
           </div>
           <div className="mb-3">
-            <label htmlFor="contact" className="form-label">Contact</label>
+            <label htmlFor="contact" className="form-label1">Contact</label>
             <input type="number" className="form-control" id="contact" name="contact" value={formData.contact} onChange={handleChange} required />
           </div>
           <div className="mb-3">
-            <label htmlFor="email" className="form-label">Email</label>
+            <label htmlFor="email" className="form-label1">Email</label>
             <input type="email" className="form-control" id="email" name="email" value={formData.email} onChange={handleChange} required />
           </div>
-          <button type="submit" className="btn btn-primary">Update Customer</button>
-          <button type="button" className="btn btn-secondary ms-2" onClick={() => { setEditingCustomer(null); setFormData({ _id: '', name: '', address: '', contact: '', email: '' }); }}>Cancel</button>
+          <button type="submit" className="btnUpdate">Update</button>
+          <button type="button" className="btnCancle" onClick={() => { setEditingCustomer(null); setFormData({ _id: '', name: '', address: '', contact: '', email: '' }); }}>Cancel</button>
         </form>
       )}
     </div>

@@ -98,4 +98,68 @@
   }
 }
 
+/*Manage Customer css*/
+.btn1{
+  color: rgb(7, 35, 250);
+  border: none;
+}
+
+.btn2{
+  
+  color: rgb(251, 7, 7);
+  margin-left: 5px;
+  border: none;
+}
+
+.cus-icon{
+  color: #0b4383;
+  margin-right: 10px;
+  width: 70px;
+  height: 25px;
+}
+
+h3{
+  color: #062ea7;
+}
+
+td text-center{
+  color: #e10909;
+}
+
+.btnUpdate{
+   background-color: rgb(108, 172, 12);
+   border: none;
+   color: white;
+   width: 100px;
+   height: 40px;
+   margin-right: 10px;
+   
+}
+.btnCancle{
+  background-color: rgb(244, 122, 9);
+   border: none;
+   color: white;
+   width: 100px;
+   height: 40px;
+}
+
+h4{
+  color: #1208ab;
+}
+
+.form-label1{
+  font-weight: bold;
+}
+
+/*Add Customer css*/
+h4{
+  text-align: center;
+  color: #0a2985;
+}
+
+.addCus{
+  color: #180881;
+  margin-right: 10px;
+}
+
 

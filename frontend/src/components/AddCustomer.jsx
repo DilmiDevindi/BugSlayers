@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faPlusSquare} from "@fortawesome/free-solid-svg-icons"; 
 
 const AddCustomer = () => {
   const [name, setName] = useState('');
@@ -56,7 +58,7 @@ const AddCustomer = () => {
 
   return (
     <div className="container mt-4">
-      <h3>Add New Customer</h3>
+      <h4><FontAwesomeIcon icon={faPlusSquare} className="addCus" />Add New Customer</h4>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="name" className="form-label">Name</label>
