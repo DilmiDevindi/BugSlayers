@@ -23,13 +23,20 @@
     padding: 10px;
   }
   
-  .btn-primary {
+  .btn {
     width: 100%;
     padding: 10px;
     border-radius: 6px;
     font-size: 16px;
+    background-color: #007bff;
+    color: #fff;
+    font-weight: bold;
   }
   
+  .btn:hover {
+    background-color: #0056b3;
+    color: #fff;
+  }
   p {
     text-align: center;
     margin-top: 10px;

@@ -10,34 +10,47 @@ const AddCustomer = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      // Check if the customer name already exists
-      const checkResponse = await axios.get(`http://localhost:5000/api/customers/check-name?name=${name}`);
-      const nameExists = checkResponse.data.exists;
+    if (!name || !address || !contact || !email) {
+      alert("All fields are required!");
+      return;
+    }
 
-      if (nameExists) {
-        alert("Customer already exists!");
-        return; // Stop further execution
+    // Validate contact number (should be exactly 10 digits)
+    if (!/^[0-9]{10}$/.test(contact)) {
+      alert("Please enter a valid 10-digit contact number!");
+      return;
+    }
+
+    try {
+      // Check if customer already exists by email
+      const checkResponse = await axios.get('http://localhost:5000/api/customers');
+      const existingCustomer = checkResponse.data.find(c => c.email === email);
+      
+      if (existingCustomer) {
+        alert("Customer with this email already exists!");
+        return;
       }
 
-      // Add the new customer
       const newCustomer = { name, address, contact, email };
-      const addResponse = await axios.post(
-        'http://localhost:5000/api/customers',
-        newCustomer,
-        { headers: { 'Content-Type': 'application/json' } }
-      );
 
-      if (addResponse.data.success) {
+      console.log("Sending new customer:", newCustomer); // Debugging log
+
+      const response = await axios.post('http://localhost:5000/api/customers', newCustomer, {
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      if (response.status === 201) {
         alert("Customer added successfully!");
         setName('');
         setAddress('');
         setContact('');
         setEmail('');
+      } else {
+        alert("Error adding customer. Please try again.");
       }
     } catch (error) {
-      alert(error.response?.data?.message || "Something went wrong. Please try again!");
-      console.error('Error adding customer:', error);
+      console.error("Error Details:", error.response?.data || error.message);
+      alert("Error adding customer. Please check the console for details.");
     }
   };
 

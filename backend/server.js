@@ -7,7 +7,8 @@ const bodyParser = require('body-parser');
 const User = require('./models/User'); // Ensure this path is correct
 const supplierRoutes = require('./routes/supplierRoutes'); // Ensure this path is correct
 const inventoryRoutes = require('./routes/inventoryRoutes');
-const customerRoutes = require('./routes/customerRoutes'); // Ensure this path is correct
+const customerRoutes = require('./routes/customerRoutes');
+ // Ensure this path is correct
  // Ensure this path is correct
 
 const app = express();

@@ -48,7 +48,7 @@ const Login = () => {
             required
           />
         </div>
-        <button type="submit" className="btn btn-primary">Login</button>
+        <button type="submit" className="btn">Login</button>
       </form>
       <p>Don&apos;t have an account? <a href="/signup">Sign up</a></p>
     </div>
