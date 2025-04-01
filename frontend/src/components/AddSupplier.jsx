@@ -15,6 +15,10 @@ const AddSupplier = () => {
     paymentTerms: '',
   });
 
+  const validatePhoneNumber = (number) => {
+    return /^\d{10}$/.test(number); // Must be exactly 10 digits
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -23,13 +27,13 @@ const AddSupplier = () => {
       return;
     }
 
-    if (supplier.phone.length !== 10) {
-      alert('Primary Contact Number must be exactly 10 digits.');
+    if (!validatePhoneNumber(supplier.phone)) {
+      alert('Primary Contact Number must be exactly 10 digits and contain only numbers.');
       return;
     }
 
-    if (supplier.phone2 && supplier.phone2.length !== 10) {
-      alert('Secondary Contact Number must be exactly 10 digits if entered.');
+    if (supplier.phone2 && !validatePhoneNumber(supplier.phone2)) {
+      alert('Secondary Contact Number must be exactly 10 digits and contain only numbers if entered.');
       return;
     }
 
@@ -57,7 +61,7 @@ const AddSupplier = () => {
     if (/^\d{0,10}$/.test(value)) {
       setSupplier({ ...supplier, [name]: value });
     } else {
-      alert('Phone Number cannot exceed 10 digits.');
+      alert('Phone Number must contain only numbers and cannot exceed 10 digits.');
     }
   };
 
@@ -77,7 +81,12 @@ const AddSupplier = () => {
           />
         </div>
 
-        {[{ label: "Supplier Name", key: "supplierName" }, { label: "Contact Number (Primary)", key: "phone", required: true }, { label: "Contact Number (Secondary)", key: "phone2", required: false }, { label: "Fax Number", key: "fax", required: false }, { label: "Email Address", key: "email" }, { label: "Address", key: "address" }].map(field => (
+        {[{ label: "Supplier Name", key: "supplierName" }, 
+          { label: "Contact Number (Primary)", key: "phone", required: true }, 
+          { label: "Contact Number (Secondary)", key: "phone2", required: false }, 
+          { label: "Fax Number", key: "fax", required: false }, 
+          { label: "Email Address", key: "email" }, 
+          { label: "Address", key: "address" }].map(field => (
           <div key={field.key} className="mb-3">
             <label className="form-label">{field.label}</label>
             <input
@@ -126,7 +135,6 @@ const AddSupplier = () => {
             <option value="" disabled>Select a payment method</option>
             <option value="Cash">Cash</option>
             <option value="Card">Card</option>
-          
           </select>
         </div>
 
