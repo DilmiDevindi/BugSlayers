@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBarsProgress, faBucket, faDeleteLeft, faEdit, faRemove } from '@fortawesome/free-solid-svg-icons';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const ManageInventories = () => {
   const [items, setItems] = useState([]);
@@ -14,10 +17,10 @@ const ManageInventories = () => {
 
   const fetchItems = async () => {
     setLoading(true);
-    setError(null);
+    setError('');
     try {
       const response = await axios.get('http://localhost:5000/api/inventory');
-      setItems(Array.isArray(response.data) ? response.data : []);
+      setItems(Array.isArray(response.data) ? response.data.reverse() : []);
     } catch (err) {
       setError('Error fetching inventory items');
       console.error('Error fetching inventory items:', err);
@@ -29,7 +32,6 @@ const ManageInventories = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this item?')) return;
 
-    setError(null);
     try {
       await axios.delete(`http://localhost:5000/api/inventory/${id}`);
       setItems((prevItems) => prevItems.filter((item) => item._id !== id)); // Optimistic update
@@ -46,13 +48,10 @@ const ManageInventories = () => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    setError(null);
     try {
       await axios.put(`http://localhost:5000/api/inventory/${editItem._id}`, editItem);
       setItems((prevItems) =>
-        prevItems.map((item) =>
-          item._id === editItem._id ? editItem : item
-        )
+      [editItem, ...prevItems.filter(item => item.id !== editItem._id)]
       ); // Optimistic update
       setEditItem(null);
       alert('Item updated successfully!');
@@ -63,13 +62,18 @@ const ManageInventories = () => {
   };
 
   const filteredItems = items.filter((item) =>
-    item.name.toLowerCase().includes(search.toLowerCase())
+    item.productName.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
-    <div className="container mt-4">
-      <h3>Manage Inventory</h3>
+    <div className="container-fluid mt-4 inventory-container">
+      <div className='inventory-title'>
+        <span className='inventory-title-icon'><FontAwesomeIcon icon={faBarsProgress} /></span> Add New Product
+      </div>
       {error && <div className="alert alert-danger">{error}</div>}
+
+      <div className="row mb-3">
+      <div className="col-md-4">
       <input
         type="text"
         className="form-control mb-3"
@@ -77,88 +81,113 @@ const ManageInventories = () => {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
+      </div>
+
+      <div className="table-responsive inventory-table-container">
       {loading ? (
         <div>Loading...</div>
       ) : filteredItems.length === 0 ? (
-        <div>No items found</div>
+        <div className='no-items'>No items found</div>
       ) : (
-        <table className="table table-bordered">
+        <table className="table table-striped table-bordered inventory-table">
           <thead>
             <tr>
-              <th>Name</th>
+              <th>ID</th>
+              <th>Product Name</th>
+              <th>Category</th>
               <th>Quantity</th>
-              <th>Price</th>
+              <th>Buying Price</th>
+              <th>Selling Price</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {filteredItems.map((item) => (
+            {filteredItems.map((item, index) => (
               <tr key={item._id}>
-                <td>{item.name}</td>
+                <td>{index + 1}</td>
+                <td>{item.productName}</td>
+                <td>{item.category}</td>
                 <td>{item.quantity}</td>
-                <td>{item.price}</td>
+                <td>{parseFloat(item.buyingPrice).toFixed(2)}</td>
+                <td>{parseFloat(item.sellingPrice).toFixed(2)}</td>
                 <td>
-                  <button
-                    className="btn btn-warning btn-sm me-2"
-                    onClick={() => handleEdit(item)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={() => handleDelete(item._id)}
-                  >
-                    Delete
-                  </button>
+                <span className='inventory-edit-icon' onClick={() => handleEdit(item)}><FontAwesomeIcon icon={faEdit} /></span>
+                <span className='inventory-delete-icon' onClick={() => handleDelete(item._id)}><FontAwesomeIcon icon={faRemove} /></span>    
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       )}
+      </div>
+    </div>
 
       {editItem && (
         <div className="edit-form mt-4">
           <h4>Edit Item</h4>
           <form onSubmit={handleUpdate}>
             <div className="mb-3">
-              <label htmlFor="editName" className="form-label">Item Name</label>
+              <label  className="form-label">Product Name</label>
               <input
                 type="text"
                 className="form-control"
-                id="editName"
-                value={editItem.name}
+
+                value={editItem.productName}
                 onChange={(e) =>
-                  setEditItem({ ...editItem, name: e.target.value })
+                  setEditItem({ ...editItem, productName: e.target.value })
                 }
                 required
               />
             </div>
             <div className="mb-3">
-              <label htmlFor="editQuantity" className="form-label">Quantity</label>
+              <label className="form-label">Category</label>
+              <input
+                type="text"
+                className="form-control"
+                
+                value={editItem.category}
+                onChange={(e) =>
+                  setEditItem({ ...editItem, category: e.target.value })
+                }
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Quantity</label>
               <input
                 type="number"
                 className="form-control"
-                id="editQuantity"
+                
                 value={editItem.quantity}
                 onChange={(e) =>
-                  setEditItem({ ...editItem, quantity: e.target.value })
+                  setEditItem({ ...editItem, quantity: Number(e.target.value) })
                 }
                 required
               />
             </div>
             <div className="mb-3">
-              <label htmlFor="editPrice" className="form-label">Price</label>
+              <label className="form-label">Buying Price</label>
               <input
                 type="number"
                 className="form-control"
-                id="editPrice"
-                value={editItem.price}
-                onChange={(e) =>
-                  setEditItem({ ...editItem, price: e.target.value })
-                }
+                
+                min="0"
+                step="0.01"
+                value={editItem.buyingPrice}
+                onChange={(e) => setEditItem({...editItem, buyingPrice: Number(e.target.value) })}
                 required
-              />
+                />
+            </div>
+            <div className="mb-3">
+            <label className="form-label">Selling Price</label>
+              <input
+                type="number"
+                className="form-control"
+                
+                value={editItem.sellingPrice}
+                onChange={(e) => setEditItem({...editItem, sellingPrice: Number(e.target.value) })}
+                required
+                />
             </div>
             <button type="submit" className="btn btn-success">Update Item</button>
             <button
