@@ -17,7 +17,7 @@ const AddCategory = () => {
 
         try {
             const newCategory = { CategoryName };
-            await axios.post('http://localhost:5000/api/inventory/add', newCategory);
+            await axios.post('http://localhost:5000/api/category/', newCategory);
             setCategoryName('');
             alert('Category added successfully!');
         } catch (error) {
@@ -30,8 +30,8 @@ const AddCategory = () => {
 
     const fetchCategories = async () => {
         try {
-            const respose = await axios.get('http://localhost:5000/api/inventory');
-            setCategories(Response.data);
+            const response = await axios.get('http://localhost:5000/api/category');
+            setCategories(response.data);
         } catch (error) {
             console.error('Error fetching categories:', error);
         }

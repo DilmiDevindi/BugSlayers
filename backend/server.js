@@ -38,7 +38,7 @@ app.use('/api/suppliers', supplierRoutes);
 app.use('/api/inventory', inventoryRoutes);
 
 app.use('/api/employees', employeeRoutes);
-app.use('/api/categories', categoryRoutes);
+app.use('/api/category', categoryRoutes);
 
 
 // Login route

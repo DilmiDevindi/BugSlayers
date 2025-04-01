@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const AddEmployee = ({ onEmployeeAdded }) => {
+const AddEmployee = () => {
   const [name, setName] = useState('');
   const [department, setDepartment] = useState('');
   const [email, setEmail] = useState('');
@@ -12,7 +12,6 @@ const AddEmployee = ({ onEmployeeAdded }) => {
     try {
       const newEmployee = { name, department, email };
       await axios.post('http://localhost:5000/api/employees', newEmployee);
-      onEmployeeAdded();
       setName('');
       setDepartment('');
       setEmail('');
