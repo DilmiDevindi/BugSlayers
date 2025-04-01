@@ -1,5 +1,5 @@
 import ShoppingHeader from "./header";
-
+import {Outlet} from "react-router-dom";
 
 
 
@@ -9,7 +9,7 @@ function ShoppigLayout () {
             {/*common header*/}
             <ShoppingHeader/>
             <main className="flex flex-col w-full">
-            <Outlet/>
+            <Outlet />
             </main>
         </div>
     );
