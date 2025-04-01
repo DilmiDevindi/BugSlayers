@@ -58,7 +58,7 @@ const AddCustomer = () => {
 
   return (
     <div className="container mt-4">
-      <h4><FontAwesomeIcon icon={faPlusSquare} className="addCus" />Add New Customer</h4>
+      <h4 className='addCusTitle'><FontAwesomeIcon icon={faPlusSquare} className="addCus" />Add New Customer</h4>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="name" className="form-label">Name</label>

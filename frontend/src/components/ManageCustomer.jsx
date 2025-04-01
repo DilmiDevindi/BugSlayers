@@ -5,7 +5,6 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUsers } from "@fortawesome/free-solid-svg-icons"; 
 
-
 const ManageCustomer = () => {
   const [customers, setCustomers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -17,12 +16,11 @@ const ManageCustomer = () => {
     fetchCustomers();
   }, []);
 
-  // Fetch customers from the backend
   const fetchCustomers = async () => {
     setLoading(true);
     try {
       const response = await axios.get('http://localhost:5000/api/customers');
-      setCustomers(response.data.reverse()); // Show latest first
+      setCustomers(response.data.reverse());
     } catch (error) {
       console.error('Error fetching customers:', error);
       alert('Failed to fetch customers');
@@ -30,7 +28,6 @@ const ManageCustomer = () => {
     setLoading(false);
   };
 
-  // Search function
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
@@ -43,7 +40,6 @@ const ManageCustomer = () => {
     customer.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Delete a customer
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this customer?')) return;
     try {
@@ -55,19 +51,11 @@ const ManageCustomer = () => {
     }
   };
 
-  // Edit a customer
   const handleEdit = (customer) => {
     setEditingCustomer(customer._id);
-    setFormData({
-      _id: customer._id,
-      name: customer.name,
-      address: customer.address,
-      contact: customer.contact,
-      email: customer.email,
-    });
+    setFormData({ ...customer });
   };
 
-  // Update customer details
   const handleUpdate = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.address || !formData.contact || !formData.email) {
@@ -79,14 +67,13 @@ const ManageCustomer = () => {
       setEditingCustomer(null);
       setFormData({ _id: '', name: '', address: '', contact: '', email: '' });
       fetchCustomers();
-      alert('Customer updated successfully.');
+      alert('Successfully updated customer!');
     } catch (error) {
       console.error('Error updating customer:', error);
       alert('Failed to update customer');
     }
   };
 
-  // Handle form input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -94,7 +81,7 @@ const ManageCustomer = () => {
 
   return (
     <div className="container1">
-      <h3><FontAwesomeIcon icon={faUsers} className="cus-icon"/>Manage Customers</h3>
+      <h4 className="manage-title"><FontAwesomeIcon icon={faUsers} className="cus-icon" /> Manage Customers</h4>
       <input
         type="text"
         className="form-control mb-3"
@@ -126,18 +113,14 @@ const ManageCustomer = () => {
                     <td>{customer.contact}</td>
                     <td>{customer.email}</td>
                     <td>
-                      <button className="btn1" onClick={() => handleEdit(customer)}>
-                      <FaEdit/>
-                      </button>
-                      <button className="btn2" onClick={() => handleDelete(customer._id)}>
-                      <FaTrash/>
-                      </button>
+                      <button className="btn1" onClick={() => handleEdit(customer)}><FaEdit/></button>
+                      <button className="btn2" onClick={() => handleDelete(customer._id)}><FaTrash/></button>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6" className="text-center text-danger">Customer Not Found</td>
+                  <td colSpan="6" className="text-center text-danger">Customer Not Found!</td>
                 </tr>
               )}
             </tbody>
@@ -146,27 +129,32 @@ const ManageCustomer = () => {
       )}
 
       {editingCustomer && (
-        <form onSubmit={handleUpdate} className="container1 mt-4">
-          <h4>Edit Customer</h4>
-          <div className="mb-3">
-            <label htmlFor="name" className="form-label1">Name</label>
-            <input type="text" className="form-control" id="name" name="name" value={formData.name} onChange={handleChange} required />
+        <>
+          <div className="dark-overlay"></div>
+          <div className="edit-form-container">
+            <form onSubmit={handleUpdate}>
+            <h4 className="edit-title"><FaEdit className="edit-icon" /> Edit Customer</h4>
+              <div className="mb-3">
+                <label htmlFor="name">Name</label>
+                <input type="text" name="name" value={formData.name} onChange={handleChange} required />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="address">Address</label>
+                <input type="text" name="address" value={formData.address} onChange={handleChange} required />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="contact">Contact</label>
+                <input type="number" name="contact" value={formData.contact} onChange={handleChange} required />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="email">Email</label>
+                <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+              </div>
+              <button type="submit" className="btnUpdate">Update</button>
+              <button type="button" className="btnCancle" onClick={() => setEditingCustomer(null)}>Cancel</button>
+            </form>
           </div>
-          <div className="mb-3">
-            <label htmlFor="address" className="form-label1">Address</label>
-            <input type="text" className="form-control" id="address" name="address" value={formData.address} onChange={handleChange} required />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="contact" className="form-label1">Contact</label>
-            <input type="number" className="form-control" id="contact" name="contact" value={formData.contact} onChange={handleChange} required />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="email" className="form-label1">Email</label>
-            <input type="email" className="form-control" id="email" name="email" value={formData.email} onChange={handleChange} required />
-          </div>
-          <button type="submit" className="btnUpdate">Update</button>
-          <button type="button" className="btnCancle" onClick={() => { setEditingCustomer(null); setFormData({ _id: '', name: '', address: '', contact: '', email: '' }); }}>Cancel</button>
-        </form>
+        </>
       )}
     </div>
   );
