@@ -52,7 +52,7 @@ const AddCustomer = () => {
       }
     } catch (error) {
       console.error("Error Details:", error.response?.data || error.message);
-      alert("Error adding customer. Please check the console for details.");
+      alert("This email is existing. Please try again with a different email.");
     }
   };
 
@@ -100,7 +100,7 @@ const AddCustomer = () => {
             className="form-control"
             id="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value.toLowerCase())}
             required
           />
         </div>

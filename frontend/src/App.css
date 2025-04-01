@@ -232,8 +232,9 @@ h4{
   font-size: 16px;
   border-radius: 5px;
   cursor: pointer;
-  width: 30%;
-  margin-right: 20px;
+  width: 20%;
+  margin-right: 10px;
+  height: 40px;
 }
 
 .btnUpdate:hover { 
@@ -248,13 +249,16 @@ h4{
   font-size: 16px;
   border-radius: 5px;
   cursor: pointer;
-  width: 30%;
+  width: 20%;
+  height: 40px;
 }
 
 
 .btnCancle:hover { 
   background: #9c0312; 
 }
+
+
 
 
 

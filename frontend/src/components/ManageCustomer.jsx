@@ -120,7 +120,7 @@ const ManageCustomer = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6" className="text-center text-danger">Customer Not Found!</td>
+                  <td colSpan="6" className="text-center text-danger">No Matching Customer Found!</td>
                 </tr>
               )}
             </tbody>
