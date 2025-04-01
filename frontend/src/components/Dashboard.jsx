@@ -5,16 +5,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../App.css'; // Assuming you'll put custom styles here
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { Card} from 'react-bootstrap';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import axios from 'axios';
 
 // Register components
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
-
 const Dashboard = () => {
   const [totalSuppliers, setTotalSuppliers] = useState(0);
   const [totalInventory, setTotalInventory] = useState(0);
   const [totalEmployees, setTotalEmployees] = useState(0);
+  const [totalCategories, setTotalCategory] = useState(0);
 
   useEffect(() => {
     fetchData();
@@ -29,6 +27,10 @@ const Dashboard = () => {
       // Get total inventory items
       const inventoryResponse = await axios.get('http://localhost:5000/api/inventory');
       setTotalInventory(inventoryResponse.data.length);
+
+      // Get total inventory items
+      const categoryResponse = await axios.get('http://localhost:5000/api/inventory');
+      setTotalCategory(categoryResponse.data.length);
 
       // Get total employees and employee data
       const employeesResponse = await axios.get('http://localhost:5000/api/employees');
@@ -73,6 +75,14 @@ const Dashboard = () => {
                     <Card.Body>
                       <Card.Title>Total Employees</Card.Title>
                       <Card.Text>{totalEmployees}</Card.Text>
+                    </Card.Body>
+                  </Card>
+                </div>
+                <div className="col-md-3">
+                  <Card className="custom-card-3 text-center mb-4">
+                    <Card.Body>
+                      <Card.Title>Total Categories</Card.Title>
+                      <Card.Text>{totalCategories}</Card.Text>
                     </Card.Body>
                   </Card>
                 </div>
