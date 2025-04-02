@@ -9,8 +9,7 @@
   z-index: 1000; /* Keeps sidebar on top */
 }
 
-
-.sidebar a {
+.sidebar a { 
   color: #fff;
   display: block;
   padding: 15px;
@@ -24,7 +23,7 @@
   background-color: #495057;
 }
 
-/*sidebar */
+/* Sidebar */
 .custom-heading {
   margin-top: 12px;
   margin-bottom: 20px;
@@ -33,14 +32,14 @@
 /* Navbar */
 .navbar {
   height: 60px;
-  width: calc(100% - 198px); /* Ensure width adjusts based on sidebar width */
+  width: calc(100% - 220px); /* Ensure width adjusts based on sidebar width */
   background-color: #343a40;
   color: #fff;
   display: flex;
   padding: 0 20px;
   position: fixed;
   top: 0;
-  left: 198px; /* Offset to accommodate sidebar width */
+  left: 220px; /* Offset to accommodate sidebar width */
   z-index: 1000;
 }
 
@@ -61,36 +60,32 @@
   padding-left: 20px;
   padding-right: 20px;
 }
-/* App.css */
 
 /* Background color for Cards */
 .custom-card-1 {
-  background-color: #09425b; /* Light grey background */
-  border: 1px solid #dee2e6; /* Light border */
+  background-color: #09425b;
+  border: 1px solid #dee2e6;
 }
 .custom-card-2 {
-  background-color: #296a29; /* Light grey background */
-  border: 1px solid #dee2e6; /* Light border */
+  background-color: #296a29;
+  border: 1px solid #dee2e6;
 }
 .custom-card-3 {
-  background-color: #802929; /* Light grey background */
-  border: 1px solid #dee2e6; /* Light border */
+  background-color: #802929;
+  border: 1px solid #dee2e6;
 }
 
-
-
 .card-title {
-  font-size: 15px; /* Font size for the Card Title */
-  color: #fff; /* Maintain the white text for readability */
-  font-weight: bold; /* Make it bold for emphasis */
+  font-size: 15px;
+  color: #fff;
+  font-weight: bold;
 }
 
 .card-text {
-  font-size: 15px; /* Font size for the Card Text */
-  color: #fff; /* Maintain consistent color with the title */
-  font-weight: normal; /* Keep normal weight for distinction */
+  font-size: 15px;
+  color: #fff;
+  font-weight: normal;
 }
-
 
 @media (min-width: 768px) {
   .offset-md-2 {
@@ -98,29 +93,27 @@
   }
 }
 
-
-/*Manage Customer css*/
-.btn1{
+/* Manage Customer CSS */
+.btn1 {
   color: rgb(7, 35, 250);
   border: none;
 }
 
-.btn1:hover{
+.btn1:hover {
   color: rgb(2, 13, 94); 
 }
 
-.btn2{
-  
+.btn2 {
   color: rgb(251, 7, 7);
   margin-left: 5px;
   border: none;
 }
 
-.btn2:hover{
+.btn2:hover {
   color: rgb(156, 6, 6);
 }
 
-.cus-icon{
+.cus-icon {
   color: #0b4383;
   margin-right: 10px;
   width: 20px;
@@ -128,27 +121,21 @@
   margin-top: 20px;
 }
 
-h3{
+h3 {
   color: #062ea7;
   font-size: 18px;
   font-weight: bold;
   margin-top: -15px;
 }
 
-td text-center{
-  color: #e10909;
-}
-
-h4{
+h4 {
   color: #1208ab;
   font-size: 18px;
-  
 }
 
-.form-label1{
+.form-label1 {
   font-weight: bold;
 }
-
 
 .edit-title {
   display: flex;
@@ -158,26 +145,18 @@ h4{
   color: #0b4383;
 }
 
-/*Add Customer css*/
-.addCus{
+/* Add Customer CSS */
+.addCus {
   color: #0b4383;
   margin-right: 10px;
 }
 
-.addCusTitle{
+.addCusTitle {
   color: #0b4383;
   font-size: 18px;
   font-weight: bold;
-  
 }
 
-.cus-icon {
-  font-size: 18px;
-  color: #043870;
-  margin-bottom: 20px;
-}
-
-/*Manage Customer css*/
 .dark-overlay {
   position: fixed;
   top: 0;
@@ -187,6 +166,7 @@ h4{
   background: rgba(28, 21, 21, 0.6);
   z-index: 999;
 }
+
 .manage-title {
   display: flex;
   align-items: center; 
@@ -194,10 +174,11 @@ h4{
   color: #043870;
   font-weight: bold;
 }
+
 .edit-form-container {
   position: fixed;
   top: 50%;
-  left: 55%;
+  left: 50%;
   transform: translate(-50%, -50%);
   background: #fff;
   padding: 20px;
@@ -233,7 +214,7 @@ h4{
   font-size: 16px;
   border-radius: 5px;
   cursor: pointer;
-  width: 20%;
+  width: 45%;
   margin-right: 10px;
   height: 40px;
 }
@@ -242,7 +223,7 @@ h4{
   background: #077f07; 
 }
 
-.edit-form-container .btnCancle {
+.edit-form-container .btnCancel {
   background: #c05014;
   color: white;
   border: none;
@@ -250,195 +231,12 @@ h4{
   font-size: 16px;
   border-radius: 5px;
   cursor: pointer;
-  width: 20%;
+  width: 45%;
   height: 40px;
 }
 
-
-.btnCancle:hover { 
+.btnCancel:hover { 
   background: #9c0312; 
-}
-
-/*inventory*/
-.container-i {
-  background-color: #f8f9fa;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  width: 50%;
-}
-
-.card-i {
-  width: 100%;
-  max-width: 500px;
-  padding: 20px;
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
-  border-radius: 12px;
-  background-color: #ffffff;
-}
-
-.form-title-i {
-  font-size: 16px;
-  font-weight: bold;
-  color: #333;
-  background-color: #f8f9fa;
-  padding: 10px 15px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 15px;
-}
-
-.form-icon-i {
-  font-size: 22px;
-  margin-right: 8px;
-  color: #007bff;
-  height: 40px;
-}
-
-
-
-.form-group-i {
-  margin-bottom: 15px;
-}
-
-.form-control-i {
-  border: 1px solid #ced4da;
-  border-radius: 8px;
-  padding: 12px;
-  font-size: 16px;
-  width: 100%;
-  transition: all 0.3s ease;
-}
-
-.form-control-i:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
-  outline: none;
-}
-
-.form-row-i {
-  display: flex;
-  gap: 10px;
-  justify-content: space-between;
-}
-
-.input-icon-i {
-  display: flex;
-  align-items: center;
-  position: relative;
-}
-
-.input-icon-i .icon {
-  position: absolute;
-  left: 12px;
-  font-size: 16px;
-  color: #555;
-}
-
-.input-icon-i input {
-  padding-left: 30px;
-}
-
-.btn-primary-i {
-  width: 40%;
-  height: 40px;
-  padding: 8px;
-  font-weight: bold;
-  background-color: #007bff;
-  color: #fff;
-  border-radius: 8px;
-}
-
-.btn-primary-i:hover {
-  background-color: #0056b3;
-}
-
-.btn-success-i {
-  width: 90%;
-  font-weight: bold;
-  padding: 12px;
-  background-color: #007bff;
-  color: #fff;
-  border-radius: 8px;
-}
-
-.btn-success-i:hover {
-  background-color: #007bff;
-}
-
-.alert-danger-i {
-  font-size: 14px;
-  padding: 10px;
-  text-align: center;
-  background-color: #f8d7da;
-  border-color: #f5c6cb;
-  color: #721c24;
-}
-
-
-/*ManageInventories Styles*/
-.inventory-container {
-  background-color: #f8f9fa;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  width: 100%;
-}
-
-.inventory-title {
-  font-size: 16px;
-  font-weight: bold;
-  color: #333;
-  background-color: #f8f9fa;
-  padding: 10px 15px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 15px;
-}
-
-.inventory-title-icon {
-  font-size: 22px;
-  margin-right: 8px;
-  color: #007bff;
-  height: 40px;
-}
-
-.inventory-table-container {
-  width: 100%;
-}
-
-.inventory-table {
-  width: 100%;
-  background: white;
-  border-radius: 8px;
-  border-collapse: collapse;
-}
-
-.inventory-table th, .inventory-table td {
-  padding: 5px;
-  font-size: 14px;
-}
-
-.inventory-table tbody tr:hover {
-  background-color: #f1f1f1;
-}
-
-.inventory-edit-icon {
-  font-size: 16px;
-  margin-right: 8px;
-  color: #ffc107;
-  height: 40px;
-}
-
-.inventory-delete-icon {
-  font-size: 16px;
-  margin-right: 8px;
-  color: #dc3545;
-  height: 40px;
 }
 
 .no-items {
@@ -447,4 +245,3 @@ h4{
   color: #666;
   padding: 20px;
 }
-
