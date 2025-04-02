@@ -7,7 +7,9 @@ const bodyParser = require('body-parser');
 const User = require('./models/User'); // Ensure this path is correct
 const supplierRoutes = require('./routes/supplierRoutes'); // Ensure this path is correct
 const inventoryRoutes = require('./routes/inventoryRoutes');
-const employeeRoutes = require('./routes/employeeRoutes');
+const customerRoutes = require('./routes/customerRoutes');
+ // Ensure this path is correct
+ // Ensure this path is correct
 
 const app = express();
 const PORT = 5000;
@@ -36,10 +38,7 @@ app.use('/api/suppliers', supplierRoutes);
 
 app.use('/api/inventory', inventoryRoutes);
 
-
-// Routes
-app.use('/api/employees', employeeRoutes);
-
+app.use('/api/customers', customerRoutes); // Ensure this path is correct
 
 // Login route
 app.post('/api/login', async (req, res) => {
