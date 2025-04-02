@@ -33,8 +33,6 @@ function App() {
           <Route path="suppliers/edit/:id" element={<EditSupplier />} />
           <Route path="inventory/add" element={<AddInventoryItem />} />
           <Route path="inventory/add1" element={<ManageInventories />} />
-          <Route path="Employeess/add" element={<AddEmployee/>}/>
-          <Route path="Employees/manage" element={<ManageEmployee/>}/>
         </Route>
       </Routes>
     </Router>

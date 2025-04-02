@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBarsProgress, faEdit, faRemove } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 
 const ManageSuppliers = () => {
@@ -41,8 +43,10 @@ const ManageSuppliers = () => {
   };
 
   return (
-    <div className="container mt-5">
-      <h2 className="text-center mb-4">Manage Suppliers</h2>
+    <div className="container-fluid mt-5 supplier-container">
+      <div className='supplier-title'>
+        <span className='supplier-title-icon'><FontAwesomeIcon icon={faBarsProgress} /></span> Manage Supplier
+      </div>
 
       {/* Search & Filter Form */}
       <div className="card p-3 mb-3">
@@ -66,7 +70,7 @@ const ManageSuppliers = () => {
         </div>
 
         {/* Toggle Table Visibility Button */}
-        <div className="text-center">
+        <div className="table-responsive supplier-table-container">
           <button className="btn btn-info" onClick={() => setShowTable(!showTable)}>
             {showTable ? 'Hide Table' : 'View Table'}
           </button>
@@ -75,7 +79,7 @@ const ManageSuppliers = () => {
 
       {/* Table Display */}
       {showTable && suppliers.length > 0 ? (
-        <table className="table table-bordered table-striped w-100">
+        <table className="table table-striped table-bordered supplier-table">
           <thead className="table-dark">
             <tr>
               <th>Date</th>

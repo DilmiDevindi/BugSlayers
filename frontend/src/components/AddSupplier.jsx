@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSquarePlus, faDollarSign } from '@fortawesome/free-solid-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 
@@ -7,7 +9,7 @@ const AddSupplier = () => {
     date: new Date().toISOString().split('T')[0],
     supplierName: '',
     phone: '',
-    phone2: '', // Optional second phone number
+    phone2: '',
     fax: '',
     email: '',
     address: '',
@@ -15,9 +17,7 @@ const AddSupplier = () => {
     paymentTerms: '',
   });
 
-  const validatePhoneNumber = (number) => {
-    return /^\d{10}$/.test(number); // Must be exactly 10 digits
-  };
+  const validatePhoneNumber = (number) => /^\d{10}$/.test(number);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,12 +28,12 @@ const AddSupplier = () => {
     }
 
     if (!validatePhoneNumber(supplier.phone)) {
-      alert('Primary Contact Number must be exactly 10 digits and contain only numbers.');
+      alert('Primary Contact Number must be exactly 10 digits.');
       return;
     }
 
     if (supplier.phone2 && !validatePhoneNumber(supplier.phone2)) {
-      alert('Secondary Contact Number must be exactly 10 digits and contain only numbers if entered.');
+      alert('Secondary Contact Number must be exactly 10 digits.');
       return;
     }
 
@@ -56,60 +56,38 @@ const AddSupplier = () => {
     }
   };
 
-  const handlePhoneChange = (e) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
-    if (/^\d{0,10}$/.test(value)) {
-      setSupplier({ ...supplier, [name]: value });
-    } else {
-      alert('Phone Number must contain only numbers and cannot exceed 10 digits.');
-    }
+    setSupplier({ ...supplier, [name]: value });
   };
 
   return (
-    <div className="container mt-5">
-      <h2>Add Supplier</h2>
+    <div className="container form-container" style={{ maxWidth: '50%' }}>
+      <div className='text-center' style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '20px' }}>
+        <FontAwesomeIcon icon={faSquarePlus} /> Add Supplier
+      </div>
+
       <form onSubmit={handleSubmit} autoComplete="off">
-        <div className="mb-3">
+        <div className="form-group">
           <label className="form-label">Date</label>
-          <input
-            type="date"
-            className="form-control"
-            value={supplier.date}
-            onChange={(e) => setSupplier({ ...supplier, date: e.target.value })}
-            required
-            autoComplete="off"
-          />
+          <input type="date" className="form-control" name="date" value={supplier.date} onChange={handleInputChange} required />
         </div>
 
         {[{ label: "Supplier Name", key: "supplierName" }, 
           { label: "Contact Number (Primary)", key: "phone", required: true }, 
           { label: "Contact Number (Secondary)", key: "phone2", required: false }, 
-          { label: "Fax Number", key: "fax", required: false }, 
+          { label: "Fax Number", key: "fax" }, 
           { label: "Email Address", key: "email" }, 
           { label: "Address", key: "address" }].map(field => (
-          <div key={field.key} className="mb-3">
+          <div key={field.key} className="form-group">
             <label className="form-label">{field.label}</label>
-            <input
-              type="text"
-              className="form-control"
-              name={field.key}
-              value={supplier[field.key]}
-              onChange={field.key.includes('phone') ? handlePhoneChange : (e) => setSupplier({ ...supplier, [field.key]: e.target.value })}
-              {...(field.required === false ? {} : { required: true })}
-              autoComplete="off"
-            />
+            <input type="text" className="form-control" name={field.key} value={supplier[field.key]} onChange={handleInputChange} required={field.required || false} />
           </div>
         ))}
 
-        <div className="mb-3">
+        <div className="form-group">
           <label className="form-label">Supply Products</label>
-          <select
-            className="form-control"
-            value={supplier.supplyProducts}
-            onChange={(e) => setSupplier({ ...supplier, supplyProducts: e.target.value })}
-            required
-            autoComplete="off"
-          >
+          <select className="form-control" name="supplyProducts" value={supplier.supplyProducts} onChange={handleInputChange} required>
             <option value="" disabled>Select a product</option>
             <option value="Mattress">Mattress</option>
             <option value="Cupboard">Cupboard</option>
@@ -123,15 +101,9 @@ const AddSupplier = () => {
           </select>
         </div>
 
-        <div className="mb-3">
-          <label className="form-label">Payment Method</label>
-          <select
-            className="form-control"
-            value={supplier.paymentTerms}
-            onChange={(e) => setSupplier({ ...supplier, paymentTerms: e.target.value })}
-            required
-            autoComplete="off"
-          >
+        <div className="form-group">
+          <label className="form-label"><FontAwesomeIcon icon={faDollarSign} /> Payment Method</label>
+          <select className="form-control" name="paymentTerms" value={supplier.paymentTerms} onChange={handleInputChange} required>
             <option value="" disabled>Select a payment method</option>
             <option value="Cash">Cash</option>
             <option value="Card">Card</option>
