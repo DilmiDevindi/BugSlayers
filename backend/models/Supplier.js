@@ -6,7 +6,9 @@ const SupplierSchema = new mongoose.Schema({
   email: String,
   address: String,
   supplyProducts: String,
-  paymentTerms: String
+  paymentTerms: String,
+  
 });
 
 module.exports = mongoose.model('Supplier', SupplierSchema);
+

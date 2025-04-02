@@ -33,9 +33,11 @@ function App() {
           <Route path="suppliers/edit/:id" element={<EditSupplier />} />
           <Route path="inventory/add" element={<AddInventoryItem />} />
           <Route path="inventory/add1" element={<ManageInventories />} />
+
           <Route path="customers/add" element={<AddCustomer />} />
           <Route path="customers/manage" element={<ManageCustomer />} />
           {/* Add other nested routes here */}
+
         </Route>
       </Routes>
     </Router>

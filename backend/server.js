@@ -4,12 +4,11 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
-const User = require('./models/User'); // Ensure this path is correct
-const supplierRoutes = require('./routes/supplierRoutes'); // Ensure this path is correct
+const User = require('./models/User'); 
+const supplierRoutes = require('./routes/supplierRoutes'); 
 const inventoryRoutes = require('./routes/inventoryRoutes');
 const customerRoutes = require('./routes/customerRoutes');
- // Ensure this path is correct
- // Ensure this path is correct
+
 
 const app = express();
 const PORT = 5000;
@@ -38,7 +37,9 @@ app.use('/api/suppliers', supplierRoutes);
 
 app.use('/api/inventory', inventoryRoutes);
 
-app.use('/api/customers', customerRoutes); // Ensure this path is correct
+
+app.use('/api/customers', customerRoutes); 
+
 
 // Login route
 app.post('/api/login', async (req, res) => {
