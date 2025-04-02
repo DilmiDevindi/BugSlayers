@@ -5,8 +5,10 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 const User = require('./models/User'); // Ensure this path is correct
+const supplierRoutes = require('./routes/supplierRoutes'); // Ensure this path is correct
 const inventoryRoutes = require('./routes/inventoryRoutes');
 const employeeRoutes = require('./routes/employeeRoutes');
+const categoryRoutes = require('./routes/categoryRoutes'); // Fix: Ensure this is the correct filename
 
 const app = express();
 const PORT = 5000;
@@ -31,10 +33,12 @@ mongoose.connect('mongodb://127.0.0.1:27017/mern-vite-app', {
 
 
 // Routes
+app.use('/api/suppliers', supplierRoutes);
 
 app.use('/api/inventory', inventoryRoutes);
 
-
+app.use('/api/employees', employeeRoutes);
+app.use('/api/category', categoryRoutes);
 
 
 // Login route
