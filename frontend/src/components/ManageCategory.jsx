@@ -4,26 +4,33 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBarsProgress, faEdit, faRemove } from '@fortawesome/free-solid-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const ManageCategories = () => {
-  const [categories, setCategories] = useState([]);
+const ManageCategory = () => {
+  const [category, setCategory] = useState([]);
   const [search, setSearch] = useState('');
   const [editCategory, setEditCategory] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchCategories();
+    fetchCategory();
   }, []);
 
-  const fetchCategories = async () => {
+  const fetchCategory = async () => {
     setLoading(true);
     setError('');
     try {
-      const response = await axios.get('http://localhost:5000/api/categories');
-      setCategories(response.data.reverse());
+      const response = await axios.get('http://localhost:5000/api/category');
+      const groupedCategory = response.data.reduce((acc, category) => {
+        if (!acc[category.categorytName]) {
+          acc[category.categoryName] = { ...category };
+        } 
+        return acc;
+      }, {});
+
+      setCategory(Object.values(groupedCategory).reverse());
     } catch (err) {
-      setError('Error fetching categories');
-      console.error('Error fetching categories:', err);
+      setError('Error fetching inventory items');
+      console.error('Error fetching inventory items:', err);
     } finally {
       setLoading(false);
     }
@@ -33,8 +40,8 @@ const ManageCategories = () => {
     if (!window.confirm('Are you sure you want to delete this category?')) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/categories/${id}`);
-      fetchCategories(); // Refresh list after deletion
+      await axios.delete(`http://localhost:5000/api/inventory/${id}`);
+      fetchCategory(); // Refresh list after deletion
       alert('Category deleted successfully!');
     } catch (err) {
       setError('Error deleting category');
@@ -49,24 +56,24 @@ const ManageCategories = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:5000/api/categories/${editCategory._id}`, editCategory);
-      fetchCategories(); // Refresh after update
+      await axios.put(`http://localhost:5000/api/category/${editCategory._id}`, editCategory);
+      fetchCategory(); // Refresh after update
       setEditCategory(null);
-      alert('Category updated successfully!');
+      alert('Item updated successfully!');
     } catch (err) {
       setError('Error updating category');
       console.error('Error updating category:', err);
     }
   };
 
-  const filteredCategories = categories.filter((category) =>
+  const filteredCategory = category.filter((category) =>
     category.categoryName.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
-    <div className="container-fluid mt-4 category-container">
-      <div className='category-title'>
-        <span className='category-title-icon'><FontAwesomeIcon icon={faBarsProgress} /></span> Manage Categories
+    <div className="container-fluid mt-4 inventory-container">
+      <div className='inventory-title'>
+        <span className='inventory-title-icon'><FontAwesomeIcon icon={faBarsProgress} /></span> Manage Inventory
       </div>
       {error && <div className="alert alert-danger">{error}</div>}
 
@@ -75,18 +82,18 @@ const ManageCategories = () => {
           <input
             type="text"
             className="form-control mb-3"
-            placeholder="Search categories..."
+            placeholder="Search items..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
       </div>
 
-      <div className="table-responsive category-table-container">
+      <div className="table-responsive inventory-table-container">
         {loading ? (
           <div>Loading...</div>
-        ) : filteredCategories.length === 0 ? (
-          <div className='no-items'>No categories found</div>
+        ) : filteredCategory.length === 0 ? (
+          <div className='no-category'>No category found</div>
         ) : (
           <table className="table table-striped table-bordered category-table">
             <thead>
@@ -97,15 +104,15 @@ const ManageCategories = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredCategories.map((category, index) => (
+              {filteredCategory.map((category, index) => (
                 <tr key={category._id}>
                   <td>{index + 1}</td>
-                  <td>{category.categoryName}</td>
+                  <td>{category.categorytName}</td>
                   <td>
-                    <span className='category-edit-icon' onClick={() => handleEdit(category)}>
+                    <span className='inventory-edit-icon' onClick={() => handleEdit(category)}>
                       <FontAwesomeIcon icon={faEdit} />
                     </span>
-                    <span className='category-delete-icon' onClick={() => handleDelete(category._id)}>
+                    <span className='inventory-delete-icon' onClick={() => handleDelete(category._id)}>
                       <FontAwesomeIcon icon={faRemove} />
                     </span>
                   </td>
@@ -121,17 +128,32 @@ const ManageCategories = () => {
           <h4>Edit Category</h4>
           <form onSubmit={handleUpdate}>
             <div className="mb-3">
-              <label className="form-label">Category Name</label>
+              <label  className="form-label">Catelog Name</label>
               <input
                 type="text"
                 className="form-control"
-                value={editCategory.categoryName}
+
+                value={editCategory.productName}
                 onChange={(e) =>
-                  setEditCategory({ ...editCategory, categoryName: e.target.value })
+                  setEditCategory({  })
                 }
                 required
               />
             </div>
+            <div className="mb-3">
+              <label className="form-label">Category</label>
+              <input
+                type="text"
+                className="form-control"
+                
+                value={editCategory.category}
+                onChange={(e) =>
+                  setEditCategory({ ...editCategory })
+                }
+                required
+              />
+            </div>
+            
             <button type="submit" className="btn btn-success">Update Category</button>
             <button
               type="button"
@@ -147,4 +169,4 @@ const ManageCategories = () => {
   );
 };
 
-export default ManageCategories;
+export default ManageCategory;
