@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css'; // Import Bootstrap Icons
@@ -6,9 +6,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css'; // Import Bootstrap Icons
 const Sidebar = () => {
   const [isSuppliersOpen, setIsSuppliersOpen] = useState(false); 
   const [isInventoryOpen, setIsInventoryOpen] = useState(false); 
-  const [isEmployeesOpen,setIsEmployeesOpen] =  useState(false); 
-
-
+  const [isCustomersOpen, setIsCustomersOpen] = useState(false); // New state for Customers dropdown 
 
   const toggleSuppliersDropdown = () => {
     setIsSuppliersOpen(!isSuppliersOpen);
@@ -17,10 +15,11 @@ const Sidebar = () => {
   const toggleInventoryDropdown = () => {
     setIsInventoryOpen(!isInventoryOpen);
   };
-  
-  const  toggleEmployeesDropdown = () => {
-    setIsEmployeesOpen(!isEmployeesOpen);
-  };
+ 
+  const toggleCustomersDropdown = () => {
+    setIsCustomersOpen(!isCustomersOpen);
+  }
+  // New function to toggle Customers dropdown
 
   return (
     <div className="bg-dark text-white vh-100 p-3">
@@ -85,31 +84,34 @@ const Sidebar = () => {
           )}
         </li>
         
-        {/* Employees Dropdown */}
-        <li className="nav-item mb-3">
-          <button 
-            className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
-            onClick={toggleEmployeesDropdown}
-            style={{ cursor: 'pointer' }}>
-            <i className="bi bi-receipt me-2"></i> Employees
-            <i className={`bi ${isEmployeesOpen ? 'bi-chevron-up' : 'bi-chevron-down'} ms-auto`}></i>
-          </button>
+      
 
-          {isEmployeesOpen && (
-            <ul className="nav flex-column ms-3">
-              <li className="nav-item mb-2">
-                <Link to="/dashboard/Employeess/add" className="nav-link text-white">
-                  Add Employees
-                </Link>
-              </li>
-              <li className="nav-item mb-2">
-                <Link to="/dashboard/Employees/manage" className="nav-link text-white">
-                  Manage Employees
-                </Link>
-              </li>
-            </ul>
-          )}
-        </li>
+        {/* Customers Dropdown */}
+<li className="nav-item mb-3">
+  <button 
+    className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
+    onClick={toggleCustomersDropdown}
+    style={{ cursor: 'pointer' }}>
+    <i className="bi bi-receipt me-2"></i> Customers
+    <i className={`bi ${isCustomersOpen ? 'bi-chevron-up' : 'bi-chevron-down'} ms-auto`}></i>
+  </button>
+
+  {isCustomersOpen && (
+    <ul className="nav flex-column ms-3">
+      <li className="nav-item mb-2">
+        <Link to="/dashboard/customers/add" className="nav-link text-white">
+          Add Customers
+        </Link>
+      </li>
+      <li className="nav-item mb-2">
+        <Link to="/dashboard/customers/manage" className="nav-link text-white">
+          Manage Customers
+        </Link>
+      </li>
+    </ul>
+  )}
+</li>
+
       </ul>
     </div>
   );
