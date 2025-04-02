@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Login.css'; // Import CSS file
@@ -19,7 +19,7 @@ const Login = () => {
       }
     // eslint-disable-next-line no-unused-vars
     } catch (error) {
-      alert('Login failed');
+      alert('Login failed',error);
     }
   };
 
@@ -49,7 +49,7 @@ const Login = () => {
             required
           />
         </div>
-        <button type="submit" className="btn btn-primary">Login</button>
+        <button type="submit" className="btn">Login</button>
       </form>
       <p>Don&apos;t have an account? <a href="/signup">Sign up</a></p>
     </div>
