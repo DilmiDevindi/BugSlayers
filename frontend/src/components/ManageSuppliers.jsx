@@ -1,12 +1,10 @@
 
-import React, { useState, useEffect } from 'react';
-
 // components/ManageSuppliers.js
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBarsProgress, faEdit, faRemove } from '@fortawesome/free-solid-svg-icons';
+import { faBarsProgress } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 
 const ManageSuppliers = () => {
@@ -88,7 +86,8 @@ const ManageSuppliers = () => {
             <tr>
               <th>Date</th>
               <th>Supplier Name</th>
-              <th>Phone</th>
+              <th>Phone1</th>
+              <th>Phone2</th>
               <th>Fax</th>
               <th>Email</th>
               <th>Address</th>
@@ -102,7 +101,8 @@ const ManageSuppliers = () => {
               <tr key={supplier._id}>
                 <td>{supplier.date}</td>
                 <td>{supplier.supplierName}</td>
-                <td>{supplier.phone}</td>
+                <td>{supplier.phone1}</td>
+                <td>{supplier.phone2}</td>
                 <td>{supplier.fax || '-'}</td>
                 <td>{supplier.email}</td>
                 <td>{supplier.address}</td>

@@ -10,7 +10,8 @@ const EditSupplier = () => {
   const [supplier, setSupplier] = useState({
     date: new Date().toISOString().split('T')[0], // Default to today's date
     supplierName: '',
-    phone: '',
+    phone1: '',
+    phone2:'',
     fax: '',
     email: '',
     address: '',
@@ -47,7 +48,7 @@ const EditSupplier = () => {
     e.preventDefault();
 
     // Validate phone number length if entered
-    if (supplier.phone && supplier.phone.length !== 10) {
+    if (supplier.phone1 && supplier.phone2.length !== 10) {
       alert('Phone number must be exactly 10 digits.');
       return;
     }
@@ -100,12 +101,23 @@ const EditSupplier = () => {
 
         {/* Phone Number */}
         <div className="mb-3">
-          <label className="form-label">Phone</label>
+          <label className="form-label">Phone1</label>
           <input
-            type="text"
+            type="int"
             className="form-control"
-            name="phone"
-            value={supplier.phone}
+            name="phone1"
+            value={supplier.phone1}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label">Phone2</label>
+          <input
+            type="int"
+            className="form-control"
+            name="phone2"
+            value={supplier.phone2}
             onChange={handleChange}
           />
         </div>

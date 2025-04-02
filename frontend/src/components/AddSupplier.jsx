@@ -1,7 +1,7 @@
 
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSquarePlus, faDollarSign } from '@fortawesome/free-solid-svg-icons';
+import { faSquarePlus } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
@@ -64,13 +64,13 @@ const AddSupplier = () => {
   };
 
   return (
-    <div className="container form-container" style={{ maxWidth: '50%' }}>
+    <div className="container-i form-container-i" style={{ maxWidth: '50%' }}>
       <div className='text-center' style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '20px' }}>
         <FontAwesomeIcon icon={faSquarePlus} /> Add Supplier
       </div>
 
       <form onSubmit={handleSubmit} autoComplete="off">
-        <div className="form-group">
+        <div className="form-group-i">
           <label className="form-label">Date</label>
           <input type="date" className="form-control" name="date" value={supplier.date} onChange={handleInputChange} required />
         </div>
@@ -81,13 +81,13 @@ const AddSupplier = () => {
           { label: "Fax Number", key: "fax" }, 
           { label: "Email Address", key: "email" }, 
           { label: "Address", key: "address" }].map(field => (
-          <div key={field.key} className="form-group">
+          <div key={field.key} className="form-group-i">
             <label className="form-label">{field.label}</label>
             <input type="text" className="form-control" name={field.key} value={supplier[field.key]} onChange={handleInputChange} required={field.required || false} />
           </div>
         ))}
 
-        <div className="form-group">
+        <div className="form-group-i">
           <label className="form-label">Supply Products</label>
           <select className="form-control" name="supplyProducts" value={supplier.supplyProducts} onChange={handleInputChange} required>
             <option value="" disabled>Select a product</option>
@@ -103,8 +103,8 @@ const AddSupplier = () => {
           </select>
         </div>
 
-        <div className="form-group">
-          <label className="form-label"><FontAwesomeIcon icon={faDollarSign} /> Payment Method</label>
+        <div className="form-group-i">
+          <label className="form-label-i"><FontAwesomeIcon icon /> Payment Method</label>
           <select className="form-control" name="paymentTerms" value={supplier.paymentTerms} onChange={handleInputChange} required>
             <option value="" disabled>Select a payment method</option>
             <option value="Cash">Cash</option>
@@ -112,7 +112,7 @@ const AddSupplier = () => {
           </select>
         </div>
 
-        <button type="submit" className="btn btn-primary">Add Supplier</button>
+        <button type="submit" className="btn btn-primary-i">Add Supplier</button>
       </form>
     </div>
   );
