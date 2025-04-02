@@ -37,9 +37,9 @@ router.delete('/:id', async (req, res) => {
 });
 
 // Route to update a category by ID
-router.put('/:id', async (req, res) => {
+router.put('/api/category/:id', async (req, res) => {
         const { id } = req.params;
-        const { categoryame } = req.body;
+        const { categoryName } = req.body;
         try {
         const updatedCategory = await Category.findByIdAndUpdate(id, 
             { categoryName }, 

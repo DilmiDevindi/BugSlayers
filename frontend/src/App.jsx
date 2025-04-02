@@ -14,7 +14,7 @@ import ManageInventories from './components/ManageInventories'; // Ensure the pa
 import AddEmployee from './components/AddCustomer';
 import ManageEmployee from './components/ManageEmployee';
 import AddCategory from "./components/AddCategory";
-import ManageCategories from "./components/ManageCategories";
+import ManageCategories from "./components/ManageCategory";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
