@@ -9,9 +9,7 @@ import axios from 'axios';
 
 // Register components
 const Dashboard = () => {
-  const [totalSuppliers, setTotalSuppliers] = useState(0);
   const [totalInventory, setTotalInventory] = useState(0);
-  const [totalEmployees, setTotalEmployees] = useState(0);
   const [totalCategories, setTotalCategory] = useState(0);
 
   useEffect(() => {
@@ -20,9 +18,6 @@ const Dashboard = () => {
 
   const fetchData = async () => {
     try {
-      // Get total suppliers
-      const suppliersResponse = await axios.get('http://localhost:5000/api/suppliers');
-      setTotalSuppliers(suppliersResponse.data.length);
 
       // Get total inventory items
       const inventoryResponse = await axios.get('http://localhost:5000/api/inventory');
@@ -31,10 +26,6 @@ const Dashboard = () => {
       // Get total inventory items
       const categoryResponse = await axios.get('http://localhost:5000/api/inventory');
       setTotalCategory(categoryResponse.data.length);
-
-      // Get total employees and employee data
-      const employeesResponse = await axios.get('http://localhost:5000/api/employees');
-      setTotalEmployees(employeesResponse.data.length);
      
     } catch (error) {
       console.error('Error fetching dashboard data:', error.message || error);
@@ -55,26 +46,10 @@ const Dashboard = () => {
 
               <div className="row mt-5">
                 <div className="col-md-3">
-                  <Card className="custom-card-1 text-center mb-4">
-                    <Card.Body>
-                      <Card.Title>Total Suppliers</Card.Title>
-                      <Card.Text>{totalSuppliers}</Card.Text>
-                    </Card.Body>
-                  </Card>
-                </div>
-                <div className="col-md-3">
                   <Card className="custom-card-2 text-center mb-4">
                     <Card.Body>
                       <Card.Title>Total Inventory</Card.Title>
                       <Card.Text>{totalInventory}</Card.Text>
-                    </Card.Body>
-                  </Card>
-                </div>
-                <div className="col-md-3">
-                  <Card className="custom-card-3 text-center mb-4">
-                    <Card.Body>
-                      <Card.Title>Total Employees</Card.Title>
-                      <Card.Text>{totalEmployees}</Card.Text>
                     </Card.Body>
                   </Card>
                 </div>

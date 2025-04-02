@@ -6,13 +6,8 @@ import Signup from './components/Signup'; // Ensure the path is correct
 import Dashboard from './components/Dashboard'; // Ensure the path is correct
 import Layout from './components/Layout'; // Ensure the path is correct
 import './App.css';
-import AddSupplier from './components/AddSupplier'; // Ensure the path is correct
-import ManageSuppliers from './components/ManageSuppliers'; // Ensure the path is correct
-import EditSupplier from './components/EditSupplier'; // Ensure the path is correct
 import AddInventoryItem from './components/AddInventoryItem'; // Ensure the path is correct
 import ManageInventories from './components/ManageInventories'; // Ensure the path is correct
-import AddEmployee from './components/AddCustomer';
-import ManageEmployee from './components/ManageEmployee';
 import AddCategory from "./components/AddCategory";
 import ManageCategories from "./components/ManageCategories";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -29,13 +24,8 @@ function App() {
         <Route path="/dashboard" element={<Layout />}>
           {/* Nested routes under /dashboard */}
           <Route index element={<Dashboard />} /> {/* Default route for /dashboard */}
-          <Route path="suppliers/add" element={<AddSupplier />} />
-          <Route path="suppliers/manage" element={<ManageSuppliers />} />
-          <Route path="suppliers/edit/:id" element={<EditSupplier />} />
           <Route path="inventory/add" element={<AddInventoryItem />} />
           <Route path="inventory/add1" element={<ManageInventories />} />
-          <Route path="Employeess/add" element={<AddEmployee/>}/>
-          <Route path="Employees/manage" element={<ManageEmployee/>}/>
           <Route path="category/add" element={<AddCategory />} />
           <Route path="category/add1" element={<ManageCategories />} />
         </Route>

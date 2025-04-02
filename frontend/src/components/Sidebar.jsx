@@ -4,23 +4,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css'; // Import Bootstrap Icons
 
 const Sidebar = () => {
-  const [isSuppliersOpen, setIsSuppliersOpen] = useState(false); 
   const [isInventoryOpen, setIsInventoryOpen] = useState(false); 
-  const [isCustomerOpen,setIsCustomerOpen] =  useState(false); 
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
-
-
-  const toggleSuppliersDropdown = () => {
-    setIsSuppliersOpen(!isSuppliersOpen);
-  };
 
   const toggleInventoryDropdown = () => {
     setIsInventoryOpen(!isInventoryOpen);
   };
   
-  const  toggleCustomerDropdown = () => {
-    setIsCustomerOpen(!isCustomerOpen);
-  };
 
   const toggleCategoryDropdown = () => {
     setIsCategoryOpen(!isCategoryOpen);
@@ -36,32 +26,6 @@ const Sidebar = () => {
           </Link>
         </li>
 
-        
-        {/* Suppliers Dropdown */}
-        <li className="nav-item mb-3">
-          <button 
-            className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
-            onClick={toggleSuppliersDropdown}
-            style={{ cursor: 'pointer' }}>
-            <i className="bi bi-truck me-2"></i> Suppliers
-            <i className={`bi ${isSuppliersOpen ? 'bi-chevron-up' : 'bi-chevron-down'} ms-auto`}></i>
-          </button>
-
-          {isSuppliersOpen && (
-            <ul className="nav flex-column ms-3">
-              <li className="nav-item mb-2">
-                <Link to="/dashboard/suppliers/add" className="nav-link text-white">
-                  Add Supplier
-                </Link>
-              </li>
-              <li className="nav-item mb-2">
-                <Link to="/dashboard/suppliers/manage" className="nav-link text-white">
-                  Manage Suppliers
-                </Link>
-              </li>
-            </ul>
-          )}
-        </li>
 
         {/* Inventory Dropdown */}
         <li className="nav-item mb-3">
@@ -115,31 +79,6 @@ const Sidebar = () => {
           )}
         </li>
         
-        {/* Customer Dropdown */}
-        <li className="nav-item mb-3">
-          <button 
-            className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
-            onClick={toggleCustomerDropdown}
-            style={{ cursor: 'pointer' }}>
-            <i className="bi bi-receipt me-2"></i> Customer
-            <i className={`bi ${isCustomerOpen ? 'bi-chevron-up' : 'bi-chevron-down'} ms-auto`}></i>
-          </button>
-
-          {isCustomerOpen && (
-            <ul className="nav flex-column ms-3">
-              <li className="nav-item mb-2">
-                <Link to="/dashboard/Customer/add" className="nav-link text-white">
-                  Add Customer
-                </Link>
-              </li>
-              <li className="nav-item mb-2">
-                <Link to="/dashboard/Customer/manage" className="nav-link text-white">
-                  Manage Customer
-                </Link>
-              </li>
-            </ul>
-          )}
-        </li>
       </ul>
     </div>
   );
