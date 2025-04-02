@@ -1,247 +1,74 @@
-/* Sidebar Styling */
-.sidebar {
-  height: 100vh; /* Full height */
-  position: fixed;
-  background-color: #343a40;
-  width: 220px; /* Fixed sidebar width */
-  top: 0;
-  left: 0;
-  z-index: 1000; /* Keeps sidebar on top */
-}
-
-.sidebar a { 
+/* Manage Supplier Buttons */
+.btn-warning {
+  background-color: #ff9900;
+  border: none;
   color: #fff;
-  display: block;
-  padding: 15px;
-  text-decoration: none;
-  font-size: 16px;
-  margin-top: 40px;
-  padding-top: 80px;
+  display: flex;
+  align-items: center;
 }
 
-.sidebar a:hover {
-  background-color: #495057;
+.btn-warning:hover {
+  background-color: #e68900;
 }
 
-/* Sidebar */
-.custom-heading {
-  margin-top: 12px;
+.btn-danger {
+  background-color: #ff4d4d;
+  border: none;
+  color: #fff;
+  display: flex;
+  align-items: center;
+}
+
+.btn-danger:hover {
+  background-color: #ff1a1a;
+}
+
+.btn i {
+  margin-right: 5px;
+}
+
+/* Centering Add Supplier Form */
+.form-container-i {
+  max-width: 600px;
+  margin: 0 auto; /* Center the form horizontally */
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-label {
+  font-weight: bold;
+}
+
+.form-group-i {
   margin-bottom: 20px;
 }
 
-/* Navbar */
-.navbar {
-  height: 60px;
-  width: calc(100% - 220px); /* Ensure width adjusts based on sidebar width */
-  background-color: #343a40;
-  color: #fff;
-  display: flex;
-  padding: 0 20px;
-  position: fixed;
-  top: 0;
-  left: 220px; /* Offset to accommodate sidebar width */
-  z-index: 1000;
-}
-
-.navbar a {
-  color: #fff;
-  margin-left: 15px;
-  text-decoration: none;
-}
-
-.navbar a:hover {
-  color: #ccc;
-}
-
-/* Content Area */
-.content {
-  margin-left: 220px; /* Offset for the sidebar */
-  padding-top: 80px;  /* Offset for the navbar */
-  padding-left: 20px;
-  padding-right: 20px;
-}
-
-/* Background color for Cards */
-.custom-card-1 {
-  background-color: #09425b;
-  border: 1px solid #dee2e6;
-}
-.custom-card-2 {
-  background-color: #296a29;
-  border: 1px solid #dee2e6;
-}
-.custom-card-3 {
-  background-color: #802929;
-  border: 1px solid #dee2e6;
-}
-
-.card-title {
-  font-size: 15px;
-  color: #fff;
-  font-weight: bold;
-}
-
-.card-text {
-  font-size: 15px;
-  color: #fff;
-  font-weight: normal;
-}
-
-@media (min-width: 768px) {
-  .offset-md-2 {
-      margin-left: 10.66666667%;
-  }
-}
-
-/* Manage Customer CSS */
-.btn1 {
-  color: rgb(7, 35, 250);
-  border: none;
-}
-
-.btn1:hover {
-  color: rgb(2, 13, 94); 
-}
-
-.btn2 {
-  color: rgb(251, 7, 7);
-  margin-left: 5px;
-  border: none;
-}
-
-.btn2:hover {
-  color: rgb(156, 6, 6);
-}
-
-.cus-icon {
-  color: #0b4383;
-  margin-right: 10px;
-  width: 20px;
-  height: 25px;
-  margin-top: 20px;
-}
-
-h3 {
-  color: #062ea7;
-  font-size: 18px;
-  font-weight: bold;
-  margin-top: -15px;
-}
-
-h4 {
-  color: #1208ab;
-  font-size: 18px;
-}
-
-.form-label1 {
-  font-weight: bold;
-}
-
-.edit-title {
-  display: flex;
-  align-items: center; 
-  gap: 8px;
-  font-weight: bold; 
-  color: #0b4383;
-}
-
-/* Add Customer CSS */
-.addCus {
-  color: #0b4383;
-  margin-right: 10px;
-}
-
-.addCusTitle {
-  color: #0b4383;
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.dark-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
+.btn-primary-i {
+  background-color: #007bff;
+  color: white;
   width: 100%;
-  height: 100%;
-  background: rgba(28, 21, 21, 0.6);
-  z-index: 999;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
 }
 
-.manage-title {
-  display: flex;
-  align-items: center; 
-  gap: 8px; 
-  color: #043870;
-  font-weight: bold;
+.btn-primary-i:hover {
+  background-color: #0056b3;
 }
 
-.edit-form-container {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  width: 400px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
-}
-
-.edit-form-container input {
+.form-control {
   width: 100%;
   padding: 8px;
-  margin: 5px 0;
+  margin-top: 5px;
+  border-radius: 5px;
   border: 1px solid #ccc;
-  border-radius: 5px;
 }
 
-.edit-form-container button {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  color: white;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-.edit-form-container .btnUpdate {
-  background: #2cce17;
-  color: white;
-  border: none;
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 5px;
-  cursor: pointer;
-  width: 45%;
-  margin-right: 10px;
-  height: 40px;
-}
-
-.btnUpdate:hover { 
-  background: #077f07; 
-}
-
-.edit-form-container .btnCancel {
-  background: #c05014;
-  color: white;
-  border: none;
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 5px;
-  cursor: pointer;
-  width: 45%;
-  height: 40px;
-}
-
-.btnCancel:hover { 
-  background: #9c0312; 
-}
-
-.no-items {
-  text-align: center;
-  font-size: 18px;
-  color: #666;
-  padding: 20px;
+.alert-danger {
+  margin-top: 5px;
+  color: red;
+  font-size: 12px;
 }
