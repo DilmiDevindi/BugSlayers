@@ -8,7 +8,6 @@ const User = require('./models/User'); // Ensure this path is correct
 const supplierRoutes = require('./routes/supplierRoutes'); // Ensure this path is correct
 const inventoryRoutes = require('./routes/inventoryRoutes');
 const employeeRoutes = require('./routes/employeeRoutes');
-const categoryRoutes = require('./routes/categoryRoute')
 
 const app = express();
 const PORT = 5000;
@@ -38,7 +37,7 @@ app.use('/api/suppliers', supplierRoutes);
 app.use('/api/inventory', inventoryRoutes);
 
 app.use('/api/employees', employeeRoutes);
-app.use('/api/category', categoryRoutes);
+
 
 
 // Login route

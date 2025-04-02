@@ -11,11 +11,11 @@ import ManageSuppliers from './components/ManageSuppliers'; // Ensure the path i
 import EditSupplier from './components/EditSupplier'; // Ensure the path is correct
 import AddInventoryItem from './components/AddInventoryItem'; // Ensure the path is correct
 import ManageInventories from './components/ManageInventories'; // Ensure the path is correct
-import AddEmployee from './components/AddEmployee';
+import AddEmployee from './components/AddCustomer';
 import ManageEmployee from './components/ManageEmployee';
 import AddCategory from "./components/AddCategory";
+import ManageCategories from "./components/ManageCategories";
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 
 function App() {
   return (
@@ -24,7 +24,7 @@ function App() {
         {/* Public Routes */}
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        
+
         {/* Protected Routes */}
         <Route path="/dashboard" element={<Layout />}>
           {/* Nested routes under /dashboard */}
@@ -37,6 +37,7 @@ function App() {
           <Route path="Employeess/add" element={<AddEmployee/>}/>
           <Route path="Employees/manage" element={<ManageEmployee/>}/>
           <Route path="category/add" element={<AddCategory />} />
+          <Route path="category/add1" element={<ManageCategories />} />
         </Route>
       </Routes>
     </Router>

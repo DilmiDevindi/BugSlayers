@@ -6,7 +6,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css'; // Import Bootstrap Icons
 const Sidebar = () => {
   const [isSuppliersOpen, setIsSuppliersOpen] = useState(false); 
   const [isInventoryOpen, setIsInventoryOpen] = useState(false); 
-  const [isEmployeesOpen,setIsEmployeesOpen] =  useState(false); 
+  const [isCustomerOpen,setIsCustomerOpen] =  useState(false); 
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
 
 
@@ -18,8 +18,8 @@ const Sidebar = () => {
     setIsInventoryOpen(!isInventoryOpen);
   };
   
-  const  toggleEmployeesDropdown = () => {
-    setIsEmployeesOpen(!isEmployeesOpen);
+  const  toggleCustomerDropdown = () => {
+    setIsCustomerOpen(!isCustomerOpen);
   };
 
   const toggleCategoryDropdown = () => {
@@ -106,30 +106,35 @@ const Sidebar = () => {
                   Add Category
                 </Link>
               </li>
+              <li className="nav-item mb-2">
+                <Link to="/dashboard/category/add1" className="nav-link text-white">
+                  Manage Category
+                </Link>
+              </li>
             </ul>
           )}
         </li>
         
-        {/* Employees Dropdown */}
+        {/* Customer Dropdown */}
         <li className="nav-item mb-3">
           <button 
             className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
-            onClick={toggleEmployeesDropdown}
+            onClick={toggleCustomerDropdown}
             style={{ cursor: 'pointer' }}>
-            <i className="bi bi-receipt me-2"></i> Employees
-            <i className={`bi ${isEmployeesOpen ? 'bi-chevron-up' : 'bi-chevron-down'} ms-auto`}></i>
+            <i className="bi bi-receipt me-2"></i> Customer
+            <i className={`bi ${isCustomerOpen ? 'bi-chevron-up' : 'bi-chevron-down'} ms-auto`}></i>
           </button>
 
-          {isEmployeesOpen && (
+          {isCustomerOpen && (
             <ul className="nav flex-column ms-3">
               <li className="nav-item mb-2">
-                <Link to="/dashboard/Employeess/add" className="nav-link text-white">
-                  Add Employees
+                <Link to="/dashboard/Customer/add" className="nav-link text-white">
+                  Add Customer
                 </Link>
               </li>
               <li className="nav-item mb-2">
-                <Link to="/dashboard/Employees/manage" className="nav-link text-white">
-                  Manage Employees
+                <Link to="/dashboard/Customer/manage" className="nav-link text-white">
+                  Manage Customer
                 </Link>
               </li>
             </ul>
