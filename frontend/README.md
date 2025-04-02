@@ -11,4 +11,3 @@ stock levels in real time, so the shop always knows what is available. The syste
 finances, making business management more efficient.This system saves time, reduces manual work, and helps
 the shop run smoothly.
 
-
