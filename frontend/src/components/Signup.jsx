@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Signup.css'; // Import CSS file
@@ -18,7 +18,7 @@ const Signup = () => {
         alert(response.data.message);
       }
     } catch (error) {
-      alert('Signup failed');
+      alert('Signup failed',error);
     }
   };
 

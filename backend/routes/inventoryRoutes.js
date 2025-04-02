@@ -14,15 +14,17 @@ router.get('/', async (req, res) => {
 
 // Route to add a new inventory item
 router.post('/add', async (req, res) => {
-  const { name, quantity, price } = req.body;
+  const { productName, category, quantity, buyingPrice, sellingPrice } = req.body;
   try {
-    const newItem = new InventoryItem({ name, quantity, price });
+    const newItem = new InventoryItem({ productName, category, quantity, buyingPrice, sellingPrice });
     await newItem.save();
     res.status(201).json(newItem);
   } catch (error) {
+    console.error("Error adding item:", error); // Log the error to the server
     res.status(500).json({ error: 'Error adding item' });
   }
 });
+
 
 
 // Get inventory count
@@ -37,11 +39,11 @@ router.get('/count', async (req, res) => {
 // Route to update an inventory item
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
-  const { name, quantity, price } = req.body;
+  const { productName, category, quantity, buyingPrice, sellingPrice} = req.body;
   try {
     const updatedItem = await InventoryItem.findByIdAndUpdate(
       id,
-      { name, quantity, price },
+      { productName, category, quantity, buyingPrice, sellingPrice },
       { new: true, runValidators: true }
     );
     res.json(updatedItem);
