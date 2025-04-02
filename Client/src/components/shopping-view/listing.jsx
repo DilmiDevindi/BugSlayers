@@ -1,7 +1,7 @@
 function ShoppingListing() {
-    return(
-        <div>Shopping view listing</div>
-    );
+  
+        return <div>Shopping view listing</div>
+   
 
     
 }

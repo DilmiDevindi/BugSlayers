@@ -1,19 +1,18 @@
-import ShoppingHeader from "./header";
-import {Outlet} from "react-router-dom";
+import ShoppingHeader from "./header"; // Ensure correct file path
+import { Outlet } from "react-router-dom";
 
 
-
-function ShoppigLayout () {
+function ShoppingLayout() {
     return(
         <div className="flex flex-col bg-white overflow-hidden">
-            {/*common header*/}
-            <ShoppingHeader/>
+            {/* common header*/}
+            <ShoppingHeader />
             <main className="flex flex-col w-full">
-            <Outlet />
+                <Outlet/>
             </main>
         </div>
     );
 
     
 }
-export default ShoppigLayout;
+export default ShoppingLayout;

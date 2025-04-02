@@ -1,8 +1,6 @@
 function ShoppingCheckout() {
-    return(
-        <div>Shopping view checkout</div>
-    );
-
+    return <div>Shopping view Checkout</div>
     
 }
+
 export default ShoppingCheckout;

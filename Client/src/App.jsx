@@ -13,19 +13,38 @@ import ShoppingListing from "./components/shopping-view/listing";
 import ShoppingCheckout from "./components/shopping-view/checkout";
 import ShoppingAccount from "./components/shopping-view/account";
 import NotFound from "./pages/not-found"; 
+import CheckAuth from "./components/common/check-auth";
+import UnauthPage from "./pages/unauth-page";
 
-function App() {
+
+function App(){
+  const isAuthenticated =true;
+  const user={
+    name:'Hiruni',
+    role:'admin',
+  };
+
+
   return (
     <div className="flex flex-col overflow-hidden bg-white">
       <Routes>
         {/* Auth Routes */}
-        <Route path="/auth" element={<AuthLayout />}>
+        <Route path="/auth" element={
+          <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+            <AuthLayout/>
+          </CheckAuth>
+        }>
           <Route path="login" element={<AuthLogin />} />
           <Route path="register" element={<AuthRegister />} />
         </Route>
 
         {/* Admin Routes */}
-        <Route path="/admin" element={<AdminLayout />}>
+        <Route path="/admin" element={
+        <CheckAuth isAuthenticated={isAuthenticated}user={user}>
+          <AdminLayout/>
+
+        </CheckAuth>
+         }>
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="products" element={<AdminProducts />} />
           <Route path="orders" element={<AdminOrders />} />
@@ -33,19 +52,23 @@ function App() {
         </Route>
 
         {/* Shopping Routes (with Index Route) */}
-        <Route path="/shop" element={<ShoppingLayout />}>
-          <Route index element={<ShoppingHome />} /> {/* Loads /shop/home by default */}
-import ShoppingListing from "./components/shopping-view/listing";
-<Route path="listing" element={<ShoppingListing />} /> 
+        <Route path="/shop" element={
+          <CheckAuth isAuthenticated={isAuthenticated}user={user} >
+            <ShoppingLayout />
+          </CheckAuth>
+        }>
+          <Route path="home" element={<ShoppingHome />} /> 
+          <Route path="listing" element={<ShoppingListing />} /> 
           <Route path="checkout" element={<ShoppingCheckout />} />
           <Route path="account" element={<ShoppingAccount />} />
         </Route>
 
         {/* Catch-All Route (404 Page) */}
         <Route path="*" element={<NotFound />} />
+        <Route path ="/unauth-page" element={<UnauthPage/>}/>
       </Routes>
     </div>
   );
 }
-
+ 
 export default App;
