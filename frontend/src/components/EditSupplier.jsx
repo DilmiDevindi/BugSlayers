@@ -1,4 +1,3 @@
-// components/EditSupplier.js
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -8,10 +7,10 @@ const EditSupplier = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [supplier, setSupplier] = useState({
-    date: new Date().toISOString().split('T')[0], // Default to today's date
+    date: '', // Initialize as empty, will be set later
     supplierName: '',
     phone1: '',
-    phone2:'',
+    phone2: '',
     fax: '',
     email: '',
     address: '',
@@ -24,7 +23,7 @@ const EditSupplier = () => {
       const fetchSupplier = async () => {
         try {
           const response = await axios.get(`http://localhost:5000/api/suppliers/${id}`);
-          setSupplier(response.data);
+          setSupplier({ ...response.data, date: new Date(response.data.date).toISOString().split('T')[0] });
         } catch (error) {
           console.error('Error fetching supplier:', error);
         }
@@ -35,24 +34,11 @@ const EditSupplier = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    // Ensure phone and fax are only numeric
-    if ((name === 'phone' || name === 'fax') && isNaN(value)) {
-      return;
-    }
-
     setSupplier({ ...supplier, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Validate phone number length if entered
-    if (supplier.phone1 && supplier.phone2.length !== 10) {
-      alert('Phone number must be exactly 10 digits.');
-      return;
-    }
-
     try {
       if (id) {
         await axios.put(`http://localhost:5000/api/suppliers/${id}`, supplier);
@@ -61,7 +47,7 @@ const EditSupplier = () => {
         await axios.post('http://localhost:5000/api/suppliers', supplier);
         alert('Supplier added successfully!');
       }
-      navigate('/dashboard/suppliers/manage'); // Redirect after successful update
+      navigate('/dashboard/suppliers/manage');
     } catch (error) {
       console.error('Error saving supplier:', error);
       alert('Error saving supplier. Please try again.');
@@ -99,22 +85,21 @@ const EditSupplier = () => {
           />
         </div>
 
-        {/* Phone Number */}
+        {/* Phone Numbers */}
         <div className="mb-3">
           <label className="form-label">Phone1</label>
           <input
-            type="int"
+            type="text"
             className="form-control"
             name="phone1"
             value={supplier.phone1}
             onChange={handleChange}
           />
         </div>
-
         <div className="mb-3">
           <label className="form-label">Phone2</label>
           <input
-            type="int"
+            type="text"
             className="form-control"
             name="phone2"
             value={supplier.phone2}
