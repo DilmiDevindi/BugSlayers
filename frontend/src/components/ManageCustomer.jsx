@@ -19,7 +19,7 @@ const ManageCustomer = () => {
   const fetchCustomers = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:5000/api/customers');
+      const response = await axios.get('http://localhost:5001/api/customers');
       setCustomers(response.data.reverse());
     } catch (error) {
       console.error('Error fetching customers:', error);
@@ -43,7 +43,7 @@ const ManageCustomer = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this customer?')) return;
     try {
-      await axios.delete(`http://localhost:5000/api/customers/${id}`);
+      await axios.delete(`http://localhost:5001/api/customers/${id}`);
       fetchCustomers();
     } catch (error) {
       console.error('Error deleting customer:', error);
@@ -63,7 +63,7 @@ const ManageCustomer = () => {
       return;
     }
     try {
-      await axios.put(`http://localhost:5000/api/customers/${editingCustomer}`, formData);
+      await axios.put(`http://localhost:5001/api/customers/${editingCustomer}`, formData);
       setEditingCustomer(null);
       setFormData({ _id: '', name: '', address: '', contact: '', email: '' });
       fetchCustomers();

@@ -22,7 +22,7 @@ const EditSupplier = () => {
     if (id) {
       const fetchSupplier = async () => {
         try {
-          const response = await axios.get(`http://localhost:5000/api/suppliers/${id}`);
+          const response = await axios.get(`http://localhost:5001/api/suppliers/${id}`);
           setSupplier({ ...response.data, date: new Date(response.data.date).toISOString().split('T')[0] });
         } catch (error) {
           console.error('Error fetching supplier:', error);
@@ -41,10 +41,10 @@ const EditSupplier = () => {
     e.preventDefault();
     try {
       if (id) {
-        await axios.put(`http://localhost:5000/api/suppliers/${id}`, supplier);
+        await axios.put(`http://localhost:5001/api/suppliers/${id}`, supplier);
         alert('Supplier updated successfully!');
       } else {
-        await axios.post('http://localhost:5000/api/suppliers', supplier);
+        await axios.post('http://localhost:5001/api/suppliers', supplier);
         alert('Supplier added successfully!');
       }
       navigate('/dashboard/suppliers/manage');

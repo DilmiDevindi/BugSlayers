@@ -19,7 +19,7 @@ const ManageInventories = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await axios.get('http://localhost:5000/api/inventory');
+      const response = await axios.get('http://localhost:5001/api/inventory');
       setItems(Array.isArray(response.data) ? response.data.reverse() : []);
     } catch (err) {
       setError('Error fetching inventory items');
@@ -33,7 +33,7 @@ const ManageInventories = () => {
     if (!window.confirm('Are you sure you want to delete this item?')) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/inventory/${id}`);
+      await axios.delete(`http://localhost:5001/api/inventory/${id}`);
       setItems((prevItems) => prevItems.filter((item) => item._id !== id)); // Optimistic update
       alert('Item deleted successfully!');
     } catch (err) {
@@ -49,7 +49,7 @@ const ManageInventories = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:5000/api/inventory/${editItem._id}`, editItem);
+      await axios.put(`http://localhost:5001/api/inventory/${editItem._id}`, editItem);
       setItems((prevItems) =>
       [editItem, ...prevItems.filter(item => item.id !== editItem._id)]
       ); // Optimistic update

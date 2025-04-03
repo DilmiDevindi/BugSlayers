@@ -61,7 +61,7 @@ const AddSupplier = () => {
     if (Object.values(errors).some((err) => err)) return;
 
     try {
-      await axios.post('http://localhost:5000/api/suppliers', supplier);
+      await axios.post('http://localhost:5001/api/suppliers', supplier);
       alert('Supplier added successfully');
       setSupplier({
         date: new Date().toISOString().split('T')[0],

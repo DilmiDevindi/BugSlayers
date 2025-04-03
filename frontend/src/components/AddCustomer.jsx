@@ -25,7 +25,7 @@ const AddCustomer = () => {
 
     try {
       // Check if customer already exists by email
-      const checkResponse = await axios.get('http://localhost:5000/api/customers');
+      const checkResponse = await axios.get('http://localhost:5001/api/customers');
       const existingCustomer = checkResponse.data.find(c => c.email === email);
       
       if (existingCustomer) {
@@ -37,7 +37,7 @@ const AddCustomer = () => {
 
       console.log("Sending new customer:", newCustomer); // Debugging log
 
-      const response = await axios.post('http://localhost:5000/api/customers', newCustomer, {
+      const response = await axios.post('http://localhost:5001/api/customers', newCustomer, {
         headers: { 'Content-Type': 'application/json' }
       });
 

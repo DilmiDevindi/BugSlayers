@@ -14,7 +14,7 @@ const ManageSuppliers = () => {
 
   const fetchSuppliers = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/suppliers', {
+      const response = await axios.get('http://localhost:5001/api/suppliers', {
         params: { search, filter, date: dateFilter } // Include date in query params
       });
       setSuppliers(response.data);
