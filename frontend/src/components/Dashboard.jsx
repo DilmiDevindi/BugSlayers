@@ -7,6 +7,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import { Card, Table } from 'react-bootstrap';
 import axios from 'axios';
 
+
 const Dashboard = () => {
   const [totalSuppliers, setTotalSuppliers] = useState(0);
   const [totalInventory, setTotalInventory] = useState(0);
