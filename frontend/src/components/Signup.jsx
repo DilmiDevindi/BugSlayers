@@ -1,30 +1,42 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import './Signup.css'; // Import CSS file
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import "./Signup.css"; // Import CSS file
 
 const Signup = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/signup', { email, password });
+      const response = await axios.post("http://localhost:5000/api/signup", {
+        email,
+        password,
+      });
+
       if (response.data.success) {
-        navigate('/');
+        navigate("/");
       } else {
         alert(response.data.message);
       }
     } catch (error) {
-      alert('Signup failed', error);
+      alert("Signup failed: " + (error.response?.data?.message || error.message));
     }
   };
 
   return (
     <div className="signup-page">
       <div className="container-wrapper-signup">
+        <div className="info-container"> {/* Fixed missing `<` */}
+          <img src="/furniture-log.png" alt="Furniture" className="login-image" />
+          <h1>Welcome To</h1>
+          <h3>New Sisira Furniture Management System</h3>
+          <p className="logpara">
+            Manage your furniture business with ease and efficiency, streamline operations.
+          </p>
+        </div>
         <div className="signup-container">
           <h2>Signup</h2>
           <form onSubmit={handleSignup}>
@@ -52,10 +64,6 @@ const Signup = () => {
             </div>
             <button type="submit" className="btn">Sign up</button>
           </form>
-        </div>
-        <div className="info-container">
-          <img src="/furniture-log.png" alt="Furniture" className="signup-image" />
-          <p className="logpara">Join us and manage your furniture business easily and effectively!</p>
         </div>
       </div>
     </div>

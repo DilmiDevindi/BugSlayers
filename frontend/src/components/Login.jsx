@@ -18,7 +18,6 @@ const Login = () => {
       } else {
         alert(response.data.message);
       }
-    // eslint-disable-next-line no-unused-vars
     } catch (error) {
       alert('Login failed', error);
     }
@@ -28,7 +27,7 @@ const Login = () => {
     <div className="login-page">
     <div className="container-wrapper-login">
       <div className="info-container">
-           <img src="/furniture-log.png" alt="Furniture" className="login-image" />
+          <img src="/furniture-log.png" alt="Furniture" className="login-image" />
         <h1>Welcome To</h1>
         <h3>New Sisira Furniture Management System</h3>
         <p className='logpara'>Manage your furniture business with ease and efficiency, streamline operations.</p>
