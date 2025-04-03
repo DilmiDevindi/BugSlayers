@@ -41,6 +41,7 @@ app.use('/api/employees', employeeRoutes);
 app.use('/api/category', categoryRoutes);
 
 
+
 // Login route
 app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
