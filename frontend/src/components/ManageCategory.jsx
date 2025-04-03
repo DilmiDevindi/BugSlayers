@@ -44,23 +44,28 @@ const ManageCategory = () => {
 
   const handleEdit = (category) => {
     console.log("Editing category:", category);
-    setEditCategory(category);
+    setEditCategory({ _id: category._id, categoryName: category.categoryName });
   };
+  
+  
 
   const handleUpdate = async (e) => {
     e.preventDefault();
     
     try {
       // Send the update request
-      await axios.put(`http://localhost:5000/api/category/${editCategory._id}`, editCategory);
+      await axios.put(`http://localhost:5000/api/category/${editCategory._id}`, {
+        categoryName: editCategory.categoryName
+      });
       fetchCategory();
-      setEditCategory(null);
+      setEditCategory(null); // Fix: Set it to null instead of calling an empty function
       alert('Category updated successfully!');
     } catch (err) {
       setError('Error updating category');
       console.error('Error updating category:', err);
     }
   };
+  
   
 
   const filteredCategory = category.filter((category) =>
@@ -131,9 +136,10 @@ const ManageCategory = () => {
                 type="text"
                 className="form-control"
                 value={editCategory.categoryName}
-                onChange={(e) =>
-                  setEditCategory({ ...editCategory, categoryName: e.target.value })
-                }
+                onChange={(e) => {
+                  setEditCategory((prev) => ({ ...prev, categoryName: e.target.value }));
+                }}
+                
                 required
               />
             </div>

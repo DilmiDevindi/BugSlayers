@@ -37,15 +37,16 @@ router.delete('/:id', async (req, res) => {
 });
 
 // Route to update a category by ID
-router.put('/api/category/:id', async (req, res) => {
+router.put('/:id', async (req, res) => {
         const { id } = req.params;
         const { categoryName } = req.body;
         try {
-        const updatedCategory = await Category.findByIdAndUpdate(id, 
+        const updateCategory = await Category.findByIdAndUpdate(
+            id, 
             { categoryName }, 
             { new: true, runValidators: true }
         );
-        res.json(updatedCategory); 
+        res.json(updateCategory); 
     } catch (error) {
         res.status(500).json({ error: 'Error updating category' });
     }
