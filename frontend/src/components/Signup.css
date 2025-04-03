@@ -1,46 +1,123 @@
-/* Signup.css */
+.signup-page {
+  background-image: url('../assets/background.avif'); /* Background image */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-.container {
-    max-width: 400px;
-    background-color: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #343a40;
-  }
-  
-  .form-label {
-    color: #495057;
-  }
-  
-  .form-control {
-    border-radius: 6px;
-    padding: 10px;
-  }
-  
-  .btn-primary {
-    width: 100%;
-    padding: 10px;
-    border-radius: 6px;
-    font-size: 16px;
-  }
-  
-  p {
-    text-align: center;
-    margin-top: 10px;
-  }
-  
-  p a {
-    color: #007bff;
-    text-decoration: none;
-  }
-  
-  p a:hover {
-    text-decoration: underline;
-  }
-  
+.container-wrapper-signup {
+  display: flex;
+  height: 100vh;
+  align-items: center;
+  width: 100%;
+}
+
+.signup-container {
+  width: 30%;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  height: 70vh;
+}
+
+h1 {
+  font-size: 30px;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #343a40;
+  margin-top: 40px;
+}
+
+h3 {
+  font-weight: bolder;
+  font-size: 25px;
+}
+
+.form-label {
+  color: #495057;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.btn {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+p {
+  text-align: center;
+  margin-top: 10px;
+}
+
+p a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+p a:hover {
+  text-decoration: underline;
+}
+
+.info-container {
+  width: 30%;
+  text-align: center;
+  padding: 20px;
+  background: #9db3ec;
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+  margin-left: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 15px;
+}
+
+.signup-image {
+  width: 80%;
+  height: 60%;
+}
+
+.logpara {
+  color: black;
+  font-size: 16px;
+  text-align: center;
+  font-weight: normal;
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  color: blue;
+  cursor: pointer;
+  text-decoration: underline;
+}

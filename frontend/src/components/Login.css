@@ -117,3 +117,11 @@ p a:hover {
   text-align: center;
   font-weight: normal;
 }
+
+.toggle-btn {
+  background: none;
+  border: none;
+  color: blue;
+  cursor: pointer;
+  text-decoration: underline;
+}
