@@ -93,8 +93,15 @@ const AddSupplier = () => {
       </div>
       <form onSubmit={handleSubmit} autoComplete="off">
         <div className="form-group-i">
-          <label className="form-label">Date</label>
-          <input type="date" className="form-control" name="date" value={supplier.date} onChange={handleInputChange} required />
+          <input 
+            type="date" 
+            className="form-control" 
+            name="date" 
+            value={supplier.date} 
+            onChange={handleInputChange} 
+            placeholder="Date"
+            required 
+          />
         </div>
 
         {[{ label: "Supplier Name", key: "supplierName" },
@@ -104,13 +111,13 @@ const AddSupplier = () => {
           { label: "Email Address", key: "email" },
           { label: "Address", key: "address" }].map(field => (
           <div key={field.key} className="form-group-i">
-            <label className="form-label">{field.label}</label>
             <input
               type="text"
               className="form-control"
               name={field.key}
               value={supplier[field.key]}
               onChange={handleInputChange}
+              placeholder={field.label}
               required={field.required || false}
             />
             {errors[field.key] && <div className="alert alert-danger">{errors[field.key]}</div>}
@@ -118,24 +125,31 @@ const AddSupplier = () => {
         ))}
 
         <div className="form-group-i">
-          <label className="form-label">Supply Products</label>
-          <select className="form-control" name="supplyProducts" value={supplier.supplyProducts} onChange={handleInputChange} required>
+          <select 
+            className="form-control" 
+            name="supplyProducts" 
+            value={supplier.supplyProducts} 
+            onChange={handleInputChange} 
+            required
+          >
             <option value="" disabled>Select a product</option>
             <option value="Mattress">Mattress</option>
             <option value="Cupboard">Cupboard</option>
-            <option value="Scupboard">Steel Melamine Cupboard</option>
             <option value="Chair">Chair</option>
-            <option value="Pchair">Plastic Chair</option>
             <option value="Table">Table</option>
-            <option value="Wtable">Writing Table</option>
             <option value="Iron Board">Iron Board</option>
-            <option value="Clothes Rack">Clothes Rack</option>
+            <option value="Clothes Rack">Clothing Rack</option>
           </select>
         </div>
 
         <div className="form-group-i">
-          <label className="form-label"><FontAwesomeIcon icon /> Payment Method</label>
-          <select className="form-control" name="paymentTerms" value={supplier.paymentTerms} onChange={handleInputChange} required>
+          <select 
+            className="form-control" 
+            name="paymentTerms" 
+            value={supplier.paymentTerms} 
+            onChange={handleInputChange} 
+            required
+          >
             <option value="" disabled>Select a payment method</option>
             <option value="Cash">Cash</option>
             <option value="Card">Card</option>

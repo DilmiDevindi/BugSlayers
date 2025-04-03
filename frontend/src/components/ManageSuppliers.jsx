@@ -9,13 +9,13 @@ const ManageSuppliers = () => {
   const [suppliers, setSuppliers] = useState([]);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('');
-  const [dateFilter] = useState(''); // Date filter state
+  const [dateFilter] = useState('');
   const [showTable, setShowTable] = useState(false);
 
   const fetchSuppliers = async () => {
     try {
       const response = await axios.get('http://localhost:5001/api/suppliers', {
-        params: { search, filter, date: dateFilter } // Include date in query params
+        params: { search, filter, date: dateFilter }
       });
       setSuppliers(response.data);
     } catch (error) {
@@ -33,10 +33,12 @@ const ManageSuppliers = () => {
     if (!window.confirm('Are you sure you want to delete this supplier?')) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/suppliers/${id}`);
-      setSuppliers(suppliers.filter(supplier => supplier._id !== id));
+      await axios.delete(`http://localhost:5001/api/suppliers/${id}`); // Fixed API URL
+      setSuppliers(prevSuppliers => prevSuppliers.filter(supplier => supplier._id !== id));
+      alert('Supplier deleted successfully!');
     } catch (error) {
       console.error('Error deleting supplier:', error.response ? error.response.data : error.message);
+      alert('Failed to delete supplier. Please try again.');
     }
   };
 
@@ -50,7 +52,7 @@ const ManageSuppliers = () => {
         <div className="mb-3">
           <input
             type="text"
-            className="form-control"
+            className="form-control-i"
             placeholder="Search by name..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -59,7 +61,7 @@ const ManageSuppliers = () => {
         <div className="mb-3">
           <input
             type="text"
-            className="form-control"
+            className="form-control-i"
             placeholder="Filter by products..."
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
@@ -75,7 +77,7 @@ const ManageSuppliers = () => {
 
       {showTable && suppliers.length > 0 ? (
         <table className="table table-striped table-bordered supplier-table">
-          <thead className="table-dark">
+          <thead className="table-white">
             <tr>
               <th>Date</th>
               <th>Supplier Name</th>
@@ -92,11 +94,11 @@ const ManageSuppliers = () => {
           <tbody>
             {suppliers.map(supplier => (
               <tr key={supplier._id}>
-                <td>{new Date(supplier.date).toLocaleDateString()}</td> {/* Format the date */}
+                <td>{new Date(supplier.date).toLocaleDateString()}</td>
                 <td>{supplier.supplierName}</td>
-                <td>{supplier.phone1}</td> {/* Change from phone1 to phone */}
-                <td>{supplier.phone2}</td> {/* Change from phone2 to phone2 */}
-                <td>{supplier.fax}</td> {/* Display '-' if fax is not available */}
+                <td>{supplier.phone1}</td>
+                <td>{supplier.phone2}</td>
+                <td>{supplier.fax || '-'}</td>
                 <td>{supplier.email}</td>
                 <td>{supplier.address}</td>
                 <td>{supplier.supplyProducts}</td>
@@ -104,10 +106,10 @@ const ManageSuppliers = () => {
                 <td>
                   <div className="d-flex gap-2">
                     <Link to={`/dashboard/suppliers/edit/${supplier._id}`} className="btn btn-warning">
-                      <FontAwesomeIcon icon={faEdit} /> 
+                      <FontAwesomeIcon icon={faEdit} />
                     </Link>
                     <button className="btn btn-danger" onClick={() => handleDelete(supplier._id)}>
-                      <FontAwesomeIcon icon={faTrash} /> 
+                      <FontAwesomeIcon icon={faTrash} />
                     </button>
                   </div>
                 </td>

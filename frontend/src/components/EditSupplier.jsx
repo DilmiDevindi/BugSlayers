@@ -7,7 +7,7 @@ const EditSupplier = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [supplier, setSupplier] = useState({
-    date: '', // Initialize as empty, will be set later
+    date: '',
     supplierName: '',
     phone1: '',
     phone2: '',
@@ -17,6 +17,7 @@ const EditSupplier = () => {
     supplyProducts: '',
     paymentTerms: ''
   });
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (id) {
@@ -32,148 +33,101 @@ const EditSupplier = () => {
     }
   }, [id]);
 
+  const validatePhoneNumber = (number) => /^\d{10}$/.test(number);
+
+  const validateFields = (name, value) => {
+    let error = '';
+    if (name === 'phone1' || name === 'phone2') {
+      value = value.replace(/\D/g, ''); // Remove non-numeric characters
+      if (value.length > 10) {
+        alert('Contact number must not exceed 10 digits');
+        value = value.slice(0, 10);
+      }
+      if (!validatePhoneNumber(value)) {
+        error = 'Contact number must be exactly 10 digits and numeric';
+      } else if (name === 'phone2' && value === supplier.phone1) {
+        error = 'Primary and Secondary Contact Numbers must not be the same';
+      }
+    }
+    setErrors((prev) => ({ ...prev, [name]: error }));
+    return value;
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setSupplier({ ...supplier, [name]: value });
+    const validatedValue = validateFields(name, value);
+    setSupplier({ ...supplier, [name]: validatedValue });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    for (let field in supplier) {
+      validateFields(field, supplier[field]);
+    }
+    if (Object.values(errors).some((err) => err)) return;
+
     try {
-      if (id) {
-        await axios.put(`http://localhost:5001/api/suppliers/${id}`, supplier);
-        alert('Supplier updated successfully!');
-      } else {
-        await axios.post('http://localhost:5001/api/suppliers', supplier);
-        alert('Supplier added successfully!');
-      }
+      await axios.put(`http://localhost:5001/api/suppliers/${id}`, supplier);
+      alert('Supplier updated successfully!');
       navigate('/dashboard/suppliers/manage');
     } catch (error) {
-      console.error('Error saving supplier:', error);
-      alert('Error saving supplier. Please try again.');
+      console.error('Error updating supplier:', error);
+      alert('Error updating supplier. Please try again.');
     }
   };
 
   return (
     <div className="container mt-5">
-      <h2>{id ? 'Edit Supplier' : 'Add New Supplier'}</h2>
+      <h2>Edit Supplier</h2>
       <form onSubmit={handleSubmit}>
-
-        {/* Date Field */}
         <div className="mb-3">
           <label className="form-label">Date</label>
-          <input
-            type="date"
-            className="form-control"
-            name="date"
-            value={supplier.date}
-            onChange={handleChange}
-            required
-          />
+          <input type="date" className="form-control" name="date" value={supplier.date} onChange={handleChange} required />
         </div>
 
-        {/* Supplier Name */}
         <div className="mb-3">
           <label className="form-label">Supplier Name</label>
-          <input
-            type="text"
-            className="form-control"
-            name="supplierName"
-            value={supplier.supplierName}
-            onChange={handleChange}
-            required
-          />
+          <input type="text" className="form-control" name="supplierName" value={supplier.supplierName} onChange={handleChange} required />
         </div>
 
-        {/* Phone Numbers */}
         <div className="mb-3">
           <label className="form-label">Phone1</label>
-          <input
-            type="text"
-            className="form-control"
-            name="phone1"
-            value={supplier.phone1}
-            onChange={handleChange}
-          />
+          <input type="text" className="form-control" name="phone1" value={supplier.phone1} onChange={handleChange} required />
+          {errors.phone1 && <div className="alert alert-danger">{errors.phone1}</div>}
         </div>
+
         <div className="mb-3">
           <label className="form-label">Phone2</label>
-          <input
-            type="text"
-            className="form-control"
-            name="phone2"
-            value={supplier.phone2}
-            onChange={handleChange}
-          />
+          <input type="text" className="form-control" name="phone2" value={supplier.phone2} onChange={handleChange} />
+          {errors.phone2 && <div className="alert alert-danger">{errors.phone2}</div>}
         </div>
 
-        {/* Fax Number */}
         <div className="mb-3">
           <label className="form-label">Fax</label>
-          <input
-            type="text"
-            className="form-control"
-            name="fax"
-            value={supplier.fax}
-            onChange={handleChange}
-          />
+          <input type="text" className="form-control" name="fax" value={supplier.fax} onChange={handleChange} />
         </div>
 
-        {/* Email */}
         <div className="mb-3">
           <label className="form-label">Email</label>
-          <input
-            type="email"
-            className="form-control"
-            name="email"
-            value={supplier.email}
-            onChange={handleChange}
-            required
-          />
+          <input type="email" className="form-control" name="email" value={supplier.email} onChange={handleChange} required />
         </div>
 
-        {/* Address */}
         <div className="mb-3">
           <label className="form-label">Address</label>
-          <input
-            type="text"
-            className="form-control"
-            name="address"
-            value={supplier.address}
-            onChange={handleChange}
-            required
-          />
+          <input type="text" className="form-control" name="address" value={supplier.address} onChange={handleChange} required />
         </div>
 
-        {/* Supply Products */}
         <div className="mb-3">
           <label className="form-label">Supply Products</label>
-          <input
-            type="text"
-            className="form-control"
-            name="supplyProducts"
-            value={supplier.supplyProducts}
-            onChange={handleChange}
-            required
-          />
+          <input type="text" className="form-control" name="supplyProducts" value={supplier.supplyProducts} onChange={handleChange} required />
         </div>
 
-        {/* Payment Terms */}
         <div className="mb-3">
           <label className="form-label">Payment Terms</label>
-          <input
-            type="text"
-            className="form-control"
-            name="paymentTerms"
-            value={supplier.paymentTerms}
-            onChange={handleChange}
-            required
-          />
+          <input type="text" className="form-control" name="paymentTerms" value={supplier.paymentTerms} onChange={handleChange} required />
         </div>
 
-        <button type="submit" className="btn btn-primary">
-          {id ? 'Update Supplier' : 'Add Supplier'}
-        </button>
+        <button type="submit" className="btn btn-primary">Update Supplier</button>
       </form>
     </div>
   );
