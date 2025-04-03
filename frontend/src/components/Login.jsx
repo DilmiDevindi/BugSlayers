@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './Login.css'; // Import CSS file
+import './Login.css'; 
+
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -11,20 +12,26 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/login', { email, password });
+      const response = await axios.post('http://localhost:5173/api/login', { email, password });
       if (response.data.success) {
         navigate('/dashboard');
       } else {
         alert(response.data.message);
       }
-    // eslint-disable-next-line no-unused-vars
     } catch (error) {
       alert('Login failed', error);
     }
   };
 
   return (
-    <div className="container-wrapper">
+    <div className="login-page">
+    <div className="container-wrapper-login">
+      <div className="info-container">
+          <img src="/furniture-log.png" alt="Furniture" className="login-image" />
+        <h1>Welcome To</h1>
+        <h3>New Sisira Furniture Management System</h3>
+        <p className='logpara'>Manage your furniture business with ease and efficiency, streamline operations.</p>
+      </div>
       <div className="login-container">
         <h2>Login</h2>
         <form onSubmit={handleLogin}>
@@ -54,9 +61,7 @@ const Login = () => {
         </form>
         <p>Don&apos;t have an account? <a href="/signup">Sign up</a></p>
       </div>
-      <div className="info-container">
-        <h1>New Sisira Furniture Management System</h1>
-      </div>
+    </div>
     </div>
   );
 };
