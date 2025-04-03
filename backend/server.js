@@ -11,7 +11,7 @@ const customerRoutes = require('./routes/customerRoutes');
 
 
 const app = express();
-const PORT = 5000;
+const PORT = 5001;
 const JWT_SECRET = 'your_jwt_secret_key';
 
 // Middleware
@@ -53,7 +53,7 @@ app.post('/api/login', async (req, res) => {
 
     const token = jwt.sign({ id: user._id }, JWT_SECRET);
     return res.json({ success: true, token });
-  } catch (err) {
+  } catch (error) {
     res.status(500).json({ success: false, message: 'Server error' });
   }
 });
