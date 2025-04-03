@@ -8,7 +8,7 @@ const AddSupplier = () => {
   const [supplier, setSupplier] = useState({
     date: new Date().toISOString().split('T')[0],
     supplierName: '',
-    phone: '',
+    phone1: '',
     phone2: '',
     fax: '',
     email: '',
@@ -20,16 +20,19 @@ const AddSupplier = () => {
 
   const validatePhoneNumber = (number) => /^\d{10}$/.test(number);
 
-  // Updated email validation to allow only Gmail addresses with a more proper structure
   const validateEmail = (email) => /^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(email);
 
   const validateFields = (name, value) => {
     let error = '';
-    if (name === 'phone' || name === 'phone2') {
-      value = value.replace(/\D/g, '').slice(0, 10);
+    if (name === 'phone1' || name === 'phone2') {
+      value = value.replace(/\D/g, '');
+      if (value.length > 10) {
+        alert('Contact number must not exceed 10 digits');
+        value = value.slice(0, 10);
+      }
       if (!validatePhoneNumber(value)) {
         error = 'Contact number must be exactly 10 digits and numeric';
-      } else if (name === 'phone2' && value === supplier.phone) {
+      } else if (name === 'phone2' && value === supplier.phone1) {
         error = 'Primary and Secondary Contact Numbers must not be the same';
       }
     }
@@ -51,7 +54,6 @@ const AddSupplier = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Trigger validation before submitting
     for (let field in supplier) {
       validateFields(field, supplier[field]);
     }
@@ -64,7 +66,7 @@ const AddSupplier = () => {
       setSupplier({
         date: new Date().toISOString().split('T')[0],
         supplierName: '',
-        phone: '',
+        phone1: '',
         phone2: '',
         fax: '',
         email: '',
@@ -96,7 +98,7 @@ const AddSupplier = () => {
         </div>
 
         {[{ label: "Supplier Name", key: "supplierName" },
-          { label: "Contact Number (Primary)", key: "phone", required: true },
+          { label: "Contact Number (Primary)", key: "phone1", required: true },
           { label: "Contact Number (Secondary)", key: "phone2", required: false },
           { label: "Fax Number", key: "fax" },
           { label: "Email Address", key: "email" },

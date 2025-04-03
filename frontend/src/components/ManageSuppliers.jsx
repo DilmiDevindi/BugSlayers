@@ -94,7 +94,7 @@ const ManageSuppliers = () => {
               <tr key={supplier._id}>
                 <td>{new Date(supplier.date).toLocaleDateString()}</td> {/* Format the date */}
                 <td>{supplier.supplierName}</td>
-                <td>{supplier.phone}</td> {/* Change from phone1 to phone */}
+                <td>{supplier.phone1}</td> {/* Change from phone1 to phone */}
                 <td>{supplier.phone2}</td> {/* Change from phone2 to phone2 */}
                 <td>{supplier.fax}</td> {/* Display '-' if fax is not available */}
                 <td>{supplier.email}</td>
