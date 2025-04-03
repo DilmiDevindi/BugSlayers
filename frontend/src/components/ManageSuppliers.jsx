@@ -17,7 +17,9 @@ const ManageSuppliers = () => {
       const response = await axios.get('http://localhost:5001/api/suppliers', {
         params: { search, filter, date: dateFilter }
       });
-      setSuppliers(response.data);
+      // Sort suppliers by date in ascending order
+      const sortedSuppliers = response.data.sort((a, b) => new Date(a.date) - new Date(b.date));
+      setSuppliers(sortedSuppliers);
     } catch (error) {
       console.error('Error fetching suppliers:', error.response ? error.response.data : error.message);
     }
@@ -97,9 +99,9 @@ const ManageSuppliers = () => {
                 <td>{new Date(supplier.date).toLocaleDateString()}</td>
                 <td>{supplier.supplierName}</td>
                 <td>{supplier.phone1}</td>
-                <td>{supplier.phone2}</td>
+                <td>{supplier.phone2 || '-'}</td>
                 <td>{supplier.fax || '-'}</td>
-                <td>{supplier.email}</td>
+                <td>{supplier.email || '-'}</td>
                 <td>{supplier.address}</td>
                 <td>{supplier.supplyProducts}</td>
                 <td>{supplier.paymentTerms}</td>

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { FaEdit } from 'react-icons/fa';  // Importing the Edit Icon from React Icons
 
 const EditSupplier = () => {
   const { id } = useParams();
@@ -77,58 +78,62 @@ const EditSupplier = () => {
   };
 
   return (
-    <div className="container mt-5">
-      <h2>Edit Supplier</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label className="form-label">Date</label>
-          <input type="date" className="form-control" name="date" value={supplier.date} onChange={handleChange} required />
-        </div>
+    <div className="container mt-5 d-flex justify-content-center">
+      <div className="col-md-6 border p-4 rounded">
+        <h2><FaEdit /> Edit Supplier</h2> {/* Added Font Awesome Icon */}
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label className="form-label">Date</label>
+            <input type="date" className="form-control" name="date" value={supplier.date} onChange={handleChange} required />
+          </div>
 
-        <div className="mb-3">
-          <label className="form-label">Supplier Name</label>
-          <input type="text" className="form-control" name="supplierName" value={supplier.supplierName} onChange={handleChange} required />
-        </div>
+          <div className="mb-3">
+            <label className="form-label">Supplier Name</label>
+            <input type="text" className="form-control" name="supplierName" value={supplier.supplierName} onChange={handleChange} required />
+          </div>
 
-        <div className="mb-3">
-          <label className="form-label">Phone1</label>
-          <input type="text" className="form-control" name="phone1" value={supplier.phone1} onChange={handleChange} required />
-          {errors.phone1 && <div className="alert alert-danger">{errors.phone1}</div>}
-        </div>
+          <div className="mb-3">
+            <label className="form-label">Phone1</label>
+            <input type="text" className="form-control" name="phone1" value={supplier.phone1} onChange={handleChange} required />
+            {errors.phone1 && <div className="alert alert-danger">{errors.phone1}</div>}
+          </div>
 
-        <div className="mb-3">
-          <label className="form-label">Phone2</label>
-          <input type="text" className="form-control" name="phone2" value={supplier.phone2} onChange={handleChange} />
-          {errors.phone2 && <div className="alert alert-danger">{errors.phone2}</div>}
-        </div>
+          <div className="mb-3">
+            <label className="form-label">Phone2</label>
+            <input type="text" className="form-control" name="phone2" value={supplier.phone2} onChange={handleChange} />
+            {errors.phone2 && <div className="alert alert-danger">{errors.phone2}</div>}
+          </div>
 
-        <div className="mb-3">
-          <label className="form-label">Fax</label>
-          <input type="text" className="form-control" name="fax" value={supplier.fax} onChange={handleChange} />
-        </div>
+          <div className="mb-3">
+            <label className="form-label">Fax</label>
+            <input type="text" className="form-control" name="fax" value={supplier.fax} onChange={handleChange} />
+          </div>
 
-        <div className="mb-3">
-          <label className="form-label">Email</label>
-          <input type="email" className="form-control" name="email" value={supplier.email} onChange={handleChange} required />
-        </div>
+          <div className="mb-3">
+            <label className="form-label">Email</label>
+            <input type="email" className="form-control" name="email" value={supplier.email} onChange={handleChange} />
+          </div>
 
-        <div className="mb-3">
-          <label className="form-label">Address</label>
-          <input type="text" className="form-control" name="address" value={supplier.address} onChange={handleChange} required />
-        </div>
+          <div className="mb-3">
+            <label className="form-label">Address</label>
+            <input type="text" className="form-control" name="address" value={supplier.address} onChange={handleChange} required />
+          </div>
 
-        <div className="mb-3">
-          <label className="form-label">Supply Products</label>
-          <input type="text" className="form-control" name="supplyProducts" value={supplier.supplyProducts} onChange={handleChange} required />
-        </div>
+          <div className="mb-3">
+            <label className="form-label">Supply Products</label>
+            <input type="text" className="form-control" name="supplyProducts" value={supplier.supplyProducts} onChange={handleChange} required />
+          </div>
 
-        <div className="mb-3">
-          <label className="form-label">Payment Terms</label>
-          <input type="text" className="form-control" name="paymentTerms" value={supplier.paymentTerms} onChange={handleChange} required />
-        </div>
+          <div className="mb-3">
+            <label className="form-label">Payment Terms</label>
+            <input type="text" className="form-control" name="paymentTerms" value={supplier.paymentTerms} onChange={handleChange} required />
+          </div>
 
-        <button type="submit" className="btn btn-primary">Update Supplier</button>
-      </form>
+          <div className="d-flex justify-content-center">
+            <button type="submit" className="btn btn-primary w-auto">Update Supplier</button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

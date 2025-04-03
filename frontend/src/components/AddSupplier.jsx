@@ -133,11 +133,12 @@ const AddSupplier = () => {
             required
           >
             <option value="" disabled>Select a product</option>
-            <option value="Mattress">Mattress</option>
+            <option value="Mattress">Mettress</option>
             <option value="Cupboard">Cupboard</option>
             <option value="Chair">Chair</option>
             <option value="Table">Table</option>
             <option value="Iron Board">Iron Board</option>
+            <option value="Carrom Board">Carrom Board</option>
             <option value="Clothes Rack">Clothing Rack</option>
           </select>
         </div>
