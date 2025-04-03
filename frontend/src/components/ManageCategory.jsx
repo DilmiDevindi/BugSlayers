@@ -42,8 +42,9 @@ const ManageCategory = () => {
     }
   };
 
-  const handleEdit = (item) => {
-    setEditCategory(item);
+  const handleEdit = (category) => {
+    console.log("Editing category:", category);
+    setEditCategory(category);
   };
 
   const handleUpdate = async (e) => {
@@ -52,15 +53,8 @@ const ManageCategory = () => {
     try {
       // Send the update request
       await axios.put(`http://localhost:5000/api/category/${editCategory._id}`, editCategory);
-
-      // Update the category list in the state immediately
-      setCategory((prevCategory) => 
-        prevCategory.map((cat) => 
-          cat._id === editCategory._id ? { ...cat, categoryName: editCategory.categoryName } : cat
-        )
-      );
-  
-      setEditCategory(null); // Close the edit form
+      fetchCategory();
+      setEditCategory(null);
       alert('Category updated successfully!');
     } catch (err) {
       setError('Error updating category');
