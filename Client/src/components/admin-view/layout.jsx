@@ -3,14 +3,15 @@ import AdminSideBar from "./sidebar";
 import AdminHeader from "./header";
 
 function AdminLayout() {
+  const [openSidebar,setOpenSidebar ] =useState(false)
   return (
     <div className="flex min-h-screen w-full">
       {/* Admin Sidebar */}
-      <AdminSideBar />
+      <AdminSideBar open={openSidebar} setOpen={setOpenSidebar}/>
       
       <div className="flex flex-1 flex-col">
         {/* Admin Header */}
-        <AdminHeader />
+        <AdminHeader setOpen={setOpenSidebar} />
         
         {/* Main Content */}
         <main className="flex-1 flex bg-muted/40 p-4 md:p-6">
