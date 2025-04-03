@@ -1,53 +1,70 @@
-// 2. routes/categoryRoutes.js
 const express = require('express');
 const router = express.Router();
 const Category = require('../models/Category');
 
+// Route to get all categories
 router.get('/', async (req, res) => {
     try {
-        const category = await Category.find();
-        res.json(category);
+        const categories = await Category.find();
+        res.json(categories);
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching category items'});
+        res.status(500).json({ error: 'Error fetching category items' });
     }
 });
 
-//Route to add a new category item
+// Route to add a new category item
 router.post('/add', async (req, res) => {
-        const { categoryName } = req.body;
-        try {
-          const newCategory = new Category({ categoryName });
-          await newCategory.save();
-          res.status(201).json(newCategory);
-        } catch (error) {
-          console.error("Error adding category:", error);
-          res.status(500).json({ error: 'Error adding item' });
-        }
+    const { categoryName } = req.body;
+    if (!categoryName) {
+        return res.status(400).json({ error: 'Category name is required' });
+    }
+    try {
+        const newCategory = new Category({ categoryName });
+        await newCategory.save();
+        res.status(201).json(newCategory);
+    } catch (error) {
+        console.error("Error adding category:", error);
+        res.status(500).json({ error: 'Error adding item' });
+    }
 });
 
 // Route to delete a category by ID
 router.delete('/:id', async (req, res) => {
-        const { id } = req.params;
-        try {
-            await Category.findByIdAndDelete(id);
-            res.json({ message: 'Category deleted successfully' });
+    const { id } = req.params;
+    try {
+        const category = await Category.findByIdAndDelete(id);
+        if (!category) {
+            return res.status(404).json({ message: 'Category not found' });
+        }
+        res.json({ message: 'Category deleted successfully' });
     } catch (error) {
-        res.status(500).json({ message: 'Error deleting category'});
+        res.status(500).json({ message: 'Error deleting category' });
     }
 });
 
 // Route to update a category by ID
 router.put('/:id', async (req, res) => {
-        const { id } = req.params;
-        const { categoryName } = req.body;
-        try {
-        const updateCategory = await Category.findByIdAndUpdate(
-            id, 
-            { categoryName }, 
+    const { id } = req.params;
+    const { categoryName } = req.body;
+
+    if (!categoryName) {
+        return res.status(400).json({ error: 'Category name is required' });
+    }
+
+    try {
+        const updatedCategory = await Category.findByIdAndUpdate(
+            id,
+            { categoryName },
             { new: true, runValidators: true }
         );
-        res.json(updateCategory); 
+
+        if (!updatedCategory) {
+            return res.status(404).json({ error: 'Category not found' });
+        }
+
+        res.json(updatedCategory);
     } catch (error) {
+        console.error("Error updating category:", error);
         res.status(500).json({ error: 'Error updating category' });
     }
 });

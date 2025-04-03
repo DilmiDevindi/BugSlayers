@@ -20,10 +20,19 @@ const ManageCategory = () => {
     setError('');
     try {
       const response = await axios.get('http://localhost:5000/api/category');
-      setCategory(response.data.reverse());
-    } catch (error) {
-      setError('Error fetching categories');
-      console.error('Error fetching categories:', error);
+      const groupedCategory = response.data.reduce((acc, category) => {
+        if (!acc[category.categoryName]) {
+          acc[category.categoryName] = { ...category, inStock: category.quantity };
+        } else {
+          acc[category.categoryName].inStock += category.quantity;
+        }
+        return acc;
+      }, {});
+
+      setCategory(Object.values(groupedCategory).reverse());
+    } catch (err) {
+      setError('Error fetching category items');
+      console.error('Error fetching category items:', err);
     } finally {
       setLoading(false);
     }
@@ -43,30 +52,31 @@ const ManageCategory = () => {
   };
 
   const handleEdit = (category) => {
-    console.log("Editing category:", category);
-    setEditCategory({ _id: category._id, categoryName: category.categoryName });
+    setEditCategory({ ...category }); // Ensure it's a fresh copy
   };
-  
-  
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    
+  
+    if (!editCategory || !editCategory._id) {
+      setError("Invalid category selected for update.");
+      return;
+    }
+
     try {
-      // Send the update request
       await axios.put(`http://localhost:5000/api/category/${editCategory._id}`, {
         categoryName: editCategory.categoryName
       });
+
       fetchCategory();
-      setEditCategory(null); // Fix: Set it to null instead of calling an empty function
+      setEditCategory(null);
       alert('Category updated successfully!');
     } catch (err) {
-      setError('Error updating category');
+      const errorMessage = err.response?.data?.error || 'Error updating category';
+      setError(errorMessage);
       console.error('Error updating category:', err);
     }
   };
-  
-  
 
   const filteredCategory = category.filter((category) =>
     category.categoryName.toLowerCase().includes(search.toLowerCase())
@@ -75,7 +85,7 @@ const ManageCategory = () => {
   return (
     <div className="container-fluid mt-4 inventory-container">
       <div className='inventory-title'>
-        <span className='inventory-title-icon'><FontAwesomeIcon icon={faBarsProgress} /></span> Manage Categories
+        <span className='inventory-title-icon'><FontAwesomeIcon icon={faBarsProgress} /></span> Manage Category
       </div>
       {error && <div className="alert alert-danger">{error}</div>}
 
@@ -84,7 +94,7 @@ const ManageCategory = () => {
           <input
             type="text"
             className="form-control mb-3"
-            placeholder="Search categories..."
+            placeholder="Search category..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -95,7 +105,7 @@ const ManageCategory = () => {
         {loading ? (
           <div>Loading...</div>
         ) : filteredCategory.length === 0 ? (
-          <div className='no-items'>No categories found</div>
+          <div className='no-items'>No items found</div>
         ) : (
           <table className="table table-striped table-bordered inventory-table">
             <thead>
@@ -114,7 +124,6 @@ const ManageCategory = () => {
                     <span className='inventory-edit-icon' onClick={() => handleEdit(category)}>
                       <FontAwesomeIcon icon={faEdit} />
                     </span>
-
                     <span className='inventory-delete-icon' onClick={() => handleDelete(category._id)}>
                       <FontAwesomeIcon icon={faTrash} />
                     </span>
@@ -125,7 +134,7 @@ const ManageCategory = () => {
           </table>
         )}
       </div>
-      
+
       {editCategory && (
         <div className="edit-form mt-4">
           <h4>Edit Category</h4>
@@ -135,11 +144,13 @@ const ManageCategory = () => {
               <input
                 type="text"
                 className="form-control"
-                value={editCategory.categoryName}
-                onChange={(e) => {
-                  setEditCategory((prev) => ({ ...prev, categoryName: e.target.value }));
-                }}
-                
+                value={editCategory?.categoryName || ''}
+                onChange={(e) =>
+                  setEditCategory((prev) => ({
+                    ...prev,
+                    categoryName: e.target.value,
+                  }))
+                }
                 required
               />
             </div>
