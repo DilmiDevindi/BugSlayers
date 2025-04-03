@@ -18,38 +18,46 @@ const Signup = () => {
         alert(response.data.message);
       }
     } catch (error) {
-      alert('Signup failed',error);
+      alert('Signup failed', error);
     }
   };
 
   return (
-    <div className="container mt-5">
-      <h2>Signup</h2>
-      <form onSubmit={handleSignup}>
-        <div className="mb-3">
-          <label htmlFor="email" className="form-label">Email</label>
-          <input
-            type="email"
-            className="form-control"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+    <div className="signup-page">
+      <div className="container-wrapper-signup">
+        <div className="signup-container">
+          <h2>Signup</h2>
+          <form onSubmit={handleSignup}>
+            <div className="mb-3">
+              <label htmlFor="email" className="form-label">Email</label>
+              <input
+                type="email"
+                className="form-control"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="password" className="form-label">Password</label>
+              <input
+                type="password"
+                className="form-control"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <button type="submit" className="btn">Sign up</button>
+          </form>
         </div>
-        <div className="mb-3">
-          <label htmlFor="password" className="form-label">Password</label>
-          <input
-            type="password"
-            className="form-control"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+        <div className="info-container">
+          <img src="/furniture-log.png" alt="Furniture" className="signup-image" />
+          <p className="logpara">Join us and manage your furniture business easily and effectively!</p>
         </div>
-        <button type="submit" className="btn btn-primary">Sign up</button>
-      </form>
+      </div>
     </div>
   );
 };
