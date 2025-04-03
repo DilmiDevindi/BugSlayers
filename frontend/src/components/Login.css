@@ -1,48 +1,17 @@
 /* Login.css */
-.login-page {
-  background-image: url('../assets/background.avif'); /* Path to your image */
-  background-size: cover; /* Ensure the image covers the whole page */
-  background-position: center;
-  background-repeat: no-repeat;
-  height: 100vh; /* Full viewport height */
-  margin: 0; /* Remove any default margin */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.container-wrapper-login {
-  display: flex;
-  height: 100vh;
-  align-items: center;
-  width: 100%;
-  
-  
-}
 
-.login-container {
-  width: 30%;
+.container {
+  max-width: 400px;
+  background-color: #f8f9fa;
   padding: 20px;
-  background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  height: 70vh;
-}
-
-h1{
-  font-size: 30px;
 }
 
 h2 {
   text-align: center;
   margin-bottom: 20px;
   color: #343a40;
-  margin-top: 40px;
-}
-
-h3{
-  font-weight: bolder;
-  font-size: 25px;
- 
 }
 
 .form-label {
@@ -50,26 +19,15 @@ h3{
 }
 
 .form-control {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
   border-radius: 6px;
+  padding: 10px;
 }
 
-.btn {
+.btn-primary {
   width: 100%;
   padding: 10px;
   border-radius: 6px;
   font-size: 16px;
-  background-color: #007bff;
-  color: #fff;
-  font-weight: bold;
-  border: none;
-  cursor: pointer;
-}
-
-.btn:hover {
-  background-color: #0056b3;
 }
 
 p {
@@ -83,45 +41,5 @@ p a {
 }
 
 p a:hover {
-  text-decoration: underline;
-}
-
-.info-container {
-  width: 30%;
-  text-align: center;
-  padding: 20px;
-  background: #9db3ec;
-  color: white;
-  font-size: 24px;
-  font-weight: bold;
-  justify-content: center;
-  align-items: center;
-  height: 70vh;
-  margin-left: 280px;
-  display: flex;
-  flex-direction: column;  /* Arrange children in a vertical column */
-  align-items: center;     /* Center items horizontally */
-  text-align: center;      /* Center text content */
-  gap: 15px;              /* Add spacing between elements */
-  
-}
-.login-image {
-  width: 80%;
-  height: 60%;
- 
-  
-}
-.logpara {
-  color: black;  
-  font-size: 16px; 
-  text-align: center;
-  font-weight: normal;
-}
-
-.toggle-btn {
-  background: none;
-  border: none;
-  color: blue;
-  cursor: pointer;
   text-decoration: underline;
 }

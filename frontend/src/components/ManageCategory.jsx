@@ -19,7 +19,7 @@ const ManageCategory = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await axios.get('http://localhost:5000/api/category');
+      const response = await axios.get('http://localhost:5001/api/category');
       const groupedCategory = response.data.reduce((acc, category) => {
         if (!acc[category.categoryName]) {
           acc[category.categoryName] = { ...category, inStock: category.quantity };
@@ -42,7 +42,7 @@ const ManageCategory = () => {
     if (!window.confirm('Are you sure you want to delete this category?')) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/category/${id}`);
+      await axios.delete(`http://localhost:5001/api/category/${id}`);
       fetchCategory(); // Refresh list after deletion
       alert('Category deleted successfully!');
     } catch (err) {
@@ -64,7 +64,7 @@ const ManageCategory = () => {
     }
 
     try {
-      await axios.put(`http://localhost:5000/api/category/${editCategory._id}`, {
+      await axios.put(`http://localhost:5001/api/category/${editCategory._id}`, {
         categoryName: editCategory.categoryName
       });
 

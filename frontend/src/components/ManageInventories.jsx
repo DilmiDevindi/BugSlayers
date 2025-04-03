@@ -19,7 +19,7 @@ const ManageInventories = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await axios.get('http://localhost:5000/api/inventory');
+      const response = await axios.get('http://localhost:5001/api/inventory');
       const groupedItems = response.data.reduce((acc, item) => {
         if (!acc[item.productName]) {
           acc[item.productName] = { ...item, inStock: item.quantity };
@@ -42,7 +42,7 @@ const ManageInventories = () => {
     if (!window.confirm('Are you sure you want to delete this item?')) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/inventory/${id}`);
+      await axios.delete(`http://localhost:5001/api/inventory/${id}`);
       fetchItems(); // Refresh list after deletion
       alert('Item deleted successfully!');
     } catch (err) {
@@ -58,7 +58,7 @@ const ManageInventories = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:5000/api/inventory/${editItem._id}`, editItem);
+      await axios.put(`http://localhost:5001/api/inventory/${editItem._id}`, editItem);
       fetchItems(); // Refresh after update
       setEditItem(null);
       alert('Item updated successfully!');

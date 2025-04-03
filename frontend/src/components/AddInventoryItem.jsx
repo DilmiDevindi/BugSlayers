@@ -21,7 +21,7 @@ const AddInventoryItem = () => {
 
     try {
       const newItem = { productName, category, quantity: Number(quantity), buyingPrice: parseFloat(buyingPrice).toFixed(2), sellingPrice: parseFloat(sellingPrice).toFixed(2) };
-      await axios.post('http://localhost:5000/api/inventory/add', newItem);
+      await axios.post('http://localhost:5001/api/inventory/add', newItem);
       setProductName('');
       setCategory('');
       setQuantity('');

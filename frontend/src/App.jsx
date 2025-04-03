@@ -1,4 +1,4 @@
-
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Login from './components/Login'; // Ensure the path is correct
@@ -11,13 +11,9 @@ import ManageSuppliers from './components/ManageSuppliers'; // Ensure the path i
 import EditSupplier from './components/EditSupplier'; // Ensure the path is correct
 import AddInventoryItem from './components/AddInventoryItem'; // Ensure the path is correct
 import ManageInventories from './components/ManageInventories'; // Ensure the path is correct
-
+import AddEmployee from './components/AddCustomer';
 import AddCategory from "./components/AddCategory";
 import ManageCategories from "./components/ManageCategory";
-
-import AddCustomer from './components/AddCustomer';
-import ManageCustomer from './components/ManageCustomer'; // Ensure the path is correct
-
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -37,15 +33,9 @@ function App() {
           <Route path="suppliers/edit/:id" element={<EditSupplier />} />
           <Route path="inventory/add" element={<AddInventoryItem />} />
           <Route path="inventory/add1" element={<ManageInventories />} />
-
+          <Route path="Employeess/add" element={<AddEmployee/>}/>
           <Route path="category/add" element={<AddCategory />} />
           <Route path="category/add1" element={<ManageCategories />} />
-
-
-          <Route path="customers/add" element={<AddCustomer />} />
-          <Route path="customers/manage" element={<ManageCustomer />} />
-          {/* Add other nested routes here */}
-
         </Route>
       </Routes>
     </Router>

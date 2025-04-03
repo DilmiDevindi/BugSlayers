@@ -26,21 +26,21 @@ const Dashboard = () => {
   const fetchData = async () => {
     try {
       // Fetch suppliers data from the manage supplier endpoint
-      const suppliersResponse = await axios.get('http://localhost:5000/api/suppliers');
+      const suppliersResponse = await axios.get('http://localhost:5001/api/suppliers');
       setTotalSuppliers(suppliersResponse.data.length);
       setLatestSuppliers(suppliersResponse.data.slice(0, 5)); // Fetch latest 5 suppliers
 
       // Fetch inventory data from the manage inventory endpoint
-      const inventoryResponse = await axios.get('http://localhost:5000/api/inventory');
+      const inventoryResponse = await axios.get('http://localhost:5001/api/inventory');
       setTotalInventory(inventoryResponse.data.length);
       setLatestInventory(inventoryResponse.data.slice(0, 5)); // Fetch latest 5 inventory items
 
       // Fetch customers data from the manage customer endpoint
-      const customersResponse = await axios.get('http://localhost:5000/api/customers');
+      const customersResponse = await axios.get('http://localhost:5001/api/customers');
       setTotalCustomers(customersResponse.data.length);
       setLatestCustomers(customersResponse.data.slice(0, 5)); // Fetch latest 5 customers
 
-      const categoryResponse = await axios.get('http://localhost:5000/api/inventory');
+      const categoryResponse = await axios.get('http://localhost:5001/api/inventory');
       setTotalCategory(categoryResponse.data.length);
 
       
