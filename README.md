@@ -1,4 +1,3 @@
-# BugSlayers
 
 Group Name : BugSlayers
 
@@ -10,4 +9,3 @@ The Billing System makes sales easier by creating invoices and keeping records o
 stock levels in real time, so the shop always knows what is available. The system helps track sales and 
 finances, making business management more efficient.This system saves time, reduces manual work, and helps
 the shop run smoothly.
-

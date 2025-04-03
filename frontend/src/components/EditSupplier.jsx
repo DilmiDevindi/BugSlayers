@@ -1,5 +1,4 @@
-// components/EditSupplier.js
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -8,8 +7,11 @@ const EditSupplier = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [supplier, setSupplier] = useState({
+    date: '', // Initialize as empty, will be set later
     supplierName: '',
-    phone: '',
+    phone1: '',
+    phone2: '',
+    fax: '',
     email: '',
     address: '',
     supplyProducts: '',
@@ -21,7 +23,7 @@ const EditSupplier = () => {
       const fetchSupplier = async () => {
         try {
           const response = await axios.get(`http://localhost:5000/api/suppliers/${id}`);
-          setSupplier(response.data);
+          setSupplier({ ...response.data, date: new Date(response.data.date).toISOString().split('T')[0] });
         } catch (error) {
           console.error('Error fetching supplier:', error);
         }
@@ -40,12 +42,15 @@ const EditSupplier = () => {
     try {
       if (id) {
         await axios.put(`http://localhost:5000/api/suppliers/${id}`, supplier);
+        alert('Supplier updated successfully!');
       } else {
         await axios.post('http://localhost:5000/api/suppliers', supplier);
+        alert('Supplier added successfully!');
       }
-      navigate('/dashboard/suppliers/manage'); // Redirect to ManageSuppliers after successful update
+      navigate('/dashboard/suppliers/manage');
     } catch (error) {
       console.error('Error saving supplier:', error);
+      alert('Error saving supplier. Please try again.');
     }
   };
 
@@ -53,6 +58,21 @@ const EditSupplier = () => {
     <div className="container mt-5">
       <h2>{id ? 'Edit Supplier' : 'Add New Supplier'}</h2>
       <form onSubmit={handleSubmit}>
+
+        {/* Date Field */}
+        <div className="mb-3">
+          <label className="form-label">Date</label>
+          <input
+            type="date"
+            className="form-control"
+            name="date"
+            value={supplier.date}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        {/* Supplier Name */}
         <div className="mb-3">
           <label className="form-label">Supplier Name</label>
           <input
@@ -64,17 +84,42 @@ const EditSupplier = () => {
             required
           />
         </div>
+
+        {/* Phone Numbers */}
         <div className="mb-3">
-          <label className="form-label">Phone</label>
+          <label className="form-label">Phone1</label>
           <input
             type="text"
             className="form-control"
-            name="phone"
-            value={supplier.phone}
+            name="phone1"
+            value={supplier.phone1}
             onChange={handleChange}
-            required
           />
         </div>
+        <div className="mb-3">
+          <label className="form-label">Phone2</label>
+          <input
+            type="text"
+            className="form-control"
+            name="phone2"
+            value={supplier.phone2}
+            onChange={handleChange}
+          />
+        </div>
+
+        {/* Fax Number */}
+        <div className="mb-3">
+          <label className="form-label">Fax</label>
+          <input
+            type="text"
+            className="form-control"
+            name="fax"
+            value={supplier.fax}
+            onChange={handleChange}
+          />
+        </div>
+
+        {/* Email */}
         <div className="mb-3">
           <label className="form-label">Email</label>
           <input
@@ -86,6 +131,8 @@ const EditSupplier = () => {
             required
           />
         </div>
+
+        {/* Address */}
         <div className="mb-3">
           <label className="form-label">Address</label>
           <input
@@ -97,6 +144,8 @@ const EditSupplier = () => {
             required
           />
         </div>
+
+        {/* Supply Products */}
         <div className="mb-3">
           <label className="form-label">Supply Products</label>
           <input
@@ -108,6 +157,8 @@ const EditSupplier = () => {
             required
           />
         </div>
+
+        {/* Payment Terms */}
         <div className="mb-3">
           <label className="form-label">Payment Terms</label>
           <input
@@ -119,6 +170,7 @@ const EditSupplier = () => {
             required
           />
         </div>
+
         <button type="submit" className="btn btn-primary">
           {id ? 'Update Supplier' : 'Add Supplier'}
         </button>

@@ -4,14 +4,15 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
-const User = require('./models/User'); // Ensure this path is correct
-const supplierRoutes = require('./routes/supplierRoutes'); // Ensure this path is correct
+const User = require('./models/User'); 
+const supplierRoutes = require('./routes/supplierRoutes'); 
 const inventoryRoutes = require('./routes/inventoryRoutes');
-const employeeRoutes = require('./routes/employeeRoutes');
 const categoryRoutes = require('./routes/categoryRoutes'); // Fix: Ensure this is the correct filename
+const customerRoutes = require('./routes/customerRoutes');
+
 
 const app = express();
-const PORT = 5000;
+const PORT = 5001;
 const JWT_SECRET = 'your_jwt_secret_key';
 
 // Middleware
@@ -37,8 +38,11 @@ app.use('/api/suppliers', supplierRoutes);
 
 app.use('/api/inventory', inventoryRoutes);
 
-app.use('/api/employees', employeeRoutes);
+
 app.use('/api/category', categoryRoutes);
+
+app.use('/api/customers', customerRoutes); 
+
 
 
 // Login route
@@ -53,7 +57,7 @@ app.post('/api/login', async (req, res) => {
 
     const token = jwt.sign({ id: user._id }, JWT_SECRET);
     return res.json({ success: true, token });
-  } catch (err) {
+  } catch (error) {
     res.status(500).json({ success: false, message: 'Server error' });
   }
 });
