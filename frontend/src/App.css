@@ -2,8 +2,8 @@
 .sidebar {
   height: 100vh; /* Full height */
   position: fixed;
-  background-color: #343a40;
-  width: 220px; /* Fixed sidebar width */
+  color: #343a40;
+  width: 10px; /* Fixed sidebar width */
   top: 0;
   left: 0;
   z-index: 1000; /* Keeps sidebar on top */
@@ -67,8 +67,10 @@
   border: 1px solid #dee2e6;
 }
 .custom-card-2 {
-  background-color: #296a29;
-  border: 1px solid #dee2e6;
+
+  background-color: #007bff; /* Light grey background */
+  border: 1px solid #dee2e6; /* Light border */
+
 }
 .custom-card-3 {
   background-color: #802929;

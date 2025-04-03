@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -7,10 +8,12 @@ const AddCustomer = () => {
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [contact, setContact] = useState('');
+
   const [email, setEmail] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
 
     if (!name || !address || !contact || !email) {
       alert("All fields are required!");
@@ -53,12 +56,15 @@ const AddCustomer = () => {
     } catch (error) {
       console.error("Error Details:", error.response?.data || error.message);
       alert("This email is existing. Please try again with a different email.");
+
     }
   };
 
   return (
     <div className="container mt-4">
+
       <h4 className='addCusTitle'><FontAwesomeIcon icon={faPlusSquare} className="addCus" />Add New Customer</h4>
+
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="name" className="form-label">Name</label>
@@ -72,6 +78,7 @@ const AddCustomer = () => {
           />
         </div>
         <div className="mb-3">
+
           <label htmlFor="address" className="form-label">Address</label>
           <input
             type="text"
@@ -90,6 +97,7 @@ const AddCustomer = () => {
             id="contact"
             value={contact}
             onChange={(e) => setContact(e.target.value)}
+
             required
           />
         </div>
@@ -100,14 +108,18 @@ const AddCustomer = () => {
             className="form-control"
             id="email"
             value={email}
+
             onChange={(e) => setEmail(e.target.value.toLowerCase())}
             required
           />
         </div>
         <button type="submit" className="btn btn-primary">Add Customer</button>
+
       </form>
     </div>
   );
 };
 
+
 export default AddCustomer;
+

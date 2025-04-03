@@ -4,6 +4,7 @@ import Sidebar from './Sidebar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../App.css'; // Assuming you'll put custom styles here
 import 'bootstrap-icons/font/bootstrap-icons.css';
+
 import { Card, Table } from 'react-bootstrap';
 import axios from 'axios';
 
@@ -12,9 +13,11 @@ const Dashboard = () => {
   const [totalSuppliers, setTotalSuppliers] = useState(0);
   const [totalInventory, setTotalInventory] = useState(0);
   const [totalCustomers, setTotalCustomers] = useState(0);
+  const [totalCategories, setTotalCategory] = useState(0);
   const [latestSuppliers, setLatestSuppliers] = useState([]);
   const [latestCustomers, setLatestCustomers] = useState([]);
   const [latestInventory, setLatestInventory] = useState([]);
+
 
   useEffect(() => {
     fetchData();
@@ -36,6 +39,11 @@ const Dashboard = () => {
       const customersResponse = await axios.get('http://localhost:5000/api/customers');
       setTotalCustomers(customersResponse.data.length);
       setLatestCustomers(customersResponse.data.slice(0, 5)); // Fetch latest 5 customers
+
+      const categoryResponse = await axios.get('http://localhost:5000/api/inventory');
+      setTotalCategory(categoryResponse.data.length);
+
+      
 
     } catch (error) {
       console.error('Error fetching dashboard data:', error.message || error);
@@ -190,6 +198,14 @@ const Dashboard = () => {
                           )}
                         </tbody>
                       </Table>
+                    </Card.Body>
+                  </Card>
+                </div>
+                <div className="col-md-3">
+                  <Card className="custom-card-3 text-center mb-4">
+                    <Card.Body>
+                      <Card.Title>Total Categories</Card.Title>
+                      <Card.Text>{totalCategories}</Card.Text>
                     </Card.Body>
                   </Card>
                 </div>

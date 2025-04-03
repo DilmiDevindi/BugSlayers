@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const User = require('./models/User'); 
 const supplierRoutes = require('./routes/supplierRoutes'); 
 const inventoryRoutes = require('./routes/inventoryRoutes');
+const categoryRoutes = require('./routes/categoryRoutes'); // Fix: Ensure this is the correct filename
 const customerRoutes = require('./routes/customerRoutes');
 
 
@@ -38,7 +39,10 @@ app.use('/api/suppliers', supplierRoutes);
 app.use('/api/inventory', inventoryRoutes);
 
 
+app.use('/api/category', categoryRoutes);
+
 app.use('/api/customers', customerRoutes); 
+
 
 
 // Login route
