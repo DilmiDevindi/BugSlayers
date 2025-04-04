@@ -73,7 +73,7 @@ const AddInventoryItem = () => {
             required
           >
           <option value="" disabled>Select Category</option>
-          <option value="">None</option> {/* Option to deselect */}
+          <option value="">None</option> 
           {categories.map((cat, index) => (
             <option key={index} value={cat}>{cat}</option>
           ))}

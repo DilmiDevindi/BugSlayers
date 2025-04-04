@@ -33,14 +33,14 @@
 /* Navbar */
 .navbar {
   height: 60px;
-  width: calc(100% - 198px); /* Ensure width adjusts based on sidebar width */
+  width: calc(100% - 198px); 
   background-color: #343a40;
   color: #fff;
   display: flex;
   padding: 0 20px;
   position: fixed;
   top: 0;
-  left: 198px; /* Offset to accommodate sidebar width */
+  left: 198px; 
   z-index: 1000;
 }
 
@@ -64,32 +64,32 @@
 }
 /* Background color for Cards */
 .custom-card-1 {
-  background-color: #20b2aa; /* Light grey background */
+  background-color: #20b2aa; 
   border: 1px solid #dee2e6; 
 }
 .custom-card-2 {
-  background-color: #dfbd00; /* Light grey background */
-  border: 1px solid #dee2e6; /* Light border */
+  background-color: #dfbd00; 
+  border: 1px solid #dee2e6;
 }
 .custom-card-3 {
-  background-color: #b53131; /* Light grey background */
-  border: 1px solid #dee2e6; /* Light border */
+  background-color: #b53131; 
+  border: 1px solid #dee2e6; 
 }
 .custom-card-4 {
-  background-color: #89be00; /* Light grey background */
-  border: 1px solid #dee2e6; /* Light border */
+  background-color: #89be00; 
+  border: 1px solid #dee2e6; 
 }
 
 .card-title {
-  font-size: 15px; /* Font size for the Card Title */
-  color: #fff; /* Maintain the white text for readability */
-  font-weight: bold; /* Make it bold for emphasis */
+  font-size: 15px;
+  color: #fff; 
+  font-weight: bold; 
 }
 
 .card-text {
-  font-size: 15px; /* Font size for the Card Text */
-  color: #fff; /* Maintain consistent color with the title */
-  font-weight: normal; /* Keep normal weight for distinction */
+  font-size: 15px;
+  color: #fff;
+  font-weight: normal; 
 }
 
 
@@ -152,7 +152,7 @@
   font-size: 16px;
   width: 250px;
   transition: all 0.3s ease;
-  color: #333333; /* Add this line for font color */
+  color: #333333; 
 }
 
 .form-control-ii {
@@ -162,7 +162,7 @@
   font-size: 16px;
   width: 545px;
   transition: all 0.3s ease;
-  color: #333333; /* Add this line for font color */
+  color: #333333; 
 }
 
 .form-control-i:focus, .form-control-ii:focus {
@@ -238,7 +238,7 @@
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  width: 100%;
+  width: 80%;
 }
 
 .inventory-title {

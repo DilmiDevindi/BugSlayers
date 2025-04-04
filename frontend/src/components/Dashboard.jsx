@@ -143,7 +143,7 @@ const Dashboard = () => {
                           <YAxis />
                           <Tooltip />
                           <Legend />
-                          <Bar dataKey="inStock" fill="#EFC3CA" />
+                          <Bar dataKey="inStock" fill="#A86566" />
                         </BarChart>
                       </ResponsiveContainer>
                     </Card.Body>
