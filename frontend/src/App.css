@@ -2,7 +2,7 @@
 .sidebar {
   height: 100vh; /* Full height */
   position: fixed;
-  color: #343a40;
+  color: #a1abb5 ;
   width: 10px; /* Fixed sidebar width */
   top: 0;
   left: 0;
@@ -15,7 +15,7 @@
   display: block;
   padding: 15px;
   text-decoration: none;
-  font-size: 16px;
+  font-size: 12px;
   margin-top: 40px;
   padding-top: 80px;
 }
@@ -54,26 +54,29 @@
   color: #ccc;
 }
 
-/* Content Area */
-.content {
-  margin-left: 220px; /* Offset for the sidebar */
-  padding-top: 80px;  /* Offset for the navbar */
-  padding-left: 20px;
-  padding-right: 20px;
+.mt-4 {
+  margin-left: 50px;
 }
 /* App.css */
-
+.mt-5 {
+  margin-left: 50px;
+  margin-right: 50px;
+}
 /* Background color for Cards */
 .custom-card-1 {
-  background-color: #09425b; /* Light grey background */
-  border: 1px solid #dee2e6; /* Light border */
+  background-color: #20b2aa; /* Light grey background */
+  border: 1px solid #dee2e6; 
 }
 .custom-card-2 {
-  background-color: #007bff; /* Light grey background */
+  background-color: #dfbd00; /* Light grey background */
   border: 1px solid #dee2e6; /* Light border */
 }
 .custom-card-3 {
-  background-color: #802929; /* Light grey background */
+  background-color: #b53131; /* Light grey background */
+  border: 1px solid #dee2e6; /* Light border */
+}
+.custom-card-4 {
+  background-color: #89be00; /* Light grey background */
   border: 1px solid #dee2e6; /* Light border */
 }
 
@@ -104,7 +107,7 @@
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  width: 50%;
+  width: 45%;
 }
 
 .card-i {
@@ -147,9 +150,9 @@
   border-radius: 8px;
   padding: 12px;
   font-size: 16px;
-  width: 280px;
+  width: 250px;
   transition: all 0.3s ease;
-  color: #4b4a4a; /* Add this line for font color */
+  color: #333333; /* Add this line for font color */
 }
 
 .form-control-ii {
@@ -157,7 +160,7 @@
   border-radius: 8px;
   padding: 12px;
   font-size: 16px;
-  width: 280px;
+  width: 545px;
   transition: all 0.3s ease;
   color: #333333; /* Add this line for font color */
 }

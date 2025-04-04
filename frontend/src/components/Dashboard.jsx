@@ -4,20 +4,16 @@ import Sidebar from './Sidebar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../App.css'; // Assuming you'll put custom styles here
 import 'bootstrap-icons/font/bootstrap-icons.css';
-
 import { Card, Table } from 'react-bootstrap';
 import axios from 'axios';
-
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const Dashboard = () => {
   const [totalSuppliers, setTotalSuppliers] = useState(0);
   const [totalInventory, setTotalInventory] = useState(0);
   const [totalCustomers, setTotalCustomers] = useState(0);
   const [totalCategories, setTotalCategory] = useState(0);
-  const [latestSuppliers, setLatestSuppliers] = useState([]);
-  const [latestCustomers, setLatestCustomers] = useState([]);
-  const [latestInventory, setLatestInventory] = useState([]);
-
+  const [categoryStock, setCategoryStock] = useState([]);
 
   useEffect(() => {
     fetchData();
@@ -25,26 +21,35 @@ const Dashboard = () => {
 
   const fetchData = async () => {
     try {
-      // Fetch suppliers data from the manage supplier endpoint
       const suppliersResponse = await axios.get('http://localhost:5001/api/suppliers');
       setTotalSuppliers(suppliersResponse.data.length);
-      setLatestSuppliers(suppliersResponse.data.slice(0, 5)); // Fetch latest 5 suppliers
 
-      // Fetch inventory data from the manage inventory endpoint
-      const inventoryResponse = await axios.get('http://localhost:5001/api/inventory');
-      setTotalInventory(inventoryResponse.data.length);
-      setLatestInventory(inventoryResponse.data.slice(0, 5)); // Fetch latest 5 inventory items
-
-      // Fetch customers data from the manage customer endpoint
       const customersResponse = await axios.get('http://localhost:5001/api/customers');
       setTotalCustomers(customersResponse.data.length);
-      setLatestCustomers(customersResponse.data.slice(0, 5)); // Fetch latest 5 customers
 
-      const categoryResponse = await axios.get('http://localhost:5001/api/inventory');
+      const inventoryResponse = await axios.get('http://localhost:5001/api/inventory');
+      setTotalInventory(inventoryResponse.data.length);
+
+      const categoryResponse = await axios.get('http://localhost:5001/api/category');
       setTotalCategory(categoryResponse.data.length);
 
-      
+      // Aggregate stock levels by category
+      const categoryMap = {};
+      inventoryResponse.data.forEach((item) => {
+        const stockCount = Number(item.quantity) || 0; // Ensure it's a valid number
+        if (categoryMap[item.category]) {
+          categoryMap[item.category] += stockCount;
+        } else {
+          categoryMap[item.category] = stockCount;
+        }
+      });
 
+      // Convert the map to an array for the graph
+      const categoryStockData = Object.keys(categoryMap).map((category) => ({
+        category,
+        inStock: categoryMap[category],
+      }));
+      setCategoryStock(categoryStockData);
     } catch (error) {
       console.error('Error fetching dashboard data:', error.message || error);
     }
@@ -61,155 +66,91 @@ const Dashboard = () => {
           </div>
 
           {/* Main Content */}
-          <div className="col-md-10" style={{ marginLeft: '16.67%', marginTop: '10px' }}>
+          <div className="col-md-10">
             <div className="container-fluid mt-4 px-3">
               <div className="row mt-5">
                 <div className="col-md-3">
-                  <Card className="custom-card-1 text-center mb-4" style={{ backgroundColor: '#007bff', color: 'white', padding: '20px' }}>
+                  <Card className="custom-card-1 text-center mb-4">
                     <Card.Body>
-                      {/* Supplier Section Icon */}
-                      <i className="bi bi-truck" style={{ fontSize: '50px' }}></i>
                       <Card.Title className="mt-3">Total Suppliers</Card.Title>
                       <Card.Text>{totalSuppliers}</Card.Text>
                     </Card.Body>
                   </Card>
                 </div>
                 <div className="col-md-3">
-                  <Card className="custom-card-2 text-center mb-4" style={{ backgroundColor: '#28a745', color: 'white', padding: '20px' }}>
+                  <Card className="custom-card-2 text-center mb-4">
                     <Card.Body>
-                      {/* Inventory Section Icon */}
-                      <i className="bi bi-boxes" style={{ fontSize: '50px' }}></i>
-                      <Card.Title className="mt-3">Total Inventory</Card.Title>
-                      <Card.Text>{totalInventory}</Card.Text>
-                    </Card.Body>
-                  </Card>
-                </div>
-                <div className="col-md-3">
-                  <Card className="custom-card-3 text-center mb-4" style={{ backgroundColor: '#ffc107', color: 'white', padding: '20px' }}>
-                    <Card.Body>
-                      {/* Customer Section Icon */}
-                      <i className="bi bi-person-lines-fill" style={{ fontSize: '50px' }}></i>
                       <Card.Title className="mt-3">Total Customers</Card.Title>
                       <Card.Text>{totalCustomers}</Card.Text>
-                    </Card.Body>
-                  </Card>
-                </div>
-              </div>
-
-              {/* Supplier Report Table */}
-              <div className="row">
-                <div className="col-md-12">
-                  <Card className="custom-card-1 mb-4">
-                    <Card.Body>
-                      <Card.Title>Supplier Report (Latest 5)</Card.Title>
-                      <Table striped bordered hover responsive>
-                        <thead className="table-dark">
-                          <tr>
-                            <th>Date</th>
-                            <th>Supplier Name</th>
-                            <th>Contact Number</th>
-                            <th>Supply Products</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {latestSuppliers.length === 0 ? (
-                            <tr>
-                              <td colSpan="4" className="text-center">No suppliers found</td>
-                            </tr>
-                          ) : (
-                            latestSuppliers.map(supplier => (
-                              <tr key={supplier._id}>
-                                <td>{new Date(supplier.date).toLocaleDateString()}</td>
-                                <td>{supplier.supplierName}</td>
-                                <td>{supplier.phone1}</td>
-                                <td>{supplier.supplyProducts}</td>
-                              </tr>
-                            ))
-                          )}
-                        </tbody>
-                      </Table>
-                    </Card.Body>
-                  </Card>
-                </div>
-              </div>
-
-              {/* Customer Report Table */}
-              <div className="row">
-                <div className="col-md-12">
-                  <Card className="custom-card-2 mb-4">
-                    <Card.Body>
-                      <Card.Title>Customer Report (Latest 5)</Card.Title>
-                      <Table striped bordered hover responsive>
-                        <thead className="table-dark">
-                          <tr>
-                            <th>Date</th>
-                            <th>Customer Name</th>
-                            <th>Contact Number</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {latestCustomers.length === 0 ? (
-                            <tr>
-                              <td colSpan="3" className="text-center">No customers found</td>
-                            </tr>
-                          ) : (
-                            latestCustomers.map(customer => (
-                              <tr key={customer._id}>
-                                <td>{new Date(customer.date).toLocaleDateString()}</td>
-                                <td>{customer.customerName}</td>
-                                <td>{customer.contactNumber}</td>
-                              </tr>
-                            ))
-                          )}
-                        </tbody>
-                      </Table>
-                    </Card.Body>
-                  </Card>
-                </div>
-              </div>
-
-              {/* Inventory Report Table */}
-              <div className="row">
-                <div className="col-md-12">
-                  <Card className="custom-card-3 mb-4">
-                    <Card.Body>
-                      <Card.Title>Inventory Report (Latest 5)</Card.Title>
-                      <Table striped bordered hover responsive>
-                        <thead className="table-dark">
-                          <tr>
-                            <th>Product Category</th>
-                            <th>Product Title</th>
-                            <th>Product Quantity</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {latestInventory.length === 0 ? (
-                            <tr>
-                              <td colSpan="3" className="text-center">No inventory found</td>
-                            </tr>
-                          ) : (
-                            latestInventory.map(item => (
-                              <tr key={item._id}>
-                                <td>{item.productCategory}</td>
-                                <td>{item.productTitle}</td>
-                                <td>{item.productQuantity}</td>
-                              </tr>
-                            ))
-                          )}
-                        </tbody>
-                      </Table>
                     </Card.Body>
                   </Card>
                 </div>
                 <div className="col-md-3">
                   <Card className="custom-card-3 text-center mb-4">
                     <Card.Body>
-                      <Card.Title>Total Categories</Card.Title>
+                      <Card.Title className="mt-3">Total Inventory</Card.Title>
+                      <Card.Text>{totalInventory}</Card.Text>
+                    </Card.Body>
+                  </Card>
+                </div>
+                <div className="col-md-3">
+                  <Card className="custom-card-4 text-center mb-4">
+                    <Card.Body>
+                      <Card.Title className="mt-3">Total Categories</Card.Title>
                       <Card.Text>{totalCategories}</Card.Text>
                     </Card.Body>
                   </Card>
                 </div>
               </div>
+
+              {/* Category-based Inventory Report */}
+              <div className="row">
+                <div className="col-md-6">
+                  <Card className="mt-4">
+                    <Card.Body>
+                      <Card.Title>Inventory Stock by Category</Card.Title>
+                      <Table striped bordered hover size="sm">
+                        <thead>
+                          <tr>
+                            <th>No</th>
+                            <th>Category</th>
+                            <th>Stock</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {categoryStock.map((item, index) => (
+                            <tr key={item.category}>
+                              <td>{index + 1}</td>
+                              <td>{item.category}</td>
+                              <td>{item.inStock}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </Table>
+                    </Card.Body>
+                  </Card>
+                </div>
+
+                {/* Inventory Bar Chart by Category */}
+                <div className="col-md-6">
+                  <Card className="mt-5">
+                    <Card.Body>
+                      <Card.Title>Inventory Stock Levels by Category</Card.Title>
+                      <ResponsiveContainer width="100%" height={300}>
+                        <BarChart data={categoryStock}>
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis dataKey="category" />
+                          <YAxis />
+                          <Tooltip />
+                          <Legend />
+                          <Bar dataKey="inStock" fill="#EFC3CA" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </Card.Body>
+                  </Card>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
