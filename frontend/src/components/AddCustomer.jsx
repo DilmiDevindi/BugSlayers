@@ -1,43 +1,39 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faPlusSquare} from "@fortawesome/free-solid-svg-icons"; 
+import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
 
 const AddCustomer = () => {
+  const [date, setDate] = useState('');  
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [contact, setContact] = useState('');
   const [email, setEmail] = useState('');
+  const [errors, setErrors] = useState({});
+
+  const validateFields = () => {
+    let newErrors = {};
+    if (!name.trim()) newErrors.name = "Name is required";
+    if (!address.trim()) newErrors.address = "Address is required";
+    if (!/^[0-9]{10}$/.test(contact)) newErrors.contact = "Enter a valid 10-digit contact number";
+    if (!/^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(email)) newErrors.email = "Enter a valid @gmail.com email address";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!name || !address || !contact || !email) {
-      alert("All fields are required!");
-      return;
-    }
-
-    // Validate contact number (should be exactly 10 digits)
-    if (!/^[0-9]{10}$/.test(contact)) {
-      alert("Please enter a valid 10-digit contact number!");
-      return;
-    }
+    if (!validateFields()) return;
 
     try {
-      // Check if customer already exists by email
-      const checkResponse = await axios.get('http://localhost:5000/api/customers');
-      const existingCustomer = checkResponse.data.find(c => c.email === email);
-      
-      if (existingCustomer) {
+      const checkResponse = await axios.get('http://localhost:5002/api/customers');
+      if (checkResponse.data.some(c => c.email === email)) {
         alert("Customer with this email already exists!");
         return;
       }
 
-      const newCustomer = { name, address, contact, email };
-
-      console.log("Sending new customer:", newCustomer); // Debugging log
-
-      const response = await axios.post('http://localhost:5000/api/customers', newCustomer, {
+      const newCustomer = { date, name, address, contact, email };  // Ensure date is included
+      const response = await axios.post('http://localhost:5002/api/customers', newCustomer, {
         headers: { 'Content-Type': 'application/json' }
       });
 
@@ -47,62 +43,51 @@ const AddCustomer = () => {
         setAddress('');
         setContact('');
         setEmail('');
+        setDate('');  
+        setErrors({});
       } else {
         alert("Error adding customer. Please try again.");
       }
     } catch (error) {
       console.error("Error Details:", error.response?.data || error.message);
-      alert("This email is existing. Please try again with a different email.");
+      alert("Error adding customer. Please try again.");
     }
   };
 
   return (
-    <div className="container mt-4">
-      <h4 className='addCusTitle'><FontAwesomeIcon icon={faPlusSquare} className="addCus" />Add New Customer</h4>
+    <div className="container-c">
+      <h4 className="add-title" style={{ textAlign: "left" }}>
+        <FontAwesomeIcon icon={faPlusSquare} className="addCus" /> Add New Customer
+      </h4>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
-          <label htmlFor="name" className="form-label">Name</label>
+          <label className="form-label">Date</label>
           <input
-            type="text"
+            type="date"
             className="form-control"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
+            value={date}
+            onChange={(e) => setDate(e.target.value)}  
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="address" className="form-label">Address</label>
-          <input
-            type="text"
-            className="form-control"
-            id="address"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            required
-          />
+          <label className="form-label">Name</label>
+          <input type="text" className="form-control" value={name} onChange={(e) => setName(e.target.value)} />
+          {errors.name && <div className="alert alert-danger">{errors.name}</div>}
         </div>
         <div className="mb-3">
-          <label htmlFor="contact" className="form-label">Contact</label>
-          <input
-            type="text"
-            className="form-control"
-            id="contact"
-            value={contact}
-            onChange={(e) => setContact(e.target.value)}
-            required
-          />
+          <label className="form-label">Address</label>
+          <input type="text" className="form-control" value={address} onChange={(e) => setAddress(e.target.value)} />
+          {errors.address && <div className="alert alert-danger">{errors.address}</div>}
         </div>
         <div className="mb-3">
-          <label htmlFor="email" className="form-label">Email</label>
-          <input
-            type="email"
-            className="form-control"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value.toLowerCase())}
-            required
-          />
+          <label className="form-label">Contact</label>
+          <input type="text" className="form-control" value={contact} onChange={(e) => setContact(e.target.value)} />
+          {errors.contact && <div className="alert alert-danger">{errors.contact}</div>}
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Email</label>
+          <input type="email" className="form-control" value={email} onChange={(e) => setEmail(e.target.value.toLowerCase())} />
+          {errors.email && <div className="alert alert-danger">{errors.email}</div>}
         </div>
         <button type="submit" className="btn btn-primary">Add Customer</button>
       </form>

@@ -18,7 +18,7 @@ const AddSupplier = () => {
     e.preventDefault();
     try {
       // Sending data to the backend
-      await axios.post('http://localhost:5000/api/suppliers', supplier);
+      await axios.post('http://localhost:5001/api/suppliers', supplier);
       alert('Supplier added successfully');
       setSupplier({
         supplierName: '',

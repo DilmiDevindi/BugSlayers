@@ -1,15 +1,23 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../App.css';
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUsers } from "@fortawesome/free-solid-svg-icons"; 
+import { faUsers } from "@fortawesome/free-solid-svg-icons";
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
 
 const ManageCustomer = () => {
   const [customers, setCustomers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [searchDate, setSearchDate] = useState('');
   const [editingCustomer, setEditingCustomer] = useState(null);
-  const [formData, setFormData] = useState({ _id: '', name: '', address: '', contact: '', email: '' });
+  const [formData, setFormData] = useState({ 
+    _id: '', 
+    date: new Date().toISOString().split('T')[0], 
+    name: '', 
+    address: '', 
+    contact: '', 
+    email: '' 
+  });
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -19,7 +27,7 @@ const ManageCustomer = () => {
   const fetchCustomers = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:5000/api/customers');
+      const response = await axios.get('http://localhost:5002/api/customers');
       setCustomers(response.data.reverse());
     } catch (error) {
       console.error('Error fetching customers:', error);
@@ -32,18 +40,36 @@ const ManageCustomer = () => {
     setSearchTerm(e.target.value);
   };
 
-  const filteredCustomers = customers.filter(customer =>
-    customer._id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    customer.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    customer.contact.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    customer.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleDateSearch = (e) => {
+    setSearchDate(e.target.value);
+  };
+
+  const filteredCustomers = customers.filter(customer => {
+    // Search term filtering
+    const matchSearchTerm = customer._id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                             customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                             customer.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                             customer.contact.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                             customer.email.toLowerCase().includes(searchTerm.toLowerCase());
+  
+    // Date filtering (single date match or range)
+    let matchDate = true;
+    if (searchDate) {
+      const customerDate = new Date(customer.date);
+      const targetDate = new Date(searchDate);
+  
+      matchDate = customerDate.toDateString() === targetDate.toDateString();
+  
+    }
+  
+    return matchSearchTerm && matchDate;
+  });
+  
 
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this customer?')) return;
     try {
-      await axios.delete(`http://localhost:5000/api/customers/${id}`);
+      await axios.delete(`http://localhost:5002/api/customers/${id}`);
       fetchCustomers();
     } catch (error) {
       console.error('Error deleting customer:', error);
@@ -63,9 +89,9 @@ const ManageCustomer = () => {
       return;
     }
     try {
-      await axios.put(`http://localhost:5000/api/customers/${editingCustomer}`, formData);
+      await axios.put(`http://localhost:5002/api/customers/${editingCustomer}`, formData);
       setEditingCustomer(null);
-      setFormData({ _id: '', name: '', address: '', contact: '', email: '' });
+      setFormData({ _id: '', date: new Date().toISOString().split('T')[0], name: '', address: '', contact: '', email: '' });
       fetchCustomers();
       alert('Successfully updated customer!');
     } catch (error) {
@@ -82,79 +108,118 @@ const ManageCustomer = () => {
   return (
     <div className="container1">
       <h4 className="manage-title"><FontAwesomeIcon icon={faUsers} className="cus-icon" /> Manage Customers</h4>
+
       <input
         type="text"
         className="form-control mb-3"
-        placeholder="Search by ID, name, address, contact, or email"
+        placeholder="Search by name, address, contact, or email"
         value={searchTerm}
         onChange={handleSearch}
       />
 
+      <input
+        type="date"
+        className="form-control mb-3"
+        value={searchDate}
+        onChange={handleDateSearch}
+      />
+
       {loading ? <p>Loading customers...</p> : (
-        <>
-          <table className="table table-striped">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Address</th>
-                <th>Contact</th>
-                <th>Email</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredCustomers.length > 0 ? (
-                filteredCustomers.map((customer, index) => (
-                  <tr key={customer._id}>
-                    <td>{index + 1}</td>
-                    <td>{customer.name}</td>
-                    <td>{customer.address}</td>
-                    <td>{customer.contact}</td>
-                    <td>{customer.email}</td>
-                    <td>
-                      <button className="btn1" onClick={() => handleEdit(customer)}><FaEdit/></button>
-                      <button className="btn2" onClick={() => handleDelete(customer._id)}><FaTrash/></button>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="6" className="text-center text-danger">No Matching Customer Found!</td>
+        <table className="table table-striped">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Date</th>
+              <th>Name</th>
+              <th>Address</th>
+              <th>Contact</th>
+              <th>Email</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredCustomers.length > 0 ? (
+              filteredCustomers.map((customer, index) => (
+                <tr key={customer._id}>
+                  <td>{index + 1}</td>
+                  <td>{new Date(customer.date).toLocaleDateString('en-CA')}</td> {/* Format date */}
+                  <td>{customer.name}</td>
+                  <td>{customer.address}</td>
+                  <td>{customer.contact}</td>
+                  <td>{customer.email}</td>
+                  <td>
+                    <button className="btn1" onClick={() => handleEdit(customer)}><FaEdit /></button>
+                    <button className="btn2" onClick={() => handleDelete(customer._id)}><FaTrash /></button>
+                  </td>
                 </tr>
-              )}
-            </tbody>
-          </table>
-        </>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="7" className="text-center text-danger">No Matching Customer Found!</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       )}
 
       {editingCustomer && (
-        <>
-          <div className="dark-overlay"></div>
-          <div className="edit-form-container">
-            <form onSubmit={handleUpdate}>
-            <h4 className="edit-title"><FaEdit className="edit-icon" /> Edit Customer</h4>
-              <div className="mb-3">
-                <label htmlFor="name">Name</label>
-                <input type="text" name="name" value={formData.name} onChange={handleChange} required />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="address">Address</label>
-                <input type="text" name="address" value={formData.address} onChange={handleChange} required />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="contact">Contact</label>
-                <input type="number" name="contact" value={formData.contact} onChange={handleChange} required />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="email">Email</label>
-                <input type="email" name="email" value={formData.email} onChange={handleChange} required />
-              </div>
-              <button type="submit" className="btnUpdate">Update</button>
-              <button type="button" className="btnCancle" onClick={() => setEditingCustomer(null)}>Cancel</button>
-            </form>
-          </div>
-        </>
+        <div className="edit-form-container">
+          <form onSubmit={handleUpdate}>
+            <h4 className='add-title'><FontAwesomeIcon icon={faEdit}/>Edit Customer</h4>
+            <div className="mb-3">
+              <label htmlFor="date">Date</label>
+              <input
+                type="date"
+                name="date"
+                value={formData.date}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="name">Name</label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="address">Address</label>
+              <input
+                type="text"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="contact">Contact</label>
+              <input
+                type="text"
+                name="contact"
+                value={formData.contact}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <button type="submit" className="btnUpdate">Update</button>
+            <button type="button" className="btnCancel" onClick={() => setEditingCustomer(null)}>Cancel</button>
+          </form>
+        </div>
       )}
     </div>
   );

@@ -11,7 +11,7 @@ const Signup = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/api/signup", {
+      const response = await axios.post("http://localhost:5002/api/signup", {
         email,
         password,
       });
@@ -32,7 +32,6 @@ const Signup = () => {
         <div className="info-container"> {/* Fixed missing `<` */}
           <img src="/furniture-log.png" alt="Furniture" className="login-image" />
           <h1>Welcome To</h1>
-          <h3>New Sisira Furniture Management System</h3>
           <p className="logpara">
             Manage your furniture business with ease and efficiency, streamline operations.
           </p>

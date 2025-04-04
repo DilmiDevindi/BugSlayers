@@ -1,6 +1,6 @@
 /* Login.css */
 .login-page {
-  background-image: url('../assets/background.avif'); /* Path to your image */
+  background-image: url('/background.avif'); /* Path to your image */
   background-size: cover; /* Ensure the image covers the whole page */
   background-position: center;
   background-repeat: no-repeat;
@@ -9,12 +9,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 .container-wrapper-login {
   display: flex;
   height: 100vh;
   align-items: center;
   width: 100%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   
   
 }
@@ -23,13 +25,17 @@
   width: 30%;
   padding: 20px;
   background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   height: 70vh;
+  box-shadow:3px -3px 10px rgba(0, 0, 0, 0.2),  /* Top */
+  3px 3px 10px rgba(0, 0, 0, 0.2),   /* Bottom */
+  3px 0px 10px rgba(0, 0, 0, 0.2),
+  -3px 3px 10px rgba(244, 242, 242, 0.2); 
 }
 
 h1{
   font-size: 30px;
+  color: #000;
+  margin-top: -50px;
 }
 
 h2 {
@@ -86,12 +92,13 @@ p a:hover {
   text-decoration: underline;
 }
 
+
 .info-container {
-  width: 30%;
+  width: 50%;
   text-align: center;
   padding: 20px;
-  background: #9db3ec;
-  color: white;
+  color: rgb(15, 14, 14);
+  background-color:#fff!important;
   font-size: 24px;
   font-weight: bold;
   justify-content: center;
@@ -102,13 +109,20 @@ p a:hover {
   flex-direction: column;  /* Arrange children in a vertical column */
   align-items: center;     /* Center items horizontally */
   text-align: center;      /* Center text content */
-  gap: 15px;              /* Add spacing between elements */
+  gap: 15px; 
+  width: 30%;
+  padding: 20px;
+  height: 70vh;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2),  /* Right & Bottom */
+  -3px 3px 10px rgba(0, 0, 0, 0.2), /* Left & Bottom */
+  3px -3px 10px rgba(0, 0, 0, 0.2);
+   /* Right & Top */
+}             
   
-}
 .login-image {
   width: 80%;
   height: 60%;
- 
+  margin-top: 10px;
   
 }
 .logpara {

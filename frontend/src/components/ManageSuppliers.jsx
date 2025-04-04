@@ -12,7 +12,7 @@ const ManageSuppliers = () => {
   useEffect(() => {
     const fetchSuppliers = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/suppliers', {
+        const response = await axios.get('http://localhost:5001/api/suppliers', {
           params: { search, filter }
         });
         setSuppliers(response.data);
@@ -26,7 +26,7 @@ const ManageSuppliers = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/suppliers/${id}`);
+      await axios.delete(`http://localhost:5001/api/suppliers/${id}`);
       setSuppliers(suppliers.filter(supplier => supplier._id !== id));
     } catch (error) {
       console.error('Error deleting supplier:', error.response ? error.response.data : error.message);

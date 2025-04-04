@@ -4,39 +4,54 @@ const Customer = require('../models/customerModel'); // Ensure this model exists
 // Fetch customers (with optional filtering by name)
 // Fetch customers (with optional filtering by name)
 const getCustomers = async (req, res) => {
-    try {
-      const { name } = req.query;
-      let query = {};
-      
-      if (name) {
-        query = { name }; // Search by name if provided
-      }
-  
-      const customers = await Customer.find(query);
-      res.status(200).json(customers);
-    } catch (error) {
-      res.status(500).json({ message: 'Error fetching customers', error });
+  try {
+    const { name, date } = req.query;
+    let query = {};
+
+    if (name) {
+      query.name = name; // Search by name if provided
     }
-  };
+
+    if (date) {
+      query.date = new Date(date); // Search by date if provided
+    }
+
+    const customers = await Customer.find(query);
+    res.status(200).json(customers);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching customers', error });
+  }
+};
+
 
 // Create a new customer
 const createCustomer = async (req, res) => {
   try {
-    const { name, email } = req.body;
+    const { date, name, address, contact, email } = req.body;
 
     // Validate request body
-    if (!name || !email) {
-      return res.status(400).json({ message: 'Name and email are required' });
+    if (!name || !email || !date || !address || !contact) {
+      return res.status(400).json({ message: 'Name, email, date, address, and contact are required' });
     }
 
-    // Check if customer name already exists
-    const existingCustomer = await Customer.findOne({ name: name.trim() });
+    // Validate email format
+    if (!/^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(email)) {
+      return res.status(400).json({ message: 'Invalid email format. Please use a valid @gmail.com email.' });
+    }
+
+    // Validate contact number (example: 10-digit number)
+    if (!/^[0-9]{10}$/.test(contact)) {
+      return res.status(400).json({ message: 'Invalid contact number. It should be a 10-digit number.' });
+    }
+
+    // Check if customer with the same email exists
+    const existingCustomer = await Customer.findOne({ email: email });
     if (existingCustomer) {
-      return res.status(400).json({ message: 'Customer with this name already exists' });
+      return res.status(400).json({ message: 'Customer with this email already exists' });
     }
+    // Create a new customer with the provided date and other data
+    const newCustomer = new Customer({ date: new Date(date), name, address, contact, email });
 
-    // Add the new customer if not existing
-    const newCustomer = new Customer(req.body);
     const savedCustomer = await newCustomer.save();
     res.status(201).json(savedCustomer);
   } catch (error) {
@@ -48,6 +63,7 @@ const createCustomer = async (req, res) => {
     }
   }
 };
+
   
 
 // Update an existing customer
@@ -70,7 +86,7 @@ const deleteCustomer = async (req, res) => {
   }
 };
 
-// ✅ Check if customer name exists before adding (Updated)
+
 
 
 module.exports = {
@@ -78,6 +94,6 @@ module.exports = {
   createCustomer,
   updateCustomer,
   deleteCustomer,
-  // ✅ Ensure this is exported
+  
 };
 

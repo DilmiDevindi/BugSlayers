@@ -159,16 +159,22 @@ h4{
 }
 
 /*Add Customer css*/
-.addCus{
-  color: #0b4383;
-  margin-right: 10px;
+
+.container-c{
+  width: 35%;
+  margin-bottom: 20px;
+  margin-left: 20px;
 }
 
-.addCusTitle{
-  color: #0b4383;
-  font-size: 18px;
+
+
+.add-title{
+  display: flex;
+  align-items: center; 
+  gap: 8px; 
+  color: #043870;
   font-weight: bold;
-  
+  margin-top: 20px;
 }
 
 .cus-icon {
@@ -205,6 +211,8 @@ h4{
   width: 400px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   z-index: 1000;
+  height: 600px;
+  margin-top: 30px;
 }
 
 .edit-form-container input {
@@ -215,18 +223,9 @@ h4{
   border-radius: 5px;
 }
 
-.edit-form-container button {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  color: white;
-  cursor: pointer;
-  margin-top: 10px;
-}
 
 .edit-form-container .btnUpdate {
-  background: #2cce17;
+  background: #5fd253;
   color: white;
   border: none;
   padding: 10px;
@@ -242,8 +241,8 @@ h4{
   background: #077f07; 
 }
 
-.edit-form-container .btnCancle {
-  background: #c05014;
+.btnCancle {
+  background-color: rgb(243, 112, 69);
   color: white;
   border: none;
   padding: 10px;
@@ -254,9 +253,18 @@ h4{
   height: 40px;
 }
 
+.btnCancel {
+  background-color: red !important;
+  color: white !important;
+  border: none !important;
+  padding: 10px !important;
+  width: 20% !important;
+  height: 40px !important;
+}
 
-.btnCancle:hover { 
-  background: #9c0312; 
+
+.btnCancel:hover { 
+  background: #920412 !important;
 }
 
 /*inventory*/

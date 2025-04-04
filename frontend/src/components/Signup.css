@@ -1,5 +1,5 @@
 .signup-page {
-  background-image: url('../assets/background.avif'); /* Background image */
+  background-image: url('/background.avif'); /* Background image */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -24,6 +24,10 @@
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   height: 70vh;
+  box-shadow:3px -3px 10px rgba(0, 0, 0, 0.2),  /* Top */
+  3px 3px 10px rgba(0, 0, 0, 0.2),   /* Bottom */
+  3px 0px 10px rgba(0, 0, 0, 0.2),
+  -3px 3px 10px rgba(244, 242, 242, 0.2); 
 }
 
 h1 {

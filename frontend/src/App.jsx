@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Login from './components/Login'; // Ensure the path is correct
@@ -13,7 +12,6 @@ import AddInventoryItem from './components/AddInventoryItem'; // Ensure the path
 import ManageInventories from './components/ManageInventories'; // Ensure the path is correct
 import AddCustomer from './components/AddCustomer';
 import ManageCustomer from './components/ManageCustomer'; // Ensure the path is correct
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 function App() {
@@ -32,10 +30,11 @@ function App() {
           <Route path="suppliers/manage" element={<ManageSuppliers />} />
           <Route path="suppliers/edit/:id" element={<EditSupplier />} />
           <Route path="inventory/add" element={<AddInventoryItem />} />
-          <Route path="inventory/add1" element={<ManageInventories />} />
+          <Route path="inventory/manage" element={<ManageInventories />} />
           <Route path="customers/add" element={<AddCustomer />} />
           <Route path="customers/manage" element={<ManageCustomer />} />
-          {/* Add other nested routes here */}
+          
+          
         </Route>
       </Routes>
     </Router>
