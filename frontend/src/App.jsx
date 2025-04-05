@@ -11,7 +11,7 @@ import EditSupplier from './components/EditSupplier'; // Ensure the path is corr
 import AddInventoryItem from './components/AddInventoryItem'; // Ensure the path is correct
 import ManageInventories from './components/ManageInventories'; // Ensure the path is correct
 import AddCustomer from './components/AddCustomer';
-import ManageCustomer from './components/ManageCustomer'; // Ensure the path is correct
+import ManageCustomer from './components/ManageCustomer';
 
 
 function App() {
@@ -33,6 +33,7 @@ function App() {
           <Route path="inventory/manage" element={<ManageInventories />} />
           <Route path="customers/add" element={<AddCustomer />} />
           <Route path="customers/manage" element={<ManageCustomer />} />
+          <Route path="sales/add" element={<AddCustomer />} /> {/* Assuming AddCustomer is for sales as well */}
           
           
         </Route>
