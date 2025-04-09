@@ -7,6 +7,7 @@ const supplierRoutes = require('./routes/supplierRoutes');
 const inventoryRoutes = require('./routes/inventoryRoutes');
 const customerRoutes = require('./routes/customerRoutes');
 const authRoutes = require('./routes/authRoutes'); 
+const categoryRoutes = require('./routes/categoryRoutes'); 
 
 
 const app = express();
@@ -35,6 +36,7 @@ app.use('/api/suppliers', supplierRoutes);
 app.use('/api/inventory', inventoryRoutes);
 app.use('/api/customers', customerRoutes); 
 app.use('/api/auth', authRoutes);
+app.use('/api/category', categoryRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
