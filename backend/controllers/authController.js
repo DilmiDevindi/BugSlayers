@@ -6,7 +6,6 @@ const JWT_SECRET = 'your_jwt_secret_key';
 
 // Signup route
 const signup = async (req, res) => {
-  console.log("Signup request received:", req.body);	
   const { email, password } = req.body;
   try {
     const userExists = await User.findOne({ email });
