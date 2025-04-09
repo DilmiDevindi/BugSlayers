@@ -1,103 +1,164 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSquarePlus } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
+import './Supplier.css';
 
 const AddSupplier = () => {
-  // State to manage form data
   const [supplier, setSupplier] = useState({
+    date: new Date().toISOString().split('T')[0],
     supplierName: '',
-    phone: '',
+    phone1: '',
+    phone2: '',
+    fax: '',
     email: '',
     address: '',
     supplyProducts: '',
     paymentTerms: '',
   });
+  const [errors, setErrors] = useState({});
 
-  // Handle form submission
+  const validatePhoneNumber = (number) => /^\d{10}$/.test(number);
+
+  const validateEmail = (email) => /^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(email);
+
+  const validateFields = (name, value) => {
+    let error = '';
+    if (name === 'phone1' || name === 'phone2') {
+      value = value.replace(/\D/g, '');
+      if (value.length > 10) {
+        alert('Contact number must not exceed 10 digits');
+        value = value.slice(0, 10);
+      }
+      if (!validatePhoneNumber(value)) {
+        error = 'Contact number must be exactly 10 digits and numeric';
+      } else if (name === 'phone2' && value === supplier.phone1) {
+        error = 'Primary and Secondary Contact Numbers must not be the same';
+      }
+    }
+
+    if (name === 'email' && value) {
+      if (!validateEmail(value)) {
+        error = 'Email must be a valid @gmail.com address';
+      }
+    }
+
+    if (name === 'address' && !value.trim()) {
+      error = 'Address cannot be empty';
+    }
+
+    setErrors((prev) => ({ ...prev, [name]: error }));
+    return value;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    for (let field in supplier) {
+      validateFields(field, supplier[field]);
+    }
+
+    if (Object.values(errors).some((err) => err)) return;
+
     try {
-      // Sending data to the backend
-      await axios.post('http://localhost:5000/api/suppliers', supplier);
+      await axios.post('/api/suppliers', supplier);
       alert('Supplier added successfully');
       setSupplier({
+        date: new Date().toISOString().split('T')[0],
         supplierName: '',
-        phone: '',
+        phone1: '',
+        phone2: '',
+        fax: '',
         email: '',
         address: '',
         supplyProducts: '',
         paymentTerms: '',
       });
+      setErrors({});
     } catch (error) {
       console.error('Error adding supplier:', error);
     }
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    const validatedValue = validateFields(name, value);
+    setSupplier({ ...supplier, [name]: validatedValue });
+  };
+
   return (
-    <div className="container mt-5">
-      <h2>Add Supplier</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label className="form-label">Supplier Name</label>
-          <input
-            type="text"
-            className="form-control"
-            value={supplier.supplierName}
-            onChange={(e) => setSupplier({ ...supplier, supplierName: e.target.value })}
-            required
+    <div className="container-i form-container-i" style={{ maxWidth: '50%' }}>
+      <div className='text-center' style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '20px' }}>
+        <FontAwesomeIcon icon={faSquarePlus} /> Add Supplier
+      </div>
+      <form onSubmit={handleSubmit} autoComplete="off">
+        <div className="form-group-i">
+          <input 
+            type="date" 
+            className="form-control" 
+            name="date" 
+            value={supplier.date} 
+            onChange={handleInputChange} 
+            placeholder="Date"
+            required 
           />
         </div>
-        <div className="mb-3">
-          <label className="form-label">Phone</label>
-          <input
-            type="tel"
-            className="form-control"
-            value={supplier.phone}
-            onChange={(e) => setSupplier({ ...supplier, phone: e.target.value })}
+
+        {[{ label: "Supplier Name", key: "supplierName" },
+          { label: "Contact Number (Primary)", key: "phone1", required: true },
+          { label: "Contact Number (Secondary)", key: "phone2", required: false },
+          { label: "Fax Number", key: "fax" },
+          { label: "Email Address", key: "email" },
+          { label: "Address", key: "address" }].map(field => (
+          <div key={field.key} className="form-group-i">
+            <input
+              type="text"
+              className="form-control"
+              name={field.key}
+              value={supplier[field.key]}
+              onChange={handleInputChange}
+              placeholder={field.label}
+              required={field.required || false}
+            />
+            {errors[field.key] && <div className="alert alert-danger">{errors[field.key]}</div>}
+          </div>
+        ))}
+
+        <div className="form-group-i">
+          <select 
+            className="form-control" 
+            name="supplyProducts" 
+            value={supplier.supplyProducts} 
+            onChange={handleInputChange} 
             required
-          />
+          >
+            <option value="" disabled>Select a product</option>
+            <option value="Mattress">Mettress</option>
+            <option value="Cupboard">Cupboard</option>
+            <option value="Chair">Chair</option>
+            <option value="Table">Table</option>
+            <option value="Iron Board">Iron Board</option>
+            <option value="Carrom Board">Carrom Board</option>
+            <option value="Clothes Rack">Clothing Rack</option>
+          </select>
         </div>
-        <div className="mb-3">
-          <label className="form-label">Email</label>
-          <input
-            type="email"
-            className="form-control"
-            value={supplier.email}
-            onChange={(e) => setSupplier({ ...supplier, email: e.target.value })}
+
+        <div className="form-group-i">
+          <select 
+            className="form-control" 
+            name="paymentTerms" 
+            value={supplier.paymentTerms} 
+            onChange={handleInputChange} 
             required
-          />
+          >
+            <option value="" disabled>Select a payment method</option>
+            <option value="Cash">Cash</option>
+            <option value="Card">Card</option>
+          </select>
         </div>
-        <div className="mb-3">
-          <label className="form-label">Address</label>
-          <input
-            type="text"
-            className="form-control"
-            value={supplier.address}
-            onChange={(e) => setSupplier({ ...supplier, address: e.target.value })}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Supply Products</label>
-          <input
-            type="text"
-            className="form-control"
-            value={supplier.supplyProducts}
-            onChange={(e) => setSupplier({ ...supplier, supplyProducts: e.target.value })}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Payment Terms</label>
-          <input
-            type="text"
-            className="form-control"
-            value={supplier.paymentTerms}
-            onChange={(e) => setSupplier({ ...supplier, paymentTerms: e.target.value })}
-            required
-          />
-        </div>
-        <button type="submit" className="btn btn-primary">Add Supplier</button>
+
+        <button type="submit" className="btn btn-primary-i">Add Supplier</button>
       </form>
     </div>
   );
