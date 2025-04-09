@@ -13,6 +13,8 @@ import AddInventoryItem from './components/AddInventoryItem'; // Ensure the path
 import ManageInventories from './components/ManageInventories'; // Ensure the path is correct
 import AddCustomer from './components/AddCustomer';
 import ManageCustomer from './components/ManageCustomer'; // Ensure the path is correct
+import AddCategory from "./components/AddCategory";
+import ManageCategories from "./components/ManageCategory";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -35,6 +37,8 @@ function App() {
           <Route path="inventory/add1" element={<ManageInventories />} />
           <Route path="customers/add" element={<AddCustomer />} />
           <Route path="customers/manage" element={<ManageCustomer />} />
+          <Route path="category/add" element={<AddCategory />} />
+          <Route path="category/add1" element={<ManageCategories />} />
           {/* Add other nested routes here */}
         </Route>
       </Routes>

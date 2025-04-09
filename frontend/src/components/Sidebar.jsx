@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css'; // Import Bootstrap Icons
+import '../App.css';
 
 const Sidebar = () => {
   const [isSuppliersOpen, setIsSuppliersOpen] = useState(false); 
   const [isInventoryOpen, setIsInventoryOpen] = useState(false); 
   const [isCustomersOpen, setIsCustomersOpen] = useState(false); // New state for Customers dropdown 
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
 
   const toggleSuppliersDropdown = () => {
     setIsSuppliersOpen(!isSuppliersOpen);
@@ -20,6 +22,10 @@ const Sidebar = () => {
     setIsCustomersOpen(!isCustomersOpen);
   }
   // New function to toggle Customers dropdown
+
+  const toggleCategoryDropdown = () => {
+    setIsCategoryOpen(!isCategoryOpen);
+  }
 
   return (
     <div className="bg-dark text-white vh-100 p-3">
@@ -84,6 +90,31 @@ const Sidebar = () => {
           )}
         </li>
         
+        {/* Category Dropdown */}
+        <li className="nav-item mb-3">
+          <button 
+            className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
+            onClick={toggleCategoryDropdown}
+            style={{ cursor: 'pointer' }}>
+            <i className="bi bi-boxes me-2"></i> Category
+            <i className={`bi ${isCategoryOpen ? 'bi-chevron-up' : 'bi-chevron-down'} ms-auto`}></i>
+          </button>
+
+          {isCategoryOpen && (
+            <ul className="nav flex-column ms-3">
+              <li className="nav-item mb-2">
+                <Link to="/dashboard/category/add" className="nav-link text-white">
+                  Add Category
+                </Link>
+              </li>
+              <li className="nav-item mb-2">
+                <Link to="/dashboard/category/add1" className="nav-link text-white">
+                  Manage Category
+                </Link>
+              </li>
+            </ul>
+          )}
+        </li>
       
 
         {/* Customers Dropdown */}

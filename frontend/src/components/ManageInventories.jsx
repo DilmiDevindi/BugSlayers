@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBarsProgress, faBucket, faDeleteLeft, faEdit, faRemove } from '@fortawesome/free-solid-svg-icons';
+import { faBarsProgress, faEdit, faRemove } from '@fortawesome/free-solid-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '../Inventory.css';
 
 const ManageInventories = () => {
   const [items, setItems] = useState([]);
