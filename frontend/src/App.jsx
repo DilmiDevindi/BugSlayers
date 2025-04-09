@@ -15,7 +15,7 @@ import AddCustomer from './components/AddCustomer';
 import ManageCustomer from './components/ManageCustomer'; // Ensure the path is correct
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import Home from './pages/home/pages/Home'
+// import Home from './pages/home/pages/Home'
 // import Collection from './pages/home/pages/Collection'
 // import About from './pages/home/pages/About'
 // import Contact from './pages/home/pages/Contact'
@@ -34,7 +34,7 @@ function App() {
       <Routes>
         {/* Public Routes */}
 
-        <Route path='/' element={<Home/>}/>
+        {/* <Route path='/' element={<Home/>}/> */}
         {/* <Route path='/collection' element={<Collection/>} />
         <Route path='/about' element={<About/>} />
         <Route path='/contact' element={<Contact/>}/>
@@ -44,7 +44,7 @@ function App() {
         <Route path='/placeOrder' element={<PlaceOrder/>} />
         <Route path='/orders' element={<Orders/>} /> */}
 
-        <Route path="/signin" element={<Login />} />
+        <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         
         {/* Protected Routes */}
