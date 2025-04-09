@@ -65,18 +65,21 @@
 
 /* Background color for Cards */
 .custom-card-1 {
-  background-color: #09425b; /* Light grey background */
+  background-color: #20b2aa; /* Light grey background */
   border: 1px solid #dee2e6; /* Light border */
 }
 .custom-card-2 {
-  background-color: #296a29; /* Light grey background */
+  background-color: #dfbd00; /* Light grey background */
   border: 1px solid #dee2e6; /* Light border */
 }
 .custom-card-3 {
-  background-color: #802929; /* Light grey background */
+  background-color: #b53131; /* Light grey background */
   border: 1px solid #dee2e6; /* Light border */
 }
-
+.custom-card-4 {
+  background-color: #89be00; 
+  border: 1px solid #dee2e6; 
+}
 
 
 .card-title {
@@ -259,192 +262,4 @@ h4{
   background: #9c0312; 
 }
 
-/*inventory*/
-.container-i {
-  background-color: #f8f9fa;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  width: 50%;
-}
-
-.card-i {
-  width: 100%;
-  max-width: 500px;
-  padding: 20px;
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
-  border-radius: 12px;
-  background-color: #ffffff;
-}
-
-.form-title-i {
-  font-size: 16px;
-  font-weight: bold;
-  color: #333;
-  background-color: #f8f9fa;
-  padding: 10px 15px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 15px;
-}
-
-.form-icon-i {
-  font-size: 22px;
-  margin-right: 8px;
-  color: #007bff;
-  height: 40px;
-}
-
-
-
-.form-group-i {
-  margin-bottom: 15px;
-}
-
-.form-control-i {
-  border: 1px solid #ced4da;
-  border-radius: 8px;
-  padding: 12px;
-  font-size: 16px;
-  width: 100%;
-  transition: all 0.3s ease;
-}
-
-.form-control-i:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
-  outline: none;
-}
-
-.form-row-i {
-  display: flex;
-  gap: 10px;
-  justify-content: space-between;
-}
-
-.input-icon-i {
-  display: flex;
-  align-items: center;
-  position: relative;
-}
-
-.input-icon-i .icon {
-  position: absolute;
-  left: 12px;
-  font-size: 16px;
-  color: #555;
-}
-
-.input-icon-i input {
-  padding-left: 30px;
-}
-
-.btn-primary-i {
-  width: 40%;
-  height: 40px;
-  padding: 8px;
-  font-weight: bold;
-  background-color: #007bff;
-  color: #fff;
-  border-radius: 8px;
-}
-
-.btn-primary-i:hover {
-  background-color: #0056b3;
-}
-
-.btn-success-i {
-  width: 90%;
-  font-weight: bold;
-  padding: 12px;
-  background-color: #007bff;
-  color: #fff;
-  border-radius: 8px;
-}
-
-.btn-success-i:hover {
-  background-color: #007bff;
-}
-
-.alert-danger-i {
-  font-size: 14px;
-  padding: 10px;
-  text-align: center;
-  background-color: #f8d7da;
-  border-color: #f5c6cb;
-  color: #721c24;
-}
-
-
-/*ManageInventories Styles*/
-.inventory-container {
-  background-color: #f8f9fa;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  width: 100%;
-}
-
-.inventory-title {
-  font-size: 16px;
-  font-weight: bold;
-  color: #333;
-  background-color: #f8f9fa;
-  padding: 10px 15px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 15px;
-}
-
-.inventory-title-icon {
-  font-size: 22px;
-  margin-right: 8px;
-  color: #007bff;
-  height: 40px;
-}
-
-.inventory-table-container {
-  width: 100%;
-}
-
-.inventory-table {
-  width: 100%;
-  background: white;
-  border-radius: 8px;
-  border-collapse: collapse;
-}
-
-.inventory-table th, .inventory-table td {
-  padding: 5px;
-  font-size: 14px;
-}
-
-.inventory-table tbody tr:hover {
-  background-color: #f1f1f1;
-}
-
-.inventory-edit-icon {
-  font-size: 16px;
-  margin-right: 8px;
-  color: #ffc107;
-  height: 40px;
-}
-
-.inventory-delete-icon {
-  font-size: 16px;
-  margin-right: 8px;
-  color: #dc3545;
-  height: 40px;
-}
-
-.no-items {
-  text-align: center;
-  font-size: 18px;
-  color: #666;
-  padding: 20px;
-}
 
