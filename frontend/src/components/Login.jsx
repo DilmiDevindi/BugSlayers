@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Login.css';
+import myImage from '../assets/furniture-log.png';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -36,7 +37,7 @@ const Login = () => {
     <div className="login-page">
       <div className="container-wrapper-login">
         <div className="info-container">
-          <img src="/furniture-log.png" alt="Furniture" className="login-image" />
+          <img src={myImage} alt="Furniture" className="login-image" />
           <h1>Welcome To</h1>
           <p className='logpara'>Manage your furniture business with ease and efficiency, streamline operations.</p>
         </div>
