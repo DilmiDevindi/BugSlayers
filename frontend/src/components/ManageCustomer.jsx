@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUsers } from "@fortawesome/free-solid-svg-icons";
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import './Customer.css';
-
+ // Assuming you have a CSS file for styling
 
 const ManageCustomer = () => {
   const [customers, setCustomers] = useState([]);
@@ -81,20 +81,12 @@ const ManageCustomer = () => {
 
   const handleEdit = (customer) => {
     setEditingCustomer(customer._id);
-    
-    setFormData({
-      _id: customer._id,
-      date: new Date(customer.date).toISOString().split('T')[0],
-      name: customer.name,
-      address: customer.address,
-      contact: customer.contact,
-      email: customer.email
-    });
+    setFormData({ ...customer });
   };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    if ( !formData.date || !formData.name || !formData.address || !formData.contact || !formData.email) {
+    if (!formData.name || !formData.address || !formData.contact || !formData.email) {
       alert('All fields are required!');
       return;
     }
@@ -113,8 +105,6 @@ const ManageCustomer = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    
-    
   };
 
   return (
