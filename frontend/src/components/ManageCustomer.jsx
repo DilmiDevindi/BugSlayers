@@ -82,13 +82,9 @@ const ManageCustomer = () => {
   const handleEdit = (customer) => {
     setEditingCustomer(customer._id);
     
-    // Format the date to "yyyy-MM-dd" for compatibility with <input type="date" />
-    const formattedDate = new Date(customer.date).toISOString().split('T')[0];
-    
-    // Update form data with customer data including the formatted date
     setFormData({
       _id: customer._id,
-      date: formattedDate,
+      date: new Date(customer.date).toISOString().split('T')[0],
       name: customer.name,
       address: customer.address,
       contact: customer.contact,
@@ -98,7 +94,7 @@ const ManageCustomer = () => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    if ( !formData.name || !formData.address || !formData.contact || !formData.email) {
+    if ( !formData.date || !formData.name || !formData.address || !formData.contact || !formData.email) {
       alert('All fields are required!');
       return;
     }
