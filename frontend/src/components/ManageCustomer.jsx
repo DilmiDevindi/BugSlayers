@@ -217,7 +217,7 @@ const ManageCustomer = () => {
               />
             </div>
             <button type="submit" className="btnUpdate">Update</button>
-            <button type="button" className="btnCancel" onClick={() => setEditingCustomer(null)}>Cancel</button>
+            <button type="button" className="btnClose" onClick={() => setEditingCustomer(null)}>Cancel</button>
           </form>
         </div>
       )}
