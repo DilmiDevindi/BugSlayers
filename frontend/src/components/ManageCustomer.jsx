@@ -4,6 +4,8 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUsers } from "@fortawesome/free-solid-svg-icons";
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import './Customer.css';
+ // Assuming you have a CSS file for styling
 
 const ManageCustomer = () => {
   const [customers, setCustomers] = useState([]);
@@ -217,7 +219,7 @@ const ManageCustomer = () => {
               />
             </div>
             <button type="submit" className="btnUpdate">Update</button>
-            <button type="button" className="btnCancel" onClick={() => setEditingCustomer(null)}>Cancel</button>
+            <button type="button" className="btnClose" onClick={() => setEditingCustomer(null)}>Cancel</button>
           </form>
         </div>
       )}
