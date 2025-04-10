@@ -1,3 +1,9 @@
+/*Add Customer css*/
+ .container-c{
+    width: 30%;
+ }
+
+
 /*Manage Customer css*/
 .dark-overlay {
     position: fixed;
