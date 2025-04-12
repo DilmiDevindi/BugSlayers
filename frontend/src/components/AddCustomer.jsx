@@ -2,6 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
+import './Customer.css'; // Assuming you have a CSS file for styling
 
 const AddCustomer = () => {
   const [date, setDate] = useState('');  
@@ -26,14 +27,14 @@ const AddCustomer = () => {
     if (!validateFields()) return;
 
     try {
-      const checkResponse = await axios.get('http://localhost:5002/api/customers');
+      const checkResponse = await axios.get('/api/customers');
       if (checkResponse.data.some(c => c.email === email)) {
         alert("Customer with this email already exists!");
         return;
       }
 
       const newCustomer = { date, name, address, contact, email };  // Ensure date is included
-      const response = await axios.post('http://localhost:5002/api/customers', newCustomer, {
+      const response = await axios.post('/api/customers', newCustomer, {
         headers: { 'Content-Type': 'application/json' }
       });
 
