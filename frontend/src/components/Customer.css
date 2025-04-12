@@ -70,3 +70,8 @@
   .btnClose:hover { 
     background: #9a0505!important; 
   } 
+
+  .container-c{
+    width: 35%;
+  }
+
