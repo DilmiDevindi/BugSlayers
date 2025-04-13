@@ -143,6 +143,13 @@ const Sidebar = () => {
   )}
 </li>
 
+{/*  Bill Link (Simple single-page link) */}
+<li className="nav-item mb-3">
+  <Link to="/dashboard/bill" className="nav-link text-white d-flex align-items-center">
+    <i className="bi bi-calculator me-2"></i> Bill
+  </Link>
+</li>
+
       </ul>
     </div>
   );

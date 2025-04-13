@@ -48,7 +48,7 @@ const ManageCustomer = () => {
 
   const filteredCustomers = customers.filter(customer => {
     // Search term filtering
-    const matchSearchTerm = customer._id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const matchSearchTerm = (String(customer._id).toLowerCase().includes(searchTerm.toLowerCase()))  ||
                              customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                              customer.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
                              customer.contact.toLowerCase().includes(searchTerm.toLowerCase()) ||
