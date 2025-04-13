@@ -8,7 +8,7 @@ const inventoryRoutes = require('./routes/inventoryRoutes');
 const customerRoutes = require('./routes/customerRoutes');
 const authRoutes = require('./routes/authRoutes'); 
 const categoryRoutes = require('./routes/categoryRoutes'); 
-const salesRoutes = require('./routes/salesRoutes');
+const salesRoutes = require('./routes/salesRoutes'); // Import the sales route
 
 const app = express();
 const PORT = 5000;
@@ -37,7 +37,7 @@ app.use('/api/inventory', inventoryRoutes);
 app.use('/api/customers', customerRoutes); 
 app.use('/api/auth', authRoutes);
 app.use('/api/category', categoryRoutes);
-app.use('/api/sales', salesRoutes); // Ensure the sales route is connected
+app.use('/api/sales', salesRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
