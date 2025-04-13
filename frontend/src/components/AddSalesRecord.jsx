@@ -12,7 +12,7 @@ const AddSalesRecord = () => {
     e.preventDefault();
     try {
       const newSale = { customerName, productName, quantity, price };
-      await axios.post('http://localhost:5000/api/sales/add', newSale);
+      await axios.post('/api/sales/add', newSale);
       setCustomerName('');
       setProductName('');
       setQuantity('');
