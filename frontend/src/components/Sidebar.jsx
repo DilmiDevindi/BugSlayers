@@ -149,15 +149,9 @@ const Sidebar = () => {
   )}
 </li>
 
-{/*  Bill Link (Simple single-page link) */}
-<li className="nav-item mb-3">
-  <Link to="/dashboard/bill" className="nav-link text-white d-flex align-items-center">
-    <i className="bi bi-calculator me-2"></i> Bill
-  </Link>
-</li>
 
-    {/* Sales Dropdown */}
-    <li className="nav-item mb-3">
+   {/* Sales Dropdown */}
+   <li className="nav-item mb-3">
           <button 
             className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
             onClick={toggleSalesDropdown}
@@ -187,7 +181,14 @@ const Sidebar = () => {
           )}
         </li>
 
+{/*  Bill Link (Simple single-page link) */}
+<li className="nav-item mb-3">
+  <Link to="/dashboard/bill" className="nav-link text-white d-flex align-items-center">
+    <i className="bi bi-calculator me-2"></i> Bill
+  </Link>
+</li>
 
+ 
       </ul>
     </div>
   );
