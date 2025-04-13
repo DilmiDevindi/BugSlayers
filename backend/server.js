@@ -19,7 +19,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/merninventory', {
+mongoose.connect('mongodb://localhost:27017/mern-vite-app', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
