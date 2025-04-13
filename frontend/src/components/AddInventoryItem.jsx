@@ -1,5 +1,6 @@
 
 import { useState } from 'react';
+import { useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart, faSquarePlus, faDollarSign } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
@@ -12,8 +13,22 @@ const AddInventoryItem = () => {
   const [quantity, setQuantity] = useState('');
   const [buyingPrice, setBuyingPrice] = useState('');
   const [sellingPrice, setSellingPrice] = useState('');
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/category'); 
+        setCategories(response.data);
+      } catch (err) {
+        console.error('Failed to fetch categories', err);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,7 +36,13 @@ const AddInventoryItem = () => {
     setError('');
 
     try {
-      const newItem = { productName, category, quantity: Number(quantity), buyingPrice: parseFloat(buyingPrice).toFixed(2), sellingPrice: parseFloat(sellingPrice).toFixed(2) };
+      const newItem = {
+         productName, 
+         category, 
+         quantity: Number(quantity), 
+         buyingPrice: parseFloat(buyingPrice).toFixed(2), 
+         sellingPrice: parseFloat(sellingPrice).toFixed(2) 
+      };
       await axios.post('http://localhost:5000/api/inventory/add', newItem);
       setProductName('');
       setCategory('');
@@ -56,14 +77,19 @@ const AddInventoryItem = () => {
 
             <div className="form-row-i">
               <div className="form-group-i col">
-                <input
-                  type="text"
+                <select
                   className="form-control-i"
-                  placeholder="Product Category"
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
                   required
-                />
+                  >
+                  <option value="">Select Category</option>
+                  {categories.map((cat) => (
+                    <option key={cat._id} value={cat._id}>
+                      {cat.categoryName}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
 
