@@ -29,19 +29,12 @@ const AddCustomer = () => {
       const res = await axios.get('/api/customers');
       const customers = res.data;
 
-      // Check for existing email
       if (customers.some(c => c.email === email)) {
         alert("Customer with this email already exists!");
         return;
       }
 
-      // Create new customer object (no customerId field needed here)
-      const newCustomer = {
-        name,
-        address,
-        contact,
-        email
-      };
+      const newCustomer = { name, address, contact, email };
 
       const response = await axios.post('/api/customers', newCustomer, {
         headers: { 'Content-Type': 'application/json' }
@@ -70,23 +63,43 @@ const AddCustomer = () => {
       </h4>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
-          <label className="form-label">Name</label>
-          <input type="text" className="form-control" value={name} onChange={(e) => setName(e.target.value)} />
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
           {errors.name && <div className="alert alert-danger">{errors.name}</div>}
         </div>
         <div className="mb-3">
-          <label className="form-label">Address</label>
-          <input type="text" className="form-control" value={address} onChange={(e) => setAddress(e.target.value)} />
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Address"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+          />
           {errors.address && <div className="alert alert-danger">{errors.address}</div>}
         </div>
         <div className="mb-3">
-          <label className="form-label">Contact</label>
-          <input type="text" className="form-control" value={contact} onChange={(e) => setContact(e.target.value)} />
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Contact"
+            value={contact}
+            onChange={(e) => setContact(e.target.value)}
+          />
           {errors.contact && <div className="alert alert-danger">{errors.contact}</div>}
         </div>
         <div className="mb-3">
-          <label className="form-label">Email</label>
-          <input type="email" className="form-control" value={email} onChange={(e) => setEmail(e.target.value.toLowerCase())} />
+          <input
+            type="email"
+            className="form-control"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value.toLowerCase())}
+          />
           {errors.email && <div className="alert alert-danger">{errors.email}</div>}
         </div>
         <button type="submit" className="btn btn-primary">Add Customer</button>
