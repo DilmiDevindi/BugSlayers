@@ -70,14 +70,37 @@ const deleteCustomer = async (req, res) => {
   }
 };
 
-// ✅ Check if customer name exists before adding (Updated)
 
+const getCustomerByName = async (req, res) => {
+  try {
+    const { name } = req.params;  // This should be from req.params for the route `/name/:name`
+    const customer = await Customer.findOne({ name: { $regex: new RegExp(`^${name}$`, 'i') } });
+
+    if (!customer) {
+      return res.status(404).json({ message: 'Customer not found' });
+    }
+
+    res.status(200).json(customer);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching customer by name', error });
+  }
+};
 
 module.exports = {
   getCustomers,
   createCustomer,
   updateCustomer,
   deleteCustomer,
+  getCustomerByName,
+ 
   // ✅ Ensure this is exported
 };
+
+
+
+
+
+
+
+
 

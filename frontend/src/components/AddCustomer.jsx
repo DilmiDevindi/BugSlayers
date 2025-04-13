@@ -2,10 +2,9 @@ import { useState } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
-import './Customer.css'; // Assuming you have a CSS file for styling
+import './Customer.css';
 
 const AddCustomer = () => {
-  const [date, setDate] = useState('');  
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [contact, setContact] = useState('');
@@ -13,7 +12,7 @@ const AddCustomer = () => {
   const [errors, setErrors] = useState({});
 
   const validateFields = () => {
-    let newErrors = {};
+    const newErrors = {};
     if (!name.trim()) newErrors.name = "Name is required";
     if (!address.trim()) newErrors.address = "Address is required";
     if (!/^[0-9]{10}$/.test(contact)) newErrors.contact = "Enter a valid 10-digit contact number";
@@ -27,13 +26,23 @@ const AddCustomer = () => {
     if (!validateFields()) return;
 
     try {
-      const checkResponse = await axios.get('/api/customers');
-      if (checkResponse.data.some(c => c.email === email)) {
+      const res = await axios.get('/api/customers');
+      const customers = res.data;
+
+      // Check for existing email
+      if (customers.some(c => c.email === email)) {
         alert("Customer with this email already exists!");
         return;
       }
 
-      const newCustomer = { date, name, address, contact, email };  // Ensure date is included
+      // Create new customer object (no customerId field needed here)
+      const newCustomer = {
+        name,
+        address,
+        contact,
+        email
+      };
+
       const response = await axios.post('/api/customers', newCustomer, {
         headers: { 'Content-Type': 'application/json' }
       });
@@ -44,7 +53,6 @@ const AddCustomer = () => {
         setAddress('');
         setContact('');
         setEmail('');
-        setDate('');  
         setErrors({});
       } else {
         alert("Error adding customer. Please try again.");
@@ -61,15 +69,6 @@ const AddCustomer = () => {
         <FontAwesomeIcon icon={faPlusSquare} className="addCus" /> Add New Customer
       </h4>
       <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label className="form-label">Date</label>
-          <input
-            type="date"
-            className="form-control"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}  
-          />
-        </div>
         <div className="mb-3">
           <label className="form-label">Name</label>
           <input type="text" className="form-control" value={name} onChange={(e) => setName(e.target.value)} />
