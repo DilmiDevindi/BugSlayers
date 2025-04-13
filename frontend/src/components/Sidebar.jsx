@@ -7,7 +7,7 @@ import '../App.css';
 const Sidebar = () => {
   const [isSuppliersOpen, setIsSuppliersOpen] = useState(false); 
   const [isInventoryOpen, setIsInventoryOpen] = useState(false); 
-  const [isCustomersOpen, setIsCustomersOpen] = useState(false); // New state for Customers dropdown 
+  const [isCustomersOpen, setIsCustomersOpen] = useState(false); 
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isSalesOpen, setIsSalesOpen]  = useState(false); 
 
