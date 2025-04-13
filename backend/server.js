@@ -8,7 +8,7 @@ const inventoryRoutes = require('./routes/inventoryRoutes');
 const customerRoutes = require('./routes/customerRoutes');
 const authRoutes = require('./routes/authRoutes'); 
 const categoryRoutes = require('./routes/categoryRoutes'); 
-const salesRoutes = require('./routes/sales');
+const salesRoutes = require('./routes/salesRoutes');
 
 const app = express();
 const PORT = 5000;
