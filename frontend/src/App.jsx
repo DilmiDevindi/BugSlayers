@@ -17,6 +17,8 @@ import AddCategory from "./components/AddCategory";
 import ManageCategories from "./components/ManageCategory";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Bill from './components/Bill';
+import AddSalesRecord   from './components/AddSalesRecord';  
+
 
 // import Home from './pages/home/pages/Home'
 // import Collection from './pages/home/pages/Collection'
@@ -64,6 +66,7 @@ function App() {
           <Route path="category/add" element={<AddCategory />} />
           <Route path="category/add1" element={<ManageCategories />} />
           <Route path="/dashboard/bill" element={<Bill />} />
+          <Route path="/dashboard/sales/add" element={<AddSalesRecord />} /> {/* Add Sales Record */}
           {/* Add other nested routes here */}
         </Route>
       </Routes>
