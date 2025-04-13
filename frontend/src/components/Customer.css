@@ -71,7 +71,19 @@
     background: #9a0505!important; 
   } 
 
-  .container-c{
-    width: 35%;
-  }
+  
 
+/*Add Customer css*/
+.container-c{
+    width: 35%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9b3;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-top: 30px;
+}
+
+h4{
+  color: #100778;
+}
