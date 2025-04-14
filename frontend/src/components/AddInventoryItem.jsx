@@ -11,8 +11,8 @@ const AddInventoryItem = () => {
   const [quantity, setQuantity] = useState('');
   const [buyingPrice, setBuyingPrice] = useState('');
   const [sellingPrice, setSellingPrice] = useState('');
-  const [dateAdded, setDateAdded] = useState('');  // New state for date
-  const [image, setImage] = useState(null);  // New state for image
+  const [dateAdded, setDateAdded] = useState('');
+  const [image, setImage] = useState(null);
   const [categories, setCategories] = useState([]);
   const [generatedCode, setGeneratedCode] = useState('');
   const [loading, setLoading] = useState(false);
@@ -35,8 +35,8 @@ const AddInventoryItem = () => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setGeneratedCode('');
 
-    // Create FormData for file upload
     const formData = new FormData();
     formData.append('productName', productName);
     formData.append('category', category);
@@ -47,17 +47,21 @@ const AddInventoryItem = () => {
     if (image) formData.append('image', image);
 
     try {
-      await axios.post('/api/inventory/add', formData, {
+      const response = await axios.post('/api/inventory/add', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
+
+      const addedItem = response.data;
+      setGeneratedCode(addedItem.code); //  set code from response
+
+      // Clear the form
       setProductName('');
       setCategory('');
       setQuantity('');
       setBuyingPrice('');
       setSellingPrice('');
       setDateAdded('');
-      setImage(null);  // Reset image field
-      setGeneratedCode(addedItem.code);
+      setImage(null);
 
       alert('Item added successfully!');
     } catch (error) {
@@ -147,7 +151,6 @@ const AddInventoryItem = () => {
           </div>
         </div>
 
-        {/* Date Added Field */}
         <div className="form-group-i">
           <input
             type="date"
@@ -158,7 +161,6 @@ const AddInventoryItem = () => {
           />
         </div>
 
-        {/* Image Upload Field */}
         <div className="form-group-i">
           <input
             type="file"
@@ -171,6 +173,7 @@ const AddInventoryItem = () => {
         <button type="submit" className="btn btn-primary-i" disabled={loading}>
           {loading ? 'Adding...' : 'Add Product'}
         </button>
+
         {error && <div className="alert alert-danger-i mt-3">{error}</div>}
 
         {generatedCode && (

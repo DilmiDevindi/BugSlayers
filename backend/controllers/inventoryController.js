@@ -1,6 +1,14 @@
 const InventoryItem = require('../models/InventoryItem');
 const path = require('path');
 
+// Utility function to generate prefix based on category name
+const getCategoryPrefix = (categoryName) => {
+  return categoryName
+    .split(' ')
+    .map(word => word[0].toLowerCase())
+    .join('');
+};
+
 // Get all inventory items
 const getInventoryItems = async (req, res) => {
   try {
@@ -17,6 +25,12 @@ const addInventoryItem = async (req, res) => {
   const image = req.file ? req.file.filename : null;
 
   try {
+    // Generate product code
+    const prefix = getCategoryPrefix(category); // e.g., 'soap furniture' -> 'sf'
+    const existingCount = await InventoryItem.countDocuments({ category });
+    const nextNumber = existingCount + 1;
+    const code = `${prefix}${String(nextNumber).padStart(3, '0')}`; // e.g., sf001, bf001, sf1023
+
     const newItem = new InventoryItem({
       productName,
       category,
@@ -24,7 +38,8 @@ const addInventoryItem = async (req, res) => {
       buyingPrice,
       sellingPrice,
       dateAdded,
-      image
+      image,
+      code // Save generated code
     });
 
     await newItem.save();
