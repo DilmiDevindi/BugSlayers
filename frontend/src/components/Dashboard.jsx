@@ -23,37 +23,44 @@ const Dashboard = () => {
     try {
       const suppliersResponse = await axios.get('/api/suppliers');
       setTotalSuppliers(suppliersResponse.data.length);
-
+  
       const inventoryResponse = await axios.get('/api/inventory');
       setTotalInventory(inventoryResponse.data.length);
-
+  
       const customersResponse = await axios.get('/api/customers');
       setTotalCustomers(customersResponse.data.length);
-
+  
       const categoryResponse = await axios.get('/api/category');
       setTotalCategory(categoryResponse.data.length);
-
-      // Aggregate stock levels by category
+  
+      const categoryList = categoryResponse.data; // [{ _id, name }]
+  
+      // Aggregate stock levels by category ID
       const categoryMap = {};
       inventoryResponse.data.forEach((item) => {
-        const stockCount = Number(item.quantity) || 0; // Ensure it's a valid number
+        const stockCount = Number(item.quantity) || 0;
         if (categoryMap[item.category]) {
           categoryMap[item.category] += stockCount;
         } else {
           categoryMap[item.category] = stockCount;
         }
       });
-
-      // Convert the map to an array for the graph
-      const categoryStockData = Object.keys(categoryMap).map((category) => ({
-        category,
-        inStock: categoryMap[category],
-      }));
+  
+      const categoryStockData = Object.keys(categoryMap).map((categoryId) => {
+        const category = categoryList.find((cat) => cat._id === categoryId);
+        return {
+          category: category ? category.categoryName : categoryId, // use category.categoryName instead of category.name
+          inStock: categoryMap[categoryId],
+        };
+      });
+      ;
+  
       setCategoryStock(categoryStockData);
     } catch (error) {
       console.error('Error fetching dashboard data:', error.message || error);
     }
   };
+  
 
   return (
     <>
