@@ -4,21 +4,29 @@ const path = require('path');
 
 // Utility function to generate prefix based on category name
 const getCategoryPrefix = (categoryName) => {
+  if (!categoryName) return 'unk'; // Default prefix for unknown category
   return categoryName
     .split(' ')
     .map(word => word[0].toLowerCase())
     .join('');
 };
 
+
 // Get all inventory items
 const getInventoryItems = async (req, res) => {
+  const { page = 1, limit = 10 } = req.query; // Default to page 1, 10 items per page
   try {
-    const items = await InventoryItem.find().populate('category'); // Populate to get category name
-    res.json(items);
+    const items = await InventoryItem.find()
+      .populate('category')
+      .skip((page - 1) * limit)
+      .limit(Number(limit));
+    const total = await InventoryItem.countDocuments();
+    res.json({ items, total, page, totalPages: Math.ceil(total / limit) });
   } catch (error) {
     res.status(500).json({ error: 'Error fetching inventory items' });
   }
 };
+
 
 // Add a new inventory item
 const addInventoryItem = async (req, res) => {
@@ -112,12 +120,16 @@ const updateInventoryItem = async (req, res) => {
 const deleteInventoryItem = async (req, res) => {
   const { id } = req.params;
   try {
-    await InventoryItem.findByIdAndDelete(id);
+    const item = await InventoryItem.findByIdAndDelete(id);
+    if (item && item.image) {
+      fs.unlinkSync(path.join(__dirname, '../uploads', item.image)); // Delete file
+    }
     res.json({ message: 'Item deleted successfully!' });
   } catch (error) {
     res.status(500).json({ error: 'Error deleting item' });
   }
 };
+
 
 module.exports = {
   getInventoryItems,

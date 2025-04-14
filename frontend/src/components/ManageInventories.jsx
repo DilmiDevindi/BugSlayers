@@ -23,7 +23,7 @@ const ManageInventories = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await axios.get('http://localhost:5000/api/inventory');
+      const response = await axios.get('/api/inventory');
       setItems(Array.isArray(response.data) ? response.data.reverse() : []);
     } catch (err) {
       setError('Error fetching inventory items');
@@ -35,7 +35,7 @@ const ManageInventories = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/category');
+      const response = await axios.get('/api/category');
       setCategories(response.data);
     } catch (err) {
       console.error('Error fetching categories:', err);
@@ -50,7 +50,7 @@ const ManageInventories = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this item?')) return;
     try {
-      await axios.delete(`http://localhost:5000/api/inventory/${id}`);
+      await axios.delete(`/api/inventory/${id}`);
       setItems((prevItems) => prevItems.filter((item) => item._id !== id));
       alert('Item deleted successfully!');
     } catch (err) {
@@ -79,7 +79,7 @@ const ManageInventories = () => {
     }
 
     try {
-      await axios.put(`http://localhost:5000/api/inventory/${editItem._id}`, formData, {
+      await axios.put(`/api/inventory/${editItem._id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
