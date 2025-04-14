@@ -12,6 +12,7 @@ const ManageInventories = () => {
   const [editItem, setEditItem] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [newImage, setNewImage] = useState(null); // ✅ for updating image
 
   useEffect(() => {
     fetchItems();
@@ -34,7 +35,7 @@ const ManageInventories = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/category'); // ✅ Adjust endpoint as needed
+      const response = await axios.get('http://localhost:5000/api/category');
       setCategories(response.data);
     } catch (err) {
       console.error('Error fetching categories:', err);
@@ -45,7 +46,6 @@ const ManageInventories = () => {
     const category = categories.find(cat => cat._id === categoryId);
     return category ? category.categoryName : 'Unknown';
   };
-  
 
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this item?')) return;
@@ -61,15 +61,30 @@ const ManageInventories = () => {
 
   const handleEdit = (item) => {
     setEditItem(item);
+    setNewImage(null); // Reset image
   };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('productName', editItem.productName);
+    formData.append('category', editItem.category);
+    formData.append('quantity', Number(editItem.quantity));
+    formData.append('buyingPrice', parseFloat(editItem.buyingPrice).toFixed(2));
+    formData.append('sellingPrice', parseFloat(editItem.sellingPrice).toFixed(2));
+    formData.append('dateAdded', editItem.dateAdded);
+    if (newImage) {
+      formData.append('image', newImage);
+    }
+
     try {
-      await axios.put(`http://localhost:5000/api/inventory/${editItem._id}`, editItem);
-      setItems((prevItems) =>
-        [editItem, ...prevItems.filter(item => item._id !== editItem._id)]
-      );
+      await axios.put(`http://localhost:5000/api/inventory/${editItem._id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      fetchItems(); // Refresh items
       setEditItem(null);
       alert('Item updated successfully!');
     } catch (err) {
@@ -85,8 +100,9 @@ const ManageInventories = () => {
   return (
     <div className="container-fluid mt-4 inventory-container">
       <div className='inventory-title'>
-        <span className='inventory-title-icon'><FontAwesomeIcon icon={faBarsProgress} /></span> Add New Product
+        <span className='inventory-title-icon'><FontAwesomeIcon icon={faBarsProgress} /></span> Manage Inventory
       </div>
+
       {error && <div className="alert alert-danger">{error}</div>}
 
       <div className="row mb-3">
@@ -115,6 +131,8 @@ const ManageInventories = () => {
                   <th>Quantity</th>
                   <th>Buying Price</th>
                   <th>Selling Price</th>
+                  <th>Date Added</th>
+                  <th>Image</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -123,13 +141,21 @@ const ManageInventories = () => {
                   <tr key={item._id}>
                     <td>{index + 1}</td>
                     <td>{item.productName}</td>
-                    <td>{getCategoryName(item.category)}</td> {/* ✅ Updated to show category name */}
+                    <td>{getCategoryName(item.category)}</td>
                     <td>{item.quantity}</td>
                     <td>{parseFloat(item.buyingPrice).toFixed(2)}</td>
                     <td>{parseFloat(item.sellingPrice).toFixed(2)}</td>
+                    <td>{item.dateAdded ? new Date(item.dateAdded).toLocaleDateString() : 'N/A'}</td>
+                    
+                    <td>{item.image ? item.image : 'No image'}</td>
+
                     <td>
-                      <span className='inventory-edit-icon' onClick={() => handleEdit(item)}><FontAwesomeIcon icon={faEdit} /></span>
-                      <span className='inventory-delete-icon' onClick={() => handleDelete(item._id)}><FontAwesomeIcon icon={faRemove} /></span>    
+                      <span className='inventory-edit-icon' onClick={() => handleEdit(item)}>
+                        <FontAwesomeIcon icon={faEdit} />
+                      </span>
+                      <span className='inventory-delete-icon' onClick={() => handleDelete(item._id)}>
+                        <FontAwesomeIcon icon={faRemove} />
+                      </span>
                     </td>
                   </tr>
                 ))}
@@ -155,18 +181,24 @@ const ManageInventories = () => {
                 required
               />
             </div>
+
             <div className="mb-3">
               <label className="form-label">Category</label>
-              <input
-                type="text"
+              <select
                 className="form-control"
                 value={editItem.category}
                 onChange={(e) =>
                   setEditItem({ ...editItem, category: e.target.value })
                 }
                 required
-              />
+              >
+                <option value="">Select Category</option>
+                {categories.map((cat) => (
+                  <option key={cat._id} value={cat._id}>{cat.categoryName}</option>
+                ))}
+              </select>
             </div>
+
             <div className="mb-3">
               <label className="form-label">Quantity</label>
               <input
@@ -179,6 +211,7 @@ const ManageInventories = () => {
                 required
               />
             </div>
+
             <div className="mb-3">
               <label className="form-label">Buying Price</label>
               <input
@@ -187,20 +220,43 @@ const ManageInventories = () => {
                 min="0"
                 step="0.01"
                 value={editItem.buyingPrice}
-                onChange={(e) => setEditItem({...editItem, buyingPrice: Number(e.target.value) })}
+                onChange={(e) => setEditItem({ ...editItem, buyingPrice: Number(e.target.value) })}
                 required
               />
             </div>
+
             <div className="mb-3">
               <label className="form-label">Selling Price</label>
               <input
                 type="number"
                 className="form-control"
                 value={editItem.sellingPrice}
-                onChange={(e) => setEditItem({...editItem, sellingPrice: Number(e.target.value) })}
+                onChange={(e) => setEditItem({ ...editItem, sellingPrice: Number(e.target.value) })}
                 required
               />
             </div>
+
+            <div className="mb-3">
+              <label className="form-label">Date Added</label>
+              <input
+                type="date"
+                className="form-control"
+                value={editItem.dateAdded ? editItem.dateAdded.substring(0, 10) : ''}
+                onChange={(e) => setEditItem({ ...editItem, dateAdded: e.target.value })}
+                required
+              />
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label">Update Image (optional)</label>
+              <input
+                type="file"
+                accept="image/*"
+                className="form-control"
+                onChange={(e) => setNewImage(e.target.files[0])}
+              />
+            </div>
+
             <button type="submit" className="btn btn-success">Update Item</button>
             <button
               type="button"

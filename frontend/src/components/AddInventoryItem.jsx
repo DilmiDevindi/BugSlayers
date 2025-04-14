@@ -20,7 +20,7 @@ const AddInventoryItem = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/category');
+        const response = await axios.get('/api/category');
         setCategories(response.data);
       } catch (err) {
         console.error('Failed to fetch categories', err);
@@ -46,7 +46,7 @@ const AddInventoryItem = () => {
     if (image) formData.append('image', image);
 
     try {
-      await axios.post('http://localhost:5000/api/inventory/add', formData, {
+      await axios.post('/api/inventory/add', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       setProductName('');
