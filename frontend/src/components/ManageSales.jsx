@@ -41,7 +41,7 @@ const ManageSales = () => {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:5000/api/sales/${editingSale._id}`, editingSale);
+      await axios.put(`/api/sales/${editingSale._id}`, editingSale);
       fetchSales();
       setEditingSale(null);
       alert('Sale record updated successfully!');
