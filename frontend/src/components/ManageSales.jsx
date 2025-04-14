@@ -12,7 +12,7 @@ const ManageSales = () => {
 
   const fetchSales = async () => {
     try {
-      const response = await axios.get('http://localhost:5001/api/sales/');
+      const response = await axios.get('http://localhost:5000/api/sales/');
       setSales(response.data);
     } catch (error) {
       console.error('Error fetching sales records:', error);
