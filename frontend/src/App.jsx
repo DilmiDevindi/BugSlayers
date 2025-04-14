@@ -16,7 +16,8 @@ import ManageCustomer from './components/ManageCustomer'; // Ensure the path is 
 import AddCategory from "./components/AddCategory";
 import ManageCategories from "./components/ManageCategory";
 import Bill from './components/Bill';
-import AddSalesRecord from './components/AddSalesRecord'; 
+import AddSalesRecord from './components/AddSalesRecord';
+import ManageSales from './components/ManageSales'; 
 
 
 // import Home from './pages/home/pages/Home'
