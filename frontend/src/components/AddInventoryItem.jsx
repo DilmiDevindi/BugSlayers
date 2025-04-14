@@ -18,6 +18,7 @@ const AddInventoryItem = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Fetch categories on mount
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -47,14 +48,16 @@ const AddInventoryItem = () => {
     if (image) formData.append('image', image);
 
     try {
-      const response = await axios.post('/api/inventory/add', formData, {
+      const response = await axios.post('http://localhost:5000/api/inventory/add', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
       const addedItem = response.data;
-      setGeneratedCode(addedItem.code); //  set code from response
 
-      // Clear the form
+      // Show generated code from backend
+      setGeneratedCode(addedItem.code || 'Code not returned');
+
+      // Clear the form after success
       setProductName('');
       setCategory('');
       setQuantity('');
@@ -66,7 +69,12 @@ const AddInventoryItem = () => {
       alert('Item added successfully!');
     } catch (error) {
       console.error('Error adding item:', error);
-      setError('Failed to add item. Please try again.');
+
+      if (error.response && error.response.data && error.response.data.error) {
+        setError(error.response.data.error);
+      } else {
+        setError('Failed to add item. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -77,6 +85,7 @@ const AddInventoryItem = () => {
       <div className="form-title-i">
         <span className="form-icon-i"><FontAwesomeIcon icon={faSquarePlus} /></span> Add New Product
       </div>
+
       <form onSubmit={handleSubmit}>
         <div className="form-group-i">
           <input

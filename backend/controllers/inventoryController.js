@@ -1,4 +1,5 @@
 const InventoryItem = require('../models/InventoryItem');
+const Category = require('../models/Category');
 const path = require('path');
 
 // Utility function to generate prefix based on category name
@@ -12,7 +13,7 @@ const getCategoryPrefix = (categoryName) => {
 // Get all inventory items
 const getInventoryItems = async (req, res) => {
   try {
-    const items = await InventoryItem.find();
+    const items = await InventoryItem.find().populate('category'); // Populate to get category name
     res.json(items);
   } catch (error) {
     res.status(500).json({ error: 'Error fetching inventory items' });
@@ -25,11 +26,21 @@ const addInventoryItem = async (req, res) => {
   const image = req.file ? req.file.filename : null;
 
   try {
-    // Generate product code
-    const prefix = getCategoryPrefix(category); // e.g., 'soap furniture' -> 'sf'
+    if (!category) return res.status(400).json({ error: 'Category is required.' });
+
+    const categoryDoc = await Category.findById(category);
+    if (!categoryDoc) return res.status(404).json({ error: 'Category not found' });
+
+    const categoryName = categoryDoc.categoryName;
+    const prefix = getCategoryPrefix(categoryName);
+
     const existingCount = await InventoryItem.countDocuments({ category });
     const nextNumber = existingCount + 1;
-    const code = `${prefix}${String(nextNumber).padStart(3, '0')}`; // e.g., sf001, bf001, sf1023
+    const code = `${prefix}${String(nextNumber).padStart(3, '0')}`;
+
+    if (isNaN(quantity) || quantity <= 0) return res.status(400).json({ error: 'Invalid quantity.' });
+    if (isNaN(buyingPrice) || buyingPrice < 0) return res.status(400).json({ error: 'Invalid buying price.' });
+    if (isNaN(sellingPrice) || sellingPrice < 0) return res.status(400).json({ error: 'Invalid selling price.' });
 
     const newItem = new InventoryItem({
       productName,
@@ -39,16 +50,23 @@ const addInventoryItem = async (req, res) => {
       sellingPrice,
       dateAdded,
       image,
-      code // Save generated code
+      code
     });
 
     await newItem.save();
-    res.status(201).json(newItem);
+
+    // Populate category before sending back
+    const populatedItem = await InventoryItem.findById(newItem._id).populate('category');
+
+    console.log("New Item with code:", populatedItem.code);
+    res.status(201).json(populatedItem);
+
   } catch (error) {
     console.error("Error adding item:", error);
     res.status(500).json({ error: 'Error adding item' });
   }
 };
+
 
 // Get inventory count
 const getInventoryCount = async (req, res) => {

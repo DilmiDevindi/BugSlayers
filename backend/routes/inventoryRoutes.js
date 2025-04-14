@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
+const { addInventoryItem } = require('../controllers/inventoryController');
 
 // Multer configuration for handling image uploads
 const storage = multer.diskStorage({

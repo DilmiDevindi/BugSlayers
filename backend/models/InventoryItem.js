@@ -13,7 +13,7 @@ const inventoryItemSchema = new mongoose.Schema({
   sellingPrice: { type: Number, required: true },
   dateAdded: { type: Date, required: true }, 
   image: { type: String },
-  code: { type: String, unique: true } //  Product code added here
+  code: { type: String, unique: true, required: true } //  Product code added here
 });
 
 // Create and export the model
