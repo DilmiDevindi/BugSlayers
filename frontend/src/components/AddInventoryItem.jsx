@@ -14,6 +14,7 @@ const AddInventoryItem = () => {
   const [dateAdded, setDateAdded] = useState('');  // New state for date
   const [image, setImage] = useState(null);  // New state for image
   const [categories, setCategories] = useState([]);
+  const [generatedCode, setGeneratedCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -56,6 +57,8 @@ const AddInventoryItem = () => {
       setSellingPrice('');
       setDateAdded('');
       setImage(null);  // Reset image field
+      setGeneratedCode(addedItem.code);
+
       alert('Item added successfully!');
     } catch (error) {
       console.error('Error adding item:', error);
@@ -169,6 +172,12 @@ const AddInventoryItem = () => {
           {loading ? 'Adding...' : 'Add Product'}
         </button>
         {error && <div className="alert alert-danger-i mt-3">{error}</div>}
+
+        {generatedCode && (
+          <div className="alert alert-success-i mt-3">
+            <strong>Generated Code:</strong> {generatedCode}
+          </div>
+        )}
       </form>
     </div>
   );

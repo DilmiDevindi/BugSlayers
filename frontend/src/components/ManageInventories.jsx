@@ -128,6 +128,7 @@ const ManageInventories = () => {
                   <th>ID</th>
                   <th>Product Name</th>
                   <th>Category</th>
+                  <th>Product Code</th>
                   <th>Quantity</th>
                   <th>Buying Price</th>
                   <th>Selling Price</th>
@@ -142,6 +143,7 @@ const ManageInventories = () => {
                     <td>{index + 1}</td>
                     <td>{item.productName}</td>
                     <td>{getCategoryName(item.category)}</td>
+                    <td>{item.code || 'N/A'}</td>
                     <td>{item.quantity}</td>
                     <td>{parseFloat(item.buyingPrice).toFixed(2)}</td>
                     <td>{parseFloat(item.sellingPrice).toFixed(2)}</td>
