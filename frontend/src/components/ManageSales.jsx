@@ -21,7 +21,7 @@ const ManageSales = () => {
 
   const deleteSale = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/sales/${id}`);
+      await axios.delete(`/api/sales/${id}`);
       setSales(sales.filter((sale) => sale._id !== id));
       alert('Sale record deleted successfully!');
     } catch (error) {
