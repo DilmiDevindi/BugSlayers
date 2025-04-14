@@ -7,6 +7,7 @@ import '../Inventory.css';
 
 const ManageInventories = () => {
   const [items, setItems] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [search, setSearch] = useState('');
   const [editItem, setEditItem] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -14,6 +15,7 @@ const ManageInventories = () => {
 
   useEffect(() => {
     fetchItems();
+    fetchCategories(); 
   }, []);
 
   const fetchItems = async () => {
@@ -30,12 +32,26 @@ const ManageInventories = () => {
     }
   };
 
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/category'); // ✅ Adjust endpoint as needed
+      setCategories(response.data);
+    } catch (err) {
+      console.error('Error fetching categories:', err);
+    }
+  };
+
+  const getCategoryName = (categoryId) => {
+    const category = categories.find(cat => cat._id === categoryId);
+    return category ? category.categoryName : 'Unknown';
+  };
+  
+
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this item?')) return;
-
     try {
       await axios.delete(`http://localhost:5000/api/inventory/${id}`);
-      setItems((prevItems) => prevItems.filter((item) => item._id !== id)); // Optimistic update
+      setItems((prevItems) => prevItems.filter((item) => item._id !== id));
       alert('Item deleted successfully!');
     } catch (err) {
       setError('Error deleting item');
@@ -52,8 +68,8 @@ const ManageInventories = () => {
     try {
       await axios.put(`http://localhost:5000/api/inventory/${editItem._id}`, editItem);
       setItems((prevItems) =>
-      [editItem, ...prevItems.filter(item => item.id !== editItem._id)]
-      ); // Optimistic update
+        [editItem, ...prevItems.filter(item => item._id !== editItem._id)]
+      );
       setEditItem(null);
       alert('Item updated successfully!');
     } catch (err) {
@@ -74,65 +90,64 @@ const ManageInventories = () => {
       {error && <div className="alert alert-danger">{error}</div>}
 
       <div className="row mb-3">
-      <div className="col-md-4">
-      <input
-        type="text"
-        className="form-control mb-3"
-        placeholder="Search items..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
-      </div>
+        <div className="col-md-4">
+          <input
+            type="text"
+            className="form-control mb-3"
+            placeholder="Search items..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
 
-      <div className="table-responsive inventory-table-container">
-      {loading ? (
-        <div>Loading...</div>
-      ) : filteredItems.length === 0 ? (
-        <div className='no-items'>No items found</div>
-      ) : (
-        <table className="table table-striped table-bordered inventory-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Product Name</th>
-              <th>Category</th>
-              <th>Quantity</th>
-              <th>Buying Price</th>
-              <th>Selling Price</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredItems.map((item, index) => (
-              <tr key={item._id}>
-                <td>{index + 1}</td>
-                <td>{item.productName}</td>
-                <td>{item.category}</td>
-                <td>{item.quantity}</td>
-                <td>{parseFloat(item.buyingPrice).toFixed(2)}</td>
-                <td>{parseFloat(item.sellingPrice).toFixed(2)}</td>
-                <td>
-                <span className='inventory-edit-icon' onClick={() => handleEdit(item)}><FontAwesomeIcon icon={faEdit} /></span>
-                <span className='inventory-delete-icon' onClick={() => handleDelete(item._id)}><FontAwesomeIcon icon={faRemove} /></span>    
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+        <div className="table-responsive inventory-table-container">
+          {loading ? (
+            <div>Loading...</div>
+          ) : filteredItems.length === 0 ? (
+            <div className='no-items'>No items found</div>
+          ) : (
+            <table className="table table-striped table-bordered inventory-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Product Name</th>
+                  <th>Category</th>
+                  <th>Quantity</th>
+                  <th>Buying Price</th>
+                  <th>Selling Price</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredItems.map((item, index) => (
+                  <tr key={item._id}>
+                    <td>{index + 1}</td>
+                    <td>{item.productName}</td>
+                    <td>{getCategoryName(item.category)}</td> {/* ✅ Updated to show category name */}
+                    <td>{item.quantity}</td>
+                    <td>{parseFloat(item.buyingPrice).toFixed(2)}</td>
+                    <td>{parseFloat(item.sellingPrice).toFixed(2)}</td>
+                    <td>
+                      <span className='inventory-edit-icon' onClick={() => handleEdit(item)}><FontAwesomeIcon icon={faEdit} /></span>
+                      <span className='inventory-delete-icon' onClick={() => handleDelete(item._id)}><FontAwesomeIcon icon={faRemove} /></span>    
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
       </div>
-    </div>
 
       {editItem && (
         <div className="edit-form mt-4">
           <h4>Edit Item</h4>
           <form onSubmit={handleUpdate}>
             <div className="mb-3">
-              <label  className="form-label">Product Name</label>
+              <label className="form-label">Product Name</label>
               <input
                 type="text"
                 className="form-control"
-
                 value={editItem.productName}
                 onChange={(e) =>
                   setEditItem({ ...editItem, productName: e.target.value })
@@ -145,7 +160,6 @@ const ManageInventories = () => {
               <input
                 type="text"
                 className="form-control"
-                
                 value={editItem.category}
                 onChange={(e) =>
                   setEditItem({ ...editItem, category: e.target.value })
@@ -158,7 +172,6 @@ const ManageInventories = () => {
               <input
                 type="number"
                 className="form-control"
-                
                 value={editItem.quantity}
                 onChange={(e) =>
                   setEditItem({ ...editItem, quantity: Number(e.target.value) })
@@ -171,24 +184,22 @@ const ManageInventories = () => {
               <input
                 type="number"
                 className="form-control"
-                
                 min="0"
                 step="0.01"
                 value={editItem.buyingPrice}
                 onChange={(e) => setEditItem({...editItem, buyingPrice: Number(e.target.value) })}
                 required
-                />
+              />
             </div>
             <div className="mb-3">
-            <label className="form-label">Selling Price</label>
+              <label className="form-label">Selling Price</label>
               <input
                 type="number"
                 className="form-control"
-                
                 value={editItem.sellingPrice}
                 onChange={(e) => setEditItem({...editItem, sellingPrice: Number(e.target.value) })}
                 required
-                />
+              />
             </div>
             <button type="submit" className="btn btn-success">Update Item</button>
             <button
