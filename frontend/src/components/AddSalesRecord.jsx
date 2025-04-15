@@ -1,6 +1,7 @@
 // src/components/AddSalesRecord.js
 import { useState } from 'react';
 import axios from 'axios';
+import './Sales.css';
 
 const AddSalesRecord = () => {
   const [customerName, setCustomerName] = useState('');
