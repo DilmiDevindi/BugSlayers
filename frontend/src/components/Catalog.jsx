@@ -9,13 +9,17 @@ const Catalog = () => {
   const [products, setProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
+  // Fetch categories from the API
   useEffect(() => {
-    axios.get('http://localhost:5000/api/catalog/inventory') // ✅ Corrected API endpoint
+    axios.get('http://localhost:5000/api/categories')
       .then((res) => {
-        console.log("Fetched products:", res.data); // Debug
-        setProducts(res.data);
+        console.log('Fetched categories:', res.data);
+        setCategories(res.data);
+        if (res.data.length > 0) {
+          setSelectedCategory(res.data[0]._id); // Default to first category
+        }
       })
-      .catch((err) => console.error("Error fetching products:", err));
+      .catch((err) => console.error('Error fetching categories:', err));
   }, []);
 
   return (
