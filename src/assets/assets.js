@@ -122,7 +122,7 @@ export const products = [
         image: [p_img1_1,p_img1_2],
         category: "Bed",
         subCategory: "Timber",
-        sizes: ["Single, Double, King"],
+        sizes: ["Single","Double", "King"],
         date: 1716634345448,
         bestseller: true
     },
@@ -146,7 +146,7 @@ export const products = [
         image: [p_img3],
         category: "Bed",
         subCategory: "Timber",
-        sizes: ["Single, Double, King"],
+        sizes: ["Single","Double", "King"],
         date: 1716234545448,
         bestseller: true
     },
@@ -182,7 +182,7 @@ export const products = [
         image: [p_img6],
         category: "Bed",
         subCategory: "Timber",
-        sizes: ["Single, Double, King"],
+        sizes: ["Single","Double", "King"],
         date: 1716623423448,
         bestseller: true
     },
@@ -242,7 +242,7 @@ export const products = [
         image: [p_img11],
         category: "Bed",
         subCategory: "Cushion",
-        sizes: ["Single, Double, King"],
+        sizes: ["Single","Double", "King"],
         date: 1716623345448,
         bestseller: false
     },
@@ -254,7 +254,7 @@ export const products = [
         image: [p_img12],
         category: "Bed",
         subCategory: "Timber",
-        sizes: ["Single, Double, King"],
+        sizes: ["Single","Double", "King"],
         date: 1716624445448,
         bestseller: false
     },
@@ -328,7 +328,7 @@ export const products = [
         subCategory: "Cushion",
         sizes: ["43 seat height","44 seat height","45 seat height" ],
         date: 1716631045448,
-        bestseller: false
+        bestseller: true
     },
     {
         _id: "aaaas",
@@ -340,7 +340,7 @@ export const products = [
         subCategory: "Cushion",
         sizes: ["43 seat height","44 seat height","45 seat height" ],
         date: 1716632145448,
-        bestseller: false
+        bestseller: true
     },
     {
         _id: "aaaat",
