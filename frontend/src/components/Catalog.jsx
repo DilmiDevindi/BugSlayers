@@ -22,6 +22,18 @@ const Catalog = () => {
       .catch((err) => console.error('Error fetching categories:', err));
   }, []);
 
+  // Fetch products for the selected category
+  useEffect(() => {
+    if (selectedCategory) {
+      axios.get(`http://localhost:5000/api/inventoryitems?categoryId=${selectedCategory}`)
+        .then((res) => {
+          console.log('Fetched products:', res.data);
+          setProducts(res.data);
+        })
+        .catch((err) => console.error('Error fetching products:', err));
+    }
+  }, [selectedCategory]);
+
   return (
     <div className="container mt-4">
       <h2 className="mb-4">Product Catalog</h2>
