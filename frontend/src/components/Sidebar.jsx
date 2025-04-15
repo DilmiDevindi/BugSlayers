@@ -186,6 +186,24 @@ const Sidebar = () => {
           )}
         </li>
 
+        {/* Product Catalog Dropdown */}
+        <li className="nav-item mb-3">
+          <button 
+            className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
+            onClick={toggleCatalogDropdown}
+            style={{ cursor: 'pointer' }}>
+            <i className="bi bi-journal-richtext me-2"></i> Catalog
+            <i className={`bi ${isCatalogOpen ? 'bi-chevron-up' : 'bi-chevron-down'} ms-auto`}></i>
+          </button>
+          {isCatalogOpen && (
+            <ul className="nav flex-column ms-3">
+              <li className="nav-item mb-2">
+                <Link to="/dashboard/catalog/view" className="nav-link text-white">View Catalog</Link>
+              </li>
+            </ul>
+          )}
+        </li>
+
 {/*  Bill Link (Simple single-page link) */}
 <li className="nav-item mb-3">
   <Link to="/dashboard/bill" className="nav-link text-white d-flex align-items-center">
