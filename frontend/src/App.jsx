@@ -70,7 +70,7 @@ function App() {
           <Route path="/dashboard/bill" element={<Bill />} />
           <Route path="sales/add" element={<AddSalesRecord />} />
           <Route path="sales/manage" element={<ManageSales />}/>
-          <Route path="catalog" element={<Catalog />} />
+          <Route path="catalog/view" element={<Catalog />} />
           {/* Add other nested routes here */}
         </Route>
       </Routes>
