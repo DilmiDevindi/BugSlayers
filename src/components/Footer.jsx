@@ -11,7 +11,7 @@ const Footer = () => {
         <div className='border-r-2 p-5'>
           <img src={assets.logo} className='m-5 w-32 ' alt='Company Logo' />
           <p className='text-gray-600 leading-relaxed pr-10'>
-          Vanessa offers stylish, high-quality women's clothing that empowers and inspires confidence. Discover fashion made for you.
+          New Sisira Furniture offers Durable, high-quality furniture items that empowers and inspires confidence. Discover elegance made for you.
           </p> <br />
             <div className='flex items-center space-x-5'>
                 <p>FOLLOW US ON</p>
@@ -43,8 +43,8 @@ const Footer = () => {
           <div className='ml-5'>
             <h2 className='text-lg mb-5 font-sm '>CONTACT US</h2>
             <ul className='flex flex-col gap-1 text-gray-600 text-sm'> 
-                <li>Contact No: <text className='hover:text-pink-600 cursor-pointer'>+94 77 123 4567</text></li>
-                <li >Email Address: <text className='hover:text-pink-600 cursor-pointer'>contact.vanessa@gmail.com </text></li>
+                <li>Contact No: <text className='hover:text-pink-600 cursor-pointer'>077-3211603 | 071-8006485</text></li>
+                <li >Email Address: <text className='hover:text-pink-600 cursor-pointer'>sisirafurniture@gmail.com </text></li>
 
             </ul>
 
@@ -55,7 +55,7 @@ const Footer = () => {
       </div>
       <div className='mt-10'>
         <hr />
-        <p className='text-center text-gray-500 text-xs pt-5'> &copy; {Year} VANESSA All rights reserved. Created by Sihara Edirisinghe</p>
+        <p className='text-center text-gray-500 text-xs pt-5'> &copy; {Year} All rights reserved.</p>
       </div>
     </footer>
   )

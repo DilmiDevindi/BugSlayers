@@ -1,27 +1,29 @@
-import p_img1 from './p_img1.png'
-import p_img2_1 from './p_img2_1.png'
-import p_img2_2 from './p_img2_2.png'
-import p_img2_3 from './p_img2_3.png'
-import p_img2_4 from './p_img2_4.png'
-import p_img3 from './p_img3.png'
-import p_img4 from './p_img4.png'
-import p_img5 from './p_img5.png'
-import p_img6 from './p_img6.png'
-import p_img7 from './p_img7.png'
-import p_img8 from './p_img8.png'
-import p_img9 from './p_img9.png'
-import p_img10 from './p_img10.png'
-import p_img11 from './p_img11.png'
-import p_img12 from './p_img12.png'
-import p_img13 from './p_img13.png'
-import p_img14 from './p_img14.png'
-import p_img15 from './p_img15.png'
-import p_img16 from './p_img16.png'
-import p_img17 from './p_img17.png'
-import p_img18 from './p_img18.png'
-import p_img19 from './p_img19.png'
-import p_img20 from './p_img20.png'
-import p_img21 from './p_img21.png'
+import p_img1_1 from './p_img1_1.jpg'
+import p_img1_2 from './p_img1_2.jpg'
+/*import p_img2_1 from './p_img2_1.jpg'
+import p_img2_2 from './p_img2_2.jpg'
+import p_img2_3 from './p_img2_3.jpg'*/
+import p_img3 from './p_img3.jpg'
+/*
+import p_img4 from './p_img4.jpg'
+import p_img5 from './p_img5.jpg'*/
+import p_img6 from './p_img6.jpg'
+import p_img7 from './p_img7.jpg'
+import p_img8 from './p_img8.jpg'
+/*import p_img9 from './p_img9.jpg'
+import p_img10 from './p_img10.jpg'*/
+import p_img11 from './p_img11.jpg'
+import p_img12 from './p_img12.jpg'
+/*import p_img13 from './p_img13.jpg'*/
+import p_img14 from './p_img14.jpg'
+import p_img15 from './p_img15.jpg'
+import p_img16 from './p_img16.jpg'
+/*import p_img17 from './p_img17.jpg'*/
+import p_img18 from './p_img18.jpg'
+import p_img19 from './p_img19.jpg'
+import p_img20 from './p_img20.jpg'
+
+/*import p_img21 from './p_img21.png'
 import p_img22 from './p_img22.png'
 import p_img23 from './p_img23.png'
 import p_img24 from './p_img24.png'
@@ -52,7 +54,7 @@ import p_img48 from './p_img48.png'
 import p_img49 from './p_img49.png'
 import p_img50 from './p_img50.png'
 import p_img51 from './p_img51.png'
-import p_img52 from './p_img52.png'
+import p_img52 from './p_img52.png'*/
 
 
 
@@ -114,41 +116,41 @@ export const assets = {
 export const products = [
     {
         _id: "aaaaa",
-        name: "Women Round Neck Cotton Top",
-        description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
-        price: 100,
-        image: [p_img1],
-        category: "Women",
-        subCategory: "Topwear",
-        sizes: ["S", "M", "L"],
+        name: "Pink Color Elegant look bed",
+        description: "Experience ultimate comfort with our modern wooden bed, crafted for both durability and style. Designed with a sturdy hardwood frame, this bed offers exceptional support and a sleek, timeless aesthetic that complements any bedroom décor.",
+        price: 45000,
+        image: [p_img1_1,p_img1_2],
+        category: "Bed",
+        subCategory: "Timber",
+        sizes: ["Single, Double, King"],
         date: 1716634345448,
         bestseller: true
     },
-    {
+    /*{
         _id: "aaaab",
         name: "Men Round Neck Pure Cotton T-shirt",
         description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
         price: 200,
-        image: [p_img2_1,p_img2_2,p_img2_3,p_img2_4],
+        image: [p_img2_1,p_img2_2,p_img2_3],
         category: "Men",
         subCategory: "Topwear",
-        sizes: ["M", "L", "XL"],
+        sizes: ["1 Seater", "4 Seater"],
         date: 1716621345448,
         bestseller: true
-    },
+    },*/
     {
         _id: "aaaac",
-        name: "Girls Round Neck Cotton Top",
-        description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
-        price: 220,
+        name: "Modern Cushion Bed",
+        description: "Experience ultimate comfort with our modern wooden bed, crafted for both durability and style. Designed with a sturdy hardwood frame, this bed offers exceptional support and a sleek, timeless aesthetic that complements any bedroom décor.",
+        price: 50000,
         image: [p_img3],
-        category: "Kids",
-        subCategory: "Topwear",
-        sizes: ["S", "L", "XL"],
+        category: "Bed",
+        subCategory: "Timber",
+        sizes: ["Single, Double, King"],
         date: 1716234545448,
         bestseller: true
     },
-    {
+    /*{
         _id: "aaaad",
         name: "Men Round Neck Pure Cotton T-shirt",
         description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
@@ -171,44 +173,44 @@ export const products = [
         sizes: ["M", "L", "XL"],
         date: 1716622345448,
         bestseller: true
-    },
+    },*/
     {
         _id: "aaaaf",
-        name: "Girls Round Neck Cotton Top",
-        description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
-        price: 140,
+        name: "White Color Relaxing Bed",
+        description: "Experience ultimate comfort with our modern wooden bed, crafted for both durability and style. Designed with a sturdy hardwood frame, this bed offers exceptional support and a sleek, timeless aesthetic that complements any bedroom décor.",
+        price: 60000,
         image: [p_img6],
-        category: "Kids",
-        subCategory: "Topwear",
-        sizes: ["S", "L", "XL"],
+        category: "Bed",
+        subCategory: "Timber",
+        sizes: ["Single, Double, King"],
         date: 1716623423448,
         bestseller: true
     },
     {
         _id: "aaaag",
-        name: "Men Tapered Fit Flat-Front Trousers",
-        description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
-        price: 190,
+        name: "Well-built Handcrafted dining Table",
+        description: "Enhance your dining experience with our beautifully crafted wooden dining table, designed for both elegance and durability. Made from high-quality hardwood, this table brings warmth and sophistication to any dining space.",
+        price: 80000,
         image: [p_img7],
-        category: "Men",
-        subCategory: "Bottomwear",
-        sizes: ["S", "L", "XL"],
+        category: "Table",
+        subCategory: "Timber",
+        sizes: ["4 People", "6 People", "8 People"],
         date: 1716621542448,
         bestseller: false
     },
     {
         _id: "aaaah",
-        name: "Men Round Neck Pure Cotton T-shirt",
-        description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
+        name: "Smooth Elegent Look Dining Table",
+        description: "Enhance your dining experience with our beautifully crafted wooden dining table, designed for both elegance and durability. Made from high-quality hardwood, this table brings warmth and sophistication to any dining space.",
         price: 140,
         image: [p_img8],
-        category: "Men",
-        subCategory: "Topwear",
-        sizes: ["S", "M", "L", "XL"],
+        category: "Table",
+        subCategory: "Timber",
+        sizes: ["4 People", "6 People", "8 People"],
         date: 1716622345448,
         bestseller: false
     },
-    {
+    /*{
         _id: "aaaai",
         name: "Girls Round Neck Cotton Top",
         description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
@@ -231,80 +233,80 @@ export const products = [
         sizes: ["S", "L", "XL"],
         date: 1716622235448,
         bestseller: false
-    },
+    },*/
     {
         _id: "aaaak",
-        name: "Men Round Neck Pure Cotton T-shirt",
-        description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
-        price: 120,
+        name: "Classic white color Bed",
+        description: "Experience ultimate comfort with our cushion  bed, crafted for both durability and style. Designed with a sturdy hardwood frame, this bed offers exceptional support and a sleek, timeless aesthetic that complements any bedroom décor.",
+        price: 70000,
         image: [p_img11],
-        category: "Men",
-        subCategory: "Topwear",
-        sizes: ["S", "M", "L"],
+        category: "Bed",
+        subCategory: "Cushion",
+        sizes: ["Single, Double, King"],
         date: 1716623345448,
         bestseller: false
     },
     {
         _id: "aaaal",
-        name: "Men Round Neck Pure Cotton T-shirt",
+        name: "Small Kids' Bed",
         description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
-        price: 150,
+        price: 45000,
         image: [p_img12],
-        category: "Men",
-        subCategory: "Topwear",
-        sizes: ["S", "M", "L", "XL"],
+        category: "Bed",
+        subCategory: "Timber",
+        sizes: ["Single, Double, King"],
         date: 1716624445448,
         bestseller: false
     },
-    {
+   /* {
         _id: "aaaam",
         name: "Women Round Neck Cotton Top",
         description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
-        price: 130,
+        price: 50000,
         image: [p_img13],
         category: "Women",
         subCategory: "Topwear",
         sizes: ["S", "M", "L", "XL"],
         date: 1716625545448,
         bestseller: false
-    },
+    },*/
     {
         _id: "aaaan",
-        name: "Boy Round Neck Pure Cotton T-shirt",
-        description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
-        price: 160,
+        name: "Glass working Table",
+        description: "Enhance your Working experience with our beautifully crafted glass working table, designed for both elegance and durability. Made from high-quality glass, this table brings warmth and sophistication to any woking space.",
+        price: 50000,
         image: [p_img14],
-        category: "Kids",
-        subCategory: "Topwear",
-        sizes: ["S", "M", "L", "XL"],
+        category: "Table",  
+        subCategory: "Glass",
+        sizes: ["4 People", "6 People", "8 People"],
         date: 1716626645448,
         bestseller: false
     },
     {
         _id: "aaaao",
-        name: "Men Tapered Fit Flat-Front Trousers",
-        description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
-        price: 140,
+        name: "Classic wooden Table",
+        description: "Add a touch of sophistication to your space with our beautifully crafted wooden chair. Designed for both style and comfort, this chair is made from premium-quality solid wood, ensuring durability and long-lasting use. Its ergonomic design provides excellent back support, making it perfect for dining, work, or relaxation.",
+        price: 85000,
         image: [p_img15],
-        category: "Men",
-        subCategory: "Bottomwear",
-        sizes: ["S", "M", "L", "XL"],
+        category: "Table",
+        subCategory: "Timber",
+        sizes: ["4 People", "6 People", "8 People"],
         date: 1716627745448,
         bestseller: false
     },
     {
         _id: "aaaap",
-        name: "Girls Round Neck Cotton Top",
+        name: "Dining Chair",
         description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
-        price: 170,
+        price: 10000,
         image: [p_img16],
-        category: "Kids",
-        subCategory: "Topwear",
-        sizes: ["S", "M", "L", "XL"],
+        category: "Chair",
+        subCategory: "Timber",
+        sizes: ["43 seat height","44 seat height","45 seat height" ],
         date: 1716628845448,
         bestseller: false
     },
-    {
+   /* {
         _id: "aaaaq",
         name: "Men Tapered Fit Flat-Front Trousers",
         description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
@@ -315,44 +317,44 @@ export const products = [
         sizes: ["S", "M", "L", "XL"],
         date: 1716629945448,
         bestseller: false
-    },
+    },*/
     {
         _id: "aaaar",
-        name: "Boy Round Neck Pure Cotton T-shirt",
-        description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
-        price: 180,
+        name: "Grey Color Sofa",
+        description: "Transform your living space with our luxury sofa, designed for both relaxation and elegance. Made with premium fabric and durable frame materials, this sofa offers the perfect balance of comfort, support, and style. Whether you're lounging with family or hosting guests, it’s the ideal piece for any modern or traditional home.",
+        price: 125000,
         image: [p_img18],
-        category: "Kids",
-        subCategory: "Topwear",
-        sizes: ["S", "M", "L", "XL"],
+        category: "Chair",
+        subCategory: "Cushion",
+        sizes: ["43 seat height","44 seat height","45 seat height" ],
         date: 1716631045448,
         bestseller: false
     },
     {
         _id: "aaaas",
-        name: "Boy Round Neck Pure Cotton T-shirt",
+        name: "White Color Sofa",
         description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
-        price: 160,
+        price: 100000,
         image: [p_img19],
-        category: "Kids",
-        subCategory: "Topwear",
-        sizes: ["S", "M", "L", "XL"],
+        category: "Chair",
+        subCategory: "Cushion",
+        sizes: ["43 seat height","44 seat height","45 seat height" ],
         date: 1716632145448,
         bestseller: false
     },
     {
         _id: "aaaat",
-        name: "Women Palazzo Pants with Waist Belt",
-        description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
-        price: 190,
+        name: " Durable Wooden well-built Table",
+        description: "Add a touch of sophistication to your space with our beautifully crafted wooden chair. Designed for both style and comfort, this chair is made from premium-quality solid wood, ensuring durability and long-lasting use. Its ergonomic design provides excellent back support, making it perfect for dining, work, or relaxation.",
+        price: 10000,
         image: [p_img20],
-        category: "Women",
-        subCategory: "Bottomwear",
-        sizes: ["S", "M", "L", "XL"],
+        category: "Table",
+        subCategory: "Timber",
+        sizes: ["4 People", "6 People", "8 People"],
         date: 1716633245448,
         bestseller: false
     },
-    {
+    /*{
         _id: "aaaau",
         name: "Women Zip-Front Relaxed Fit Jacket",
         description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
@@ -734,6 +736,6 @@ export const products = [
         sizes: ["S", "M", "L", "XL"],
         date: 1716668445448,
         bestseller: false
-    }
+    }*/
 
 ]
