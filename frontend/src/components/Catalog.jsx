@@ -6,7 +6,9 @@ import '../ProductCatalog.css';
 
 const Catalog = () => {
   const [categories, setCategories] = useState([]);
-  
+  const [products, setProducts] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+
   useEffect(() => {
     axios.get('http://localhost:5000/api/catalog/inventory') // ✅ Corrected API endpoint
       .then((res) => {
