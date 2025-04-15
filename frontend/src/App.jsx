@@ -18,6 +18,8 @@ import ManageCategories from "./components/ManageCategory";
 import Bill from './components/Bill';
 import AddSalesRecord from './components/AddSalesRecord';
 import ManageSales from './components/ManageSales'; 
+import Catalog from './components/Catalog';
+
 
 
 // import Home from './pages/home/pages/Home'
@@ -68,6 +70,7 @@ function App() {
           <Route path="/dashboard/bill" element={<Bill />} />
           <Route path="sales/add" element={<AddSalesRecord />} />
           <Route path="sales/manage" element={<ManageSales />}/>
+          <Route path="catalog" element={<Catalog />} />
           {/* Add other nested routes here */}
         </Route>
       </Routes>

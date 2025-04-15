@@ -1,0 +1,14 @@
+/* src/styles/ProductCatalog.css */
+.card-title {
+    font-weight: 600;
+  }
+  
+  .card {
+    border-radius: 16px;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .card:hover {
+    transform: translateY(-4px);
+  }
+  

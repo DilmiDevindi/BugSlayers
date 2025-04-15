@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import '../styles/ProductCatalog.css';
+import '../ProductCatalog.css';
 
-const ProductCatalog = () => {
+const Catalog = () => {
     const [products, setProducts] = useState([]);
   
     useEffect(() => {
@@ -40,4 +40,4 @@ const ProductCatalog = () => {
     );
   };
   
-  export default ProductCatalog;
+  export default Catalog;
