@@ -4,8 +4,7 @@ const mongoose = require('mongoose');
 const inventoryItemSchema = new mongoose.Schema({
   productName: { type: String, required: true },
   category: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Category', 
+    type: String, 
     required: true 
   },
   quantity: { type: Number, required: true },

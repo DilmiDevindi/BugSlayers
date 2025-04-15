@@ -1,3 +1,4 @@
+// Frontend: AddInventoryItem.js
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart, faSquarePlus, faDollarSign } from '@fortawesome/free-solid-svg-icons';
@@ -18,7 +19,6 @@ const AddInventoryItem = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Fetch categories on mount
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -28,7 +28,6 @@ const AddInventoryItem = () => {
         console.error('Failed to fetch categories', err);
       }
     };
-
     fetchCategories();
   }, []);
 
@@ -51,30 +50,14 @@ const AddInventoryItem = () => {
       const response = await axios.post('/api/inventory/add', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-
       const addedItem = response.data;
-
-      // Show generated code from backend
       setGeneratedCode(addedItem.code || 'Code not returned');
-
-      // Clear the form after success
-      setProductName('');
-      setCategory('');
-      setQuantity('');
-      setBuyingPrice('');
-      setSellingPrice('');
-      setDateAdded('');
-      setImage(null);
-
+      setProductName(''); setCategory(''); setQuantity(''); setBuyingPrice('');
+      setSellingPrice(''); setDateAdded(''); setImage(null);
       alert('Item added successfully!');
     } catch (error) {
       console.error('Error adding item:', error);
-
-      if (error.response && error.response.data && error.response.data.error) {
-        setError(error.response.data.error);
-      } else {
-        setError('Failed to add item. Please try again.');
-      }
+      setError(error.response?.data?.error || 'Failed to add item. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -85,111 +68,45 @@ const AddInventoryItem = () => {
       <div className="form-title-i">
         <span className="form-icon-i"><FontAwesomeIcon icon={faSquarePlus} /></span> Add New Product
       </div>
-
       <form onSubmit={handleSubmit}>
         <div className="form-group-i">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Product Title"
-            value={productName}
-            onChange={(e) => setProductName(e.target.value)}
-            required
-          />
+          <input type="text" className="form-control" placeholder="Product Title" value={productName} onChange={(e) => setProductName(e.target.value)} required />
         </div>
-
         <div className="form-row-i">
           <div className="form-group-i col">
-            <select
-              className="form-control-i"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              required
-            >
+            <select className="form-control-i" value={category} onChange={(e) => setCategory(e.target.value)} required>
               <option value="">Select Category</option>
               {categories.map((cat) => (
-                <option key={cat._id} value={cat._id}>
-                  {cat.categoryName}
-                </option>
+                <option key={cat._id} value={cat._id}>{cat.categoryName}</option>
               ))}
             </select>
           </div>
         </div>
-
         <div className="form-row-i">
           <div className="form-group-i input-icon-i">
             <span className="icon"><FontAwesomeIcon icon={faShoppingCart} /></span>
-            <input
-              type="number"
-              className="form-control-i"
-              placeholder="Product Quantity"
-              value={quantity}
-              onChange={(e) => setQuantity(e.target.value)}
-              required
-            />
+            <input type="number" className="form-control-i" placeholder="Product Quantity" value={quantity} onChange={(e) => setQuantity(e.target.value)} required />
           </div>
         </div>
-
         <div className="form-row-i">
           <div className="form-group-i input-icon-i">
             <span className="icon"><FontAwesomeIcon icon={faDollarSign} /></span>
-            <input
-              type="number"
-              className="form-control-i"
-              placeholder="Buying Price"
-              min="0"
-              step="0.01"
-              value={buyingPrice}
-              onChange={(e) => setBuyingPrice(e.target.value)}
-              required
-            />
+            <input type="number" className="form-control-i" placeholder="Buying Price" min="0" step="0.01" value={buyingPrice} onChange={(e) => setBuyingPrice(e.target.value)} required />
           </div>
-
           <div className="form-group-i input-icon-i">
             <span className="icon"><FontAwesomeIcon icon={faDollarSign} /></span>
-            <input
-              type="number"
-              className="form-control-i"
-              placeholder="Selling Price"
-              min="0"
-              step="0.01"
-              value={sellingPrice}
-              onChange={(e) => setSellingPrice(e.target.value)}
-              required
-            />
+            <input type="number" className="form-control-i" placeholder="Selling Price" min="0" step="0.01" value={sellingPrice} onChange={(e) => setSellingPrice(e.target.value)} required />
           </div>
         </div>
-
         <div className="form-group-i">
-          <input
-            type="date"
-            className="form-control"
-            value={dateAdded}
-            onChange={(e) => setDateAdded(e.target.value)}
-            required
-          />
+          <input type="date" className="form-control" value={dateAdded} onChange={(e) => setDateAdded(e.target.value)} required />
         </div>
-
         <div className="form-group-i">
-          <input
-            type="file"
-            className="form-control"
-            accept="image/*"
-            onChange={(e) => setImage(e.target.files[0])}
-          />
+          <input type="file" className="form-control" accept="image/*" onChange={(e) => setImage(e.target.files[0])} />
         </div>
-
-        <button type="submit" className="btn btn-primary-i" disabled={loading}>
-          {loading ? 'Adding...' : 'Add Product'}
-        </button>
-
+        <button type="submit" className="btn btn-primary-i" disabled={loading}>{loading ? 'Adding...' : 'Add Product'}</button>
         {error && <div className="alert alert-danger-i mt-3">{error}</div>}
-
-        {generatedCode && (
-          <div className="alert alert-success-i mt-3">
-            <strong>Generated Code:</strong> {generatedCode}
-          </div>
-        )}
+        {generatedCode && <div className="alert alert-success-i mt-3"><strong>Generated Code:</strong> {generatedCode}</div>}
       </form>
     </div>
   );

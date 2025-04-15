@@ -1,80 +1,120 @@
 const InventoryItem = require('../models/InventoryItem');
-const Category = require('../models/Category');
-const path = require('path');
+const multer = require('multer');
 
-// Utility function to generate prefix based on category name
-const getCategoryPrefix = (categoryName) => {
-  if (!categoryName) return 'unk'; // Default prefix for unknown category
-  return categoryName
-    .split(' ')
-    .map(word => word[0].toLowerCase())
-    .join('');
+// Configure multer for file upload
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); // Directory for storing images
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname.replace(/\s+/g, '_')}`); // Unique filename
+  },
+});
+
+const upload = multer({
+  storage,
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    if (allowedTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Invalid file type. Only JPEG, PNG, and GIF are allowed.'));
+    }
+  },
+});
+
+// Helper function to generate a unique numeric code
+const generateItemCode = async () => {
+  // Get all existing items
+  const existingItems = await InventoryItem.find();
+
+  // Get the highest numeric code among existing items
+  let maxCode = 0;
+  existingItems.forEach(item => {
+    const match = item.code.match(/^\d+$/); // Match only numeric codes
+    if (match) {
+      const number = parseInt(item.code);
+      if (number > maxCode) {
+        maxCode = number;
+      }
+    }
+  });
+
+  // Generate the next sequential code
+  const nextCode = maxCode + 1;
+
+  // Ensure the code is 3 digits (e.g., "001", "002")
+  return String(nextCode).padStart(3, '0');
 };
-
 
 // Get all inventory items
 const getInventoryItems = async (req, res) => {
-  const { page = 1, limit = 10 } = req.query; // Default to page 1, 10 items per page
   try {
-    const items = await InventoryItem.find()
-      .populate('category')
-      .skip((page - 1) * limit)
-      .limit(Number(limit));
-    const total = await InventoryItem.countDocuments();
-    res.json({ items, total, page, totalPages: Math.ceil(total / limit) });
+    const items = await InventoryItem.find();
+    res.json(items);
   } catch (error) {
     res.status(500).json({ error: 'Error fetching inventory items' });
   }
 };
 
-
 // Add a new inventory item
 const addInventoryItem = async (req, res) => {
-  const { productName, category, quantity, buyingPrice, sellingPrice, dateAdded } = req.body;
-  const image = req.file ? req.file.filename : null;
-
   try {
-    if (!category) return res.status(400).json({ error: 'Category is required.' });
+    const { productName, category, quantity, buyingPrice, sellingPrice, dateAdded } = req.body;
+    const image = req.file ? req.file.filename : null;
 
-    const categoryDoc = await Category.findById(category);
-    if (!categoryDoc) return res.status(404).json({ error: 'Category not found' });
+    // Validate inputs
+    if (!productName || !category || !quantity || !buyingPrice || !sellingPrice || !dateAdded) {
+      return res.status(400).json({ error: 'All fields are required!' });
+    }
+    if (isNaN(quantity) || quantity <= 0) {
+      return res.status(400).json({ error: 'Quantity must be a positive number!' });
+    }
+    if (isNaN(buyingPrice) || buyingPrice <= 0 || isNaN(sellingPrice) || sellingPrice <= 0) {
+      return res.status(400).json({ error: 'Prices must be positive numbers!' });
+    }
+    if (!Date.parse(dateAdded)) {
+      return res.status(400).json({ error: 'Invalid date format!' });
+    }
 
-    const categoryName = categoryDoc.categoryName;
-    const prefix = getCategoryPrefix(categoryName);
+    // Check if the product already exists
+    const existingItem = await InventoryItem.findOne({ productName, category });
 
-    const existingCount = await InventoryItem.countDocuments({ category });
-    const nextNumber = existingCount + 1;
-    const code = `${prefix}${String(nextNumber).padStart(3, '0')}`;
+    if (existingItem) {
+      return res.status(409).json({
+        error: 'Product already exists!',
+        message: 'You cannot add this product again as it already exists. Consider updating its details.',
+        code: existingItem.code,
+        item: existingItem,
+      });
+    } else {
+      // Generate a new numeric code for the product
+      const code = await generateItemCode();
 
-    if (isNaN(quantity) || quantity <= 0) return res.status(400).json({ error: 'Invalid quantity.' });
-    if (isNaN(buyingPrice) || buyingPrice < 0) return res.status(400).json({ error: 'Invalid buying price.' });
-    if (isNaN(sellingPrice) || sellingPrice < 0) return res.status(400).json({ error: 'Invalid selling price.' });
+      // Create a new item
+      const newItem = new InventoryItem({
+        code,
+        productName,
+        category,
+        quantity: parseInt(quantity),
+        buyingPrice: parseFloat(buyingPrice).toFixed(2),
+        sellingPrice: parseFloat(sellingPrice).toFixed(2),
+        dateAdded,
+        image,
+      });
 
-    const newItem = new InventoryItem({
-      productName,
-      category,
-      quantity,
-      buyingPrice,
-      sellingPrice,
-      dateAdded,
-      image,
-      code
-    });
-
-    await newItem.save();
-
-    // Populate category before sending back
-    const populatedItem = await InventoryItem.findById(newItem._id).populate('category');
-
-    console.log("New Item with code:", populatedItem.code);
-    res.status(201).json(populatedItem);
-
-  } catch (error) {
-    console.error("Error adding item:", error);
-    res.status(500).json({ error: 'Error adding item' });
+      const savedItem = await newItem.save();
+      return res.status(201).json({
+        message: 'New item added successfully!',
+        code: savedItem.code,
+        item: savedItem,
+      });
+    }
+  } catch (err) {
+    console.error(`Error adding item: ${err.message}`);
+    res.status(500).json({ error: `Failed to add item: ${err.message}` });
   }
 };
-
 
 // Get inventory count
 const getInventoryCount = async (req, res) => {
@@ -97,7 +137,7 @@ const updateInventoryItem = async (req, res) => {
     quantity,
     buyingPrice,
     sellingPrice,
-    dateAdded
+    dateAdded,
   };
 
   if (req.file) {
@@ -107,12 +147,12 @@ const updateInventoryItem = async (req, res) => {
   try {
     const updatedItem = await InventoryItem.findByIdAndUpdate(id, updateData, {
       new: true,
-      runValidators: true
+      runValidators: true,
     });
     res.json(updatedItem);
   } catch (error) {
-    console.error("Error updating item:", error);
-    res.status(500).json({ error: 'Error updating item' });
+    console.error(`Error updating item: ${error.message}`);
+    res.status(500).json({ error: `Failed to update item: ${error.message}` });
   }
 };
 
@@ -120,21 +160,19 @@ const updateInventoryItem = async (req, res) => {
 const deleteInventoryItem = async (req, res) => {
   const { id } = req.params;
   try {
-    const item = await InventoryItem.findByIdAndDelete(id);
-    if (item && item.image) {
-      fs.unlinkSync(path.join(__dirname, '../uploads', item.image)); // Delete file
-    }
+    await InventoryItem.findByIdAndDelete(id);
     res.json({ message: 'Item deleted successfully!' });
   } catch (error) {
-    res.status(500).json({ error: 'Error deleting item' });
+    console.error(`Error deleting item: ${error.message}`);
+    res.status(500).json({ error: `Failed to delete item: ${error.message}` });
   }
 };
-
 
 module.exports = {
   getInventoryItems,
   addInventoryItem,
   getInventoryCount,
   updateInventoryItem,
-  deleteInventoryItem
+  deleteInventoryItem,
+  upload,
 };
