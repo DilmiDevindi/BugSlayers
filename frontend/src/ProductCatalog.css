@@ -1,14 +1,57 @@
-/* src/styles/ProductCatalog.css */
-.card-title {
-    font-weight: 600;
-  }
-  
-  .card {
-    border-radius: 16px;
-    transition: transform 0.2s ease-in-out;
-  }
-  
-  .card:hover {
-    transform: translateY(-4px);
-  }
-  
+/* src/styles/ProductCatalogStyles.css */
+
+/* Card Title Styling */
+.catalog-card-title {
+  font-weight: 700; /* Make the title bolder for emphasis */
+  font-size: 1.25rem; /* Adjust size for better readability */
+  color: #333; /* Darker text for better contrast */
+}
+
+/* Card Styling */
+.catalog-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Smooth animation */
+  background-color: #fff; /* Set a clean white background */
+}
+
+/* Hover Effect for Cards */
+.catalog-card:hover {
+  transform: translateY(-8px); /* Lift effect on hover */
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* More pronounced shadow on hover */
+}
+
+/* Card Image Styling */
+.catalog-card-img-top {
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px; /* Rounded corners for the top image */
+  object-fit: cover; /* Ensure images are proportionally scaled */
+  height: 200px; /* Consistent height for all images */
+}
+
+/* Card Body Styling */
+.catalog-card-body {
+  padding: 1.25rem; /* Add more padding for a spacious layout */
+  text-align: left; /* Align text to the left for readability */
+}
+
+/* Button Styling for Categories */
+.catalog-nav-tabs .catalog-nav-link {
+  font-weight: 600;
+  color: #555; /* Default button color */
+  background-color: #f8f9fa; /* Light gray for inactive buttons */
+  border-radius: 8px; /* Rounded edges */
+  margin-right: 4px; /* Space between buttons */
+  transition: all 0.2s ease-in-out; /* Smooth color change */
+}
+
+.catalog-nav-tabs .catalog-nav-link:hover {
+  background-color: #e2e6ea; /* Slightly darker hover effect */
+  color: #000; /* Darker text on hover */
+}
+
+.catalog-nav-tabs .catalog-nav-link.active {
+  background-color: #0d6efd; /* Bootstrap primary blue for active tab */
+  color: #fff; /* White text for active tab */
+  border-radius: 8px; /* Rounded edges */
+}
