@@ -12,6 +12,8 @@ const getCategories = async (req, res) => {
   }
 };
 
+
+
  
 module.exports = {
     getAllProducts
