@@ -23,6 +23,8 @@ app.use(express.json()); // Extra safety
 
 // Serve uploaded images statically
 app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // <-- Allows frontend access to image URLs
+app.use('/uploads', express.static('uploads'));
+
 
 // Connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/mern-vite-app', {

@@ -7,7 +7,9 @@ const catalogController = require('../controllers/catalogController');
 // Route to get all categories
 router.get('/categories', catalogController.getCategories);
 
-// Route to get products by category
-router.get('/inventoryitems', catalogController.getProductsByCategory);
+
+// Route to get products by category ID
+router.get('/', getInventoryItems); // This supports `?categoryId=...` as expected
+
 
 module.exports = router;

@@ -14,15 +14,17 @@ const getCategories = async (req, res) => {
 
 // Fetch products by category
 const getProductsByCategory = async (req, res) => {
-  const { categoryId } = req.query; // Read categoryId from query parameters
+  const { categoryId } = req.query;
+
   try {
-    const products = await Product.find({ categoryId }); // Retrieve products matching categoryId
+    const products = await Product.find({ categoryId }).populate('categoryId');
     res.status(200).json(products);
   } catch (error) {
     console.error('Error fetching products:', error);
     res.status(500).json({ message: 'Server Error' });
   }
 };
+
 
  
 module.exports = {

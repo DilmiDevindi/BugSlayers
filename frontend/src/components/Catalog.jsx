@@ -11,21 +11,20 @@ const Catalog = () => {
 
   // Fetch categories from the API
   useEffect(() => {
-    axios.get('http://localhost:5000/api/categories')
+    axios.get('http://localhost:5000/api/categories') // ✅ updated
       .then((res) => {
         console.log('Fetched categories:', res.data);
         setCategories(res.data);
         if (res.data.length > 0) {
-          setActiveTab(res.data[0]._id); // Default to the first category
+          setActiveTab(res.data[0]._id);
         }
       })
       .catch((err) => console.error('Error fetching categories:', err));
   }, []);
-
-  // Fetch products for the active tab (selected category)
+  
   useEffect(() => {
     if (activeTab) {
-      axios.get(`http://localhost:5000/api/inventoryitems?categoryId=${activeTab}`)
+      axios.get(`http://localhost:5000/api/inventoryitems?categoryId=${activeTab}`) // ✅ URL still valid
         .then((res) => {
           console.log('Fetched products:', res.data);
           setProducts(res.data);
@@ -33,10 +32,12 @@ const Catalog = () => {
         .catch((err) => console.error('Error fetching products:', err));
     }
   }, [activeTab]);
+  
 
   return (
     <div className="container mt-4">
       <h2 className="mb-4">Product Catalog</h2>
+
       {/* Tabs for categories */}
       <ul className="nav nav-tabs mb-4">
         {categories.map((category) => (
@@ -45,11 +46,12 @@ const Catalog = () => {
               className={`nav-link ${activeTab === category._id ? 'active' : ''}`}
               onClick={() => setActiveTab(category._id)}
             >
-              {category.name}
+              {category.categoryName}
             </button>
           </li>
         ))}
       </ul>
+
       {/* Product grid */}
       <div className="row">
         {products.length ? (
@@ -58,12 +60,14 @@ const Catalog = () => {
               <div className="card h-100 shadow-sm">
                 {product.image && (
                   <img
-                    src={product.image}
-                    className="card-img-top"
-                    alt={product.name}
-                    style={{ height: '200px', objectFit: 'cover' }}
+                  src={`http://localhost:5000/${product.image}`}
+                  className="card-img-top"
+                  alt={product.name}
+                  style={{ height: '200px', objectFit: 'cover' }}
                   />
+                
                 )}
+                
                 <div className="card-body">
                   <h5 className="card-title">{product.name}</h5>
                   <p className="card-text mb-1"><strong>Item Code:</strong> {product.itemCode}</p>
