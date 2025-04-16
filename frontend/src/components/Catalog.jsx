@@ -1,5 +1,3 @@
-// src/components/Catalog.jsx
-
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import '../ProductCatalog.css';
@@ -11,20 +9,21 @@ const Catalog = () => {
 
   // Fetch categories from the API
   useEffect(() => {
-    axios.get('http://localhost:5000/api/categories') // ✅ updated
+    axios.get('http://localhost:5000/api/catalog/categories') // ✅ updated
       .then((res) => {
         console.log('Fetched categories:', res.data);
         setCategories(res.data);
         if (res.data.length > 0) {
-          setActiveTab(res.data[0]._id);
+          setActiveTab(res.data[0]._id); // Set the first category as default
         }
       })
       .catch((err) => console.error('Error fetching categories:', err));
   }, []);
-  
+
+  // Fetch products when category tab changes
   useEffect(() => {
     if (activeTab) {
-      axios.get(`http://localhost:5000/api/inventoryitems?categoryId=${activeTab}`) // ✅ URL still valid
+      axios.get(`http://localhost:5000/api/catalog/products?categoryId=${activeTab}`)
         .then((res) => {
           console.log('Fetched products:', res.data);
           setProducts(res.data);
@@ -32,7 +31,6 @@ const Catalog = () => {
         .catch((err) => console.error('Error fetching products:', err));
     }
   }, [activeTab]);
-  
 
   return (
     <div className="container mt-4">
@@ -60,14 +58,12 @@ const Catalog = () => {
               <div className="card h-100 shadow-sm">
                 {product.image && (
                   <img
-                  src={`http://localhost:5000/${product.image}`}
-                  className="card-img-top"
-                  alt={product.name}
-                  style={{ height: '200px', objectFit: 'cover' }}
+                    src={`http://localhost:5000/uploads/${product.image}`} // Fixed image path
+                    className="card-img-top"
+                    alt={product.name}
+                    style={{ height: '200px', objectFit: 'cover' }}
                   />
-                
                 )}
-                
                 <div className="card-body">
                   <h5 className="card-title">{product.name}</h5>
                   <p className="card-text mb-1"><strong>Item Code:</strong> {product.itemCode}</p>

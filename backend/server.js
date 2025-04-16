@@ -21,7 +21,7 @@ app.use(cors());
 app.use(bodyParser.json()); // Still useful for parsing JSON requests
 app.use(express.json()); // Extra safety
 
-// Serve uploaded images statically
+//images
 app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // <-- Allows frontend access to image URLs
 app.use('/uploads', express.static('uploads'));
 
@@ -41,7 +41,7 @@ app.use('/api/customers', customerRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/category', categoryRoutes);
 app.use('/api/sales', salesRoutes);
-app.use('/api/catalog', catalogRoutes);
+app.use('/api/catalog', catalogRoutes); // Use the catalog routes
 
 // Start server
 app.listen(PORT, () => {
