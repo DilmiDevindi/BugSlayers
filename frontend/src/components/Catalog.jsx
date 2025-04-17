@@ -60,7 +60,7 @@ const Catalog = () => {
                   <img
                     src={`http://localhost:5000/uploads/${product.image}`} // Fixed image path
                     className="card-img-top"
-                    alt={product.name}
+                    alt={product.productName}
                     style={{ height: '200px', objectFit: 'cover' }}
                   />
                 )}
