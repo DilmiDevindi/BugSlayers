@@ -16,6 +16,7 @@ const getProductsByCategory = async (req, res) => {
 
   try {
     const products = await InventoryItem.find({ category: categoryId });
+    console.log('Fetched products:', products);
     res.status(200).json(products);
   } catch (error) {
     console.error('Error fetching products:', error);
