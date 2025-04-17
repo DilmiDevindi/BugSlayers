@@ -26,7 +26,7 @@ const AddSalesRecord = () => {
 
   return (
     <div className="container mt-4">
-      <h3>Add Sales Record</h3>
+      <h3><FontAwesomeIcon icon={faPlus} className="sr-icon" />Add Sales Record</h3>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="customerName" className="form-label">Customer Name</label>
