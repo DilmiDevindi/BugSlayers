@@ -17,37 +17,14 @@ import AddCategory from "./components/AddCategory";
 import ManageCategories from "./components/ManageCategory";
 import Bill from './components/Bill';
 import AddSalesRecord from './components/AddSalesRecord';
-import ManageSales from './components/ManageSales'; 
-
-
-// import Home from './pages/home/pages/Home'
-// import Collection from './pages/home/pages/Collection'
-// import About from './pages/home/pages/About'
-// import Contact from './pages/home/pages/Contact'
-// import Product from './page/home/pages/Product'
-// import Cart from './pages/home/pages/Cart'
-// import LogIn from './pages/home/pages/LogIn'
-// import PlaceOrder from './pages/home/pages/PlaceOrder'
-// import Orders from './pages/home/pages/Orders'
-// import Navbar from './pages/home/components/Navbar'
-// import Footer from './pages/home/components/Footer'
-
+import ManageSales from './components/ManageSales';
+import SalesReport from './components/SalesReport'; 
 
 function App() {
   return (
     <Router>
       <Routes>
         {/* Public Routes */}
-
-        {/* <Route path='/' element={<Home/>}/> */}
-        {/* <Route path='/collection' element={<Collection/>} />
-        <Route path='/about' element={<About/>} />
-        <Route path='/contact' element={<Contact/>}/>
-        <Route path='/product/:productId' element={<Product/>} />
-        <Route path='/cart' element={<Cart/>}/>
-        <Route path='/logIn' element={<LogIn/>} />
-        <Route path='/placeOrder' element={<PlaceOrder/>} />
-        <Route path='/orders' element={<Orders/>} /> */}
 
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
@@ -68,7 +45,8 @@ function App() {
           <Route path="/dashboard/bill" element={<Bill />} />
           <Route path="sales/add" element={<AddSalesRecord />} />
           <Route path="sales/manage" element={<ManageSales />}/>
-          {/* Add other nested routes here */}
+          <Route path="sales/report" element={<SalesReport />}/>
+       
         </Route>
       </Routes>
     </Router>
