@@ -33,8 +33,16 @@ const Catalog = () => {
         .catch((err) => console.error('Error fetching products:', err));
     }
   }, [activeTab]);
-  
 
+  // Filter products based on search query
+  useEffect(() => {
+    const results = products.filter((product) =>
+      product.productName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.code?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredProducts(results);
+  }, [searchQuery, products]);
+  
   return (
     <div className="container mt-4">
 
