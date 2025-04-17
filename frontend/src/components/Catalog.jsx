@@ -25,12 +25,13 @@ const Catalog = () => {
     if (activeTab) {
       axios.get(`http://localhost:5000/api/catalog/products?categoryId=${activeTab}`)
         .then((res) => {
-          console.log('Fetched products:', res.data);
+          console.log('Fetched products:', res.data); // Log products
           setProducts(res.data);
         })
         .catch((err) => console.error('Error fetching products:', err));
     }
   }, [activeTab]);
+  
 
   return (
     <div className="container mt-4">

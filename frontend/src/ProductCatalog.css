@@ -52,6 +52,6 @@
 
 .catalog-nav-tabs .catalog-nav-link.active {
   background-color: #0d6efd; /* Bootstrap primary blue for active tab */
-  color: #fff; /* White text for active tab */
+  color: #000000; /* White text for active tab */
   border-radius: 8px; /* Rounded edges */
 }
