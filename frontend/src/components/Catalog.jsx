@@ -6,56 +6,58 @@ const Catalog = () => {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [activeTab, setActiveTab] = useState(null);
-  const [filteredProducts, setFilteredProducts] = useState([]); 
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Fetch categories from the API
+  // Fetch all categories on load
   useEffect(() => {
-    axios.get('http://localhost:5000/api/catalog/categories') // ✅ updated
+    axios.get('http://localhost:5000/api/catalog/categories')
       .then((res) => {
-        console.log('Fetched categories:', res.data);
         setCategories(res.data);
         if (res.data.length > 0) {
-          setActiveTab(res.data[0]._id); // Set the first category as default
+          setActiveTab(res.data[0]._id);
         }
       })
       .catch((err) => console.error('Error fetching categories:', err));
   }, []);
 
-  // Fetch products when category tab changes
+  // Fetch products for selected category
   useEffect(() => {
     if (activeTab) {
       axios.get(`http://localhost:5000/api/catalog/products?categoryId=${activeTab}`)
         .then((res) => {
-          console.log('Fetched products:', res.data); // Log products
           setProducts(res.data);
+          setFilteredProducts(res.data); // Initially show all in category
+          setSearchQuery(''); // Reset search when tab changes
         })
         .catch((err) => console.error('Error fetching products:', err));
     }
   }, [activeTab]);
 
-  // Filter products based on search query
+  // Search within current category's products
   useEffect(() => {
-    const results = products.filter((product) =>
-      product.productName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.code?.toLowerCase().includes(searchQuery.toLowerCase())
+    const query = searchQuery.toLowerCase();
+    const filtered = products.filter((product) =>
+      product.productName?.toLowerCase().includes(query) ||
+      product.code?.toLowerCase().includes(query)
     );
-    setFilteredProducts(results);
+    setFilteredProducts(filtered);
   }, [searchQuery, products]);
-  
+
   return (
     <div className="container mt-4">
+      {/* Search bar */}
+      <div className="input-group mb-4">
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Search within this category..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </div>
 
-    <div className="input-group mb-4">
-    <input
-      type="text"
-      className="form-control"
-      placeholder="Search for a product..."
-      onChange={(e) => setSearchQuery(e.target.value)} // Update search query
-    />
-    </div>
-
-      {/* Tabs for categories */}
+      {/* Category Tabs */}
       <ul className="nav nav-tabs mb-4">
         {categories.map((category) => (
           <li className="nav-item" key={category._id}>
@@ -69,24 +71,24 @@ const Catalog = () => {
         ))}
       </ul>
 
-      {/* Product grid */}
+      {/* Product Grid */}
       <div className="row">
-        {products.length ? (
-          products.map((product) => (
+        {filteredProducts.length ? (
+          filteredProducts.map((product) => (
             <div className="col-md-4 mb-4" key={product._id}>
-              <div className="card h-100 shadow-sm">
+              <div className="card card compact-spacing h-100 shadow-sm">
                 {product.image && (
                   <img
-                    src={`http://localhost:5000/uploads/${product.image}`} // Fixed image path
+                    src={`http://localhost:5000/uploads/${product.image}`}
                     className="card-img-top"
                     alt={product.productName}
                     style={{ height: '200px', objectFit: 'cover' }}
                   />
                 )}
                 <div className="card-body">
-                  <h5 className="card-title">{product.productName || 'No Name Available'}</h5>
-                  <p className="card-text mb-1"><strong>Item Code: {product.code || 'No Code Available'}</strong></p>
-                  <p className="card-text mb-1"><strong>Price: Rs. {product.sellingPrice || 'N/A'}</strong></p>
+                  <h5 className="card-title">{product.productName}</h5>
+                  <p className="card-text mb-1"><strong>Item Code: {product.code}</strong></p>
+                  <p className="card-text mb-1"><strong>Price: Rs. {product.sellingPrice}</strong></p>
                   <p className="card-text mb-1">
                     <strong>Stock Status:</strong>{' '}
                     <span className={`badge ${product.quantity > 0 ? 'bg-success' : 'bg-danger'}`}>
@@ -98,7 +100,7 @@ const Catalog = () => {
             </div>
           ))
         ) : (
-          <p>No products available for this category.</p>
+          <p>No products found in this category.</p>
         )}
       </div>
     </div>
