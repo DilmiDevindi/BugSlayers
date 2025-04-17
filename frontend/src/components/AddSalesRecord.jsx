@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import './Sales.css';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 const AddSalesRecord = () => {
   const [customerName, setCustomerName] = useState('');
