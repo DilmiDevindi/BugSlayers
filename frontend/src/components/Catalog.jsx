@@ -6,6 +6,8 @@ const Catalog = () => {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [activeTab, setActiveTab] = useState(null);
+  const [filteredProducts, setFilteredProducts] = useState([]); 
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Fetch categories from the API
   useEffect(() => {
