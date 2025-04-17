@@ -15,9 +15,13 @@
     font-weight: 600;
     text-align: left;
     font-size: 18px;
+    
   }
   
-  
+  .ms-icon{
+    color: blue;
+    margin-right: 10px;
+  }
   
   button.btn {
     border-radius: 6px;

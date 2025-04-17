@@ -61,7 +61,7 @@ const ManageSales = () => {
 
   return (
     <div className="container mt-4">
-      <h3><FontAwesomeIcon icon={faClipboardList} className="me-2" />Manage Sales Records</h3>
+      <h3><FontAwesomeIcon icon={faClipboardList} className="ms-icon" />Manage Sales Records</h3>
 
       {/* Search Input */}
       <div className="mb-3">
@@ -118,7 +118,7 @@ const ManageSales = () => {
       {/* Edit Sale Form - Placed after table */}
       {editingSale && (
         <form onSubmit={handleEditSubmit} className="mb-4 border p-3 rounded">
-          <h3><FontAwesomeIcon icon={faPenToSquare} className="me-2" />Edit Sale</h3>
+          <h3><FontAwesomeIcon icon={faPenToSquare} className="ms-icon" />Edit Sale</h3>
           <div className="mb-2">
             <input
               type="text"
