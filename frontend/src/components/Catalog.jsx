@@ -36,6 +36,15 @@ const Catalog = () => {
   return (
     <div className="container mt-4">
 
+    <div className="input-group mb-4">
+    <input
+      type="text"
+      className="form-control"
+      placeholder="Search for a product..."
+      onChange={(e) => setSearchQuery(e.target.value)} // Update search query
+    />
+    </div>
+
       {/* Tabs for categories */}
       <ul className="nav nav-tabs mb-4">
         {categories.map((category) => (
