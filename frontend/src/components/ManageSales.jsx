@@ -162,6 +162,7 @@ const ManageSales = () => {
               <td>{sale.price}</td>
               <td>{new Date(sale.date).toLocaleDateString()}</td>
               <td>
+              <div className="d-flex gap-2">
                 <button
                   className="btn btn-warning btn-sm me-2"
                   onClick={() => handleEditClick(sale)}
@@ -174,6 +175,7 @@ const ManageSales = () => {
                 > 
                 <FontAwesomeIcon icon={faTrash} />
                 </button>
+                </div>
               </td>
             </tr>
           ))}
