@@ -8,6 +8,7 @@
     border-radius: 16px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    width: 40%;
   }
   
   h3 {
@@ -52,6 +53,12 @@
   
   .btn-primary:hover {
     background-color: #0b5ed7;
+  }
+
+  .addsales-icon{
+    color: white;
+    background-color: blue;
+    margin-right: 13px;
   }
 
   
