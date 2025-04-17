@@ -35,7 +35,6 @@ const Catalog = () => {
 
   return (
     <div className="container mt-4">
-      <h2 className="mb-4">Product Catalog</h2>
 
       {/* Tabs for categories */}
       <ul className="nav nav-tabs mb-4">
@@ -67,8 +66,14 @@ const Catalog = () => {
                 )}
                 <div className="card-body">
                   <h5 className="card-title">{product.productName || 'No Name Available'}</h5>
-                  <p className="card-text mb-1"><strong>Item Code:</strong> {product.code || 'No Code Available'}</p>
-                  <p className="card-text mb-1"><strong>Price:</strong> Rs. {product.sellingPrice || 'N/A'}</p>
+                  <p className="card-text mb-1"><strong>Item Code: {product.code || 'No Code Available'}</strong></p>
+                  <p className="card-text mb-1"><strong>Price: Rs. {product.sellingPrice || 'N/A'}</strong></p>
+                  <p className="card-text mb-1">
+                    <strong>Stock Status:</strong>{' '}
+                    <span className={`badge ${product.quantity > 0 ? 'bg-success' : 'bg-danger'}`}>
+                      {product.quantity > 0 ? 'In Stock' : 'Out of Stock'}
+                    </span>
+                  </p>
                 </div>
               </div>
             </div>

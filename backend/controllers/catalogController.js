@@ -13,7 +13,6 @@ const getCategories = async (req, res) => {
 
 const getProductsByCategory = async (req, res) => {
   const { categoryId } = req.query;
-
   try {
     const products = await InventoryItem.find({ category: categoryId });
     res.status(200).json(products);

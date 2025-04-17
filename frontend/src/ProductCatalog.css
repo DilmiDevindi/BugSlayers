@@ -10,7 +10,7 @@ body {
 .container {
   max-width: 1200px;
   margin: auto;
-  padding: 2rem 1rem;
+  padding: 1rem 1rem;
 }
 
 /* Tabs for Categories */
@@ -45,7 +45,7 @@ body {
 
 /* Product Card Grid */
 .card {
-  width: 180px;
+  width: 200px;
   border: #343434;
   border-radius: 16px;
   overflow: hidden;
@@ -60,7 +60,7 @@ body {
 }
 
 .card-img-top {
-  width: 180px;
+  width: 190px;
   height: 200px;
   border-bottom: 1px solid #eee;
 }
@@ -71,15 +71,15 @@ body {
 }
 
 .card-title {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+  color: #555;
+  text-align: left;
 }
 
 .card-text {
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   color: #555;
+  text-align: left;
 }
 
 /* Responsive Tweak */
@@ -89,6 +89,6 @@ body {
   }
 
   .card-img-top {
-    height: 180px;
+    height: 190px;
   }
 }
