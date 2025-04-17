@@ -65,7 +65,7 @@ const Catalog = () => {
                   />
                 )}
                 <div className="card-body">
-                  <h5 className="card-title">{product.productName}</h5>
+                  <h5 className="card-title">{product.productName || 'No Name Available'}</h5>
                   <p className="card-text mb-1"><strong>Item Code:</strong> {product.code}</p>
                   <p className="card-text mb-1"><strong>Price:</strong> Rs. {product.sellingPrice}</p>
                 </div>
