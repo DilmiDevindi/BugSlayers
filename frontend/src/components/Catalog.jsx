@@ -66,7 +66,7 @@ const Catalog = () => {
                 )}
                 <div className="card-body">
                   <h5 className="card-title">{product.productName}</h5>
-                  <p className="card-text mb-1"><strong>Item Code:</strong> {product.itemCode}</p>
+                  <p className="card-text mb-1"><strong>Item Code:</strong> {product.code}</p>
                   <p className="card-text mb-1"><strong>Price:</strong> Rs. {product.price}</p>
                 </div>
               </div>
