@@ -118,7 +118,7 @@ const ManageSales = () => {
       {/* Edit Sale Form - Placed after table */}
       {editingSale && (
         <form onSubmit={handleEditSubmit} className="mb-4 border p-3 rounded">
-          <h5><FontAwesomeIcon icon={faPenToSquare} className="me-2" />Edit Sale</h5>
+          <h3><FontAwesomeIcon icon={faPenToSquare} className="me-2" />Edit Sale</h3>
           <div className="mb-2">
             <input
               type="text"
