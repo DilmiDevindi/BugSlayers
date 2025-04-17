@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './ManageSales.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash,faPenToSquare, faClipboardList} from '@fortawesome/free-solid-svg-icons';
 
 const ManageSales = () => {
   const [sales, setSales] = useState([]);
@@ -61,7 +61,8 @@ const ManageSales = () => {
 
   return (
     <div className="container mt-4">
-      <h3>Manage Sales Records</h3>
+      <h3><FontAwesomeIcon icon={faClipboardList} className="me-2" />
+      Manage Sales Records</h3>
 
       {/* Search Input */}
       <div className="mb-3">
@@ -77,7 +78,7 @@ const ManageSales = () => {
       {/* Edit Sale Form */}
       {editingSale && (
         <form onSubmit={handleEditSubmit} className="mb-4 border p-3 rounded">
-          <h5>Edit Sale</h5>
+          <h5> <FontAwesomeIcon icon={faPenToSquare} className="me-2" />Edit Sale</h5>
           <div className="mb-2">
             <input
               type="text"
