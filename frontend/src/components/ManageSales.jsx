@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './ManageSales.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const ManageSales = () => {
   const [sales, setSales] = useState([]);
@@ -164,13 +166,13 @@ const ManageSales = () => {
                   className="btn btn-warning btn-sm me-2"
                   onClick={() => handleEditClick(sale)}
                 >
-                  Edit
+                <FontAwesomeIcon icon={faEdit} />
                 </button>
                 <button
                   className="btn btn-danger btn-sm"
                   onClick={() => deleteSale(sale._id)}
-                >
-                  Delete
+                > 
+                <FontAwesomeIcon icon={faTrash} />
                 </button>
               </td>
             </tr>
