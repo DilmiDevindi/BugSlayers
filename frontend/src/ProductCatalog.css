@@ -72,13 +72,13 @@ body {
 
 .card-title {
   font-size: 0.85rem;
-  color: #555;
+  color: #282828;
   text-align: left;
 }
 
 .card-text {
   font-size: 0.85rem;
-  color: #555;
+  color: #4f4f4f;
   text-align: left;
 }
 
@@ -89,6 +89,6 @@ body {
   }
 
   .card-img-top {
-    height: 190px;
+    height: 10px;
   }
 }
