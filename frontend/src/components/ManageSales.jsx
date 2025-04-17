@@ -132,10 +132,10 @@ const ManageSales = () => {
               required
             />
           </div>
-          <button type="submit" className="btn btn-primary me-2">
+          <button type="submit" className="btn btn-primary me-2 submit-btn">
             Update
           </button>
-          <button type="button" className="btn btn-secondary" onClick={() => setEditingSale(null)}>
+          <button type="button" className="btn btn-secondary cancel-btn" onClick={() => setEditingSale(null)}>
             Cancel
           </button>
         </form>
