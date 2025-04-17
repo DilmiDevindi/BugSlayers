@@ -162,7 +162,7 @@ const ManageSales = () => {
               <td>{sale.price}</td>
               <td>{new Date(sale.date).toLocaleDateString()}</td>
               <td>
-              <div className="d-flex gap-2">
+              <div className="d-flex justify-content-center">
                 <button
                   className="btn btn-warning btn-sm me-2"
                   onClick={() => handleEditClick(sale)}

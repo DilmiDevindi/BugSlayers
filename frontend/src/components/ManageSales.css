@@ -47,8 +47,11 @@
   }
   
   .btn-warning {
+    width: 7px;
+    margin-right: 0px;
+    padding: 0px 0px;
     color: rgb(228, 200, 97);
-    background-color: transparent;
+    background-color: yellow;
    
   }
 
@@ -59,15 +62,18 @@
   }
   
   .btn-danger {
+    width: 7px;
+    margin-left: 0px;
+    padding: 0px 10px;
     color: #f90606;
-    background-color: transparent;
+    background-color: yellow;
   }
   .btn-danger:hover{
     color: #7d0303;
     background-color:transparent;
   }
   
-  
+
   @media (max-width: 768px) {
     .table-responsive {
       overflow-x: auto;
