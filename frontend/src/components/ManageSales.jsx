@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './ManageSales.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash, faPenToSquare, faClipboardList } from '@fortawesome/free-solid-svg-icons';
 
 const ManageSales = () => {
   const [sales, setSales] = useState([]);
@@ -33,7 +33,7 @@ const ManageSales = () => {
   };
 
   const handleEditClick = (sale) => {
-    setEditingSale({ ...sale }); // Set current sale for editing
+    setEditingSale({ ...sale });
   };
 
   const handleEditChange = (e) => {
@@ -61,7 +61,7 @@ const ManageSales = () => {
 
   return (
     <div className="container mt-4">
-      <h3>Manage Sales Records</h3>
+      <h3><FontAwesomeIcon icon={faClipboardList} className="ms-icon" />Manage Sales Records</h3>
 
       {/* Search Input */}
       <div className="mb-3">
@@ -74,10 +74,51 @@ const ManageSales = () => {
         />
       </div>
 
-      {/* Edit Sale Form */}
+      {/* Sales Table */}
+      <table className="table table-striped">
+        <thead>
+          <tr>
+            <th>Customer Name</th>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredSales.map((sale) => (
+            <tr key={sale._id}>
+              <td>{sale.customerName}</td>
+              <td>{sale.productName}</td>
+              <td>{sale.quantity}</td>
+              <td>{sale.price}</td>
+              <td>{new Date(sale.date).toLocaleDateString()}</td>
+              <td>
+                <div className="d-flex justify-content-center">
+                  <button
+                    className="btn btn-warning btn-sm me-2"
+                    onClick={() => handleEditClick(sale)}
+                  >
+                    <FontAwesomeIcon icon={faEdit} />
+                  </button>
+                  <button
+                    className="btn btn-danger btn-sm"
+                    onClick={() => deleteSale(sale._id)}
+                  >
+                    <FontAwesomeIcon icon={faTrash} />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* Edit Sale Form - Placed after table */}
       {editingSale && (
         <form onSubmit={handleEditSubmit} className="mb-4 border p-3 rounded">
-          <h5>Edit Sale</h5>
+          <h3><FontAwesomeIcon icon={faPenToSquare} className="ms-icon" />Edit Sale</h3>
           <div className="mb-2">
             <input
               type="text"
@@ -132,55 +173,10 @@ const ManageSales = () => {
               required
             />
           </div>
-          <button type="submit" className="btn btn-primary me-2">
-            Update
-          </button>
-          <button type="button" className="btn btn-secondary" onClick={() => setEditingSale(null)}>
-            Cancel
-          </button>
+          <button type="submit" className="btn btn-primary me-2 submit-btn">Update</button>
+          <button type="button" className="btn btn-secondary cancel-btn" onClick={() => setEditingSale(null)}>Cancel</button>
         </form>
       )}
-
-      {/* Sales Table */}
-      <table className="table table-striped">
-        <thead>
-          <tr>
-            <th>Customer Name</th>
-            <th>Product Name</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Date</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredSales.map((sale) => (
-            <tr key={sale._id}>
-              <td>{sale.customerName}</td>
-              <td>{sale.productName}</td>
-              <td>{sale.quantity}</td>
-              <td>{sale.price}</td>
-              <td>{new Date(sale.date).toLocaleDateString()}</td>
-              <td>
-              <div className="d-flex gap-2">
-                <button
-                  className="btn btn-warning btn-sm me-2"
-                  onClick={() => handleEditClick(sale)}
-                >
-                <FontAwesomeIcon icon={faEdit} />
-                </button>
-                <button
-                  className="btn btn-danger btn-sm"
-                  onClick={() => deleteSale(sale._id)}
-                > 
-                <FontAwesomeIcon icon={faTrash} />
-                </button>
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
     </div>
   );
 };
