@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import './Sales.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 const AddSalesRecord = () => {
