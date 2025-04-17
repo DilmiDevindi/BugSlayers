@@ -76,14 +76,16 @@
   
 
   .submit-btn {
+    height: 50px;
     background-color: #05a312;
     color: white;
     border: none;
-    padding: 8px 16px;
+    margin-top: 10px;
     font-weight: 500;
     border-radius: 6px;
     transition: background-color 0.2s ease-in-out;
     width: 100px;
+   
   }
   
   .submit-btn:hover {
@@ -91,14 +93,16 @@
   }
   
   .cancel-btn {
+    height: 50px;
     background-color: #c55e1a;
     color: white;
     border: none;
-    padding: 8px 16px;
+    margin-top: 10px;
     font-weight: 500;
     border-radius: 6px;
     transition: background-color 0.2s ease-in-out;
     width: 100px;
+    margin-left: 10px;
   }
   
   .cancel-btn:hover {
