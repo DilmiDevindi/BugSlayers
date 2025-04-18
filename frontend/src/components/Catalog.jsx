@@ -94,19 +94,19 @@ const Catalog = () => {
       {/* Filter Buttons */}
       <div className="d-flex gap-2">
         <button
-          className={`btn btn-xs ${stockFilter === 'all' ? 'btn-custom-all' : 'btn-outline-custom-all'}`}
+          className={`btn-1 btn-xs ${stockFilter === 'all' ? 'btn-custom-all' : 'btn-outline-custom-all'}`}
           onClick={() => setStockFilter('all')}
         >
         All
         </button>
         <button
-          className={`btn btn-xs ${stockFilter === 'in' ? 'btn-custom-in' : 'btn-outline-custom-in'}`}
+          className={`btn-2 btn-xs ${stockFilter === 'in' ? 'btn-custom-in' : 'btn-outline-custom-in'}`}
           onClick={() => setStockFilter('in')}
         >
         In Stock
         </button>
         <button
-          className={`btn btn-xs ${stockFilter === 'out' ? 'btn-out' : 'btn-outline-custom-out'}`}
+          className={`btn-3 btn-xs ${stockFilter === 'out' ? 'btn-custom-out' : 'btn-outline-custom-out'}`}
           onClick={() => setStockFilter('out')}
         >
         Out of Stock

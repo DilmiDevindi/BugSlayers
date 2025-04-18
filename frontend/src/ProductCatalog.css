@@ -60,6 +60,7 @@ body {
   font-size: 0.7rem; /* Smaller size */
   padding: 0.3rem 0.6rem;
   border-radius: 8px; /* Compact styling */
+  border-color: #646464;
 }
 
 .btn-custom-all {
@@ -73,8 +74,6 @@ body {
   color: #fff;
   border-color: #28a745;
 }
-
-
 
 .btn-custom-out {
   background-color: #dc3545; /* Red */
@@ -93,6 +92,7 @@ body {
   transition: transform 0.3s ease;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   background-color: #fff;
+  margin-top: 10px;
 }
 
 .cat-card:hover {
