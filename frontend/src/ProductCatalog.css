@@ -113,7 +113,10 @@ body {
   padding: 0.5rem;
 }
 .cat-card-title {
-  font-weight: 600;
+  color: #000000;
+}
+.cat-card-text {
+  color: #444444;
 }
 
 .cat-card-title,
@@ -121,7 +124,6 @@ body {
   font-size: 0.75rem;
   margin: 0.3rem 0;
   text-align: left;
-  color: #404040;
 }
 
 /* Responsive Tweak */
