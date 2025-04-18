@@ -45,7 +45,7 @@ const Catalog = () => {
   }, [searchQuery, products]);
 
   return (
-    <div className="container mt-4">
+    <div className="cat-container mt-4">
       {/* Search bar */}
       <div className="input-group mb-4">
         <input
@@ -58,11 +58,11 @@ const Catalog = () => {
       </div>
 
       {/* Category Tabs */}
-      <ul className="nav nav-tabs mb-4">
+      <ul className="nav cat-nav-tabs mb-4">
         {categories.map((category) => (
           <li className="nav-item" key={category._id}>
             <button
-              className={`nav-link ${activeTab === category._id ? 'active' : ''}`}
+              className={`cat-nav-link ${activeTab === category._id ? 'active' : ''}`}
               onClick={() => setActiveTab(category._id)}
             >
               {category.categoryName}
@@ -76,20 +76,20 @@ const Catalog = () => {
         {filteredProducts.length ? (
           filteredProducts.map((product) => (
             <div className="col-md-4 mb-4" key={product._id}>
-              <div className="card card compact-spacing h-100 shadow-sm">
+              <div className="card cat-card compact-spacing h-100 shadow-sm">
                 {product.image && (
                   <img
                     src={`http://localhost:5000/uploads/${product.image}`}
-                    className="card-img-top"
+                    className="cat-card-img-top"
                     alt={product.productName}
                     style={{ height: '200px', objectFit: 'cover' }}
                   />
                 )}
-                <div className="card-body">
-                  <h5 className="card-title">{product.productName}</h5>
-                  <p className="card-text mb-1"><strong>Item Code: {product.code}</strong></p>
-                  <p className="card-text mb-1"><strong>Price: Rs. {product.sellingPrice}</strong></p>
-                  <p className="card-text mb-1">
+                <div className="cat-card-body">
+                  <h5 className="cat-card-title">{product.productName}</h5>
+                  <p className="cat-card-text mb-1"><strong>Item Code: {product.code}</strong></p>
+                  <p className="cat-card-text mb-1"><strong>Price: Rs. {product.sellingPrice}</strong></p>
+                  <p className="cat-card-text mb-1">
                     <strong>Stock Status:</strong>{' '}
                     <span className={`badge ${product.quantity > 0 ? 'bg-success' : 'bg-danger'}`}>
                       {product.quantity > 0 ? 'In Stock' : 'Out of Stock'}
