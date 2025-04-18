@@ -3,7 +3,7 @@ import axios from 'axios';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDownload, faFilePdf, faCalendarDays, faChartBar } from '@fortawesome/free-solid-svg-icons';
+import { faFilePdf, faCalendarDays, faChartBar } from '@fortawesome/free-solid-svg-icons';
 
 const SalesReport = () => {
   const [startDate, setStartDate] = useState('');
@@ -19,7 +19,7 @@ const SalesReport = () => {
     }
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:5001/api/reports/sales-report', {
+      const response = await axios.get('http://localhost:5000/api/reports/sales-report', {
         params: { startDate, endDate },
       });
       setReport(response.data);
