@@ -167,10 +167,10 @@ const ManageInventories = () => {
       </div>
 
       {editItem && (
-        <div className="edit-form mt-4">
+        <div className="inventory-form-container edit-form mt-4">
           <h4>Edit Item</h4>
           <form onSubmit={handleUpdate}>
-            <div className="mb-3">
+            <div className="inventory-row">
               <label className="form-label">Product Name</label>
               <input
                 type="text"
@@ -183,7 +183,7 @@ const ManageInventories = () => {
               />
             </div>
 
-            <div className="mb-3">
+            <div className="inventory-row">
               <label className="form-label">Category</label>
               <select
                 className="form-control"
@@ -200,7 +200,7 @@ const ManageInventories = () => {
               </select>
             </div>
 
-            <div className="mb-3">
+            <div className="inventory-row">
               <label className="form-label">Quantity</label>
               <input
                 type="number"
@@ -213,7 +213,7 @@ const ManageInventories = () => {
               />
             </div>
 
-            <div className="mb-3">
+            <div className="inventory-row">
               <label className="form-label">Buying Price</label>
               <input
                 type="number"
@@ -226,7 +226,7 @@ const ManageInventories = () => {
               />
             </div>
 
-            <div className="mb-3">
+            <div className="inventory-row">
               <label className="form-label">Selling Price</label>
               <input
                 type="number"
@@ -237,7 +237,7 @@ const ManageInventories = () => {
               />
             </div>
 
-            <div className="mb-3">
+            <div className="inventory-row">
               <label className="form-label">Date Added</label>
               <input
                 type="date"
@@ -248,7 +248,7 @@ const ManageInventories = () => {
               />
             </div>
 
-            <div className="mb-3">
+            <div className="inventory-row">
               <label className="form-label">Update Image (optional)</label>
               <input
                 type="file"
