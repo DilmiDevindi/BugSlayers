@@ -61,6 +61,44 @@ const Dashboard = () => {
       console.error('Error fetching dashboard data:', error.message || error);
     }
   };
+
+
+   // Dummy sales data
+   const dummySalesData = [
+    { month: 'January', sales: 500 },
+    { month: 'February', sales: 700 },
+    { month: 'March', sales: 800 },
+    { month: 'April', sales: 600 },
+    { month: 'May', sales: 900 },
+    { month: 'June', sales: 750 },
+    { month: 'July', sales: 650 },
+    { month: 'August', sales: 850 },
+    { month: 'September', sales: 700 },
+    { month: 'October', sales: 950 },
+    { month: 'November', sales: 900 },
+    { month: 'December', sales: 1100 },
+  ];
+  setSalesData(dummySalesData);
+} catch (error) {
+  console.error('Error fetching dashboard data:', error.message || error);
+}
+};
+
+const salesChartData = {
+labels: salesData.map((data) => data.month),
+datasets: [
+  {
+    label: 'Sales',
+    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+    borderColor: 'rgba(75, 192, 192, 1)',
+    borderWidth: 1,
+    hoverBackgroundColor: 'rgba(75, 192, 192, 0.8)',
+    hoverBorderColor: 'rgba(75, 192, 192, 1)',
+    data: salesData.map((data) => data.sales),
+  },
+],
+};
+
   
 
   return (
