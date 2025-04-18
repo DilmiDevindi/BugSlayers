@@ -196,6 +196,15 @@ datasets: [
                 </div>
               </div>
 
+              <div className="row mt-4">
+                <div className="col-12">
+                  <h3>Sales</h3>
+                  <div className="chart-container">
+                    <Bar data={salesChartData} />
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
