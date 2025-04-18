@@ -20,9 +20,6 @@ import AddSalesRecord from './components/AddSalesRecord';
 import ManageSales from './components/ManageSales'; 
 import Catalog from './components/Catalog';
 
-
-
-import ManageSales from './components/ManageSales';
 import SalesReport from './components/SalesReport'; 
 
 
