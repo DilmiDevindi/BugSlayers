@@ -113,7 +113,7 @@ const SalesReport = () => {
                 <tr key={index}>
                   <td>{item._id}</td>
                   <td>{item.totalQuantity}</td>
-                  <td>${item.totalSales.toFixed(2)}</td>
+                  <td>Rs. {item.totalSales.toFixed(2)}</td>
                 </tr>
               ))}
             </tbody>
@@ -121,7 +121,7 @@ const SalesReport = () => {
 
           <div className="mt-3">
             <strong>Total Quantity Sold:</strong> {totalQuantity} <br />
-            <strong>Total Sales:</strong> ${totalSales.toFixed(2)}
+            <strong>Total Sales:</strong> Rs. {totalSales.toFixed(2)}
           </div>
         </div>
       ) : (
