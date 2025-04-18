@@ -1,0 +1,123 @@
+/* ManageSales.css */
+
+.container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  h3 {
+    margin-bottom: 20px;
+    color: #033261;
+    font-weight: 600;
+    text-align: left;
+    font-size: 18px;
+    
+  }
+  
+  .ms-icon{
+    color: blue;
+    margin-right: 10px;
+  }
+  
+  button.btn {
+    border-radius: 6px;
+    font-weight: 500;
+  }
+  
+  form {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    padding: 20px;
+    border-radius: 10px;
+  }
+  
+  .table {
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .table th {
+    background-color: #343a40;
+    color: #fff;
+    text-align: center;
+  }
+  
+  .table td {
+    vertical-align: middle;
+    text-align: center;
+  }
+  
+  .btn-warning {
+    width: 7px;
+    margin-right: 0px;
+    padding: 0px 0px;
+    color: rgb(228, 200, 97);
+    background-color: transparent;
+   
+  }
+
+  .btn-warning:hover{
+    background-color: transparent;
+    color: #cd8e05;
+    
+  }
+  
+  .btn-danger {
+    width: 7px;
+    margin-left: 0px;
+    padding: 0px 10px;
+    color: #f90606;
+    background-color: transparent;
+  }
+  .btn-danger:hover{
+    color: #7d0303;
+    background-color:transparent;
+  }
+  
+
+  @media (max-width: 768px) {
+    .table-responsive {
+      overflow-x: auto;
+    }
+  }
+  
+
+  .submit-btn {
+    height: 50px;
+    background-color: #05a312;
+    color: white;
+    border: none;
+    margin-top: 10px;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: background-color 0.2s ease-in-out;
+    width: 100px;
+   
+  }
+  
+  .submit-btn:hover {
+    background-color: #026729;
+  }
+  
+  .cancel-btn {
+    height: 50px;
+    background-color: #c55e1a;
+    color: white;
+    border: none;
+    margin-top: 10px;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: background-color 0.2s ease-in-out;
+    width: 100px;
+    margin-left: 10px;
+  }
+  
+  .cancel-btn:hover {
+    background-color: #7b1a05;
+  }
+  

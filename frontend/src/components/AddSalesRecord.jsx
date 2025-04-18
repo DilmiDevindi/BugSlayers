@@ -2,6 +2,8 @@
 import { useState } from 'react';
 import axios from 'axios';
 import './Sales.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 const AddSalesRecord = () => {
   const [customerName, setCustomerName] = useState('');
@@ -25,8 +27,8 @@ const AddSalesRecord = () => {
   };
 
   return (
-    <div className="container mt-4">
-      <h3>Add Sales Record</h3>
+    <div className="container-addsales">
+      <h3><FontAwesomeIcon icon={faPlus} className="addsales-icon" />Add Sales Record</h3>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="customerName" className="form-label">Customer Name</label>
