@@ -64,9 +64,9 @@ const AddInventoryItem = () => {
   };
 
   return (
-    <div className="container-i mt-4">
-      <div className="form-title-i">
-        <span className="form-icon-i"><FontAwesomeIcon icon={faSquarePlus} /></span> Add New Product
+    <div className="container-in mt-4">
+      <div className="form-title-in">
+        <span className="form-icon-in"><FontAwesomeIcon icon={faSquarePlus} /></span> Add New Product
       </div>
       <form onSubmit={handleSubmit}>
         <div className="form-group-i">
