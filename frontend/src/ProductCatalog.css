@@ -29,7 +29,7 @@ body {
   color: #333;
   font-weight: 500;
   padding: 0.6rem 1.3rem;
-  border-radius: 999px;
+  border-radius: 12px;
   border: 1px solid #ddd;
   transition: all 0.3s ease;
   text-transform: capitalize;
