@@ -46,17 +46,6 @@ const Catalog = () => {
 
   return (
     <div className="cat-container mt-4">
-      {/* Search bar */}
-      <div className="input-group mb-4">
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Search within this category..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-      </div>
-
       {/* Category Tabs */}
       <ul className="nav cat-nav-tabs mb-4">
         {categories.map((category) => (
@@ -70,41 +59,53 @@ const Catalog = () => {
           </li>
         ))}
       </ul>
-
-      {/* Product Grid */}
-      <div className="row">
-  {filteredProducts.length ? (
-    filteredProducts.map((product) => (
-      <div className="col cat-col mb-4" key={product._id}>
-        <div className="card cat-card compact-spacing h-100 shadow-sm">
-          {product.image && (
-            <img
-              src={`http://localhost:5000/uploads/${product.image}`}
-              className="cat-card-img-top"
-              alt={product.productName}
-              style={{ height: '150px', objectFit: 'cover' }}
-            />
-          )}
-          <div className="cat-card-body">
-            <h5 className="cat-card-title"><strong>{product.productName}</strong></h5>
-            <p className="cat-card-text mb-1"><strong>Item Code: {product.code}</strong></p>
-            <p className="cat-card-text mb-1"><strong>Price: Rs. {product.sellingPrice}</strong></p>
-            <p className="cat-card-text mb-1">
-              <strong>Stock Status:</strong>{' '}
-              <span className={`badge ${product.quantity > 0 ? 'bg-success' : 'bg-danger'}`}>
-                {product.quantity > 0 ? 'In Stock' : 'Out of Stock'}
-              </span>
-            </p>
-          </div>
-        </div>
+  
+      {/* Search Bar */}
+      <div className="cat-search mb-4">
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Search within this category..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
       </div>
-    ))
-  ) : (
-    <p>No products found in this category.</p>
-  )}
-  </div>
-  </div>
+  
+      {/* Product Grid */}
+      <div className="row ">
+        {filteredProducts.length ? (
+          filteredProducts.map((product) => (
+            <div className="col cat-col mb-4" key={product._id}>
+              <div className="card cat-card compact-spacing h-100 shadow-sm">
+                {product.image && (
+                  <img
+                    src={`http://localhost:5000/uploads/${product.image}`}
+                    className="cat-card-img-top"
+                    alt={product.productName}
+                    style={{ height: '150px', objectFit: 'cover' }}
+                  />
+                )}
+                <div className="cat-card-body">
+                  <h5 className="cat-card-title"><strong>{product.productName}</strong></h5>
+                  <p className="cat-card-text mb-1"><strong>Item Code: {product.code}</strong></p>
+                  <p className="cat-card-text mb-1"><strong>Price: Rs. {product.sellingPrice}</strong></p>
+                  <p className="cat-card-text mb-1">
+                    <strong>Stock Status:</strong>{' '}
+                    <span className={`badge ${product.quantity > 0 ? 'bg-success' : 'bg-danger'}`}>
+                      {product.quantity > 0 ? 'In Stock' : 'Out of Stock'}
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p>No products found in this category.</p>
+        )}
+      </div>
+    </div>
   );
+  
 };
 
 export default Catalog;
