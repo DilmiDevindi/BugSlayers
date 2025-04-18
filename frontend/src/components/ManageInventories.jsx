@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBarsProgress, faEdit, faRemove } from '@fortawesome/free-solid-svg-icons';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import '../Inventory.css';
 
 const ManageInventories = () => {
@@ -12,7 +11,7 @@ const ManageInventories = () => {
   const [editItem, setEditItem] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [newImage, setNewImage] = useState(null); // ✅ for updating image
+  const [newImage, setNewImage] = useState(null); // for updating image
 
   useEffect(() => {
     fetchItems();

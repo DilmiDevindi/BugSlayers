@@ -1,5 +1,5 @@
 /*inventory*/
-.container-in {
+.container-i {
     background-color: #f8f9fa;
     padding: 20px;
     border-radius: 10px;
@@ -7,7 +7,7 @@
     width: 45%;
   }
   
-  .card-in {
+  .card-i {
     width: 100%;
     max-width: 500px;
     padding: 20px;
@@ -16,7 +16,7 @@
     background-color: #ffffff;
   }
   
-  .form-title-in {
+  .form-title-i {
     font-size: 16px;
     font-weight: bold;
     color: #333;
@@ -29,7 +29,7 @@
     margin-bottom: 15px;
   }
   
-  .form-icon-in {
+  .form-icon-i {
     font-size: 22px;
     margin-right: 8px;
     color: #007bff;
@@ -38,16 +38,16 @@
   
   
   
-  .form-group-in {
+  .form-group-i {
     margin-bottom: 15px;
   }
   
-  .form-control-in {
+  .form-control-i {
     border: 1px solid #ced4da;
     border-radius: 8px;
     padding: 12px;
     font-size: 16px;
-    width: 235px;
+    width: 250px;
     transition: all 0.3s ease;
     color: #333333; 
   }
@@ -62,37 +62,37 @@
     color: #333333; 
   }
   
-  .form-control-in:focus, .form-control-ii:focus {
+  .form-control-i:focus, .form-control-ii:focus {
     border-color: #007bff;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
     outline: none;
   }
   
   
-  .form-row-in {
+  .form-row-i {
     display: flex;
     gap: 10px;
     justify-content: space-between;
   }
   
-  .input-icon-in {
+  .input-icon-i {
     display: flex;
     align-items: center;
     position: relative;
   }
   
-  .input-icon-in .icon {
+  .input-icon-i .icon {
     position: absolute;
     left: 12px;
     font-size: 16px;
     color: #555;
   }
   
-  .input-icon-in input {
+  .input-icon-i input {
     padding-left: 30px;
   }
   
-  .btn-primary-in {
+  .btn-primary-i {
     width: 40%;
     height: 40px;
     padding: 8px;
@@ -102,11 +102,11 @@
     border-radius: 8px;
   }
   
-  .btn-primary-in:hover {
+  .btn-primary-i:hover {
     background-color: #0056b3;
   }
   
-  .btn-success-in {
+  .btn-success-i {
     width: 90%;
     font-weight: bold;
     padding: 12px;
@@ -115,11 +115,11 @@
     border-radius: 8px;
   }
   
-  .btn-success-in:hover {
+  .btn-success-i:hover {
     background-color: #007bff;
   }
   
-  .alert-danger-in {
+  .alert-danger-i {
     font-size: 14px;
     padding: 10px;
     text-align: center;
