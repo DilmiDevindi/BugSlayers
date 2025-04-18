@@ -68,23 +68,13 @@ body {
   border-color: #ffcc00;
 }
 
-.btn-outline-custom-all {
-  background-color: transparent;
-  color: #ffcc00;
-  border: 1px solid #ffcc00;
-}
-
 .btn-custom-in {
   background-color: #28a745; /* Green */
   color: #fff;
   border-color: #28a745;
 }
 
-.btn-outline-custom-in {
-  background-color: transparent;
-  color: #28a745;
-  border: 1px solid #28a745;
-}
+
 
 .btn-custom-out {
   background-color: #dc3545; /* Red */
@@ -92,11 +82,6 @@ body {
   border-color: #dc3545;
 }
 
-.btn-outline-custom-out {
-  background-color: transparent;
-  color: #dc3545;
-  border: 1px solid #dc3545;
-}
 
 
 /* Product Card Grid */
