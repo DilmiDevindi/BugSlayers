@@ -20,6 +20,7 @@ const SalesReport = () => {
     setLoading(true);
     try {
       const response = await axios.get('http://localhost:5001/api/reports/sales-report', {
+      const response = await axios.get('http://localhost:5000/api/reports/sales-report', {
         params: { startDate, endDate },
       });
       setReport(response.data);
