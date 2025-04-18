@@ -69,12 +69,12 @@ const AddInventoryItem = () => {
         <span className="form-icon-in"><FontAwesomeIcon icon={faSquarePlus} /></span> Add New Product
       </div>
       <form onSubmit={handleSubmit}>
-        <div className="form-group-i">
+        <div className="form-group-in">
           <input type="text" className="form-control" placeholder="Product Title" value={productName} onChange={(e) => setProductName(e.target.value)} required />
         </div>
-        <div className="form-row-i">
-          <div className="form-group-i col">
-            <select className="form-control-i" value={category} onChange={(e) => setCategory(e.target.value)} required>
+        <div className="form-row-in">
+          <div className="form-group-in col">
+            <select className="form-control-in" value={category} onChange={(e) => setCategory(e.target.value)} required>
               <option value="">Select Category</option>
               {categories.map((cat) => (
                 <option key={cat._id} value={cat._id}>{cat.categoryName}</option>
