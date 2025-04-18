@@ -14,6 +14,7 @@ const Dashboard = () => {
   const [totalCustomers, setTotalCustomers] = useState(0);
   const [totalCategories, setTotalCategory] = useState(0);
   const [categoryStock, setCategoryStock] = useState([]);
+  const [salesData, setSalesData] = useState([]);
 
   useEffect(() => {
     fetchData();
