@@ -73,37 +73,37 @@ const Catalog = () => {
 
       {/* Product Grid */}
       <div className="row">
-        {filteredProducts.length ? (
-          filteredProducts.map((product) => (
-            <div className="col-md-4 mb-4" key={product._id}>
-              <div className="card cat-card compact-spacing h-100 shadow-sm">
-                {product.image && (
-                  <img
-                    src={`http://localhost:5000/uploads/${product.image}`}
-                    className="cat-card-img-top"
-                    alt={product.productName}
-                    style={{ height: '200px', objectFit: 'cover' }}
-                  />
-                )}
-                <div className="cat-card-body">
-                  <h5 className="cat-card-title">{product.productName}</h5>
-                  <p className="cat-card-text mb-1"><strong>Item Code: {product.code}</strong></p>
-                  <p className="cat-card-text mb-1"><strong>Price: Rs. {product.sellingPrice}</strong></p>
-                  <p className="cat-card-text mb-1">
-                    <strong>Stock Status:</strong>{' '}
-                    <span className={`badge ${product.quantity > 0 ? 'bg-success' : 'bg-danger'}`}>
-                      {product.quantity > 0 ? 'In Stock' : 'Out of Stock'}
-                    </span>
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))
-        ) : (
-          <p>No products found in this category.</p>
-        )}
+  {filteredProducts.length ? (
+    filteredProducts.map((product) => (
+      <div className="col cat-col mb-4" key={product._id}>
+        <div className="card cat-card compact-spacing h-100 shadow-sm">
+          {product.image && (
+            <img
+              src={`http://localhost:5000/uploads/${product.image}`}
+              className="cat-card-img-top"
+              alt={product.productName}
+              style={{ height: '150px', objectFit: 'cover' }}
+            />
+          )}
+          <div className="cat-card-body">
+            <h5 className="cat-card-title"><strong>{product.productName}</strong></h5>
+            <p className="cat-card-text mb-1"><strong>Item Code: {product.code}</strong></p>
+            <p className="cat-card-text mb-1"><strong>Price: Rs. {product.sellingPrice}</strong></p>
+            <p className="cat-card-text mb-1">
+              <strong>Stock Status:</strong>{' '}
+              <span className={`badge ${product.quantity > 0 ? 'bg-success' : 'bg-danger'}`}>
+                {product.quantity > 0 ? 'In Stock' : 'Out of Stock'}
+              </span>
+            </p>
+          </div>
+        </div>
       </div>
-    </div>
+    ))
+  ) : (
+    <p>No products found in this category.</p>
+  )}
+  </div>
+  </div>
   );
 };
 
