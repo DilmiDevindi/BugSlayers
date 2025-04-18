@@ -46,7 +46,6 @@ function App() {
           <Route path="sales/add" element={<AddSalesRecord />} />
           <Route path="sales/manage" element={<ManageSales />}/>
           <Route path="sales/report" element={<SalesReport />}/>
-       
         </Route>
       </Routes>
     </Router>

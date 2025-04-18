@@ -37,7 +37,7 @@ app.use('/api/inventory', inventoryRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/category', categoryRoutes);
-app.use('/api/sales', salesRoutes);
+app.use('/api/reports', reportRoutes)
 
 // Start server
 app.listen(PORT, () => {
