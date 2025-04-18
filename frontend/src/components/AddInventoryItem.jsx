@@ -82,31 +82,31 @@ const AddInventoryItem = () => {
             </select>
           </div>
         </div>
-        <div className="form-row-i">
-          <div className="form-group-i input-icon-i">
+        <div className="form-row-in">
+          <div className="form-group-in input-icon-in">
             <span className="icon"><FontAwesomeIcon icon={faShoppingCart} /></span>
-            <input type="number" className="form-control-i" placeholder="Product Quantity" value={quantity} onChange={(e) => setQuantity(e.target.value)} required />
+            <input type="number" className="form-control-in" placeholder="Product Quantity" value={quantity} onChange={(e) => setQuantity(e.target.value)} required />
           </div>
         </div>
-        <div className="form-row-i">
-          <div className="form-group-i input-icon-i">
+        <div className="form-row-in">
+          <div className="form-group-in input-icon-in">
             <span className="icon"><FontAwesomeIcon icon={faDollarSign} /></span>
-            <input type="number" className="form-control-i" placeholder="Buying Price" min="0" step="0.01" value={buyingPrice} onChange={(e) => setBuyingPrice(e.target.value)} required />
+            <input type="number" className="form-control-in" placeholder="Buying Price" min="0" step="0.01" value={buyingPrice} onChange={(e) => setBuyingPrice(e.target.value)} required />
           </div>
-          <div className="form-group-i input-icon-i">
+          <div className="form-group-in input-icon-in">
             <span className="icon"><FontAwesomeIcon icon={faDollarSign} /></span>
-            <input type="number" className="form-control-i" placeholder="Selling Price" min="0" step="0.01" value={sellingPrice} onChange={(e) => setSellingPrice(e.target.value)} required />
+            <input type="number" className="form-control-in" placeholder="Selling Price" min="0" step="0.01" value={sellingPrice} onChange={(e) => setSellingPrice(e.target.value)} required />
           </div>
         </div>
-        <div className="form-group-i">
+        <div className="form-group-in">
           <input type="date" className="form-control" value={dateAdded} onChange={(e) => setDateAdded(e.target.value)} required />
         </div>
-        <div className="form-group-i">
+        <div className="form-group-in">
           <input type="file" className="form-control" accept="image/*" onChange={(e) => setImage(e.target.files[0])} />
         </div>
-        <button type="submit" className="btn btn-primary-i" disabled={loading}>{loading ? 'Adding...' : 'Add Product'}</button>
-        {error && <div className="alert alert-danger-i mt-3">{error}</div>}
-        {generatedCode && <div className="alert alert-success-i mt-3"><strong>Generated Code:</strong> {generatedCode}</div>}
+        <button type="submit" className="btn btn-primary-in" disabled={loading}>{loading ? 'Adding...' : 'Add Product'}</button>
+        {error && <div className="alert alert-danger-in mt-3">{error}</div>}
+        {generatedCode && <div className="alert alert-success-in mt-3"><strong>Generated Code:</strong> {generatedCode}</div>}
       </form>
     </div>
   );

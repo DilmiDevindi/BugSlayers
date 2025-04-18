@@ -7,7 +7,7 @@
     width: 45%;
   }
   
-  .card-i {
+  .card-in {
     width: 100%;
     max-width: 500px;
     padding: 20px;
@@ -47,7 +47,7 @@
     border-radius: 8px;
     padding: 12px;
     font-size: 16px;
-    width: 250px;
+    width: 235px;
     transition: all 0.3s ease;
     color: #333333; 
   }
@@ -62,37 +62,37 @@
     color: #333333; 
   }
   
-  .form-control-i:focus, .form-control-ii:focus {
+  .form-control-in:focus, .form-control-ii:focus {
     border-color: #007bff;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
     outline: none;
   }
   
   
-  .form-row-i {
+  .form-row-in {
     display: flex;
     gap: 10px;
     justify-content: space-between;
   }
   
-  .input-icon-i {
+  .input-icon-in {
     display: flex;
     align-items: center;
     position: relative;
   }
   
-  .input-icon-i .icon {
+  .input-icon-in .icon {
     position: absolute;
     left: 12px;
     font-size: 16px;
     color: #555;
   }
   
-  .input-icon-i input {
+  .input-icon-in input {
     padding-left: 30px;
   }
   
-  .btn-primary-i {
+  .btn-primary-in {
     width: 40%;
     height: 40px;
     padding: 8px;
@@ -102,11 +102,11 @@
     border-radius: 8px;
   }
   
-  .btn-primary-i:hover {
+  .btn-primary-in:hover {
     background-color: #0056b3;
   }
   
-  .btn-success-i {
+  .btn-success-in {
     width: 90%;
     font-weight: bold;
     padding: 12px;
@@ -115,11 +115,11 @@
     border-radius: 8px;
   }
   
-  .btn-success-i:hover {
+  .btn-success-in:hover {
     background-color: #007bff;
   }
   
-  .alert-danger-i {
+  .alert-danger-in {
     font-size: 14px;
     padding: 10px;
     text-align: center;
