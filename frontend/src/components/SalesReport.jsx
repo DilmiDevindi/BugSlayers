@@ -3,7 +3,7 @@ import axios from 'axios';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDownload, faFilePdf, faCalendarDays, faChartBar } from '@fortawesome/free-solid-svg-icons';
+import { faFilePdf, faCalendarDays, faChartBar } from '@fortawesome/free-solid-svg-icons';
 
 const SalesReport = () => {
   const [startDate, setStartDate] = useState('');
