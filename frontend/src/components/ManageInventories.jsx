@@ -168,13 +168,13 @@ const ManageInventories = () => {
 
       {editItem && (
         <div className="inventory-form-container edit-form mt-4">
-          <h4>Edit Item</h4>
+          <span className="form-icon-i"><FontAwesomeIcon icon={faEdit} /></span>Update Product
           <form onSubmit={handleUpdate}>
             <div className="inventory-row">
-              <label className="form-label">Product Name</label>
+              <label className="inventory-form-label">Product Name</label>
               <input
                 type="text"
-                className="form-control"
+                className="inventory-form-control"
                 value={editItem.productName}
                 onChange={(e) =>
                   setEditItem({ ...editItem, productName: e.target.value })
@@ -184,9 +184,9 @@ const ManageInventories = () => {
             </div>
 
             <div className="inventory-row">
-              <label className="form-label">Category</label>
+              <label className="inventory-form-label">Category</label>
               <select
-                className="form-control"
+                className="inventory-form-control"
                 value={editItem.category}
                 onChange={(e) =>
                   setEditItem({ ...editItem, category: e.target.value })
@@ -201,10 +201,10 @@ const ManageInventories = () => {
             </div>
 
             <div className="inventory-row">
-              <label className="form-label">Quantity</label>
+              <label className="inventory-form-label">Quantity</label>
               <input
                 type="number"
-                className="form-control"
+                className="inventory-form-control"
                 value={editItem.quantity}
                 onChange={(e) =>
                   setEditItem({ ...editItem, quantity: Number(e.target.value) })
@@ -214,10 +214,10 @@ const ManageInventories = () => {
             </div>
 
             <div className="inventory-row">
-              <label className="form-label">Buying Price</label>
+              <label className="inventory-form-label">Buying Price</label>
               <input
                 type="number"
-                className="form-control"
+                className="inventory-form-control"
                 min="0"
                 step="0.01"
                 value={editItem.buyingPrice}
@@ -227,10 +227,10 @@ const ManageInventories = () => {
             </div>
 
             <div className="inventory-row">
-              <label className="form-label">Selling Price</label>
+              <label className="inventory-form-label">Selling Price</label>
               <input
                 type="number"
-                className="form-control"
+                className="inventory-form-control"
                 value={editItem.sellingPrice}
                 onChange={(e) => setEditItem({ ...editItem, sellingPrice: Number(e.target.value) })}
                 required
@@ -238,10 +238,10 @@ const ManageInventories = () => {
             </div>
 
             <div className="inventory-row">
-              <label className="form-label">Date Added</label>
+              <label className="inventory-form-label">Date Added</label>
               <input
                 type="date"
-                className="form-control"
+                className="inventory-form-control"
                 value={editItem.dateAdded ? editItem.dateAdded.substring(0, 10) : ''}
                 onChange={(e) => setEditItem({ ...editItem, dateAdded: e.target.value })}
                 required
@@ -249,15 +249,16 @@ const ManageInventories = () => {
             </div>
 
             <div className="inventory-row">
-              <label className="form-label">Update Image (optional)</label>
+              <label className="inventory-form-label">Update Image (optional)</label>
               <input
                 type="file"
                 accept="image/*"
-                className="form-control"
+                className="inventory-form-control"
                 onChange={(e) => setNewImage(e.target.files[0])}
               />
             </div>
 
+            <div className="inventory-row">
             <button type="submit" className="btn btn-success">Update Item</button>
             <button
               type="button"
@@ -266,6 +267,7 @@ const ManageInventories = () => {
             >
               Cancel
             </button>
+            </div>
           </form>
         </div>
       )}
