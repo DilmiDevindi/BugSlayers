@@ -54,36 +54,35 @@ const Dashboard = () => {
           inStock: categoryMap[categoryId],
         };
       });
-      ;
-  
       setCategoryStock(categoryStockData);
     } catch (error) {
       console.error('Error fetching dashboard data:', error.message || error);
     }
   };
 
-
-   // Dummy sales data
-   const dummySalesData = [
-    { month: 'January', sales: 500 },
-    { month: 'February', sales: 700 },
-    { month: 'March', sales: 800 },
-    { month: 'April', sales: 600 },
-    { month: 'May', sales: 900 },
-    { month: 'June', sales: 750 },
-    { month: 'July', sales: 650 },
-    { month: 'August', sales: 850 },
-    { month: 'September', sales: 700 },
-    { month: 'October', sales: 950 },
-    { month: 'November', sales: 900 },
-    { month: 'December', sales: 1100 },
-  ];
-  setSalesData(dummySalesData);
-} catch (error) {
-  console.error('Error fetching dashboard data:', error.message || error);
-}
-};
-
+  const fetchDashboardData = async () => {
+    try {
+      // Dummy sales data
+      const dummySalesData = [
+        { month: 'January', sales: 500 },
+        { month: 'February', sales: 700 },
+        { month: 'March', sales: 800 },
+        { month: 'April', sales: 600 },
+        { month: 'May', sales: 900 },
+        { month: 'June', sales: 750 },
+        { month: 'July', sales: 650 },
+        { month: 'August', sales: 850 },
+        { month: 'September', sales: 700 },
+        { month: 'October', sales: 950 },
+        { month: 'November', sales: 900 },
+        { month: 'December', sales: 1100 },
+      ];
+      setSalesData(dummySalesData);
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error.message || error);
+    }
+  };
+  
 const salesChartData = {
 labels: salesData.map((data) => data.month),
 datasets: [
@@ -100,116 +99,131 @@ datasets: [
 };
 
   
+return (
+  <>
+    <Navbar />
+    <div className="container-fluid">
+      <div className="row">
+        {/* Sidebar */}
+        <div
+          className="col-md-2 p-0 bg-dark vh-100"
+          style={{ position: 'fixed', left: 0, top: 0, overflowY: 'auto' }}
+        >
+          <Sidebar />
+        </div>
 
-  return (
-    <>
-      <Navbar />
-      <div className="container-fluid">
-        <div className="row">
-          {/* Sidebar */}
-          <div className="col-md-2 p-0 bg-dark vh-100" style={{ position: 'fixed', left: 0, top: 0, overflowY: 'auto' }}>
-            <Sidebar />
-          </div>
-
-          {/* Main Content */}
-          <div className="col-md-10" style={{ marginLeft: '16.67%', marginTop: '10px' }}>
-            <div className="container-fluid mt-4 px-3">
-              <div className="row mt-5">
-                <div className="col-md-3">
-                  <Card className="custom-card-1 text-center mb-4">
-                    <Card.Body>
-                      <Card.Title>Total Suppliers</Card.Title>
-                      <Card.Text>{totalSuppliers}</Card.Text>
-                    </Card.Body>
-                  </Card>
-                </div>
-                <div className="col-md-3">
-                  <Card className="custom-card-2 text-center mb-4">
-                    <Card.Body>
-                      <Card.Title>Total Inventory</Card.Title>
-                      <Card.Text>{totalInventory}</Card.Text>
-                    </Card.Body>
-                  </Card>
-                </div>
-                <div className="col-md-3">
-                  <Card className="custom-card-3 text-center mb-4">
-                    <Card.Body>
-                      <Card.Title>Total Customers</Card.Title>
-                      <Card.Text>{totalCustomers}</Card.Text>
-                    </Card.Body>
-                  </Card>
-                </div> 
-                <div className="col-md-3">
-                  <Card className="custom-card-4 text-center mb-4">
-                    <Card.Body>
-                      <Card.Title>Total Categories</Card.Title>
-                      <Card.Text>{totalCategories}</Card.Text>
-                    </Card.Body>
-                  </Card>
-                </div>
+        {/* Main Content */}
+        <div className="col-md-10" style={{ marginLeft: '16.67%', marginTop: '10px' }}>
+          <div className="container-fluid mt-4 px-3">
+            <div className="row mt-5">
+              <div className="col-md-3">
+                <Card className="custom-card-1 text-center mb-4">
+                  <Card.Body>
+                    <Card.Title>Total Suppliers</Card.Title>
+                    <Card.Text>{totalSuppliers}</Card.Text>
+                  </Card.Body>
+                </Card>
               </div>
-              {/* Category-based Inventory Report */}
-              <div className="row">
-                <div className="col-md-6">
-                  <Card className="mt-4">
-                    <Card.Body>
-                      <Card.Title>Inventory Stock by Category</Card.Title>
-                      <Table striped bordered hover size="sm">
-                        <thead>
-                          <tr>
-                            <th>No</th>
-                            <th>Category</th>
-                            <th>Stock</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {categoryStock.map((item, index) => (
-                            <tr key={item.category}>
-                              <td>{index + 1}</td>
-                              <td>{item.category}</td>
-                              <td>{item.inStock}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </Table>
-                    </Card.Body>
-                  </Card>
-                </div>
-
-                {/* Inventory Bar Chart by Category */}
-                <div className="col-md-6">
-                  <Card className="mt-5">
-                    <Card.Body>
-                      <Card.Title>Inventory Stock Levels by Category</Card.Title>
-                      <ResponsiveContainer width="100%" height={300}>
-                        <BarChart data={categoryStock}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="category" />
-                          <YAxis />
-                          <Tooltip />
-                          <Legend />
-                          <Bar dataKey="inStock" fill="#A86566" />
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </Card.Body>
-                  </Card>
-                </div>
+              <div className="col-md-3">
+                <Card className="custom-card-2 text-center mb-4">
+                  <Card.Body>
+                    <Card.Title>Total Inventory</Card.Title>
+                    <Card.Text>{totalInventory}</Card.Text>
+                  </Card.Body>
+                </Card>
               </div>
-
-              <div className="row mt-4">
-                <div className="col-12">
-                  <h3>Sales</h3>
-                  <div className="chart-container">
-                    <Bar data={salesChartData} />
-                  </div>
-                </div>
+              <div className="col-md-3">
+                <Card className="custom-card-3 text-center mb-4">
+                  <Card.Body>
+                    <Card.Title>Total Customers</Card.Title>
+                    <Card.Text>{totalCustomers}</Card.Text>
+                  </Card.Body>
+                </Card>
               </div>
-
+              <div className="col-md-3">
+                <Card className="custom-card-4 text-center mb-4">
+                  <Card.Body>
+                    <Card.Title>Total Categories</Card.Title>
+                    <Card.Text>{totalCategories}</Card.Text>
+                  </Card.Body>
+                </Card>
+              </div>
             </div>
+
+            {/* Category-based Inventory Report */}
+            <div className="row">
+              <div className="col-md-6">
+                <Card className="mt-4">
+                  <Card.Body>
+                    <Card.Title>Inventory Stock by Category</Card.Title>
+                    <Table striped bordered hover size="sm">
+                      <thead>
+                        <tr>
+                          <th>No</th>
+                          <th>Category</th>
+                          <th>Stock</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {categoryStock.map((item, index) => (
+                          <tr key={item.category}>
+                            <td>{index + 1}</td>
+                            <td>{item.category}</td>
+                            <td>{item.inStock}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </Table>
+                  </Card.Body>
+                </Card>
+              </div>
+
+              {/* Inventory Bar Chart by Category */}
+              <div className="col-md-6">
+                <Card className="mt-5">
+                  <Card.Body>
+                    <Card.Title>Inventory Stock Levels by Category</Card.Title>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <BarChart data={categoryStock}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="category" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="inStock" fill="#A86566" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </Card.Body>
+                </Card>
+              </div>
+            </div>
+
+            {/* Sales Chart Section */}
+            <div className="row mt-4">
+              <div className="col-12">
+                <h3>Sales</h3>
+                <Card className="mt-3">
+                  <Card.Body>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <BarChart data={salesData}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="month" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="sales" fill="#4BC0C0" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </Card.Body>
+                </Card>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
-    </>
+    </div>
+  </>
   );
 };
 
