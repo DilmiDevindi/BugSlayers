@@ -17,8 +17,14 @@ import AddCategory from "./components/AddCategory";
 import ManageCategories from "./components/ManageCategory";
 import Bill from './components/Bill';
 import AddSalesRecord from './components/AddSalesRecord';
+import ManageSales from './components/ManageSales'; 
+import Catalog from './components/Catalog';
+
+
+
 import ManageSales from './components/ManageSales';
 import SalesReport from './components/SalesReport'; 
+
 
 function App() {
   return (
@@ -45,8 +51,13 @@ function App() {
           <Route path="/dashboard/bill" element={<Bill />} />
           <Route path="sales/add" element={<AddSalesRecord />} />
           <Route path="sales/manage" element={<ManageSales />}/>
+
+          <Route path="catalog/view" element={<Catalog />} />
+         
+
           <Route path="sales/report" element={<SalesReport />}/>
        
+
         </Route>
       </Routes>
     </Router>
