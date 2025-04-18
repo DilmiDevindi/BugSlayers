@@ -8,6 +8,8 @@ const Catalog = () => {
   const [activeTab, setActiveTab] = useState(null);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [stockFilter, setStockFilter] = useState('all'); // 'all', 'in', 'out'
+
 
   // Fetch all categories on load
   useEffect(() => {
@@ -44,6 +46,23 @@ const Catalog = () => {
     setFilteredProducts(filtered);
   }, [searchQuery, products]);
 
+  useEffect(() => {
+    const query = searchQuery.toLowerCase();
+    let filtered = products.filter((product) =>
+      product.productName?.toLowerCase().includes(query) ||
+      product.code?.toLowerCase().includes(query)
+    );
+  
+    if (stockFilter === 'in') {
+      filtered = filtered.filter((p) => p.quantity > 0);
+    } else if (stockFilter === 'out') {
+      filtered = filtered.filter((p) => p.quantity <= 0);
+    }
+  
+    setFilteredProducts(filtered);
+  }, [searchQuery, stockFilter, products]);
+  
+
   return (
     <div className="cat-container mt-4">
       {/* Category Tabs */}
@@ -60,8 +79,9 @@ const Catalog = () => {
         ))}
       </ul>
   
+      <div className="cat-search-bar-container">
       {/* Search Bar */}
-      <div className="cat-search mb-4">
+      <div className="cat-search">
         <input
           type="text"
           className="form-control"
@@ -70,6 +90,31 @@ const Catalog = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
+
+      {/* Filter Buttons */}
+      <div className="d-flex gap-2">
+        <button
+          className={`btn btn-xs ${stockFilter === 'all' ? 'btn-custom-all' : 'btn-outline-custom-all'}`}
+          onClick={() => setStockFilter('all')}
+        >
+        All
+        </button>
+        <button
+          className={`btn btn-xs ${stockFilter === 'in' ? 'btn-custom-in' : 'btn-outline-custom-in'}`}
+          onClick={() => setStockFilter('in')}
+        >
+        In Stock
+        </button>
+        <button
+          className={`btn btn-xs ${stockFilter === 'out' ? 'btn-out' : 'btn-outline-custom-out'}`}
+          onClick={() => setStockFilter('out')}
+        >
+        Out of Stock
+        </button>
+      </div>
+    </div>
+
+
   
       {/* Product Grid */}
       <div className="row ">

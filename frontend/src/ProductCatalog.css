@@ -47,10 +47,58 @@ body {
   border-color: #007bff;
   box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
 }
-
-.cat-search {
-  width: 350px;
+.cat-search-bar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
+.cat-search {
+  flex: 1;
+  max-width: 350px; /* Keeps the search bar width in check */
+}
+.btn-xs {
+  font-size: 0.7rem; /* Smaller size */
+  padding: 0.3rem 0.6rem;
+  border-radius: 8px; /* Compact styling */
+}
+
+.btn-custom-all {
+  background-color: #ffcc00; /* Yellow */
+  color: #fff;
+  border-color: #ffcc00;
+}
+
+.btn-outline-custom-all {
+  background-color: transparent;
+  color: #ffcc00;
+  border: 1px solid #ffcc00;
+}
+
+.btn-custom-in {
+  background-color: #28a745; /* Green */
+  color: #fff;
+  border-color: #28a745;
+}
+
+.btn-outline-custom-in {
+  background-color: transparent;
+  color: #28a745;
+  border: 1px solid #28a745;
+}
+
+.btn-custom-out {
+  background-color: #dc3545; /* Red */
+  color: #fff;
+  border-color: #dc3545;
+}
+
+.btn-outline-custom-out {
+  background-color: transparent;
+  color: #dc3545;
+  border: 1px solid #dc3545;
+}
+
+
 /* Product Card Grid */
 .cat-card {
   width: 100%; /* Auto-adjust width */
