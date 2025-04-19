@@ -1,0 +1,13 @@
+.report {
+    margin-top: 60px;
+    color:white;
+    background-color: #033073;
+    width: 200px;
+    
+}
+
+.report:hover {
+    background-color: #58a9f5;
+    color: white;
+    width: 200px;
+}
