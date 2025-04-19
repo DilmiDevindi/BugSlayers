@@ -31,7 +31,8 @@ const SalesReport = () => {
     }
     setLoading(false);
   };
-
+   
+  
   const downloadPDF = () => {
     const doc = new jsPDF();
     doc.setFontSize(14);
