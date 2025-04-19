@@ -21,7 +21,7 @@ import ManageSales from './components/ManageSales';
 import Catalog from './components/Catalog';
 
 import SalesReport from './components/SalesReport'; 
-
+import LowStockReport from './components/LowStockReport';
 
 function App() {
   return (
