@@ -3,7 +3,7 @@ import axios from 'axios';
 import jsPDF from 'jspdf';
 import myImage from '../assets/furniture-log.png'; // Ensure this is a base64 image or handled by webpack
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFilePdf, faCalendarDays, faChartBar } from '@fortawesome/free-solid-svg-icons';
+import { faFilePdf, faCalendarDays, faChartBar,faDownload } from '@fortawesome/free-solid-svg-icons';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -226,12 +226,12 @@ const SalesReport = () => {
         <div className="mt-4">
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h5>Report Results</h5>
-            <div>
+            <div  className="d-flex align-items-center gap-2">
               <button className="btn btn-primary me-2" onClick={() => generatePDF(false)}>
-                <FontAwesomeIcon icon={faFilePdf} className="me-2" />View Report
+                <FontAwesomeIcon icon={faFilePdf} className="report me-2" />View Report
               </button>
               <button className="btn btn-success" onClick={() => generatePDF(true)}>
-                <FontAwesomeIcon icon={faFilePdf} className="me-2" />Download PDF
+                <FontAwesomeIcon icon={faDownload} className="report me-2" />Download PDF
               </button>
             </div>
           </div>
