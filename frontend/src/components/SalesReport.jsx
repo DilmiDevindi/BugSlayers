@@ -164,7 +164,7 @@ const SalesReport = () => {
         position: 'bottom',
       },
       datalabels: {
-        color: '#fff',
+        color: 'black',
         formatter: (value, context) => {
           const label = context.chart.data.labels[context.dataIndex];
           return `${label}: Rs. ${value.toFixed(2)}`;
