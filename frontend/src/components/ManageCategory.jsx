@@ -137,8 +137,8 @@ const ManageCategory = () => {
       </div>
 
       {editCategory && (
-        <div className="edit-form mt-4">
-          <h4>Edit Category</h4>
+        <div className="inventory-form-container mt-4">
+          <span className="form-icon-i"><FontAwesomeIcon icon={faEdit} /></span>Update Category
           <form onSubmit={handleUpdate}>
             <div className="mb-3">
               <label className="form-label">Category Name</label>
@@ -155,6 +155,7 @@ const ManageCategory = () => {
                 required
               />
             </div>
+            <div className="inventory-row">
             <button type="submit" className="btn btn-success">Update Category</button>
             <button
               type="button"
@@ -163,6 +164,7 @@ const ManageCategory = () => {
             >
               Cancel
             </button>
+            </div>
           </form>
         </div>
       )}
