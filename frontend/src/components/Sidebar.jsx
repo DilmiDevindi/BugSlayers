@@ -215,7 +215,9 @@ const Sidebar = () => {
     <i className="bi bi-calculator me-2"></i> Bill
   </Link>
 </li>
-
+      
+      <li className="nav-item mb-3">
+      </li>
  
       </ul>
     </div>
