@@ -4,6 +4,11 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilePdf, faCalendarDays, faChartBar } from '@fortawesome/free-solid-svg-icons';
+import { Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+
+// Register required chart elements
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const SalesReport = () => {
   const [startDate, setStartDate] = useState('');
@@ -48,6 +53,29 @@ const SalesReport = () => {
 
   const totalQuantity = report.reduce((sum, item) => sum + item.totalQuantity, 0);
   const totalSales = report.reduce((sum, item) => sum + item.totalSales, 0);
+
+  const pieData = {
+    labels: report.map((item) => item._id),
+    datasets: [
+      {
+        label: 'Total Sales',
+        data: report.map((item) => item.totalSales),
+        backgroundColor: [
+          '#4e73df',
+          '#1cc88a',
+          '#36b9cc',
+          '#f6c23e',
+          '#e74a3b',
+          '#858796',
+          '#5a5c69',
+          '#2e59d9',
+          '#17a673',
+          '#2c9faf'
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
 
   return (
     <div className="container mt-4">
@@ -122,6 +150,13 @@ const SalesReport = () => {
           <div className="mt-3">
             <strong>Total Quantity Sold:</strong> {totalQuantity} <br />
             <strong>Total Sales:</strong> Rs. {totalSales.toFixed(2)}
+          </div>
+
+          <div className="mt-4">
+                <h5 className="mb-3">Sales Distribution (Pie Chart)</h5>
+                <div style={{ maxWidth: '400px', margin: '0 auto' }}>
+                <Pie data={pieData} width={400} height={300} />
+          </div>
           </div>
         </div>
       ) : (
