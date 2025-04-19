@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import axios from 'axios';
 import jsPDF from 'jspdf';
-import myImage from '../assets/furniture-log.png'; // Ensure this is a base64 image or handled by webpack
+import myImage from '../assets/furniture-log.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFilePdf, faCalendarDays, faChartBar,faDownload } from '@fortawesome/free-solid-svg-icons';
+import { faFilePdf, faCalendarDays, faChartBar, faDownload } from '@fortawesome/free-solid-svg-icons';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -16,6 +16,7 @@ const SalesReport = () => {
   const [endDate, setEndDate] = useState('');
   const [report, setReport] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false); // Track if the form has been submitted
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,13 +25,19 @@ const SalesReport = () => {
       return;
     }
     setLoading(true);
+    setSubmitted(true);  // Mark as submitted
     try {
       const response = await axios.get('http://localhost:5000/api/reports/sales-report', {
         params: { startDate, endDate },
       });
-      setReport(response.data);
+      if (response.data.length === 0) {
+        setReport([]);  // No data, reset report state to empty
+      } else {
+        setReport(response.data);  // Set report with data
+      }
     } catch (error) {
       console.error('Error generating report:', error);
+      setReport([]); // In case of an error, set report to empty
     }
     setLoading(false);
   };
@@ -45,18 +52,15 @@ const SalesReport = () => {
     const margin = 15;
     let y = margin;
 
-    // Border
     doc.setLineWidth(0.5);
     doc.rect(5, 5, pageWidth - 10, pageHeight - 10);
 
-    // Logo
     const logoWidth = 35;
     const logoHeight = 35;
     const logoX = (pageWidth - logoWidth) / 2;
     doc.addImage(myImage, 'PNG', logoX, y, logoWidth, logoHeight);
     y += logoHeight + 5;
 
-    // Header
     doc.setFontSize(16);
     doc.setFont(undefined, 'bold');
     doc.text('New Sisira Furniture Shop', pageWidth / 2, y, { align: 'center' });
@@ -68,12 +72,10 @@ const SalesReport = () => {
     doc.text('Email: sisirafurniture@gmail.com | Phone: 077-3211603 / 071-8006485', pageWidth / 2, y, { align: 'center' });
     y += 10;
 
-    // Line
     doc.setLineWidth(0.1);
     doc.line(margin, y, pageWidth - margin, y);
     y += 8;
 
-    // Report Title
     doc.setFontSize(13);
     doc.setFont(undefined, 'bold');
     doc.text('Sales Report', margin, y);
@@ -82,7 +84,6 @@ const SalesReport = () => {
     doc.text(`From: ${startDate}  To: ${endDate}`, pageWidth - margin, y, { align: 'right' });
     y += 8;
 
-    // Table Headers
     doc.setFont(undefined, 'bold');
     doc.setFillColor(230, 230, 230);
     const col1X = margin + 2;
@@ -95,7 +96,6 @@ const SalesReport = () => {
     doc.text('Sales (Rs.)', col3X, y, { align: 'right' });
     y += 8;
 
-    // Table Content
     doc.setFont(undefined, 'normal');
     report.forEach((item) => {
       const productName = item._id;
@@ -113,14 +113,12 @@ const SalesReport = () => {
       }
     });
 
-    // Totals
     y += 6;
     doc.setFont(undefined, 'bold');
     doc.text(`Total Quantity: ${totalQuantity}`, margin, y);
     y += 6;
     doc.text(`Total Sales: Rs. ${totalSales.toFixed(2)}`, margin, y);
 
-    // Footer
     const footerY = pageHeight - 10;
     doc.setFontSize(9);
     doc.setFont(undefined, 'normal');
@@ -223,11 +221,14 @@ const SalesReport = () => {
         <div className="text-center">
           <div className="spinner-border text-primary" role="status"></div>
         </div>
+      ) : submitted && report.length === 0 ? (
+        <div className="alert alert-info mt-4">
+          No sales data available for the selected date range.
+        </div>
       ) : report.length > 0 ? (
         <div className="mt-4">
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h5>Report Results</h5>
-        
           </div>
 
           <table className="table table-striped table-bordered">
@@ -254,30 +255,21 @@ const SalesReport = () => {
             <strong>Total Sales:</strong> Rs. {totalSales.toFixed(2)}
           </div>
 
-          <div className="mt-4">
-            <h5 className="mb-3">Sales Distribution (Pie Chart)</h5>
-            <div style={{ maxWidth: '400px', margin: '0 auto' }}>
-              <Pie data={pieData} options={pieOptions} />
-            </div>
+          <div className="text-center mt-4">
+            <Pie data={pieData} options={pieOptions} height={250} />
           </div>
-          <div  className="d-flex justify-content-end gap-2">
-              <button className="report btn btn-primary me-2" onClick={() => generatePDF(false)}>
-                <FontAwesomeIcon icon={faFilePdf} className="me-2" />View Report
-              </button>
-              <button className="report btn btn-success" onClick={() => generatePDF(true)}>
-                <FontAwesomeIcon icon={faDownload} className="me-2" />Download PDF
-              </button>
-            </div>
+
+          <div className="d-flex justify-content-between mt-4">
+            <button className="btn btn-danger" onClick={() => generatePDF(false)}>
+              <FontAwesomeIcon icon={faFilePdf} className="me-2" /> View PDF
+            </button>
+            <button className="btn btn-success" onClick={() => generatePDF(true)}>
+              <FontAwesomeIcon icon={faDownload} className="me-2" /> Download PDF
+            </button>
+          </div>
         </div>
-      ) : (
-        startDate &&
-        endDate && (
-          <div className="alert alert-info mt-4">No data available for the selected date range.</div>
-        )
-      )}
-      
+      ) : null}
     </div>
-    
   );
 };
 
