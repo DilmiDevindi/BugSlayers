@@ -40,8 +40,8 @@ const Sidebar = () => {
   };
 
   const toggleInventoryReportDropdown = () => {
-    setIsInventoryReportOpen(!isInventoryReportOpen);
-  };
+  setIsInventoryReportOpen(!isInventoryReportOpen);
+};
 
   return (
     <div className="bg-dark text-white vh-100 p-3">
