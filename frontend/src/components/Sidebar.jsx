@@ -217,6 +217,13 @@ const Sidebar = () => {
 </li>
       
       <li className="nav-item mb-3">
+      <button 
+        className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
+        onClick={toggleInventoryReportDropdown}
+        style={{ cursor: 'pointer' }}>
+      <i className="bi bi-bar-chart-line me-2"></i> Inventory Reports
+      <i className={`bi ${isInventoryReportOpen ? 'bi-chevron-up' : 'bi-chevron-down'} ms-auto`}></i>
+      </button>
       </li>
  
       </ul>
