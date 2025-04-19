@@ -215,8 +215,11 @@ const Sidebar = () => {
     <i className="bi bi-calculator me-2"></i> Bill
   </Link>
 </li>
-      
-      <li className="nav-item mb-3">
+
+
+
+    {/* Inventory Reports Dropdown */}  
+    <li className="nav-item mb-3">
       <button 
         className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
         onClick={toggleInventoryReportDropdown}
@@ -224,7 +227,22 @@ const Sidebar = () => {
       <i className="bi bi-bar-chart-line me-2"></i> Inventory Reports
       <i className={`bi ${isInventoryReportOpen ? 'bi-chevron-up' : 'bi-chevron-down'} ms-auto`}></i>
       </button>
+
+    {isInventoryReportOpen && (
+    <ul className="nav flex-column ms-3">
+      <li className="nav-item mb-2">
+        <Link to="/dashboard/inventory/reports/low-stock" className="nav-link text-white">
+          Low Stock Report
+        </Link>
       </li>
+      <li className="nav-item mb-2">
+        <Link to="/dashboard/inventory/reports/summary" className="nav-link text-white">
+          Inventory Summary
+        </Link>
+      </li>
+    </ul>
+    )}
+    </li>
  
       </ul>
     </div>
