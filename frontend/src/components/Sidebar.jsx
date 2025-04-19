@@ -39,6 +39,10 @@ const Sidebar = () => {
     setIsCatalogOpen(!isCatalogOpen);
   };
 
+  const toggleInventoryReportDropdown = () => {
+    setIsInventoryReportOpen(!isInventoryReportOpen);
+  };
+
   return (
     <div className="bg-dark text-white vh-100 p-3">
       <h6 className='custom-heading'>New Sisira Furniture</h6>
