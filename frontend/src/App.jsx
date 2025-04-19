@@ -53,6 +53,7 @@ function App() {
          
 
           <Route path="sales/report" element={<SalesReport />}/>
+          <Route path="inventory/reports/low-stock" element={<LowStockReport />} />
 
        
         </Route>
