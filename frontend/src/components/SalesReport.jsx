@@ -31,7 +31,50 @@ const SalesReport = () => {
     }
     setLoading(false);
   };
-   
+    
+  const viewReport = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(14);
+    doc.text('Sales Report', 14, 16);
+    doc.setFontSize(11);
+    doc.text(`From: ${startDate} To: ${endDate}`, 14, 24);
+  
+    // Table headers
+    let y = 35;
+    doc.setFont(undefined, 'bold');
+    doc.text('Product Name', 14, y);
+    doc.text('Total Quantity', 90, y);
+    doc.text('Total Sales (Rs.)', 150, y);
+    doc.setFont(undefined, 'normal');
+    y += 8;
+  
+    // Table rows
+    report.forEach((item) => {
+      doc.text(item._id, 14, y);
+      doc.text(item.totalQuantity.toString(), 90, y);
+      doc.text(item.totalSales.toFixed(2).toString(), 150, y);
+      y += 8;
+  
+      // Add new page if content goes below page height
+      if (y > 270) {
+        doc.addPage();
+        y = 20;
+      }
+    });
+  
+    // Totals
+    y += 10;
+    doc.setFont(undefined, 'bold');
+    doc.text(`Total Quantity: ${totalQuantity}`, 14, y);
+    y += 8;
+    doc.text(`Total Sales: Rs. ${totalSales.toFixed(2)}`, 14, y);
+  
+    // Open PDF in browser instead of downloading
+    const pdfData = doc.output('blob');
+    const pdfUrl = URL.createObjectURL(pdfData);
+    window.open(pdfUrl, '_blank');
+  };
+  
   
   const downloadPDF = () => {
     const doc = new jsPDF();
