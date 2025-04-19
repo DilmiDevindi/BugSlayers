@@ -188,6 +188,9 @@ const SalesReport = () => {
         <div className="mt-4">
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h5>Report Results</h5>
+            <button className="btn btn-primary" onClick={viewReport}>
+            <FontAwesomeIcon icon={faFilePdf} className="me-2" />View Report
+            </button>
             <button className="btn btn-success" onClick={downloadPDF}>
               <FontAwesomeIcon icon={faFilePdf} className="me-2" />Download PDF
             </button>
