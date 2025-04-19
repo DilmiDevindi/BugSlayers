@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import axios from 'axios';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilePdf, faCalendarDays, faChartBar } from '@fortawesome/free-solid-svg-icons';
+import { Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const SalesReport = () => {
   const [startDate, setStartDate] = useState('');
@@ -28,26 +31,73 @@ const SalesReport = () => {
     }
     setLoading(false);
   };
-
+   
+  
   const downloadPDF = () => {
     const doc = new jsPDF();
+    doc.setFontSize(14);
     doc.text('Sales Report', 14, 16);
-    doc.text(`From: ${startDate} To: ${endDate}`, 14, 23);
+    doc.setFontSize(11);
+    doc.text(`From: ${startDate} To: ${endDate}`, 14, 24);
 
-    const tableColumn = ['Product Name', 'Total Quantity', 'Total Sales'];
-    const tableRows = [];
+    // Table headers
+    let y = 35;
+    doc.setFont(undefined, 'bold');
+    doc.text('Product Name', 14, y);
+    doc.text('Total Quantity', 90, y);
+    doc.text('Total Sales (Rs.)', 150, y);
+    doc.setFont(undefined, 'normal');
+    y += 8;
 
-    report.forEach(item => {
-      const row = [item._id, item.totalQuantity, item.totalSales];
-      tableRows.push(row);
+    // Table rows
+    report.forEach((item) => {
+      doc.text(item._id, 14, y);
+      doc.text(item.totalQuantity.toString(), 90, y);
+      doc.text(item.totalSales.toFixed(2).toString(), 150, y);
+      y += 8;
+
+      // Add new page if content goes below page height
+      if (y > 270) {
+        doc.addPage();
+        y = 20;
+      }
     });
 
-    doc.autoTable(tableColumn, tableRows, { startY: 30 });
+    // Totals
+    y += 10;
+    doc.setFont(undefined, 'bold');
+    doc.text(`Total Quantity: ${totalQuantity}`, 14, y);
+    y += 8;
+    doc.text(`Total Sales: Rs. ${totalSales.toFixed(2)}`, 14, y);
+
     doc.save(`sales_report_${startDate}_to_${endDate}.pdf`);
   };
 
   const totalQuantity = report.reduce((sum, item) => sum + item.totalQuantity, 0);
   const totalSales = report.reduce((sum, item) => sum + item.totalSales, 0);
+
+  const pieData = {
+    labels: report.map((item) => item._id),
+    datasets: [
+      {
+        label: 'Total Sales',
+        data: report.map((item) => item.totalSales),
+        backgroundColor: [
+          '#4e73df',
+          '#1cc88a',
+          '#36b9cc',
+          '#f6c23e',
+          '#e74a3b',
+          '#858796',
+          '#5a5c69',
+          '#2e59d9',
+          '#17a673',
+          '#2c9faf'
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
 
   return (
     <div className="container mt-4">
@@ -122,6 +172,13 @@ const SalesReport = () => {
           <div className="mt-3">
             <strong>Total Quantity Sold:</strong> {totalQuantity} <br />
             <strong>Total Sales:</strong> Rs. {totalSales.toFixed(2)}
+          </div>
+
+          <div className="mt-4">
+            <h5 className="mb-3">Sales Distribution (Pie Chart)</h5>
+            <div style={{ maxWidth: '400px', margin: '0 auto' }}>
+              <Pie data={pieData} width={400} height={300} />
+            </div>
           </div>
         </div>
       ) : (
