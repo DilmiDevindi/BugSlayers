@@ -7,6 +7,7 @@ import { faFilePdf, faCalendarDays, faChartBar,faDownload } from '@fortawesome/f
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import './SalesReports.css';
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
@@ -226,14 +227,7 @@ const SalesReport = () => {
         <div className="mt-4">
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h5>Report Results</h5>
-            <div  className="d-flex align-items-center gap-2">
-              <button className="btn btn-primary me-2" onClick={() => generatePDF(false)}>
-                <FontAwesomeIcon icon={faFilePdf} className="report me-2" />View Report
-              </button>
-              <button className="btn btn-success" onClick={() => generatePDF(true)}>
-                <FontAwesomeIcon icon={faDownload} className="report me-2" />Download PDF
-              </button>
-            </div>
+        
           </div>
 
           <table className="table table-striped table-bordered">
@@ -266,6 +260,14 @@ const SalesReport = () => {
               <Pie data={pieData} options={pieOptions} />
             </div>
           </div>
+          <div  className="d-flex justify-content-end gap-2">
+              <button className="report btn btn-primary me-2" onClick={() => generatePDF(false)}>
+                <FontAwesomeIcon icon={faFilePdf} className="me-2" />View Report
+              </button>
+              <button className="report btn btn-success" onClick={() => generatePDF(true)}>
+                <FontAwesomeIcon icon={faDownload} className="me-2" />Download PDF
+              </button>
+            </div>
         </div>
       ) : (
         startDate &&
@@ -273,7 +275,9 @@ const SalesReport = () => {
           <div className="alert alert-info mt-4">No data available for the selected date range.</div>
         )
       )}
+      
     </div>
+    
   );
 };
 
