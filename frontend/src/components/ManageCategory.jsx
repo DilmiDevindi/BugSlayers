@@ -137,7 +137,7 @@ const ManageCategory = () => {
       </div>
 
       {editCategory && (
-        <div className="edit-form mt-4">
+        <div className="inventory-form-container mt-4">
           <h4>Edit Category</h4>
           <form onSubmit={handleUpdate}>
             <div className="mb-3">
