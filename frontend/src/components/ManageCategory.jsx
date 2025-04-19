@@ -155,6 +155,7 @@ const ManageCategory = () => {
                 required
               />
             </div>
+            <div className="inventory-row">
             <button type="submit" className="btn btn-success">Update Category</button>
             <button
               type="button"
@@ -163,6 +164,7 @@ const ManageCategory = () => {
             >
               Cancel
             </button>
+            </div>
           </form>
         </div>
       )}
