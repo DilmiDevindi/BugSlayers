@@ -138,7 +138,7 @@ const ManageCategory = () => {
 
       {editCategory && (
         <div className="inventory-form-container mt-4">
-          <h4>Edit Category</h4>
+          <span className="form-icon-i"><FontAwesomeIcon icon={faEdit} /></span>Update Category
           <form onSubmit={handleUpdate}>
             <div className="mb-3">
               <label className="form-label">Category Name</label>
