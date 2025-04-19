@@ -7,6 +7,7 @@ import { faEdit, faTrash, faPenToSquare, faClipboardList } from '@fortawesome/fr
 const ManageSales = () => {
   const [sales, setSales] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [searchTermDate, setSearchTermDate] = useState(''); // Added state for date search
   const [editingSale, setEditingSale] = useState(null);
 
   useEffect(() => {
@@ -53,17 +54,21 @@ const ManageSales = () => {
     }
   };
 
+  // Modified filteredSales to include date filtering
   const filteredSales = sales.filter(
     (sale) =>
-      sale.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      sale.productName.toLowerCase().includes(searchTerm.toLowerCase())
+      (sale.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        sale.productName.toLowerCase().includes(searchTerm.toLowerCase())) &&
+      (searchTermDate
+        ? new Date(sale.date).toLocaleDateString() === new Date(searchTermDate).toLocaleDateString()
+        : true)
   );
 
   return (
     <div className="container mt-4">
       <h3><FontAwesomeIcon icon={faClipboardList} className="ms-icon" />Manage Sales Records</h3>
 
-      {/* Search Input */}
+      {/* Search by customer or product name */}
       <div className="mb-3">
         <input
           type="text"
@@ -71,6 +76,16 @@ const ManageSales = () => {
           placeholder="Search by customer or product name"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+
+      {/* Search by date */}
+      <div className="mb-3">
+        <input
+          type="date"
+          className="form-control"
+          value={searchTermDate}
+          onChange={(e) => setSearchTermDate(e.target.value)}
         />
       </div>
 
