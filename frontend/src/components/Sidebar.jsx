@@ -11,6 +11,7 @@ const Sidebar = () => {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
   const [isSalesOpen, setIsSalesOpen]  = useState(false); 
+  const [isInventoryReportOpen, setIsInventoryReportOpen] = useState(false);
 
   const toggleSuppliersDropdown = () => {
     setIsSuppliersOpen(!isSuppliersOpen);
