@@ -4,6 +4,7 @@ const router = express.Router();
 
 // Generate sales report based on date range
 router.get('/sales-report', async (req, res) => {
+  console.log('📥 Sales report route hit:', req.query);
   const { startDate, endDate } = req.query;
   try {
     const report = await Sales.aggregate([
@@ -12,6 +13,7 @@ router.get('/sales-report', async (req, res) => {
     ]);
     res.status(200).json(report);
   } catch (error) {
+    console.error('❌ Error generating report:', error);
     res.status(500).json({ message: 'Error generating report', error });
   }
 });

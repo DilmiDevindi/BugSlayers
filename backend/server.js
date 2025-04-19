@@ -11,6 +11,7 @@ const customerRoutes = require('./routes/customerRoutes');
 const authRoutes = require('./routes/authRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const salesRoutes = require('./routes/salesRoutes');
+const catalogRoutes = require('./routes/catalogRoutes');
 const reportRoutes = require('./routes/reportRoutes');
 
 const app = express();
@@ -21,8 +22,10 @@ app.use(cors());
 app.use(bodyParser.json()); // Still useful for parsing JSON requests
 app.use(express.json()); // Extra safety
 
-// Serve uploaded images statically
+//images
 app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // <-- Allows frontend access to image URLs
+app.use('/uploads', express.static('uploads'));
+
 
 // Connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/mern-vite-app', {
@@ -40,6 +43,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/category', categoryRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/sales', salesRoutes);
+app.use('/api/catalog', catalogRoutes); // Use the catalog routes
+app.use('/api/reports', reportRoutes);
+
 
 // Start server
 app.listen(PORT, () => {

@@ -9,6 +9,7 @@ const Sidebar = () => {
   const [isInventoryOpen, setIsInventoryOpen] = useState(false); 
   const [isCustomersOpen, setIsCustomersOpen] = useState(false); 
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const [isCatalogOpen, setIsCatalogOpen] = useState(false);
   const [isSalesOpen, setIsSalesOpen]  = useState(false); 
 
   const toggleSuppliersDropdown = () => {
@@ -32,6 +33,10 @@ const Sidebar = () => {
   const toggleCategoryDropdown = () => {
     setIsCategoryOpen(!isCategoryOpen);
   }
+
+  const toggleCatalogDropdown = () => {
+    setIsCatalogOpen(!isCatalogOpen);
+  };
 
   return (
     <div className="bg-dark text-white vh-100 p-3">
@@ -176,6 +181,24 @@ const Sidebar = () => {
                 <Link to="/dashboard/sales/report" className="nav-link text-white">
                 Generate Report
                 </Link>
+              </li>
+            </ul>
+          )}
+        </li>
+
+        {/* Product Catalog Dropdown */}
+        <li className="nav-item mb-3">
+          <button 
+            className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
+            onClick={toggleCatalogDropdown}
+            style={{ cursor: 'pointer' }}>
+            <i className="bi bi-journal-richtext me-2"></i> Catalog
+            <i className={`bi ${isCatalogOpen ? 'bi-chevron-up' : 'bi-chevron-down'} ms-auto`}></i>
+          </button>
+          {isCatalogOpen && (
+            <ul className="nav flex-column ms-3">
+              <li className="nav-item mb-2">
+                <Link to="/dashboard/catalog/view" className="nav-link text-white">View Catalog</Link>
               </li>
             </ul>
           )}
