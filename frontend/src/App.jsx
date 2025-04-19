@@ -53,8 +53,8 @@ function App() {
          
 
           <Route path="sales/report" element={<SalesReport />}/>
-       
 
+       
         </Route>
       </Routes>
     </Router>
