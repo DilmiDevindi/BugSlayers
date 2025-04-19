@@ -22,6 +22,7 @@ import Catalog from './components/Catalog';
 
 import SalesReport from './components/SalesReport'; 
 import LowStockReport from './components/LowStockReport';
+import InventorySummary from './components/InventorySummary';
 
 function App() {
   return (
