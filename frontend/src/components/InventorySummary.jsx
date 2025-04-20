@@ -13,6 +13,7 @@ import {
   Line,
   ResponsiveContainer,
 } from "recharts";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 const InventorySummary = () => {
     return (
