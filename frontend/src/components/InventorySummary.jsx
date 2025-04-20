@@ -1,5 +1,18 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  LineChart,
+  Line,
+  ResponsiveContainer,
+} from "recharts";
 
 const InventorySummary = () => {
     return (
