@@ -1,3 +1,6 @@
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+
 const InventorySummary = () => {
     return (
       <div className="container p-4">
