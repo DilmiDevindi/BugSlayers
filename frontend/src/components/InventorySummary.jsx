@@ -34,6 +34,14 @@ const InventorySummary = () => {
   ];
 
   const colors = ["#0d6efd", "#198754", "#dc3545", "#ffc107"];
+
+  const barData = [
+    { itemName: "Chair", quantity: 50 },
+    { itemName: "Bed", quantity: 30 },
+    { itemName: "Sofa", quantity: 25 },
+    { itemName: "Table", quantity: 40 },
+  ];
+
 }    
 export default InventorySummary;
   
