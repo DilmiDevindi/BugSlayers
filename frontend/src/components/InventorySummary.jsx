@@ -25,6 +25,14 @@ const InventorySummary = () => {
     { title: "Total Stock Value", value: "Rs. 1.3M", color: "success", icon: "currency-dollar" },
     { title: "Out of Stock", value: 5, color: "warning", icon: "x-circle" },
   ];
+
+  const pieData = [
+    { category: "Furniture", value: 120 },
+    { category: "Cushions", value: 60 },
+    { category: "Mattresses", value: 30 },
+    { category: "Other", value: 44 },
+  ];
+
 }    
 export default InventorySummary;
   
