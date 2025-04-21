@@ -33,6 +33,7 @@ const InventorySummary = () => {
     { category: "Other", value: 44 },
   ];
 
+  const colors = ["#0d6efd", "#198754", "#dc3545", "#ffc107"];
 }    
 export default InventorySummary;
   
