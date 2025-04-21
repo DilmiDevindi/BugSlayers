@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUsers } from "@fortawesome/free-solid-svg-icons";
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import './Customer.css';
- // Assuming you have a CSS file for styling
+
 
 const ManageCustomer = () => {
   const [customers, setCustomers] = useState([]);

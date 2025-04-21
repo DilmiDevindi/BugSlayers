@@ -5,7 +5,7 @@
   background-size: cover; /* Ensure the image covers the whole page */
   background-position: center;
   background-repeat: no-repeat;
-  height: 100vh; /* Full viewport height */
+  height: 100vh;
   margin: 0; /* Remove any default margin */
   display: flex;
   justify-content: center;
