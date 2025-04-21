@@ -17,12 +17,12 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const InventorySummary = () => {
-    return (
-      <div className="container p-4">
-        <h2>📦 Inventory Summary</h2>
-        {/* Summary table, stock value, category-wise breakdown, etc. */}
-      </div>
-    );
-  };
-  export default InventorySummary;
+  const [expandedRow, setExpandedRow] = useState(null);
+
+  const summaryCards = [
+    {title: "Total Stock Items", value: 254, color: "primary", icon: "box-seam" },
+    { title: "Low Stock", value: 12, color: "danger", icon: "exclamation-triangle" },
+  ]
+}    
+export default InventorySummary;
   

@@ -220,7 +220,7 @@ const ManageInventories = () => {
                 className="inventory-form-control"
                 min="0"
                 step="0.01"
-                value={editItem.buyingPrice}
+                value={editItem.buyingPrice.toFixed(2)}
                 onChange={(e) => setEditItem({ ...editItem, buyingPrice: Number(e.target.value) })}
                 required
               />
