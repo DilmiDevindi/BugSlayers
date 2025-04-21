@@ -42,6 +42,13 @@ const InventorySummary = () => {
     { itemName: "Table", quantity: 40 },
   ];
 
+  const stockTrends = [
+    { date: "Apr 1", value: 200000 },
+    { date: "Apr 5", value: 220000 },
+    { date: "Apr 10", value: 230000 },
+    { date: "Apr 15", value: 250000 },
+  ];
+
 }    
 export default InventorySummary;
   
