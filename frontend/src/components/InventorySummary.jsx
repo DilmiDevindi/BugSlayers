@@ -22,6 +22,7 @@ const InventorySummary = () => {
   const summaryCards = [
     {title: "Total Stock Items", value: 254, color: "primary", icon: "box-seam" },
     { title: "Low Stock", value: 12, color: "danger", icon: "exclamation-triangle" },
+    { title: "Total Stock Value", value: "Rs. 1.3M", color: "success", icon: "currency-dollar" },
   ]
 }    
 export default InventorySummary;
