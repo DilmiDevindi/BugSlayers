@@ -49,6 +49,9 @@ const InventorySummary = () => {
     { date: "Apr 15", value: 250000 },
   ];
 
+  const inventoryItems = [];
+
+
 }    
 export default InventorySummary;
   
