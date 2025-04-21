@@ -49,7 +49,10 @@ const InventorySummary = () => {
     { date: "Apr 15", value: 250000 },
   ];
 
-  const inventoryItems = [];
+  const inventoryItems = [
+    { code: "FUR-102", name: "Study Table", category: "Furniture", quantity: 15, price: "Rs. 24,000", supplier: "Mahinda Mills", date: "2025-04-12", img: "/images/study-table.jpg" },
+
+  ];
 
 
 }    
