@@ -52,9 +52,12 @@ const InventorySummary = () => {
   const inventoryItems = [
     { code: "FUR-102", name: "Study Table", category: "Furniture", quantity: 15, price: "Rs. 24,000", supplier: "Mahinda Mills", date: "2025-04-12", img: "/images/study-table.jpg" },
     { code: "CUS-301", name: "Cushion Red", category: "Cushions", quantity: 40, price: "Rs. 2,000", supplier: "SoftTex", date: "2025-04-10", img: "/images/cushion.jpg" },
-
-
   ];
+
+  const toggleExpand = (idx) => {
+    setExpandedRow(expandedRow === idx ? null : idx);
+  };
+
 
 
 }    
