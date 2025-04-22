@@ -58,7 +58,11 @@ const InventorySummary = () => {
     setExpandedRow(expandedRow === idx ? null : idx);
   };
 
-  return ()
+  return (
+    <div className="container py-4">
+      <h2 className="mb-4 fw-bold">Inventory Summary Report</h2>
+
+  )
 
 
 }    
