@@ -6,7 +6,7 @@ import axios from 'axios';
 import './Supplier.css';
 
 const AddSupplier = () => {
-  const [supplier, setSupplier] = useState({
+  const getEmptySupplier = () => ({
     date: new Date().toISOString().split('T')[0],
     supplierName: '',
     phone1: '',
@@ -17,14 +17,16 @@ const AddSupplier = () => {
     supplyProducts: '',
     paymentTerms: '',
   });
-  const [errors, setErrors] = useState({});
+
+  const [suppliers, setSuppliers] = useState([getEmptySupplier()]);
+  const [errorsList, setErrorsList] = useState([{}]);
 
   const validatePhoneNumber = (number) => /^\d{10}$/.test(number);
-
   const validateEmail = (email) => /^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(email);
 
-  const validateFields = (name, value) => {
+  const validateFields = (index, name, value) => {
     let error = '';
+
     if (name === 'phone1' || name === 'phone2') {
       value = value.replace(/\D/g, '');
       if (value.length > 10) {
@@ -33,133 +35,145 @@ const AddSupplier = () => {
       }
       if (!validatePhoneNumber(value)) {
         error = 'Contact number must be exactly 10 digits and numeric';
-      } else if (name === 'phone2' && value === supplier.phone1) {
+      } else if (name === 'phone2' && value === suppliers[index].phone1) {
         error = 'Primary and Secondary Contact Numbers must not be the same';
       }
     }
 
-    if (name === 'email' && value) {
-      if (!validateEmail(value)) {
-        error = 'Email must be a valid @gmail.com address';
-      }
+    if (name === 'email' && value && !validateEmail(value)) {
+      error = 'Email must be a valid @gmail.com address';
     }
 
     if (name === 'address' && !value.trim()) {
       error = 'Address cannot be empty';
     }
 
-    setErrors((prev) => ({ ...prev, [name]: error }));
+    setErrorsList((prev) => {
+      const newErrors = [...prev];
+      newErrors[index] = { ...newErrors[index], [name]: error };
+      return newErrors;
+    });
+
     return value;
   };
 
-  const handleSubmit = async (e) => {
+  const handleInputChange = (index, e) => {
+    const { name, value } = e.target;
+    const validatedValue = validateFields(index, name, value);
+    const updatedSuppliers = [...suppliers];
+    updatedSuppliers[index][name] = validatedValue;
+    setSuppliers(updatedSuppliers);
+  };
+
+  const handleSubmit = async (e, index) => {
     e.preventDefault();
+    const supplier = suppliers[index];
+    let hasError = false;
 
     for (let field in supplier) {
-      validateFields(field, supplier[field]);
+      const validated = validateFields(index, field, supplier[field]);
+      supplier[field] = validated;
+      if (errorsList[index] && errorsList[index][field]) {
+        hasError = true;
+      }
     }
 
-    if (Object.values(errors).some((err) => err)) return;
+    if (hasError || Object.values(errorsList[index] || {}).some(Boolean)) return;
 
     try {
       await axios.post('/api/suppliers', supplier);
-      alert('Supplier added successfully');
-      setSupplier({
-        date: new Date().toISOString().split('T')[0],
-        supplierName: '',
-        phone1: '',
-        phone2: '',
-        fax: '',
-        email: '',
-        address: '',
-        supplyProducts: '',
-        paymentTerms: '',
-      });
-      setErrors({});
+      alert('✅ Supplier added successfully!');
+      const updatedSuppliers = [...suppliers, getEmptySupplier()];
+      const updatedErrors = [...errorsList, {}];
+      setSuppliers(updatedSuppliers);
+      setErrorsList(updatedErrors);
     } catch (error) {
       console.error('Error adding supplier:', error);
+      alert('❌ Error occurred while adding supplier. Please try again.');
     }
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    const validatedValue = validateFields(name, value);
-    setSupplier({ ...supplier, [name]: validatedValue });
-  };
-
   return (
-    <div className="container-i form-container-i" style={{ maxWidth: '50%' }}>
-      <div className='text-center' style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '20px' }}>
+    <div className="container-i form-container-i" style={{ maxWidth: '60%' }}>
+      <div className="text-center" style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '20px' }}>
         <FontAwesomeIcon icon={faSquarePlus} /> Add Supplier
       </div>
-      <form onSubmit={handleSubmit} autoComplete="off">
-        <div className="form-group-i">
-          <input 
-            type="date" 
-            className="form-control" 
-            name="date" 
-            value={supplier.date} 
-            onChange={handleInputChange} 
-            placeholder="Date"
-            required 
-          />
-        </div>
 
-        {[{ label: "Supplier Name", key: "supplierName" },
-          { label: "Contact Number (Primary)", key: "phone1", required: true },
-          { label: "Contact Number (Secondary)", key: "phone2", required: false },
-          { label: "Fax Number", key: "fax" },
-          { label: "Email Address", key: "email" },
-          { label: "Address", key: "address" }].map(field => (
-          <div key={field.key} className="form-group-i">
+      {suppliers.map((supplier, index) => (
+        <form key={index} onSubmit={(e) => handleSubmit(e, index)} className="mb-4" autoComplete="off">
+          <div className="form-group-i">
             <input
-              type="text"
+              type="date"
               className="form-control"
-              name={field.key}
-              value={supplier[field.key]}
-              onChange={handleInputChange}
-              placeholder={field.label}
-              required={field.required || false}
+              name="date"
+              value={supplier.date}
+              onChange={(e) => handleInputChange(index, e)}
+              required
             />
-            {errors[field.key] && <div className="alert alert-danger">{errors[field.key]}</div>}
           </div>
-        ))}
 
-        <div className="form-group-i">
-          <select 
-            className="form-control" 
-            name="supplyProducts" 
-            value={supplier.supplyProducts} 
-            onChange={handleInputChange} 
-            required
-          >
-            <option value="" disabled>Select a product</option>
-            <option value="Mattress">Mettress</option>
-            <option value="Cupboard">Cupboard</option>
-            <option value="Chair">Chair</option>
-            <option value="Table">Table</option>
-            <option value="Iron Board">Iron Board</option>
-            <option value="Carrom Board">Carrom Board</option>
-            <option value="Clothes Rack">Clothing Rack</option>
-          </select>
-        </div>
+          {[
+            { label: 'Supplier Name', key: 'supplierName' },
+            { label: 'Contact Number (Primary)', key: 'phone1', required: true },
+            { label: 'Contact Number (Secondary)', key: 'phone2' },
+            { label: 'Fax Number', key: 'fax' },
+            { label: 'Email Address', key: 'email' },
+            { label: 'Address', key: 'address' },
+          ].map((field) => (
+            <div key={field.key} className="form-group-i">
+              <input
+                type="text"
+                className="form-control"
+                name={field.key}
+                value={supplier[field.key]}
+                onChange={(e) => handleInputChange(index, e)}
+                placeholder={field.label}
+                required={field.required || false}
+              />
+              {errorsList[index] && errorsList[index][field.key] && (
+                <div className="alert alert-danger">{errorsList[index][field.key]}</div>
+              )}
+            </div>
+          ))}
 
-        <div className="form-group-i">
-          <select 
-            className="form-control" 
-            name="paymentTerms" 
-            value={supplier.paymentTerms} 
-            onChange={handleInputChange} 
-            required
-          >
-            <option value="" disabled>Select a payment method</option>
-            <option value="Cash">Cash</option>
-            <option value="Card">Card</option>
-          </select>
-        </div>
+          <div className="form-group-i">
+            <select
+              className="form-control"
+              name="supplyProducts"
+              value={supplier.supplyProducts}
+              onChange={(e) => handleInputChange(index, e)}
+              required
+            >
+              <option value="" disabled>Select a product</option>
+              <option value="Mattress">Mattress</option>
+              <option value="Cupboard">Cupboard</option>
+              <option value="Chair">Chair</option>
+              <option value="Table">Table</option>
+              <option value="Iron Board">Iron Board</option>
+              <option value="Carrom Board">Carrom Board</option>
+              <option value="Clothes Rack">Clothes Rack</option>
+            </select>
+          </div>
 
-        <button type="submit" className="btn btn-primary-i">Add Supplier</button>
-      </form>
+          <div className="form-group-i">
+            <select
+              className="form-control"
+              name="paymentTerms"
+              value={supplier.paymentTerms}
+              onChange={(e) => handleInputChange(index, e)}
+              required
+            >
+              <option value="" disabled>Select a payment method</option>
+              <option value="Cash">Cash</option>
+              <option value="Card">Card</option>
+            </select>
+          </div>
+
+          <button type="submit" className="btn btn-primary-i">
+            Add Supplier
+          </button>
+        </form>
+      ))}
     </div>
   );
 };
