@@ -99,6 +99,32 @@ const InventorySummary = () => {
         <input className="form-control w-auto" type="search" placeholder="Search by item..." />
       </div>
 
+      {/* Charts */}
+      <div className="row g-4 mb-4">
+        <div className="col-md-6">
+          <h6>Stock Distribution by Category</h6>
+          <PieChart width={400} height={300}>
+            <Pie data={pieData} dataKey="value" nameKey="category" cx="50%" cy="50%" outerRadius={80}>
+              {pieData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+              ))}
+            </Pie>
+            <Tooltip />
+          </PieChart>
+        </div>
+        <div className="col-md-6">
+          <h6>Top Stocked Items</h6>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={barData}>
+              <XAxis dataKey="itemName" />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="quantity" fill="#0d6efd" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
 
   )
 
