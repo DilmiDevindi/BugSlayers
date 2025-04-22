@@ -137,6 +137,47 @@ const InventorySummary = () => {
         </ResponsiveContainer>
       </div>
 
+      {/* Inventory Table */}
+      <div className="table-responsive">
+        <table className="table table-bordered table-hover">
+          <thead className="table-dark">
+            <tr>
+              <th>Item Code</th>
+              <th>Item Name</th>
+              <th>Category</th>
+              <th>Quantity</th>
+              <th>Unit Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            {inventoryItems.map((item, index) => (
+              <React.Fragment key={index}>
+                <tr onClick={() => toggleExpand(index)} style={{ cursor: "pointer" }}>
+                  <td>{item.code}</td>
+                  <td>{item.name}</td>
+                  <td>{item.category}</td>
+                  <td>{item.quantity}</td>
+                  <td>{item.price}</td>
+                </tr>
+                {expandedRow === index && (
+                  <tr>
+                    <td colSpan="5">
+                      <div className="p-3 bg-light rounded d-flex justify-content-between align-items-center">
+                        <div>
+                          <strong>Supplier:</strong> {item.supplier} <br />
+                          <strong>Date Added:</strong> {item.date}
+                        </div>
+                        <img src={item.img} alt={item.name} height="80" className="rounded shadow-sm" />
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </React.Fragment>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
 
   )
 
