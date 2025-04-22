@@ -58,6 +58,7 @@ const InventorySummary = () => {
     setExpandedRow(expandedRow === idx ? null : idx);
   };
 
+  return ()
 
 
 }    
