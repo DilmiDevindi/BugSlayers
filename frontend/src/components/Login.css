@@ -1,8 +1,8 @@
 
 /* Login.css */
 .login-page {
-  background-image: url('/background.avif'); /* Path to your image */
-  background-size: cover; /* Ensure the image covers the whole page */
+  background-image: url('/background.avif'); 
+  background-size: cover; 
   background-position: center;
   background-repeat: no-repeat;
   height: 100vh;
