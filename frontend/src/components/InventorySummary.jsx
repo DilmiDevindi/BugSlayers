@@ -124,6 +124,18 @@ const InventorySummary = () => {
           </ResponsiveContainer>
         </div>
       </div>
+      
+      <div className="mb-5">
+        <h6>Stock Value Trends</h6>
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart data={stockTrends}>
+            <XAxis dataKey="date" />
+            <YAxis />
+            <Tooltip />
+            <Line type="monotone" dataKey="value" stroke="#28a745" />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
 
 
   )
