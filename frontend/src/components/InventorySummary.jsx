@@ -78,6 +78,17 @@ const InventorySummary = () => {
         ))}
       </div>
 
+      {/* Filters */}
+      <div className="d-flex justify-content-between mb-4 flex-wrap gap-2">
+        <div className="input-group w-auto">
+          <label className="input-group-text">Category</label>
+          <select className="form-select">
+            <option value="">All</option>
+            <option value="furniture">Furniture</option>
+            <option value="cushions">Cushions</option>
+          </select>
+        </div>
+
   )
 
 
