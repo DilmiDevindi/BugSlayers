@@ -88,6 +88,17 @@ const InventorySummary = () => {
             <option value="cushions">Cushions</option>
           </select>
         </div>
+        <div className="input-group w-auto">
+          <label className="input-group-text">From</label>
+          <input type="date" className="form-control" />
+        </div>
+        <div className="input-group w-auto">
+          <label className="input-group-text">To</label>
+          <input type="date" className="form-control" />
+        </div>
+        <input className="form-control w-auto" type="search" placeholder="Search by item..." />
+      </div>
+
 
   )
 
