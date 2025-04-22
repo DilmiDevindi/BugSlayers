@@ -61,6 +61,22 @@ const InventorySummary = () => {
   return (
     <div className="container py-4">
       <h2 className="mb-4 fw-bold">Inventory Summary Report</h2>
+      {/* Summary Cards */}
+      <div className="row g-4 mb-4">
+        {summaryCards.map((card, idx) => (
+          <div className="col-md-3" key={idx}>
+            <div className={`card text-white bg-${card.color} shadow-sm rounded-4`}>
+              <div className="card-body d-flex justify-content-between align-items-center">
+                <div>
+                  <h6>{card.title}</h6>
+                  <h4>{card.value}</h4>
+                </div>
+                <i className={`bi bi-${card.icon} fs-2`}></i>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
 
   )
 
