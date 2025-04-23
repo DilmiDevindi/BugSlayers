@@ -10,4 +10,5 @@ stock levels in real time, so the shop always knows what is available. The syste
 finances, making business management more efficient.This system saves time, reduces manual work, and helps
 the shop run smoothly.
 
+Together, the website and billing system provide a complete digital solution that supports both customer satisfaction and effective store management.
 
