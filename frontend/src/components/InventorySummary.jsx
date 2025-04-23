@@ -178,7 +178,11 @@ const InventorySummary = () => {
       </div>
 
        {/* Export Buttons */}
-       
+       <div className="d-flex justify-content-end gap-2 mt-4">
+        <button className="btn btn-outline-secondary">Export CSV</button>
+        <button className="btn btn-outline-danger">Export PDF</button>
+        <button className="btn btn-outline-dark" onClick={() => window.print()}>Print Report</button>
+      </div>
     </div>
 
 
