@@ -13,8 +13,7 @@ const ManageCustomer = () => {
   const [searchDate, setSearchDate] = useState('');
   const [editingCustomer, setEditingCustomer] = useState(null);
   const [formData, setFormData] = useState({ 
-    _id: '', 
-    date: new Date().toISOString().split('T')[0], 
+    _id: '',  
     name: '', 
     address: '', 
     contact: '', 
