@@ -118,12 +118,7 @@ const ManageCustomer = () => {
         onChange={handleSearch}
       />
 
-      <input
-        type="date"
-        className="form-control mb-3"
-        value={searchDate}
-        onChange={handleDateSearch}
-      />
+      
 
       {loading ? <p>Loading customers...</p> : (
         <table className="table table-striped">
