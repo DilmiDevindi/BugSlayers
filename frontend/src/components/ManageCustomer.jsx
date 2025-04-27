@@ -41,9 +41,7 @@ const ManageCustomer = () => {
     setSearchTerm(e.target.value);
   };
 
-  const handleDateSearch = (e) => {
-    setSearchDate(e.target.value);
-  };
+ 
 
   const filteredCustomers = customers.filter(customer => {
     // Search term filtering
