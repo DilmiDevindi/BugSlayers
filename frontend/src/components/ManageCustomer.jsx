@@ -123,7 +123,6 @@ const ManageCustomer = () => {
           <thead>
             <tr>
               <th>ID</th>
-              <th>Date</th>
               <th>Name</th>
               <th>Address</th>
               <th>Contact</th>
