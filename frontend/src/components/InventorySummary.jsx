@@ -110,7 +110,7 @@ const InventorySummary = () => {
           <div className="card shadow-sm">
             <div className="card-body">
               <h5 className="card-title text-danger">Out of Stock</h5>
-              <p className="h4">{filteredItems.filter(item => item.quantity === 0).length}</p>
+              <h6><b>{filteredItems.filter(item => item.quantity === 0).length}</b></h6>
             </div>
           </div>
         </div>
