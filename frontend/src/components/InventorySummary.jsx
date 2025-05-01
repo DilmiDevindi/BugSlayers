@@ -64,5 +64,7 @@ const InventorySummary = () => {
     }
   };
 
-
+  const toggleExpand = (idx) => {
+    setExpandedRow(expandedRow === idx ? null : idx);
+  };
 
