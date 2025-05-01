@@ -21,7 +21,7 @@ const InventorySummary = () => {
   const [categories, setCategories] = useState([]);
   const [pieData, setPieData] = useState([]);
   const [barData, setBarData] = useState([]);
-  const [stockTrends, setStockTrends] = useState([]);
+  const [stockTrends] = useState([]);
 
   useEffect(() => {
     // Fetch inventory items and categories from API
