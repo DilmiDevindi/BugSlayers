@@ -51,16 +51,10 @@ const ManageCustomer = () => {
                              customer.email.toLowerCase().includes(searchTerm.toLowerCase());
   
     // Date filtering (single date match or range)
-    let matchDate = true;
-    if (searchDate) {
-      const customerDate = new Date(customer.date);
-      const targetDate = new Date(searchDate);
+    
   
-      matchDate = customerDate.toDateString() === targetDate.toDateString();
-  
-    }
-  
-    return matchSearchTerm && matchDate;
+
+    return matchSearchTerm ;
   });
   
 
