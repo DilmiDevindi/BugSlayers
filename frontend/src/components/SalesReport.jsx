@@ -255,15 +255,15 @@ const SalesReport = () => {
             <strong>Total Sales:</strong> Rs. {totalSales.toFixed(2)}
           </div>
 
-          <div className="text-center mt-4">
-            <Pie data={pieData} options={pieOptions} height={250} />
+          <div className="text-center mt-4" style={{ width: '350px', height: '350px', margin: '0 auto' }}>
+            <Pie data={pieData} options={pieOptions} />
           </div>
 
           <div className="d-flex justify-content-between mt-4">
-            <button className="btn btn-danger" onClick={() => generatePDF(false)}>
+            <button className="btn btn-danger custom-btn" style={{ marginLeft: '530px' }} onClick={() => generatePDF(false)}>
               <FontAwesomeIcon icon={faFilePdf} className="me-2" /> View PDF
             </button>
-            <button className="btn btn-success" onClick={() => generatePDF(true)}>
+            <button className="btn btn-success custom-btn" onClick={() => generatePDF(true)}>
               <FontAwesomeIcon icon={faDownload} className="me-2" /> Download PDF
             </button>
           </div>
