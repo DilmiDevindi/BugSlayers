@@ -46,10 +46,10 @@ const Collection = () => {
     let fpcopy = filterProducts.slice();
 
     switch(sortType){
-      case 'low-high':
+      case 'Price low to high':
         setFilterProducts(fpcopy.sort((a,b)=> (a.price - b.price)));
         break;
-      case 'high-low':
+      case 'Price high to low':
         setFilterProducts(fpcopy.sort((a,b)=> (b.price - a.price)));
         break;
       default:
@@ -89,6 +89,11 @@ const Collection = () => {
         <p className='flex gap-2'>
           <input className='w-3' type='checkbox' value={'Bed'} onChange={toggleCategory}/> Bed
         </p>
+        <p className='flex gap-2'>
+          <input className='w-3' type='checkbox' value={'Bed'} onChange={toggleCategory}/> Cupboard
+        </p>
+
+
       </div>
     </div>
     
@@ -105,6 +110,9 @@ const Collection = () => {
         <p className='flex gap-2'>
           <input className='w-3' type='checkbox' value={'Glass'} onChange={toggleSubCategory}/> Glass
         </p>
+        <p className='flex gap-2'>
+          <input className='w-3' type='checkbox' value={'Timber'} onChange={toggleSubCategory}/> Plastic
+        </p>
       </div>
     </div>
     </div >
@@ -115,9 +123,9 @@ const Collection = () => {
         <Title text1={'All'} text2={'Products'}/>
         {/* Product Sort */}
         <select onChange={(e)=>setSortType(e.target.value)} className='border-2 border-gray-300 text-sm px-2 cursor-pointer'>
-          <option value="relevant">Sort by: Relevant</option>
-          <option value="low-high">Sort by: Low to High</option>
-          <option value="high-low">Sort by: High to Low</option>
+          <option value="relevant">Sort by Price: Relevant</option>
+          <option value="low-high">Sort by Price: Low to High</option>
+          <option value="high-low">Sort by Price: High to Low</option>
         </select>
       </div>
 

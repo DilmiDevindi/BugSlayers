@@ -6,6 +6,7 @@ import connectClooudinary from './config/cloudinary.js';
 import userRouter from './routes/userRoute.js';
 import productRouter from './routes/productRoute.js';
 
+
 //app config
 
 const app = express()

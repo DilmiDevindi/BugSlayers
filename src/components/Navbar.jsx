@@ -35,7 +35,9 @@ const Navbar = () => {
         </ul>
 
         <div className='flex items-center gap-6'>
-            <img src={assets.search} className='w-5 cursor-pointer' alt="search" />
+        <img onClick={() => setshowSearch(true)} src={assets.search} className='w-5 cursor-pointer' alt="search" />
+
+
 
             <div className='group relative'>
                 <img src={assets.login} alt="User-Account" className='w-5 cursor-pointer' />
@@ -52,6 +54,7 @@ const Navbar = () => {
                 <p className='absolute right-[-5px] bottom-[-5px] w-3 text-center leading-3 bg-black text-white aspect-square rounded-full text-[6px]'>{getCartCount()}</p>
             
             </Link>
+           
 
             <img onClick={()=>setVisible(true)} src={assets.menu} className='w-5 cursor-pointer sm:hidden' />
         </div>
@@ -82,4 +85,4 @@ const Navbar = () => {
   )
 }
 
-export default Navbar
+export default Navbar;

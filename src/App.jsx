@@ -13,6 +13,8 @@ import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import SearchBar from './components/searchBar'
+
 
 
 const App = () => {
@@ -20,6 +22,8 @@ const App = () => {
     <div className='px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]'>
       <ToastContainer/>
       <Navbar/> 
+      <SearchBar/>
+      
       <Routes>
         <Route path='/' element={<Home/>}/>
         <Route path='/collection' element={<Collection/>} />
@@ -37,4 +41,4 @@ const App = () => {
   )
 }
 
-export default App
+export default App;

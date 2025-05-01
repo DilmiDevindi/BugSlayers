@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, } from "react";
 import { products } from "../assets/assets";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -9,8 +9,8 @@ export const ShopContext = createContext();
 const ShopContextProvider = (props) => {
 
     const currency = 'LKR ';
-    const deliveryFee = 350;
-    const [search,setSearch] = useState('');
+    const deliveryFee = 1000;
+    const [search, setSearch] = useState('');
     const [showSearch, setshowSearch] = useState(true);
     const [cartItems, setCartItems] = useState({});
     const navigate = useNavigate();
@@ -96,4 +96,4 @@ const ShopContextProvider = (props) => {
     )
 }
 
-export default ShopContextProvider
+export default ShopContextProvider;
