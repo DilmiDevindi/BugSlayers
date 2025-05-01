@@ -18,7 +18,7 @@ const AddPurchase = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("/api/purchases", purchase);
+      await axios.post("/api/purchase", purchase);
       alert("Purchase added successfully!");
       setPurchase({
         supplierName: "",

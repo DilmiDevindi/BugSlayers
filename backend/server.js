@@ -13,6 +13,7 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const salesRoutes = require('./routes/salesRoutes');
 const catalogRoutes = require('./routes/catalogRoutes');
 const reportRoutes = require('./routes/reportRoutes');
+const purchaseRoutes = require("./routes/purchasesRoutes");
 
 const app = express();
 const PORT = 5000;
@@ -45,6 +46,7 @@ app.use('/api/reports', reportRoutes);
 app.use('/api/sales', salesRoutes);
 app.use('/api/catalog', catalogRoutes); // Use the catalog routes
 app.use('/api/reports', reportRoutes);
+app.use('/api/purchase', purchaseRoutes); // Use the purchase routes
 
 
 // Start server
