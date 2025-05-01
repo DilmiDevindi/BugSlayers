@@ -52,7 +52,6 @@ const ManageCustomer = () => {
   
     // Date filtering (single date match or range)
     
-  
 
     return matchSearchTerm ;
   });
@@ -128,7 +127,6 @@ const ManageCustomer = () => {
               filteredCustomers.map((customer, index) => (
                 <tr key={customer._id}>
                   <td>{index + 1}</td>
-                  <td>{new Date(customer.date).toLocaleDateString('en-CA')}</td> {/* Format date */}
                   <td>{customer.name}</td>
                   <td>{customer.address}</td>
                   <td>{customer.contact}</td>
