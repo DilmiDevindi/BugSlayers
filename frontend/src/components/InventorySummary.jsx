@@ -18,7 +18,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 const COLORS = ["#0d6efd", "#198754", "#dc3545", "#ffc107", "#6f42c1", "#fd7e14"];
 
 const InventorySummary = () => {
-  const [expandedRow, setExpandedRow] = useState(null);
   const [inventoryItems, setInventoryItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -49,12 +48,17 @@ const InventorySummary = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/catalog/categories');
+      const response = await fetch('http://localhost:5000/api/category');
       const data = await response.json();
-      setCategories(data);
+      setCategories(Array.isArray(data) ? data : []);
     } catch (error) {
-      console.error('Error fetching categories:', error);
+      console.error('Failed to fetch categories:', error);
     }
+  };
+
+  const getCategoryName = (categoryId) => {
+    const cat = categories.find((c) => c._id === categoryId);
+    return cat ? cat.categoryName : 'Unknown';
   };
 
   const applyFilters = () => {
@@ -84,10 +88,6 @@ const InventorySummary = () => {
     // Bar chart data
     const bars = items.map(item => ({ itemName: item.name, quantity: item.quantity }));
     setBarData(bars);
-  };
-
-  const toggleExpand = (idx) => {
-    setExpandedRow(expandedRow === idx ? null : idx);
   };
 
   // Custom label for PieChart
