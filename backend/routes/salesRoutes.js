@@ -1,9 +1,9 @@
 const express = require('express');
-const Sales = require('../models/sales');
+const Sales = require('../models/SalesRecord');  // Make sure the path matches
 const router = express.Router();
 
 // Add a new sales record
-router.post('/add', async (req, res) => {
+router.post('/add/sales', async (req, res) => {
   try {
     const { customerName, productName, quantity, price, totalAmount, remark } = req.body;
 
@@ -17,7 +17,6 @@ router.post('/add', async (req, res) => {
     });
 
     await newSale.save();
-
     res.status(201).json({ message: 'Sale record added successfully!' });
   } catch (error) {
     console.error('Error adding sale record:', error);
@@ -34,7 +33,6 @@ router.get('/', async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-
 
 // Update a sales record
 router.put('/:id', async (req, res) => {

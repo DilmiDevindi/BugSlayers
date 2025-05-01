@@ -1,4 +1,3 @@
-// models/SalesRecord.js
 const mongoose = require('mongoose');
 
 const SalesRecordSchema = new mongoose.Schema({

@@ -1,4 +1,3 @@
-// src/components/AddSalesRecord.js
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Sales.css';
@@ -32,6 +31,7 @@ const AddSalesRecord = () => {
         remark,
       };
       await axios.post('http://localhost:5000/api/sales/add', newSale);
+      // Reset form fields after successful submission
       setCustomerName('');
       setProductName('');
       setQuantity('');
@@ -41,6 +41,7 @@ const AddSalesRecord = () => {
       alert('Sale record added successfully!');
     } catch (error) {
       console.error('Error adding sale record:', error);
+      alert('Error adding sale record. Please try again.');
     }
   };
 
