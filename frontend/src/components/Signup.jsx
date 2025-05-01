@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './Login.css'; // Reuse same CSS as login for consistency
+import './Login.css'; // Reuse the same CSS
+import myImage from '../assets/furniture-log.png'; // Import your image
 
 const Signup = () => {
   const [email, setEmail] = useState('');
@@ -25,7 +26,7 @@ const Signup = () => {
 
       if (response.data.success) {
         alert('Signup successful! Please log in.');
-        navigate('/'); // or navigate to login page
+        navigate('/'); // Redirect to login page
       } else {
         alert(response.data.message);
       }
@@ -37,45 +38,50 @@ const Signup = () => {
   };
 
   return (
-    <div className="login-container">
-      <h2>Sign Up</h2>
-      <form onSubmit={handleSignup}>
-        <div className="mb-3">
-          <label htmlFor="email" className="form-label">
-            Email
-          </label>
-          <input
-            type="email"
-            className="form-control"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+    <div className="login-page">
+      <div className="container-wrapper-login">
+        <div className="info-container">
+          <img src={myImage} alt="Furniture" className="login-image" />
+          <h1>Welcome To</h1>
+          <p className='logpara'>
+            Manage your furniture business with ease and efficiency, streamline operations.
+          </p>
         </div>
+        <div className="login-container">
+          <h2>Sign Up</h2>
+          <form onSubmit={handleSignup}>
+            <div className="mb-3">
+              <label htmlFor="email" className="form-label">Email</label>
+              <input
+                type="email"
+                className="form-control"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
 
-        <div className="mb-3">
-          <label htmlFor="password" className="form-label">
-            Password
-          </label>
-          <input
-            type="password"
-            className="form-control"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+            <div className="mb-3">
+              <label htmlFor="password" className="form-label">Password</label>
+              <input
+                type="password"
+                className="form-control"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+
+            <button type="submit" className="btn">Sign Up</button>
+          </form>
+          <p>
+            Already have an account?{' '}
+            <a href="/">Login</a>
+          </p>
         </div>
-
-        <button type="submit" className="btn">
-          Sign Up
-        </button>
-      </form>
-      <p>
-        Already have an account?{' '}
-        <a href="/">Login</a> {/* change this to a button if you want in-container switch */}
-      </p>
+      </div>
     </div>
   );
 };
