@@ -15,6 +15,8 @@ import {
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+const COLORS = ["#0d6efd", "#198754", "#dc3545", "#ffc107", "#6f42c1", "#fd7e14"];
+
 const InventorySummary = () => {
   const [expandedRow, setExpandedRow] = useState(null);
   const [inventoryItems, setInventoryItems] = useState([]);
@@ -24,7 +26,7 @@ const InventorySummary = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [pieData, setPieData] = useState([]);
   const [barData, setBarData] = useState([]);
-  const [stockTrends] = useState([]); // Placeholder for now
+  const [stockTrends] = useState([]); // Placeholder
 
   useEffect(() => {
     fetchInventoryItems();
@@ -88,6 +90,27 @@ const InventorySummary = () => {
     setExpandedRow(expandedRow === idx ? null : idx);
   };
 
+  // Custom label for PieChart
+  const renderCustomizedLabel = ({ cx, cy, midAngle, outerRadius, percent, index }) => {
+    const RADIAN = Math.PI / 180;
+    const radius = outerRadius * 1.2;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+    return (
+      <text
+        x={x}
+        y={y}
+        fill="#000"
+        textAnchor={x > cx ? "start" : "end"}
+        dominantBaseline="central"
+        fontSize={12}
+      >
+        {`${pieData[index].category}: ${(percent * 100).toFixed(0)}%`}
+      </text>
+    );
+  };
+
   return (
     <div className="container py-5">
       <div className="text-center mb-5">
@@ -119,7 +142,7 @@ const InventorySummary = () => {
           <div className="card shadow-sm">
             <div className="card-body">
               <h5 className="card-title text-warning">Low Stock</h5>
-              <p className="h4">{filteredItems.filter(item => item.quantity < 5).length}</p>
+              <h6><b>{filteredItems.filter(item => item.quantity < 5).length}</b></h6>
             </div>
           </div>
         </div>
@@ -148,17 +171,27 @@ const InventorySummary = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
+      <br />
 
       {/* Charts */}
       <div className="row g-4 mb-4">
         <div className="col-md-6">
-          <h5 className="mb-3">Stock Distribution by Category</h5>
+          <h6>Stock Distribution by Category</h6>
           <div className="card shadow-sm p-3">
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
-                <Pie data={pieData} dataKey="value" nameKey="category" cx="50%" cy="50%" outerRadius={80}>
+                <Pie
+                  data={pieData}
+                  dataKey="value"
+                  nameKey="category"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  labelLine={false}
+                  label={renderCustomizedLabel}
+                >
                   {pieData.map((entry, index) => (
-                    <Cell key={index} fill={["#0d6efd", "#198754", "#dc3545", "#ffc107"][index % 4]} />
+                    <Cell key={index} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
                 <Tooltip />
