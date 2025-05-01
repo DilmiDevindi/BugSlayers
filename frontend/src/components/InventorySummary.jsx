@@ -14,4 +14,11 @@ import {
 } from "recharts";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-  
+
+const InventorySummary = () => {
+  const [expandedRow, setExpandedRow] = useState(null);
+  const [inventoryItems, setInventoryItems] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [pieData, setPieData] = useState([]);
+  const [barData, setBarData] = useState([]);
+  const [stockTrends, setStockTrends] = useState([]);
