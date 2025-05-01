@@ -40,7 +40,7 @@ const AddSupplier = () => {
 
     if (name === 'email' && value) {
       if (!validateEmail(value)) {
-        error = 'Email should be a valid @gmail.com address';
+        error = 'Email must be a valid @gmail.com address';
       }
     }
 
