@@ -18,37 +18,28 @@ import "bootstrap/dist/css/bootstrap.min.css";
 const InventorySummary = () => {
   const [expandedRow, setExpandedRow] = useState(null);
   const [inventoryItems, setInventoryItems] = useState([]);
+  const [filteredItems, setFilteredItems] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const [pieData, setPieData] = useState([]);
   const [barData, setBarData] = useState([]);
-  const [stockTrends] = useState([]);
+  const [stockTrends] = useState([]); // Placeholder for now
 
   useEffect(() => {
-    // Fetch inventory items and categories from API
     fetchInventoryItems();
     fetchCategories();
   }, []);
+
+  useEffect(() => {
+    applyFilters();
+  }, [inventoryItems, selectedCategory, searchQuery]);
 
   const fetchInventoryItems = async () => {
     try {
       const response = await fetch('http://localhost:5000/api/inventory');
       const data = await response.json();
       setInventoryItems(data);
-
-      // Pie and Bar data based on inventory items
-      const pieCategories = {};
-      const barItems = [];
-
-      data.forEach(item => {
-        // Pie Data Preparation
-        pieCategories[item.category] = (pieCategories[item.category] || 0) + item.quantity;
-
-        // Bar Data Preparation
-        barItems.push({ itemName: item.name, quantity: item.quantity });
-      });
-
-      setPieData(Object.entries(pieCategories).map(([category, quantity]) => ({ category, value: quantity })));
-      setBarData(barItems);
     } catch (error) {
       console.error('Error fetching inventory items:', error);
     }
@@ -56,12 +47,41 @@ const InventorySummary = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/category');
+      const response = await fetch('http://localhost:5000/api/catalog/categories');
       const data = await response.json();
       setCategories(data);
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
+  };
+
+  const applyFilters = () => {
+    let items = [...inventoryItems];
+
+    if (selectedCategory) {
+      items = items.filter(item => item.category === selectedCategory);
+    }
+
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      items = items.filter(item =>
+        item.name.toLowerCase().includes(q) ||
+        item.code?.toLowerCase().includes(q)
+      );
+    }
+
+    setFilteredItems(items);
+
+    // Pie chart data
+    const pieMap = {};
+    items.forEach(item => {
+      pieMap[item.category] = (pieMap[item.category] || 0) + item.quantity;
+    });
+    setPieData(Object.entries(pieMap).map(([category, value]) => ({ category, value })));
+
+    // Bar chart data
+    const bars = items.map(item => ({ itemName: item.name, quantity: item.quantity }));
+    setBarData(bars);
   };
 
   const toggleExpand = (idx) => {
@@ -81,7 +101,7 @@ const InventorySummary = () => {
           <div className="card shadow-sm">
             <div className="card-body">
               <h5 className="card-title text-success">Total Inventory</h5>
-              <p className="h4">{inventoryItems.length}</p>
+              <p className="h4">{filteredItems.length}</p>
             </div>
           </div>
         </div>
@@ -90,15 +110,16 @@ const InventorySummary = () => {
           <div className="card shadow-sm">
             <div className="card-body">
               <h5 className="card-title text-danger">Out of Stock</h5>
-              <p className="h4">{inventoryItems.filter(item => item.quantity === 0).length}</p>
+              <p className="h4">{filteredItems.filter(item => item.quantity === 0).length}</p>
             </div>
           </div>
         </div>
+
         <div className="col-lg-3 col-md-6">
           <div className="card shadow-sm">
             <div className="card-body">
               <h5 className="card-title text-warning">Low Stock</h5>
-              <p className="h4">{inventoryItems.filter(item => item.quantity < 5).length}</p>
+              <p className="h4">{filteredItems.filter(item => item.quantity < 5).length}</p>
             </div>
           </div>
         </div>
@@ -108,22 +129,24 @@ const InventorySummary = () => {
       <div className="d-flex justify-content-between mb-4 flex-wrap gap-2">
         <div className="input-group w-auto">
           <label className="input-group-text">Category</label>
-          <select className="form-select">
+          <select
+            className="form-select"
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+          >
             <option value="">All</option>
             {categories.map((category, idx) => (
-              <option key={idx} value={category.name}>{category.name}</option>
+              <option key={idx} value={category.categoryName}>{category.categoryName}</option>
             ))}
           </select>
         </div>
-        <div className="input-group w-auto">
-          <label className="input-group-text">From</label>
-          <input type="date" className="form-control" />
-        </div>
-        <div className="input-group w-auto">
-          <label className="input-group-text">To</label>
-          <input type="date" className="form-control" />
-        </div>
-        <input className="form-control w-auto" type="search" placeholder="Search by item..." />
+        <input
+          className="form-control w-auto"
+          type="search"
+          placeholder="Search by item..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
       </div>
 
       {/* Charts */}
@@ -158,7 +181,7 @@ const InventorySummary = () => {
         </div>
       </div>
 
-      {/* Stock Value Trends */}
+      {/* Stock Trends */}
       <div className="mb-5">
         <h5 className="mb-3">Stock Value Trends</h5>
         <div className="card shadow-sm p-3">
@@ -173,8 +196,6 @@ const InventorySummary = () => {
         </div>
       </div>
 
-  
-
       {/* Export Buttons */}
       <div className="d-flex justify-content-end gap-3 mt-4">
         <button className="btn btn-outline-secondary">Export CSV</button>
@@ -184,7 +205,5 @@ const InventorySummary = () => {
     </div>
   );
 };
-
-      
 
 export default InventorySummary;
