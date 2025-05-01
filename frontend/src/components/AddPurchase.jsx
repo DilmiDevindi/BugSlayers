@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import './AddPurchase.css';
+import React, { useState } from "react";
+import axios from "axios";
+import "./AddPurchases.css";
 
 const AddPurchase = () => {
   const [purchase, setPurchase] = useState({
-    supplierName: '',
-    productName: '',
-    quantity: '',
-    price: '',
-    date: '',
+    supplierName: "",
+    productName: "",
+    quantity: "",
+    price: "",
+    date: "",
   });
 
   const handleChange = (e) => {
@@ -18,17 +18,17 @@ const AddPurchase = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('/api/purchases', purchase);
-      alert('Purchase added successfully!');
+      await axios.post("/api/purchases", purchase);
+      alert("Purchase added successfully!");
       setPurchase({
-        supplierName: '',
-        productName: '',
-        quantity: '',
-        price: '',
-        date: '',
+        supplierName: "",
+        productName: "",
+        quantity: "",
+        price: "",
+        date: "",
       });
     } catch (error) {
-      console.error('Error adding purchase:', error);
+      console.error("Error adding purchase:", error);
     }
   };
 

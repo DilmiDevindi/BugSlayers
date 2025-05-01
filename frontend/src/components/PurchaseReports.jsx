@@ -1,28 +1,28 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import jsPDF from 'jspdf';
-import './PurchaseReport.css';
+import React, { useState } from "react";
+import axios from "axios";
+import jsPDF from "jspdf";
+import "./PurchaseReport.css";
 
 const PurchaseReport = () => {
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [reportData, setReportData] = useState([]);
 
   const handleGenerateReport = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.get('/api/purchases/report', {
+      const response = await axios.get("/api/purchases/report", {
         params: { startDate, endDate },
       });
       setReportData(response.data);
     } catch (error) {
-      console.error('Error generating report:', error);
+      console.error("Error generating report:", error);
     }
   };
 
   const handleDownloadPDF = () => {
     const doc = new jsPDF();
-    doc.text('Purchase Report', 20, 10);
+    doc.text("Purchase Report", 20, 10);
     doc.text(`From: ${startDate} To: ${endDate}`, 20, 20);
     let y = 30;
     reportData.forEach((item) => {
@@ -66,6 +66,20 @@ const PurchaseReport = () => {
               </tr>
             </thead>
             <tbody>
-              {report
-::contentReference[oaicite:18]{index=18}
- 
+              {reportData.map((item, index) => (
+                <tr key={index}>
+                  <td>{item.productName}</td>
+                  <td>{item.totalQuantity}</td>
+                  <td>{item.totalPrice}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <button onClick={handleDownloadPDF}>Download PDF</button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default PurchaseReport;
