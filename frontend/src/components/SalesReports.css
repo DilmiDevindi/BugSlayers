@@ -18,3 +18,8 @@
   width: 200px;
 }
 
+.custom-btn:hover{
+    color:black;
+    background-color: aqua;
+}
+
