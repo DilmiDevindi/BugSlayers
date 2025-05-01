@@ -11,9 +11,10 @@ const PurchaseReport = () => {
   const handleGenerateReport = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.get("/api/purchases/report", {
+      const response = await axios.get("/api/purchase-report/purchase-report", {
         params: { startDate, endDate },
       });
+      // Adjust the response to match the expected structure
       setReportData(response.data);
     } catch (error) {
       console.error("Error generating report:", error);
@@ -26,8 +27,9 @@ const PurchaseReport = () => {
     doc.text(`From: ${startDate} To: ${endDate}`, 20, 20);
     let y = 30;
     reportData.forEach((item) => {
+      // Using '_id' for productName, 'totalQuantity', and 'totalSpent' instead of 'totalPrice'
       doc.text(
-        `Product: ${item.productName}, Quantity: ${item.totalQuantity}, Total: ${item.totalPrice}`,
+        `Product: ${item._id}, Quantity: ${item.totalQuantity}, Total: ${item.totalSpent}`,
         20,
         y
       );
@@ -68,9 +70,11 @@ const PurchaseReport = () => {
             <tbody>
               {reportData.map((item, index) => (
                 <tr key={index}>
-                  <td>{item.productName}</td>
+                  <td>{item._id}</td>{" "}
+                  {/* Adjusted to match the response (_id field for productName) */}
                   <td>{item.totalQuantity}</td>
-                  <td>{item.totalPrice}</td>
+                  <td>{item.totalSpent}</td>{" "}
+                  {/* Adjusted to match the response (totalSpent for price) */}
                 </tr>
               ))}
             </tbody>
