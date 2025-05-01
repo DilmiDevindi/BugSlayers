@@ -71,8 +71,8 @@ const InventorySummary = () => {
   return (
     <div className="container py-5">
       <div className="text-center mb-5">
-        <h1 className="fw-bold text-primary">Inventory Summary Report</h1>
-        <p className="text-muted">A comprehensive overview of your current inventory, categorized by stock, sales trends, and more.</p>
+        <h4 className="fw-bold text-primary">Inventory Summary Report</h4>
+        <h6>A comprehensive overview of your current inventory, categorized by stock, sales trends, and more.</h6>
       </div>
 
       {/* Summary Cards */}
@@ -82,14 +82,6 @@ const InventorySummary = () => {
             <div className="card-body">
               <h5 className="card-title text-success">Total Inventory</h5>
               <p className="h4">{inventoryItems.length}</p>
-            </div>
-          </div>
-        </div>
-        <div className="col-lg-3 col-md-6">
-          <div className="card shadow-sm">
-            <div className="card-body">
-              <h5 className="card-title text-info">Categories</h5>
-              <p className="h4">{categories.length}</p>
             </div>
           </div>
         </div>
