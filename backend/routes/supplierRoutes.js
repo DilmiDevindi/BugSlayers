@@ -1,6 +1,18 @@
 const express = require("express");
 const router = express.Router();
 
+const SupplierSchema = new mongoose.Schema({
+  date: { type: Date, default: Date.now },
+  supplierName: String,
+  phone1: String,
+  phone2: String,
+  fax: String,
+  email: String,
+  address: String,
+  supplyProducts: String,
+  paymentTerms: String
+});
+
 const {
   getSuppliers,
   getSupplierCount,

@@ -47,8 +47,19 @@ const getSupplierById = async (req, res) => {
 
 // Create a new supplier
 const createSupplier = async (req, res) => {
-  const supplier = new Supplier(req.body);
   try {
+    const supplier = new Supplier({
+      date: req.body.date,
+      supplierName: req.body.supplierName,
+      phone1: req.body.phone1,
+      phone2: req.body.phone2,
+      fax: req.body.fax,
+      email: req.body.email,
+      address: req.body.address,
+      supplyProducts: req.body.supplyProducts,
+      paymentTerms: req.body.paymentTerms
+    });
+
     const newSupplier = await supplier.save();
     res.status(201).json(newSupplier);
   } catch (error) {
