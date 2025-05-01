@@ -10,7 +10,6 @@ import './Customer.css';
 const ManageCustomer = () => {
   const [customers, setCustomers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchDate, setSearchDate] = useState('');
   const [editingCustomer, setEditingCustomer] = useState(null);
   const [formData, setFormData] = useState({ 
     _id: '',  
