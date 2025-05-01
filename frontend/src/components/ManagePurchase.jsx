@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import './ManagePurchases.css';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "./ManagePurchases.css";
 
 const ManagePurchases = () => {
   const [purchases, setPurchases] = useState([]);
@@ -12,19 +12,19 @@ const ManagePurchases = () => {
 
   const fetchPurchases = async () => {
     try {
-      const response = await axios.get('/api/purchases');
+      const response = await axios.get("/api/purchase");
       setPurchases(response.data);
     } catch (error) {
-      console.error('Error fetching purchases:', error);
+      console.error("Error fetching purchases:", error);
     }
   };
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`/api/purchases/${id}`);
+      await axios.delete(`/api/purchase/${id}`);
       setPurchases(purchases.filter((purchase) => purchase._id !== id));
     } catch (error) {
-      console.error('Error deleting purchase:', error);
+      console.error("Error deleting purchase:", error);
     }
   };
 
@@ -39,11 +39,11 @@ const ManagePurchases = () => {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`/api/purchases/${editingPurchase._id}`, editingPurchase);
+      await axios.put(`/api/purchase/${editingPurchase._id}`, editingPurchase);
       setEditingPurchase(null);
       fetchPurchases();
     } catch (error) {
-      console.error('Error updating purchase:', error);
+      console.error("Error updating purchase:", error);
     }
   };
 
@@ -71,7 +71,9 @@ const ManagePurchases = () => {
               <td>{new Date(purchase.date).toLocaleDateString()}</td>
               <td>
                 <button onClick={() => handleEditClick(purchase)}>Edit</button>
-                <button onClick={() => handleDelete(purchase._id)}>Delete</button>
+                <button onClick={() => handleDelete(purchase._id)}>
+                  Delete
+                </button>
               </td>
             </tr>
           ))}
