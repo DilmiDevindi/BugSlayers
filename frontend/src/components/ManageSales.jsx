@@ -7,7 +7,7 @@ import { faEdit, faTrash, faPenToSquare, faClipboardList } from '@fortawesome/fr
 const ManageSales = () => {
   const [sales, setSales] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchTermDate, setSearchTermDate] = useState(''); // Added state for date search
+  const [searchTermDate, setSearchTermDate] = useState('');
   const [editingSale, setEditingSale] = useState(null);
 
   useEffect(() => {
@@ -39,7 +39,13 @@ const ManageSales = () => {
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
-    setEditingSale((prev) => ({ ...prev, [name]: value }));
+    setEditingSale((prev) => {
+      const updatedSale = { ...prev, [name]: value };
+      if (name === 'quantity' || name === 'price') {
+        updatedSale.totalAmount = updatedSale.quantity * updatedSale.price;
+      }
+      return updatedSale;
+    });
   };
 
   const handleEditSubmit = async (e) => {
@@ -54,7 +60,6 @@ const ManageSales = () => {
     }
   };
 
-  // Modified filteredSales to include date filtering
   const filteredSales = sales.filter(
     (sale) =>
       (sale.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -66,9 +71,8 @@ const ManageSales = () => {
 
   return (
     <div className="container mt-4">
-      <h3><FontAwesomeIcon icon={faClipboardList} className="ms-icon" />Manage Sales Records</h3>
+      <h3><FontAwesomeIcon icon={faClipboardList} className="ms-icon" /> Manage Sales Records</h3>
 
-      {/* Search by customer or product name */}
       <div className="mb-3">
         <input
           type="text"
@@ -79,7 +83,6 @@ const ManageSales = () => {
         />
       </div>
 
-      {/* Search by date */}
       <div className="mb-3">
         <input
           type="date"
@@ -89,14 +92,16 @@ const ManageSales = () => {
         />
       </div>
 
-      {/* Sales Table */}
       <table className="table table-striped">
         <thead>
           <tr>
+            <th>ID</th>
             <th>Customer Name</th>
             <th>Product Name</th>
             <th>Quantity</th>
             <th>Price</th>
+            <th>Total Amount</th>
+            <th>Remark</th>
             <th>Date</th>
             <th>Actions</th>
           </tr>
@@ -104,10 +109,13 @@ const ManageSales = () => {
         <tbody>
           {filteredSales.map((sale) => (
             <tr key={sale._id}>
+              <td>{sale._id}</td>
               <td>{sale.customerName}</td>
               <td>{sale.productName}</td>
               <td>{sale.quantity}</td>
               <td>{sale.price}</td>
+              <td>{sale.totalAmount}</td>
+              <td>{sale.remark}</td>
               <td>{new Date(sale.date).toLocaleDateString()}</td>
               <td>
                 <div className="d-flex justify-content-center">
@@ -130,10 +138,9 @@ const ManageSales = () => {
         </tbody>
       </table>
 
-      {/* Edit Sale Form - Placed after table */}
       {editingSale && (
         <form onSubmit={handleEditSubmit} className="mb-4 border p-3 rounded">
-          <h3><FontAwesomeIcon icon={faPenToSquare} className="ms-icon" />Edit Sale</h3>
+          <h3><FontAwesomeIcon icon={faPenToSquare} className="ms-icon" /> Edit Sale</h3>
           <div className="mb-2">
             <input
               type="text"
@@ -180,6 +187,26 @@ const ManageSales = () => {
           </div>
           <div className="mb-2">
             <input
+              type="number"
+              name="totalAmount"
+              value={editingSale.totalAmount}
+              className="form-control"
+              placeholder="Total Amount"
+              readOnly
+            />
+          </div>
+          <div className="mb-2">
+            <input
+              type="text"
+              name="remark"
+              value={editingSale.remark}
+              onChange={handleEditChange}
+              className="form-control"
+              placeholder="Remark"
+            />
+          </div>
+          <div className="mb-2">
+            <input
               type="date"
               name="date"
               value={editingSale.date.slice(0, 10)}
@@ -188,8 +215,8 @@ const ManageSales = () => {
               required
             />
           </div>
-          <button type="submit" className="btn btn-primary me-2 submit-btn">Update</button>
-          <button type="button" className="btn btn-secondary cancel-btn" onClick={() => setEditingSale(null)}>Cancel</button>
+          <button type="submit" className="btn btn-primary me-2">Update</button>
+          <button type="button" className="btn btn-secondary" onClick={() => setEditingSale(null)}>Cancel</button>
         </form>
       )}
     </div>

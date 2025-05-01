@@ -1,12 +1,41 @@
+// models/SalesRecord.js
 const mongoose = require('mongoose');
 
-const salesSchema = new mongoose.Schema({
-  customerName: { type: String, required: true },
-  productName: { type: String, required: true },
-  quantity: { type: Number, required: true },
-  price: { type: Number, required: true },
-  date: { type: Date, default: Date.now }
+const SalesRecordSchema = new mongoose.Schema({
+  customerName: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  productName: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  quantity: {
+    type: Number,
+    required: true,
+    min: 0
+  },
+  price: {
+    type: Number,
+    required: true,
+    min: 0
+  },
+  totalAmount: {
+    type: Number,
+    required: true,
+    min: 0
+  },
+  remark: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
 });
 
-const Sales = mongoose.model('Sales', salesSchema);
-module.exports = Sales;
+module.exports = mongoose.model('SalesRecord', SalesRecordSchema);

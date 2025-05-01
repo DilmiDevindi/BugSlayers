@@ -5,11 +5,23 @@ const router = express.Router();
 // Add a new sales record
 router.post('/add', async (req, res) => {
   try {
-    const newSale = new Sales(req.body);
+    const { customerName, productName, quantity, price, totalAmount, remark } = req.body;
+
+    const newSale = new Sales({
+      customerName,
+      productName,
+      quantity,
+      price,
+      totalAmount,
+      remark
+    });
+
     await newSale.save();
-    res.status(201).json(newSale);
+
+    res.status(201).json({ message: 'Sale record added successfully!' });
   } catch (error) {
-    res.status(500).json({ message: 'Error adding sale', error });
+    console.error('Error adding sale record:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
@@ -22,15 +34,7 @@ router.get('/', async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-// Get all sales records
-router.get('/', async (req, res) => {
-  try {
-    const sales = await Sales.find();
-    res.status(200).json(sales);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching sales', error });
-  }
-});
+
 
 // Update a sales record
 router.put('/:id', async (req, res) => {
