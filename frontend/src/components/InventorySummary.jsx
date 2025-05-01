@@ -101,7 +101,7 @@ const InventorySummary = () => {
           <div className="card shadow-sm">
             <div className="card-body">
               <h5 className="card-title text-success">Total Inventory</h5>
-              <h5 className="h4">{filteredItems.length}</h5>
+              <h6><b>{filteredItems.length}</b></h6>
             </div>
           </div>
         </div>
