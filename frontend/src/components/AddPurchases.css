@@ -1,0 +1,23 @@
+.add-purchase-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .add-purchase-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .add-purchase-form input {
+    margin-bottom: 10px;
+    padding: 8px;
+    font-size: 16px;
+  }
+  
+  .add-purchase-form button {
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
