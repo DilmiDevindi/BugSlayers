@@ -10,7 +10,6 @@ import './Customer.css';
 const ManageCustomer = () => {
   const [customers, setCustomers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchDate, setSearchDate] = useState('');
   const [editingCustomer, setEditingCustomer] = useState(null);
   const [formData, setFormData] = useState({ 
     _id: '',  
@@ -52,16 +51,9 @@ const ManageCustomer = () => {
                              customer.email.toLowerCase().includes(searchTerm.toLowerCase());
   
     // Date filtering (single date match or range)
-    let matchDate = true;
-    if (searchDate) {
-      const customerDate = new Date(customer.date);
-      const targetDate = new Date(searchDate);
-  
-      matchDate = customerDate.toDateString() === targetDate.toDateString();
-  
-    }
-  
-    return matchSearchTerm && matchDate;
+    
+
+    return matchSearchTerm ;
   });
   
 
@@ -135,7 +127,6 @@ const ManageCustomer = () => {
               filteredCustomers.map((customer, index) => (
                 <tr key={customer._id}>
                   <td>{index + 1}</td>
-                  <td>{new Date(customer.date).toLocaleDateString('en-CA')}</td> {/* Format date */}
                   <td>{customer.name}</td>
                   <td>{customer.address}</td>
                   <td>{customer.contact}</td>
