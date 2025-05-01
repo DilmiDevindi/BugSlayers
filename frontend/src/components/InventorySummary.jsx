@@ -28,3 +28,5 @@ const InventorySummary = () => {
     fetchInventoryItems();
     fetchCategories();
   }, []);
+
+  const fetchInventoryItems = async () => {};
