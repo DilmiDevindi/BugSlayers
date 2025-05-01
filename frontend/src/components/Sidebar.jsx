@@ -75,6 +75,37 @@ const Sidebar = () => {
           )}
         </li>
 
+        {/* Purchases Dropdown */}
+        <li className="nav-item mb-3">
+          <button 
+            className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
+            onClick={toggleSuppliersDropdown}
+            style={{ cursor: 'pointer' }}>
+            <i className="bi bi-truck me-2"></i>Purchases & Reports
+            <i className={`bi ${isSuppliersOpen ? 'bi-chevron-up' : 'bi-chevron-down'} ms-auto`}></i>
+          </button>
+
+          {isSuppliersOpen && (
+            <ul className="nav flex-column ms-3">
+              <li className="nav-item mb-2">
+                <Link to="/dashboard/purchases/add" className="nav-link text-white">
+                  Add Purchase Record
+                </Link>
+              </li>
+              <li className="nav-item mb-2">
+                <Link to="/dashboard/purchases/manage" className="nav-link text-white">
+                  Manage Purchase Record
+                </Link>
+              </li>
+              <li className="nav-item mb-2">
+                <Link to="/dashboard/purchases/report" className="nav-link text-white">
+                  Generate Purchase Report
+                </Link>
+              </li>
+            </ul>
+          )}
+        </li>
+
         {/* Inventory Dropdown */}
         <li className="nav-item mb-3">
           <button 
