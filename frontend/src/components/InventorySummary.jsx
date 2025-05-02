@@ -83,7 +83,14 @@ const InventorySummary = () => {
     items.forEach(item => {
       pieMap[item.category] = (pieMap[item.category] || 0) + item.quantity;
     });
-    setPieData(Object.entries(pieMap).map(([category, value]) => ({ category, value })));
+    
+    setPieData(
+      Object.entries(pieMap).map(([categoryId, value]) => ({
+        category: getCategoryName(categoryId), // Convert ID to name
+        value,
+      }))
+    );
+    
 
     // Bar chart data
     const bars = items.map(item => ({ itemName: item.name, quantity: item.quantity }));
