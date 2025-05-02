@@ -7,7 +7,7 @@ import { faEdit, faTrash, faPenToSquare, faClipboardList } from '@fortawesome/fr
 const ManageSales = () => {
   const [sales, setSales] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchTermDate, setSearchTermDate] = useState(''); // Added state for date search
+  const [searchTermDate, setSearchTermDate] = useState('');
   const [editingSale, setEditingSale] = useState(null);
 
   useEffect(() => {
@@ -54,7 +54,6 @@ const ManageSales = () => {
     }
   };
 
-  // Modified filteredSales to include date filtering
   const filteredSales = sales.filter(
     (sale) =>
       (sale.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -64,9 +63,15 @@ const ManageSales = () => {
         : true)
   );
 
+  const formatId = (index) => {
+    return `S${String(index + 1).padStart(3, '0')}`;
+  };
+
   return (
     <div className="container mt-4">
-      <h3><FontAwesomeIcon icon={faClipboardList} className="ms-icon" />Manage Sales Records</h3>
+      <h3>
+        <FontAwesomeIcon icon={faClipboardList} className="ms-icon" /> Manage Sales Records
+      </h3>
 
       {/* Search by customer or product name */}
       <div className="mb-3">
@@ -93,6 +98,7 @@ const ManageSales = () => {
       <table className="table table-striped">
         <thead>
           <tr>
+            <th>ID</th>
             <th>Customer Name</th>
             <th>Product Name</th>
             <th>Quantity</th>
@@ -102,8 +108,9 @@ const ManageSales = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredSales.map((sale) => (
+          {filteredSales.map((sale, index) => (
             <tr key={sale._id}>
+              <td>{formatId(index)}</td>
               <td>{sale.customerName}</td>
               <td>{sale.productName}</td>
               <td>{sale.quantity}</td>
@@ -130,10 +137,12 @@ const ManageSales = () => {
         </tbody>
       </table>
 
-      {/* Edit Sale Form - Placed after table */}
+      {/* Edit Sale Form */}
       {editingSale && (
         <form onSubmit={handleEditSubmit} className="mb-4 border p-3 rounded">
-          <h3><FontAwesomeIcon icon={faPenToSquare} className="ms-icon" />Edit Sale</h3>
+          <h3>
+            <FontAwesomeIcon icon={faPenToSquare} className="ms-icon" /> Edit Sale
+          </h3>
           <div className="mb-2">
             <input
               type="text"
@@ -188,8 +197,16 @@ const ManageSales = () => {
               required
             />
           </div>
-          <button type="submit" className="btn btn-primary me-2 submit-btn">Update</button>
-          <button type="button" className="btn btn-secondary cancel-btn" onClick={() => setEditingSale(null)}>Cancel</button>
+          <button type="submit" className="btn btn-primary me-2 submit-btn">
+            Update
+          </button>
+          <button
+            type="button"
+            className="btn btn-secondary cancel-btn"
+            onClick={() => setEditingSale(null)}
+          >
+            Cancel
+          </button>
         </form>
       )}
     </div>
