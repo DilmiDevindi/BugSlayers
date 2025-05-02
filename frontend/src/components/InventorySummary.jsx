@@ -216,7 +216,8 @@ const InventorySummary = () => {
                 <XAxis dataKey="itemName" />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="quantity" fill="#0d6efd" />
+                <Bar dataKey="quantity" fill="#0d6efd" label={{ position: 'top', fill: '#000', fontSize: 12 }} />
+
               </BarChart>
             </ResponsiveContainer>
           </div>
