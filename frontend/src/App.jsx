@@ -19,11 +19,17 @@ import AddSalesRecord from "./components/AddSalesRecord";
 import ManageSales from "./components/ManageSales";
 import Catalog from "./components/Catalog";
 
+
+
+import LowStockReport from './components/LowStockReport';
+import InventorySummary from './components/InventorySummary';
+
 import SalesReport from "./components/SalesReport";
 
 import AddPurchase from "./components/AddPurchase";
 import ManagePurchase from "./components/ManagePurchase"; 
 import PurchaseReport from "./components/PurchaseReports";
+
 
 function App() {
   return (
@@ -52,10 +58,16 @@ function App() {
           <Route path="sales/add" element={<AddSalesRecord />} />
           <Route path="sales/manage" element={<ManageSales />} />
           <Route path="catalog/view" element={<Catalog />} />
+
+          <Route path="inventory/reports/low-stock" element={<LowStockReport />} />
+          <Route path="inventory/reports/summary" element={<InventorySummary />} />
+       
+
           <Route path="sales/report" element={<SalesReport />} />
           <Route path="purchases/add" element={<AddPurchase />} />
           <Route path="purchases/manage" element={<ManagePurchase />} />
           <Route path="purchases/report" element={<PurchaseReport />} />
+
         </Route>
       </Routes>
     </Router>

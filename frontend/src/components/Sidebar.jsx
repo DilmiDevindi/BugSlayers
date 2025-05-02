@@ -10,6 +10,10 @@ const Sidebar = () => {
   const [isCustomersOpen, setIsCustomersOpen] = useState(false); 
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
+
+  const [isSalesOpen, setIsSalesOpen]  = useState(false); 
+  const [isInventoryReportOpen, setIsInventoryReportOpen] = useState(false);
+
   const [isSalesOpen, setIsSalesOpen] = useState(false); 
   const [isPurchasesOpen, setIsPurchasesOpen] = useState(false); // <-- Added separate state for purchases
 
@@ -37,9 +41,15 @@ const Sidebar = () => {
     setIsCatalogOpen(!isCatalogOpen);
   };
 
+
+  const toggleInventoryReportDropdown = () => {
+  setIsInventoryReportOpen(!isInventoryReportOpen);
+};
+
   const togglePurchasesDropdown = () => {
     setIsPurchasesOpen(!isPurchasesOpen);
   };
+
 
   return (
     <div className="bg-dark text-white vh-100 p-3">
@@ -245,6 +255,36 @@ const Sidebar = () => {
             <i className="bi bi-calculator me-2"></i> Bill
           </Link>
         </li>
+
+
+
+
+    {/* Inventory Reports Dropdown */}  
+    <li className="nav-item mb-3">
+      <button 
+        className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
+        onClick={toggleInventoryReportDropdown}
+        style={{ cursor: 'pointer' }}>
+      <i className="bi bi-bar-chart-line me-2"></i> Inventory Reports
+      <i className={`bi ${isInventoryReportOpen ? 'bi-chevron-up' : 'bi-chevron-down'} ms-auto`}></i>
+      </button>
+
+    {isInventoryReportOpen && (
+    <ul className="nav flex-column ms-3">
+      <li className="nav-item mb-2">
+        <Link to="/dashboard/inventory/reports/low-stock" className="nav-link text-white">
+          Low Stock Report
+        </Link>
+      </li>
+      <li className="nav-item mb-2">
+        <Link to="/dashboard/inventory/reports/summary" className="nav-link text-white">
+          Inventory Summary
+        </Link>
+      </li>
+    </ul>
+    )}
+    </li>
+ 
 
       </ul>
     </div>
