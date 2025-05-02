@@ -83,21 +83,23 @@ const InventorySummary = () => {
     items.forEach(item => {
       pieMap[item.category] = (pieMap[item.category] || 0) + item.quantity;
     });
-    
+
     setPieData(
       Object.entries(pieMap).map(([categoryId, value]) => ({
-        category: getCategoryName(categoryId), // Convert ID to name
+        category: getCategoryName(categoryId),
         value,
       }))
     );
-    
 
-    // Bar chart data
-    const bars = items.map(item => ({ itemName: item.name, quantity: item.quantity }));
+    // Bar chart: top 3 stocked items
+    const bars = items
+      .sort((a, b) => b.quantity - a.quantity)
+      .slice(0, 3)
+      .map(item => ({ itemName: item.name, quantity: item.quantity }));
+
     setBarData(bars);
   };
 
-  // Custom label for PieChart
   const renderCustomizedLabel = ({ cx, cy, midAngle, outerRadius, percent, index }) => {
     const RADIAN = Math.PI / 180;
     const radius = outerRadius * 1.2;
