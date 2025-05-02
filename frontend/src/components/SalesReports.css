@@ -64,21 +64,11 @@
     color: #6c757d; 
   }
   
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .most-popular-item {
-      max-width: 100%;
-      padding: 15px;
-    }
   
-    .item-name {
-      font-size: 1.2rem;
-    }
   
-    .item-sales,
-    .item-quantity {
-      font-size: 0.9rem;
-    }
-  }
+  
+    
+  
+   
   
 
