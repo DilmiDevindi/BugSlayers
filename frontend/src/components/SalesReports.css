@@ -32,13 +32,13 @@
   }
   
   .most-popular-item {
-    background-color: #f8f9fa; /* Light background for contrast */
+    background-color: #f8f9fa; 
     border-radius: 8px;
     padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for a floating effect */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
     text-align: center;
-    max-width: 300px; /* Keeps it narrow for a professional look */
-    margin: 0 auto; /* Centers the box horizontally */
+    max-width: 300px; 
+    margin: 0 auto; 
     
   }
   
