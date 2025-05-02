@@ -151,16 +151,6 @@ const ManageCustomer = () => {
           <form onSubmit={handleUpdate}>
             <h4 className='add-title'><FontAwesomeIcon icon={faEdit}/>Edit Customer</h4>
             <div className="mb-3">
-              <label htmlFor="date">Date</label>
-              <input
-                type="date"
-                name="date"
-                value={formData.date}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="mb-3">
               <label htmlFor="name">Name</label>
               <input
                 type="text"
