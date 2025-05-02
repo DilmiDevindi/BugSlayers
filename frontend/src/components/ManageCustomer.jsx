@@ -5,16 +5,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUsers } from "@fortawesome/free-solid-svg-icons";
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import './Customer.css';
- // Assuming you have a CSS file for styling
+
 
 const ManageCustomer = () => {
   const [customers, setCustomers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchDate, setSearchDate] = useState('');
   const [editingCustomer, setEditingCustomer] = useState(null);
   const [formData, setFormData] = useState({ 
-    _id: '', 
-    date: new Date().toISOString().split('T')[0], 
+    _id: '',  
     name: '', 
     address: '', 
     contact: '', 
@@ -42,9 +40,7 @@ const ManageCustomer = () => {
     setSearchTerm(e.target.value);
   };
 
-  const handleDateSearch = (e) => {
-    setSearchDate(e.target.value);
-  };
+ 
 
   const filteredCustomers = customers.filter(customer => {
     // Search term filtering
@@ -55,16 +51,9 @@ const ManageCustomer = () => {
                              customer.email.toLowerCase().includes(searchTerm.toLowerCase());
   
     // Date filtering (single date match or range)
-    let matchDate = true;
-    if (searchDate) {
-      const customerDate = new Date(customer.date);
-      const targetDate = new Date(searchDate);
-  
-      matchDate = customerDate.toDateString() === targetDate.toDateString();
-  
-    }
-  
-    return matchSearchTerm && matchDate;
+    
+
+    return matchSearchTerm ;
   });
   
 
@@ -119,19 +108,13 @@ const ManageCustomer = () => {
         onChange={handleSearch}
       />
 
-      <input
-        type="date"
-        className="form-control mb-3"
-        value={searchDate}
-        onChange={handleDateSearch}
-      />
+      
 
       {loading ? <p>Loading customers...</p> : (
         <table className="table table-striped">
           <thead>
             <tr>
               <th>ID</th>
-              <th>Date</th>
               <th>Name</th>
               <th>Address</th>
               <th>Contact</th>
@@ -144,7 +127,6 @@ const ManageCustomer = () => {
               filteredCustomers.map((customer, index) => (
                 <tr key={customer._id}>
                   <td>{index + 1}</td>
-                  <td>{new Date(customer.date).toLocaleDateString('en-CA')}</td> {/* Format date */}
                   <td>{customer.name}</td>
                   <td>{customer.address}</td>
                   <td>{customer.contact}</td>

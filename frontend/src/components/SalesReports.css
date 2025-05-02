@@ -5,9 +5,70 @@
     width: 200px;
     
 }
-
 .report:hover {
     background-color: #58a9f5;
     color: white;
     width: 200px;
 }
+
+.custom-btn{
+  color: white;
+  background-color: #033073;
+  height: 50px;
+  width: 200px;
+}
+
+.custom-btn:hover{
+    color:black;
+    background-color: aqua;
+}
+
+.most-popular-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  
+  .most-popular-item {
+    background-color: #f8f9fa; 
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    text-align: center;
+    max-width: 300px; 
+    margin: 0 auto; 
+    
+  }
+  
+  .item-name {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #4e73df; /* Highlight color for the item name */
+    margin-bottom: 1rem;
+  }
+  
+  .item-sales,
+  .item-quantity {
+    font-size: 1rem;
+    color: #555; 
+    margin-bottom: 0.5rem;
+  }
+  
+  .item-sales {
+    font-weight: bold;
+  }
+  
+  .item-quantity {
+    color: #6c757d; 
+  }
+  
+  
+  
+  
+    
+  
+   
+  
+

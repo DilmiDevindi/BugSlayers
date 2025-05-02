@@ -1,0 +1,51 @@
+.purchase-report-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .report-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .report-form input {
+    padding: 8px;
+    font-size: 16px;
+    flex: 1 1 150px;
+  }
+  
+  .report-form button {
+    padding: 8px 16px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .report-results {
+    margin-top: 20px;
+  }
+  
+  .report-table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .report-table th,
+  .report-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .report-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+  }
+  
+  .report-table tr:nth-child(even) {
+    background-color: #fafafa;
+  }
+  

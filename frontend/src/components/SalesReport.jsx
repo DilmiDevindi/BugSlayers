@@ -45,6 +45,10 @@ const SalesReport = () => {
   const totalQuantity = report.reduce((sum, item) => sum + item.totalQuantity, 0);
   const totalSales = report.reduce((sum, item) => sum + item.totalSales, 0);
 
+  // Find the most popular item (with the highest total sales)
+  const mostPopularItem = report.reduce((maxItem, item) => 
+    item.totalSales > maxItem.totalSales ? item : maxItem, report[0]);
+
   const generatePDF = (isDownload) => {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
@@ -255,15 +259,40 @@ const SalesReport = () => {
             <strong>Total Sales:</strong> Rs. {totalSales.toFixed(2)}
           </div>
 
-          <div className="text-center mt-4">
-            <Pie data={pieData} options={pieOptions} height={250} />
+          <div className="d-flex justify-content-between mt-4">
+          <div className="text-center" style={{ width: '350px', height: '350px', margin: '20px 0 0 100px' }}>
+              <Pie data={pieData} options={pieOptions} />
+            </div>
+
+            {/* Most Popular Item Box */}
+            <div
+              className="card shadow-sm"
+              style={{
+                width: '300px',
+                height: '200px',
+                padding: '20px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                marginRight: '100px',
+                marginTop: '60px',
+              }}
+            >
+            
+             <h6 className="most-popular-title">Most Popular Item</h6>
+             <div className="most-popular-item">
+             <h5 className="item-name">{mostPopularItem._id}</h5>
+             <p className="item-sales">Total Sales: Rs. {mostPopularItem.totalSales.toFixed(2)}</p>
+             <p className="item-quantity">Total Quantity: {mostPopularItem.totalQuantity}</p>
+             </div>
+            </div>
           </div>
 
           <div className="d-flex justify-content-between mt-4">
-            <button className="btn btn-danger" onClick={() => generatePDF(false)}>
+            <button className="btn btn-danger custom-btn" style={{ marginLeft: '530px' }} onClick={() => generatePDF(false)}>
               <FontAwesomeIcon icon={faFilePdf} className="me-2" /> View PDF
             </button>
-            <button className="btn btn-success" onClick={() => generatePDF(true)}>
+            <button className="btn btn-success custom-btn" onClick={() => generatePDF(true)}>
               <FontAwesomeIcon icon={faDownload} className="me-2" /> Download PDF
             </button>
           </div>
