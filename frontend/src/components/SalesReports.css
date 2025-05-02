@@ -52,7 +52,7 @@
   .item-sales,
   .item-quantity {
     font-size: 1rem;
-    color: #555; /* Slightly darker text for better readability */
+    color: #555; 
     margin-bottom: 0.5rem;
   }
   
@@ -61,7 +61,7 @@
   }
   
   .item-quantity {
-    color: #6c757d; /* A more neutral color for quantity */
+    color: #6c757d; 
   }
   
   /* Responsive Design */
