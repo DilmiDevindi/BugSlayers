@@ -31,6 +31,7 @@ const generateItemCode = async () => {
   // Get the highest numeric code among existing items
   let maxCode = 0;
   existingItems.forEach(item => {
+  if (item.code) { // Check if item.code is defined
     const match = item.code.match(/^\d+$/); // Match only numeric codes
     if (match) {
       const number = parseInt(item.code);
@@ -38,7 +39,9 @@ const generateItemCode = async () => {
         maxCode = number;
       }
     }
+  }
   });
+
 
   // Generate the next sequential code
   const nextCode = maxCode + 1;
@@ -61,7 +64,7 @@ const getInventoryItems = async (req, res) => {
 const addInventoryItem = async (req, res) => {
   try {
     const { productName, category, quantity, buyingPrice, sellingPrice, dateAdded } = req.body;
-    const image = req.file ? req.file.filename : null;
+    const image = req.file ? req.file.filename : null;  // Check if the image is correctly attached
 
     // Validate inputs
     if (!productName || !category || !quantity || !buyingPrice || !sellingPrice || !dateAdded) {
@@ -79,7 +82,6 @@ const addInventoryItem = async (req, res) => {
 
     // Check if the product already exists
     const existingItem = await InventoryItem.findOne({ productName, category });
-
     if (existingItem) {
       return res.status(409).json({
         error: 'Product already exists!',
@@ -87,34 +89,35 @@ const addInventoryItem = async (req, res) => {
         code: existingItem.code,
         item: existingItem,
       });
-    } else {
-      // Generate a new numeric code for the product
-      const code = await generateItemCode();
-
-      // Create a new item
-      const newItem = new InventoryItem({
-        code,
-        productName,
-        category,
-        quantity: parseInt(quantity),
-        buyingPrice: parseFloat(buyingPrice).toFixed(2),
-        sellingPrice: parseFloat(sellingPrice).toFixed(2),
-        dateAdded,
-        image,
-      });
-
-      const savedItem = await newItem.save();
-      return res.status(201).json({
-        message: 'New item added successfully!',
-        code: savedItem.code,
-        item: savedItem,
-      });
     }
+
+    // Generate a new numeric code for the product
+    const code = await generateItemCode();
+
+    // Create a new item
+    const newItem = new InventoryItem({
+      code,
+      productName,
+      category,
+      quantity: parseInt(quantity),
+      buyingPrice: parseFloat(buyingPrice).toFixed(2),
+      sellingPrice: parseFloat(sellingPrice).toFixed(2),
+      dateAdded,
+      image,
+    });
+
+    const savedItem = await newItem.save();
+    return res.status(201).json({
+      message: 'New item added successfully!',
+      code: savedItem.code,
+      item: savedItem,
+    });
   } catch (err) {
-    console.error(`Error adding item: ${err.message}`);
+    console.error('Error adding item: ' + err.message);
     res.status(500).json({ error: `Failed to add item: ${err.message}` });
   }
 };
+
 
 // Get inventory count
 const getInventoryCount = async (req, res) => {

@@ -36,7 +36,7 @@ const AddInventoryItem = () => {
     setLoading(true);
     setError('');
     setGeneratedCode('');
-
+  
     const formData = new FormData();
     formData.append('productName', productName);
     formData.append('category', category);
@@ -45,15 +45,20 @@ const AddInventoryItem = () => {
     formData.append('sellingPrice', parseFloat(sellingPrice).toFixed(2));
     formData.append('dateAdded', dateAdded);
     if (image) formData.append('image', image);
-
+  
     try {
       const response = await axios.post('/api/inventory/add', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       const addedItem = response.data;
       setGeneratedCode(addedItem.code || 'Code not returned');
-      setProductName(''); setCategory(''); setQuantity(''); setBuyingPrice('');
-      setSellingPrice(''); setDateAdded(''); setImage(null);
+      setProductName('');
+      setCategory('');
+      setQuantity('');
+      setBuyingPrice('');
+      setSellingPrice('');
+      setDateAdded('');
+      setImage(null);
       alert('Item added successfully!');
     } catch (error) {
       console.error('Error adding item:', error);
