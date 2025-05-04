@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./AddPurchases.css";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFilePdf, faCalendarDays, faChartBar, faDownload } from '@fortawesome/free-solid-svg-icons';
+
 
 const AddPurchase = () => {
   const [purchase, setPurchase] = useState({
@@ -77,9 +76,7 @@ const AddPurchase = () => {
           onChange={handleChange}
           required
         />
-        <button type="submit" className="btn btn-primary w-100">
-                  <FontAwesomeIcon icon={faChartBar} className="me-2" />Add New Record
-                </button>
+        <button type="submit">Add New Record</button>
       </form>
     </div>
   );
