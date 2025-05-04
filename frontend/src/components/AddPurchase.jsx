@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./AddPurchases.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
 const AddPurchase = () => {
@@ -76,7 +77,9 @@ const AddPurchase = () => {
           onChange={handleChange}
           required
         />
-        <button type="submit">Add New Record</button>
+        <button type="submit" className="btn btn-primary w-100">
+                  <FontAwesomeIcon className="me-2" />Add New Record
+                </button>
       </form>
     </div>
   );
