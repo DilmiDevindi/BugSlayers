@@ -106,12 +106,14 @@ const ManagePurchases = () => {
               <td>{purchase.price}</td>
               <td>{new Date(purchase.date).toLocaleDateString()}</td>
               <td>
-                <button className="btn btn-sm btn-primary me-2" onClick={() => handleEditClick(purchase)}>
-                  <FontAwesomeIcon icon={faEdit} /> Edit
-                </button>
-                <button className="btn btn-sm btn-danger" onClick={() => handleDelete(purchase._id)}>
-                  <FontAwesomeIcon icon={faTrash} /> Delete
-                </button>
+                <div className="d-flex gap-2">
+                  <button className="btn btn-sm btn-outline-primary w-100" onClick={() => handleEditClick(purchase)}>
+                    <FontAwesomeIcon icon={faEdit} /> Edit
+                  </button>
+                  <button className="btn btn-sm btn-outline-danger w-100" onClick={() => handleDelete(purchase._id)}>
+                    <FontAwesomeIcon icon={faTrash} /> Delete
+                  </button>
+                </div>
               </td>
             </tr>
           ))}
