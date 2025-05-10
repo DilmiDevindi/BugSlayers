@@ -3,43 +3,21 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const bodyParser = require('body-parser');
-const User = require('./models/User'); // Ensure this path is correct
-const supplierRoutes = require('./routes/supplierRoutes'); // Ensure this path is correct
-const inventoryRoutes = require('./routes/inventoryRoutes');
-const employeeRoutes = require('./routes/employeeRoutes');
+const User = require('./models/User'); 
+require('dotenv').config();
+
+const customerRoutes = require('./routes/customerRoutes');
 
 const app = express();
-const PORT = 5000;
+
 const JWT_SECRET = 'your_jwt_secret_key';
 
 // Middleware
-app.use(express.json());
 app.use(cors());
-app.use(bodyParser.json());
-
-// Connect to MongoDB
-mongoose.connect('mongodb://127.0.0.1:27017/mern-vite-app', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-  .then(() => {
-    console.log('MongoDB connected');
-  })
-  .catch((err) => {
-    console.log('MongoDB connection error:', err);
-  });
-
+app.use(express.json());
 
 // Routes
-app.use('/api/suppliers', supplierRoutes);
-
-app.use('/api/inventory', inventoryRoutes);
-
-
-// Routes
-app.use('/api/employees', employeeRoutes);
-
+app.use('/api', customerRoutes);
 
 // Login route
 app.post('/api/login', async (req, res) => {
@@ -52,8 +30,9 @@ app.post('/api/login', async (req, res) => {
     if (!isMatch) return res.status(400).json({ success: false, message: 'Invalid password' });
 
     const token = jwt.sign({ id: user._id }, JWT_SECRET);
+
     return res.json({ success: true, token });
-  } catch (err) {
+  } catch (error) {
     res.status(500).json({ success: false, message: 'Server error' });
   }
 });
@@ -61,6 +40,7 @@ app.post('/api/login', async (req, res) => {
 // Signup route
 app.post('/api/signup', async (req, res) => {
   const { email, password } = req.body;
+
   try {
     const userExists = await User.findOne({ email });
     if (userExists) return res.status(400).json({ success: false, message: 'User already exists' });
@@ -80,7 +60,15 @@ app.post('/api/logout', (req, res) => {
   return res.status(200).json({ message: 'Logged out successfully' });
 });
 
+// Database Connection
+mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => console.log('MongoDB Connected'))
+  .catch(err => console.log(err));
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+  
+
+// Start Server
+const PORT = process.env.PORT || 5002;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

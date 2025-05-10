@@ -1,5 +1,5 @@
 // components/EditSupplier.js
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -20,7 +20,7 @@ const EditSupplier = () => {
     if (id) {
       const fetchSupplier = async () => {
         try {
-          const response = await axios.get(`http://localhost:5000/api/suppliers/${id}`);
+          const response = await axios.get(`http://localhost:5001/api/suppliers/${id}`);
           setSupplier(response.data);
         } catch (error) {
           console.error('Error fetching supplier:', error);
@@ -39,9 +39,9 @@ const EditSupplier = () => {
     e.preventDefault();
     try {
       if (id) {
-        await axios.put(`http://localhost:5000/api/suppliers/${id}`, supplier);
+        await axios.put(`http://localhost:5001/api/suppliers/${id}`, supplier);
       } else {
-        await axios.post('http://localhost:5000/api/suppliers', supplier);
+        await axios.post('http://localhost:5001/api/suppliers', supplier);
       }
       navigate('/dashboard/suppliers/manage'); // Redirect to ManageSuppliers after successful update
     } catch (error) {

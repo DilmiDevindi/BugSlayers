@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Login from './components/Login'; // Ensure the path is correct
@@ -11,9 +10,8 @@ import ManageSuppliers from './components/ManageSuppliers'; // Ensure the path i
 import EditSupplier from './components/EditSupplier'; // Ensure the path is correct
 import AddInventoryItem from './components/AddInventoryItem'; // Ensure the path is correct
 import ManageInventories from './components/ManageInventories'; // Ensure the path is correct
-import AddEmployee from './components/AddEmployee';
-import ManageEmployee from './components/ManageEmployee';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import AddCustomer from './components/AddCustomer';
+import ManageCustomer from './components/ManageCustomer';
 
 
 function App() {
@@ -32,9 +30,12 @@ function App() {
           <Route path="suppliers/manage" element={<ManageSuppliers />} />
           <Route path="suppliers/edit/:id" element={<EditSupplier />} />
           <Route path="inventory/add" element={<AddInventoryItem />} />
-          <Route path="inventory/add1" element={<ManageInventories />} />
-          <Route path="Employeess/add" element={<AddEmployee/>}/>
-          <Route path="Employees/manage" element={<ManageEmployee/>}/>
+          <Route path="inventory/manage" element={<ManageInventories />} />
+          <Route path="customers/add" element={<AddCustomer />} />
+          <Route path="customers/manage" element={<ManageCustomer />} />
+          <Route path="sales/add" element={<AddCustomer />} /> {/* Assuming AddCustomer is for sales as well */}
+          
+          
         </Route>
       </Routes>
     </Router>

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart, faSquarePlus, faDollarSign } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
@@ -20,7 +21,7 @@ const AddInventoryItem = () => {
 
     try {
       const newItem = { productName, category, quantity: Number(quantity), buyingPrice: parseFloat(buyingPrice).toFixed(2), sellingPrice: parseFloat(sellingPrice).toFixed(2) };
-      await axios.post('http://localhost:5000/api/inventory/add', newItem);
+      await axios.post('http://localhost:5001/api/inventory/add', newItem);
       setProductName('');
       setCategory('');
       setQuantity('');
