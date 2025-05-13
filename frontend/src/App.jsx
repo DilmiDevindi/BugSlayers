@@ -26,6 +26,7 @@ import LowStockReport from './components/LowStockReport';
 import InventorySummary from './components/InventorySummary';
 
 import SalesReport from "./components/SalesReport";
+import DailySalesReport from "./components/DailySalesReport";
 
 
 import AddPurchase from "./components/AddPurchase";
@@ -66,6 +67,7 @@ function App() {
        
 
           <Route path="sales/report" element={<SalesReport />} />
+          <Route path="sales/dreport" element={<DailySalesReport />} />
           <Route path="purchases/add" element={<AddPurchase />} />
           <Route path="purchases/manage" element={<ManagePurchase />} />
           <Route path="purchases/report" element={<PurchaseReport />} />
