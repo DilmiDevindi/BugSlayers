@@ -302,4 +302,35 @@ const SalesReport = () => {
   );
 };
 
+
+<div className="card p-4 shadow-sm rounded">
+  <h5 className="text-primary mb-3">
+    <FontAwesomeIcon icon={faCalendarDay} className="me-2" />
+    Generate Daily Report
+  </h5>
+
+  <div className="mb-3">
+    <label className="form-label fw-bold">
+      <FontAwesomeIcon icon={faCalendarAlt} className="me-2" />
+      Select Date
+    </label>
+    <input
+      type="date"
+      className="form-control"
+      value={selectedDate}
+      onChange={(e) => setSelectedDate(e.target.value)}
+    />
+  </div>
+
+  <button
+    className="btn btn-primary w-100"
+    onClick={handleGenerateDailyReport}
+    disabled={!selectedDate}
+  >
+    <FontAwesomeIcon icon={faChartLine} className="me-2" />
+    Generate Report
+  </button>
+</div>
+
+
 export default SalesReport;
