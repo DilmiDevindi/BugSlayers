@@ -21,10 +21,12 @@ import Catalog from "./components/Catalog";
 
 
 
+
 import LowStockReport from './components/LowStockReport';
 import InventorySummary from './components/InventorySummary';
 
 import SalesReport from "./components/SalesReport";
+
 
 import AddPurchase from "./components/AddPurchase";
 import ManagePurchase from "./components/ManagePurchase"; 
