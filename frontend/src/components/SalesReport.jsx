@@ -3,7 +3,7 @@ import axios from 'axios';
 import jsPDF from 'jspdf';
 import myImage from '../assets/furniture-log.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFilePdf, faCalendarDays, faChartBar, faDownload } from '@fortawesome/free-solid-svg-icons';
+import { faCalendarAlt, faChartLine,faFilePdf, faCalendarDays, faChartBar, faDownload } from '@fortawesome/free-solid-svg-icons';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
