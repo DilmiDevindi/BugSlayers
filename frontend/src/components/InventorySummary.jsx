@@ -104,6 +104,8 @@ const InventorySummary = () => {
       date: item.dateAdded,  // assuming `dateAdded` is a field in your inventory items
       value: item.quantity * item.price || 0,
     }));
+
+    setStockTrends(trends);
   };
 
   const renderCustomizedLabel = ({ cx, cy, midAngle, outerRadius, percent, index }) => {
