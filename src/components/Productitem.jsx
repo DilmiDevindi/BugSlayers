@@ -18,6 +18,6 @@ const Productitem = ({id, image, name, price}) => {
       
     </div>
   )
-}
+} //this is product item component
 
 export default Productitem
