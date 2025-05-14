@@ -26,7 +26,7 @@ const SalesReport = () => {
     setLoading(true);
     setSubmitted(true);
     try {
-      const response = await axios.get('http://localhost:5000/api/reports/daily-sales-report', {
+      const response = await axios.get('http://localhost:5000/api/daily-reports/daily-sales-report', {
         params: { date: selectedDate },
       });
       setReport(response.data.length > 0 ? response.data : []);
