@@ -1,3 +1,5 @@
+
+//banner
 import React from 'react'
 
 const Banners = ({text1, text2, text3, src, alt}) => {

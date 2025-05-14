@@ -1,3 +1,5 @@
+//NewsLetter component
+// This component is a newsletter subscription form. It includes an input field for the email address and a submit button. When the form is submitted, it prevents the default action and logs 'subscribed' to the console. It also includes a message about agreeing to receive promotional emails.
 import React from 'react'
 
 const NewsLetter = () => {
