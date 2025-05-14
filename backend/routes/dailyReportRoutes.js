@@ -2,7 +2,7 @@ const express = require('express');
 const Sales = require('../models/sales');
 const router = express.Router();
 
-router.get('/daily-sales-report', async (req, res) => {
+router.get('/api/daily-reports/daily-sales-report', async (req, res) => {
   const { date } = req.query;
 
   if (!date) {
