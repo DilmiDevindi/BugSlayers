@@ -98,6 +98,12 @@ const InventorySummary = () => {
       .map(item => ({ itemName: item.name, quantity: item.quantity }));
 
     setBarData(bars);
+
+    // Calculate Stock Value Trends
+    const trends = items.map(item => ({
+      date: item.dateAdded,  // assuming `dateAdded` is a field in your inventory items
+      value: item.quantity * item.price || 0,
+    }));
   };
 
   const renderCustomizedLabel = ({ cx, cy, midAngle, outerRadius, percent, index }) => {
