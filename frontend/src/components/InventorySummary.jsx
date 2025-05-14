@@ -25,7 +25,7 @@ const InventorySummary = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [pieData, setPieData] = useState([]);
   const [barData, setBarData] = useState([]);
-  const [stockTrends] = useState([]); // Placeholder
+  const [stockTrends, setStockTrends] = useState([]);
 
   useEffect(() => {
     fetchInventoryItems();
@@ -127,9 +127,9 @@ const InventorySummary = () => {
       </text>
     );
   };
+
   // Total Inventory Value Calculation
   const totalInventoryValue = filteredItems.reduce((acc, item) => acc + (item.quantity * item.price || 0), 0);
-
 
   return (
     <div className="container py-5">
@@ -140,6 +140,7 @@ const InventorySummary = () => {
 
       {/* Summary Cards */}
       <div className="row g-4 mb-4">
+        {/* Total Inventory */}
         <div className="col-lg-3 col-md-6">
           <div className="card shadow-sm">
             <div className="card-body">
@@ -149,6 +150,17 @@ const InventorySummary = () => {
           </div>
         </div>
 
+        {/* Total Inventory Value */}
+        <div className="col-lg-3 col-md-6">
+          <div className="card shadow-sm">
+            <div className="card-body">
+              <h5 className="card-title text-primary">Total Inventory Value</h5>
+              <h6><b>${totalInventoryValue.toFixed(2)}</b></h6>
+            </div>
+          </div>
+        </div>
+
+        {/* Out of Stock */}
         <div className="col-lg-3 col-md-6">
           <div className="card shadow-sm">
             <div className="card-body">
@@ -158,6 +170,7 @@ const InventorySummary = () => {
           </div>
         </div>
 
+        {/* Low Stock */}
         <div className="col-lg-3 col-md-6">
           <div className="card shadow-sm">
             <div className="card-body">
@@ -191,7 +204,6 @@ const InventorySummary = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
-      <br />
 
       {/* Charts */}
       <div className="row g-4 mb-4">
