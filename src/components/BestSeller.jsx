@@ -1,3 +1,4 @@
+//Best Seller component
 import React, { useContext, useEffect, useState } from 'react'
 import { ShopContext } from '../context/ShopContext'
 import Title from './Title'

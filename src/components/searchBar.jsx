@@ -1,4 +1,5 @@
-
+//SearchBar component
+// Description: This component is a search bar that allows users to search for products. It is conditionally rendered based on the current route and the visibility state. The search input is controlled by the ShopContext, and the component uses the useLocation hook to determine if it should be displayed.
 import {ShopContext} from '../context/ShopContext'
 import { assets } from '../assets/assets';
 import React, { useContext,useEffect, useState } from 'react';

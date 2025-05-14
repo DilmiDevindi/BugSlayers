@@ -1,3 +1,5 @@
+//Latest Collection
+// Description: This component displays the latest collection of products. It uses the ShopContext to get the products and displays the first 10 products in a grid layout. Each product is displayed using the Productitem component. The component also includes a title and a description.
 import React, { useContext, useEffect, useState } from 'react'
 import { ShopContext } from '../context/ShopContext'
 import Title from './Title';

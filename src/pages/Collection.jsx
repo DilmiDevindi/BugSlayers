@@ -1,3 +1,5 @@
+//Collection Page
+// Description: This page displays all the products in the collection. It includes a filter section to filter products by category and subcategory. It also includes a sort option to sort products by price. The products are displayed in a grid layout using the Productitem component.
 import React, { useContext, useEffect, useState } from 'react'
 import { ShopContext } from '../context/ShopContext'
 import { assets } from '../assets/assets'

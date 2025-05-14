@@ -1,3 +1,5 @@
+//Home page component
+// This component is the Home page of the website. It contains a hero section, a policy section, and a latest collection section. The layout is responsive, adjusting for smaller screens.
 import React from 'react'
 import Hero from '../components/Hero'
 import Policy from '../components/Policy'

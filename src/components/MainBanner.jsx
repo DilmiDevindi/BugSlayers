@@ -1,3 +1,5 @@
+//Main Banner component
+// Description: This component displays a main banner with a carousel of images and text. It uses the Swiper library for the carousel functionality. The banners are imported from an assets file.
 import React from 'react'
 import Banners from './Banners'
 import { assets } from '../assets/assets'

@@ -1,3 +1,5 @@
+//Fron Picture
+// Description: This component is a hero section that displays a title, subtitle, and an image. The left side contains text and the right side contains an image. The layout is responsive, adjusting for smaller screens.
 import React from 'react'
 import { assets } from '../assets/assets'
 

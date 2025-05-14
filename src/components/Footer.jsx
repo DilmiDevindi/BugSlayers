@@ -1,3 +1,5 @@
+//Footer component
+// This component is the footer of the website. It contains the company logo, description, company links, newsletter subscription, and contact information.
 import React from 'react'
 import { assets } from '../assets/assets'
 import NewsLetter from './NewsLetter'

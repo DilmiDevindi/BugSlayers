@@ -1,3 +1,5 @@
+//Product page component
+// This component is the Product page of the website. It displays product details, images, and allows users to select a size and add the product to their cart. The layout is responsive, adjusting for smaller screens.
 import React from 'react'
 import { useContext, useState, useEffect } from 'react'
 import { ShopContext } from '../context/ShopContext'

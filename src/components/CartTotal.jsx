@@ -1,3 +1,5 @@
+//Cart Total Component
+// This component displays the total amount of the cart including shipping charges.
 import React, { useContext } from 'react'
 import { ShopContext } from '../context/ShopContext'
 import Title from './Title';
