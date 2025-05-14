@@ -14,7 +14,7 @@ const Sidebar = () => {
   const [isSalesOpen, setIsSalesOpen]  = useState(false); 
   const [isInventoryReportOpen, setIsInventoryReportOpen] = useState(false);
 
-  const [isSalesOpen, setIsSalesOpen] = useState(false); 
+   
   const [isPurchasesOpen, setIsPurchasesOpen] = useState(false); // <-- Added separate state for purchases
 
   const toggleSuppliersDropdown = () => {
