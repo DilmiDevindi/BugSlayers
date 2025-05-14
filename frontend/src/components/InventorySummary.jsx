@@ -127,6 +127,9 @@ const InventorySummary = () => {
       </text>
     );
   };
+  // Total Inventory Value Calculation
+  const totalInventoryValue = filteredItems.reduce((acc, item) => acc + (item.quantity * item.price || 0), 0);
+
 
   return (
     <div className="container py-5">
