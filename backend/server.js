@@ -13,6 +13,7 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const salesRoutes = require('./routes/salesRoutes');
 const catalogRoutes = require('./routes/catalogRoutes');
 const reportRoutes = require('./routes/reportRoutes');
+const dailyReportRoutes = require('./routes/dailyReportRoutes');
 const purchaseRoutes = require("./routes/purchasesRoutes");
 const purchasereportRoutes = require("./routes/purchasereportRoutes");
 
@@ -45,6 +46,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/category', categoryRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/sales', salesRoutes);
+app.use('/api/daily-reports', dailyReportRoutes);
 app.use('/api/catalog', catalogRoutes); // Use the catalog routes
 app.use('/api/reports', reportRoutes);
 app.use('/api/purchase', purchaseRoutes); // Use the purchase routes
