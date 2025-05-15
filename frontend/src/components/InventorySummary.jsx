@@ -15,8 +15,7 @@ import {
   Line,
   ResponsiveContainer
 } from 'recharts';
-import 'bootstrap-icons/font/bootstrap-icons.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import './InventorySummary.css';
 
 const COLORS = ['#0d6efd', '#198754', '#dc3545', '#ffc107', '#6f42c1', '#fd7e14'];
 
@@ -211,34 +210,30 @@ const InventorySummary = () => {
   );
 
   return (
-    <div className="container py-5">
-      <div className="text-center mb-4">
-        <h4 className="fw-bold text-primary">Inventory Summary Report</h4>
-        <h6>inventory levels, sales patterns, and stock performance</h6>
+    <div className="inventory-summary-container">
+      <div className="header">
+        <h4 className="title">Inventory Summary Report</h4>
+        <h6 className="subtitle">Inventory levels, sales patterns, and stock performance</h6>
       </div>
 
-      <div className="row g-4 mb-4">
+      <div className="summary-cards">
         {[
-          { title: 'Total Items', value: filteredItems.length, color: 'success' },
-          { title: 'Inventory Value', value: `Rs ${totalValue.toFixed(2)}`, color: 'primary' },
-          { title: 'Out of Stock', value: filteredItems.filter((it) => !it.quantity).length, color: 'danger' },
-          { title: 'Low (<5) Stock', value: filteredItems.filter((it) => it.quantity < 5 && it.quantity > 0).length, color: 'warning' }
+          { title: 'Total Items', value: filteredItems.length, color: 'green' },
+          { title: 'Inventory Value', value: `Rs ${totalValue.toFixed(2)}`, color: 'blue' },
+          { title: 'Out of Stock', value: filteredItems.filter((it) => !it.quantity).length, color: 'red' },
+          { title: 'Low (<5) Stock', value: filteredItems.filter((it) => it.quantity < 5 && it.quantity > 0).length, color: 'orange' }
         ].map((c) => (
-          <div key={c.title} className="col-lg-3 col-md-6">
-            <div className="card shadow-sm">
-              <div className="card-body text-center">
-                <h6 className={`text-${c.color}`}>{c.title}</h6>
-                <h5 className="fw-bold">{c.value}</h5>
-              </div>
-            </div>
+          <div key={c.title} className="summary-card">
+            <h6 className={`text-${c.color}`}>{c.title}</h6>
+            <h5 className="value">{c.value}</h5>
           </div>
         ))}
       </div>
 
-      <div className="row g-4">
-        <div className="col-md-6">
+      <div className="charts-row">
+        <div className="chart-container">
           <h6>Stock Distribution by Category</h6>
-          <div className="card shadow-sm p-3">
+          <div className="chart-card">
             <ResponsiveContainer width="100%" height={320}>
               <PieChart>
                 <Pie
@@ -261,9 +256,9 @@ const InventorySummary = () => {
           </div>
         </div>
 
-        <div className="col-md-6">
+        <div className="chart-container">
           <h6>Top Stocked Items</h6>
-          <div className="card shadow-sm p-3">
+          <div className="chart-card">
             <ResponsiveContainer width="100%" height={320}>
               <BarChart data={barData} margin={{ top: 20, right: 30, bottom: 40, left: 0 }}>
                 <XAxis
@@ -282,9 +277,9 @@ const InventorySummary = () => {
         </div>
       </div>
 
-      <div className="my-5">
+      <div className="trend-section">
         <h6>Inventory Value Trend</h6>
-        <div className="card shadow-sm p-3">
+        <div className="chart-card">
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={stockTrends}>
               <XAxis dataKey="date" />
@@ -296,16 +291,16 @@ const InventorySummary = () => {
         </div>
       </div>
 
-      <div className="d-flex gap-3 flex-wrap">
-        <button className="btn btn-success" onClick={exportPDF}>
-          <i className="bi bi-file-pdf" /> Export PDF
+      <div className="export-buttons">
+        <button className="btn btn-pdf" onClick={exportPDF}>
+          <span className="icon-pdf" /> Export PDF
         </button>
         <CSVLink
           data={generateCSVData()}
           filename="inventory-summary.csv"
-          className="btn btn-success"
+          className="btn btn-csv"
         >
-          <i className="bi bi-file-earmark-spreadsheet" /> Export CSV
+          <span className="icon-csv" /> Export CSV
         </CSVLink>
       </div>
     </div>
