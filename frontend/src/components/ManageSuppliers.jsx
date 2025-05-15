@@ -1,5 +1,3 @@
-// ManageSuppliers.jsx
-
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaEdit, FaTrash } from "react-icons/fa";
@@ -12,6 +10,7 @@ const ManageSuppliers = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [editingSupplier, setEditingSupplier] = useState(null);
   const [formData, setFormData] = useState({
+    createdAt: new Date().toISOString(),
     supplierName: '',
     phone1: '',
     phone2: '',
@@ -45,7 +44,7 @@ const ManageSuppliers = () => {
 
   const filteredSuppliers = suppliers.filter(supplier => {
     const createdAt = supplier.createdAt
-      ? new Date(supplier.createdAt).toLocaleDateString('en-CA') // YYYY-MM-DD
+      ? new Date(supplier.createdAt).toLocaleDateString('en-CA')
       : '';
 
     return (
@@ -68,6 +67,7 @@ const ManageSuppliers = () => {
   const handleEdit = (supplier) => {
     setEditingSupplier(supplier._id);
     setFormData({
+      createdAt: supplier.createdAt || new Date().toISOString(),
       supplierName: supplier.supplierName || '',
       phone1: supplier.phone1 || '',
       phone2: supplier.phone2 || '',
@@ -85,6 +85,7 @@ const ManageSuppliers = () => {
       await axios.put(`/api/suppliers/${editingSupplier}`, formData);
       setEditingSupplier(null);
       setFormData({
+        createdAt: new Date().toISOString(),
         supplierName: '',
         phone1: '',
         phone2: '',
@@ -125,6 +126,7 @@ const ManageSuppliers = () => {
         <table className="table table-striped">
           <thead>
             <tr>
+              <th>Date</th>
               <th>Name</th>
               <th>Phone 1</th>
               <th>Phone 2</th>
@@ -133,7 +135,6 @@ const ManageSuppliers = () => {
               <th>Address</th>
               <th>Products</th>
               <th>Payment Terms</th>
-              <th>Date</th> {/* ✅ New column */}
               <th>Actions</th>
             </tr>
           </thead>
@@ -141,6 +142,7 @@ const ManageSuppliers = () => {
             {filteredSuppliers.length > 0 ? (
               filteredSuppliers.map((supplier) => (
                 <tr key={supplier._id}>
+                  <td>{supplier.createdAt ? new Date(supplier.createdAt).toLocaleDateString('en-CA') : '-'}</td>
                   <td>{supplier.supplierName || '-'}</td>
                   <td>{supplier.phone1 || '-'}</td>
                   <td>{supplier.phone2 || '-'}</td>
@@ -149,7 +151,6 @@ const ManageSuppliers = () => {
                   <td>{supplier.address || '-'}</td>
                   <td>{supplier.supplyProducts || '-'}</td>
                   <td>{supplier.paymentTerms || '-'}</td>
-                  <td>{supplier.createdAt ? new Date(supplier.createdAt).toLocaleDateString('en-CA') : '-'}</td> {/* ✅ Display formatted date */}
                   <td>
                     <button className="btn1" onClick={() => handleEdit(supplier)}><FaEdit /></button>
                     <button className="btn2" onClick={() => handleDelete(supplier._id)}><FaTrash /></button>
@@ -173,13 +174,23 @@ const ManageSuppliers = () => {
               {Object.entries(formData).map(([key, value]) => (
                 <div className="form-field" key={key}>
                   <label>{key.charAt(0).toUpperCase() + key.slice(1)}</label>
-                  <input
-                    type={key === 'email' ? 'email' : 'text'}
-                    name={key}
-                    value={value}
-                    onChange={handleChange}
-                    required={key === 'supplierName' || key === 'email'}
-                  />
+                  {key === 'createdAt' ? (
+                    <input
+                      type="date"
+                      name={key}
+                      value={value ? new Date(value).toISOString().split('T')[0] : ''}
+                      onChange={handleChange}
+                      required
+                    />
+                  ) : (
+                    <input
+                      type={key === 'email' ? 'email' : 'text'}
+                      name={key}
+                      value={value}
+                      onChange={handleChange}
+                      required={key === 'supplierName' || key === 'email'}
+                    />
+                  )}
                 </div>
               ))}
             </div>
