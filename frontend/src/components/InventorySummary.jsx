@@ -222,7 +222,7 @@ const InventorySummary = () => {
           { title: 'Total Items', value: filteredItems.length, color: 'success' },
           { title: 'Inventory Value', value: `Rs ${totalValue.toFixed(2)}`, color: 'primary' },
           { title: 'Out of Stock', value: filteredItems.filter((it) => !it.quantity).length, color: 'danger' },
-          { title: 'Low (<5) Stock', value: filteredItems.filter((it) => it.quantity < 5).length, color: 'warning' }
+          { title: 'Low (<5) Stock', value: filteredItems.filter((it) => it.quantity < 5 && it.quantity > 0).length, color: 'warning' }
         ].map((c) => (
           <div key={c.title} className="col-lg-3 col-md-6">
             <div className="card shadow-sm">
@@ -300,15 +300,14 @@ const InventorySummary = () => {
         <button className="btn btn-success" onClick={exportPDF}>
           <i className="bi bi-file-pdf" /> Export PDF
         </button>
-      <CSVLink
-      data={generateCSVData()}
-      filename="inventory-summary.csv"
-      className="btn btn-success"
-      >
-    <i className="bi bi-file-earmark-spreadsheet" /> Export CSV
-  </CSVLink>
-</div>
-
+        <CSVLink
+          data={generateCSVData()}
+          filename="inventory-summary.csv"
+          className="btn btn-success"
+        >
+          <i className="bi bi-file-earmark-spreadsheet" /> Export CSV
+        </CSVLink>
+      </div>
     </div>
   );
 };
