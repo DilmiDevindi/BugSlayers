@@ -13,14 +13,18 @@ const Catalog = () => {
 
   // Fetch all categories on load
   useEffect(() => {
-    axios.get('http://localhost:5000/api/catalog/categories')
-      .then((res) => {
+    const fetchCategories = async () => {
+      try {
+        const res = await axios.get('http://localhost:5000/api/catalog/categories');
         setCategories(res.data);
         if (res.data.length > 0) {
           setActiveTab(res.data[0]._id);
         }
-      })
-      .catch((err) => console.error('Error fetching categories:', err));
+      } catch (err) {
+        console.error('Error fetching categories:', err);
+      }
+    };
+    fetchCategories();
   }, []);
 
   // Fetch products for selected category
