@@ -215,13 +215,14 @@ const InventorySummary = () => {
         <h4 className="title">Inventory Summary Report</h4>
         <h6 className="subtitle">Inventory levels, sales patterns, and stock performance</h6>
       </div>
-
+      
+      <br />
       <div className="summary-cards">
         {[
           { title: 'Total Items', value: filteredItems.length, color: 'green' },
           { title: 'Inventory Value', value: `Rs ${totalValue.toFixed(2)}`, color: 'blue' },
           { title: 'Out of Stock', value: filteredItems.filter((it) => !it.quantity).length, color: 'red' },
-          { title: 'Low (<5) Stock', value: filteredItems.filter((it) => it.quantity < 5 && it.quantity > 0).length, color: 'orange' }
+          { title: 'Low Stock', value: filteredItems.filter((it) => it.quantity < 5 && it.quantity > 0).length, color: 'orange' }
         ].map((c) => (
           <div key={c.title} className="summary-card">
             <h6 className={`text-${c.color}`}>{c.title}</h6>
@@ -264,7 +265,6 @@ const InventorySummary = () => {
                 <XAxis
                   dataKey="inventoryItem"
                   interval={0}
-                  angle={-45}
                   textAnchor="end"
                   height={70}
                 />
@@ -276,6 +276,8 @@ const InventorySummary = () => {
           </div>
         </div>
       </div>
+      <br />
+      <br />
 
       <div className="trend-section">
         <h6>Inventory Value Trend</h6>
