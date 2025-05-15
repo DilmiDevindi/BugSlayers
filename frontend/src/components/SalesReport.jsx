@@ -253,7 +253,7 @@ const SalesReport = () => {
                   <td>{item._id}</td>
                   <td>{item.totalQuantity}</td>
                   <td>Rs. {item.totalSales.toFixed(2)}</td>
-                  <td>Rs. {item.totalQuantity*item.totalSales}</td>
+                  <td>Rs. {(item.totalQuantity * item.totalSales).toFixed(2)}</td>
                 </tr>
               ))}
             </tbody>
