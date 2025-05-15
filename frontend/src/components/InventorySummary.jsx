@@ -271,7 +271,19 @@ const InventorySummary = () => {
         <div className="table-responsive">
           <table className="table table-bordered table-striped text-center">
             <thead className="bg-success text-white"> {/* Light Green Headers */}
-              <tr></tr>
+              <tr>
+                <th>#</th>
+                <th>Product Name</th>
+                <th>Opening Stock</th>
+                <th>Opening Stock Value (Rs)</th>
+                <th>No. of Purchases</th>
+                <th>Value of Purchases (Rs)</th>
+                <th>No. of Sales</th>
+                <th>Value of Sales (Rs)</th>
+                <th>Closing Stock</th>
+                <th>Closing Stock Value (Rs)</th>
+                <th>Profit (Rs)</th>
+              </tr>
 
       {/* Export Buttons */}
       <div className="d-flex justify-content-end gap-3 mt-4">
