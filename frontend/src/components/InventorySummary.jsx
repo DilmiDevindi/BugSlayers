@@ -266,7 +266,7 @@ const InventorySummary = () => {
 
       {/* table */}
       <div className="mt-5">
-      <h6 className="fw-bold text-primary">Detailed Inventory Summary</h6>
+      <h6>Detailed Inventory Summary</h6>
       <div className="card shadow-sm rounded-3 p-3 border-0">
         <div className="table-responsive">
           <table className="table table-bordered table-striped text-center">
