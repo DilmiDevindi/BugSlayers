@@ -214,9 +214,7 @@ const InventorySummary = () => {
     <div className="container py-5">
       <div className="text-center mb-4">
         <h4 className="fw-bold text-primary">Inventory Summary Report</h4>
-        <p className="mb-0">
-          A quick snapshot of stock levels, value, and trends in your store.
-        </p>
+        <h6>inventory levels, sales patterns, and stock performance</h6>
       </div>
 
       <div className="row g-4 mb-4">
