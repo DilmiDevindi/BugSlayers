@@ -284,7 +284,12 @@ const InventorySummary = () => {
                 <th>Closing Stock Value (Rs)</th>
                 <th>Profit (Rs)</th>
               </tr>
-
+            </thead>
+          <tbody>
+            {filteredItems.map((item, index) => {
+              
+            }
+          </tbody>
       {/* Export Buttons */}
       <div className="d-flex justify-content-end gap-3 mt-4">
         <button className="btn btn-outline-secondary">Export CSV</button>
