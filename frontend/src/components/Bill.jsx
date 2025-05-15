@@ -79,7 +79,7 @@ function BillForm() {
   };
 
   return (
-    <div>
+    <div className='invoice-form'>
       <h2>Invoice Generation</h2>
       <form>
         <h3>Customer Details</h3>
