@@ -311,6 +311,7 @@ const InventorySummary = () => {
                 <td>{closingValue.toFixed(2)}</td>
                 <td>{profit.toFixed(2)}</td>
               </tr>
+
             );
           })}
           {/* Total Row */}
