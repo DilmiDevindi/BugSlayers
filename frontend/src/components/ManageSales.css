@@ -35,22 +35,7 @@
     border-radius: 10px;
   }
   
-  .table {
-    background-color: #fff;
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  
-  .table th {
-    background-color: #343a40;
-    color: #fff;
-    text-align: center;
-  }
-  
-  .table td {
-    vertical-align: middle;
-    text-align: center;
-  }
+
   
   .btn-warning {
     width: 7px;
