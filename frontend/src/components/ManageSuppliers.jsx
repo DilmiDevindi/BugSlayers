@@ -18,12 +18,14 @@ const ManageSuppliers = () => {
       const response = await axios.get('/api/suppliers', {
         params: { search, filter, date: dateFilter }
       });
-      // Sort suppliers by date ascending (handle missing dates)
+
+      // Sort suppliers by date ascending
       const sortedSuppliers = response.data.sort((a, b) => {
         const dateA = a.date ? new Date(a.date) : new Date(0);
         const dateB = b.date ? new Date(b.date) : new Date(0);
         return dateA - dateB;
       });
+
       setSuppliers(sortedSuppliers);
     } catch (error) {
       console.error('Error fetching suppliers:', error.response ? error.response.data : error.message);
@@ -83,15 +85,15 @@ const ManageSuppliers = () => {
       </div>
 
       {showTable && suppliers.length > 0 ? (
-        <table className="table table-striped table-bordered supplier-table" style={{ minWidth: '900px' }}>
+        <table className="table table-striped table-bordered supplier-table" style={{ minWidth: '1000px' }}>
           <thead className="table-dark">
             <tr>
               <th>Date</th>
               <th>Supplier Name</th>
-              <th>Phone 1</th>
-              <th>Phone 2</th>
-              <th>Fax</th>
-              <th>Email</th>
+              <th>Contact Number (Primary)</th>
+              <th>Contact Number (Secondary)</th>
+              <th>Fax Number</th>
+              <th>Email Address</th>
               <th>Address</th>
               <th>Supply Products</th>
               <th>Payment Terms</th>
