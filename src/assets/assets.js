@@ -81,7 +81,8 @@ import star_icon from './star_icon.png'
 import star_dull_icon from './star_dull_icon.png'
 import bin_icon from './bin_icon.png'
 import cross_icon from './cross_icon.png'
-
+import Stripe_logo from './Stripe_logo.png'
+import Razorpay_icon from './Razorpay_icon.png'
 
 
 
@@ -109,6 +110,8 @@ export const assets = {
     star_dull_icon,
     bin_icon,
     cross_icon,
+    Stripe_logo,
+    Razorpay_icon,
 
 
 }
