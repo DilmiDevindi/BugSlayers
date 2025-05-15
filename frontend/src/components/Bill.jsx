@@ -144,7 +144,7 @@ function BillForm() {
 
         {/* Final Amount after Discount */}
         <label>
-          Amount (Price − Discount):
+          Amount:
           <input type="text" value={calculateAmount()} readOnly />
         </label>
         <br />
