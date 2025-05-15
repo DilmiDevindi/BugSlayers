@@ -17,11 +17,11 @@ const Login = () => {
         <p className='cursor-pointer'>Forget your password?</p>
         {
           currentState === 'Login'
-          ? <p onClick={()=>} className='cursor-pointer'>Create account</p>
-          :<p onClick={()=>} className='cursor-pointer'>Login Here</p>
+          ? <p onClick={()=>setCurrentState('Sign Up')} className='cursor-pointer'>Create account</p>
+          :<p onClick={()=>setCurrentState('Login')} className='cursor-pointer'>Login Here</p>
         }
-
       </div>
+      <button className='bg-black text-white font-light px-8 py-2 mt-4'>{currentState === 'Login' ? 'Sign In':'Sign Up'}</button>
     </form>
   )
 }
