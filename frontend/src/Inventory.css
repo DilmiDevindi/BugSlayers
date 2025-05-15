@@ -169,9 +169,18 @@
     border-collapse: collapse;
   }
   
-  .inventory-table th, .inventory-table td {
+  .inventory-table th {
     padding: 5px;
-    font-size: 14px;
+    font-size: 13.5px;
+    background-color: #333;
+    color: white;
+  }
+
+  .inventory-table td {
+    border: none;
+    padding: 8px;
+    text-align: left;
+    font-size: 13.5px;
   }
   
   .inventory-table tbody tr:hover {
