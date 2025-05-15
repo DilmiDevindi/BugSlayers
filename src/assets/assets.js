@@ -83,7 +83,7 @@ import bin_icon from './bin_icon.png'
 import cross_icon from './cross_icon.png'
 import Stripe_logo from './Stripe_logo.png'
 import Razorpay_icon from './Razorpay_icon.png'
-
+import about_img from './about_img.jpg'
 
 
 export const assets = {
@@ -112,6 +112,7 @@ export const assets = {
     cross_icon,
     Stripe_logo,
     Razorpay_icon,
+    about_img,
 
 
 }
