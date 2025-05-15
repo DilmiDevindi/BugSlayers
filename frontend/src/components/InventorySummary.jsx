@@ -204,7 +204,8 @@ const InventorySummary = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
-
+      <br />
+      <br />
       {/* Charts */}
       <div className="row g-4 mb-4">
         <div className="col-md-6">
@@ -232,7 +233,7 @@ const InventorySummary = () => {
           </div>
         </div>
         <div className="col-md-6">
-          <h5 className="mb-3">Top Stocked Items</h5>
+          <h6>Top Stocked Items</h6>
           <div className="card shadow-sm p-3">
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={barData}>
@@ -246,9 +247,11 @@ const InventorySummary = () => {
         </div>
       </div>
 
+      
+
       {/* Stock Trends */}
       <div className="mb-5">
-        <h5 className="mb-3">Stock Value Trends</h5>
+        <h6>Stock Value Trends</h6>
         <div className="card shadow-sm p-3">
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={stockTrends}>
@@ -260,6 +263,7 @@ const InventorySummary = () => {
           </ResponsiveContainer>
         </div>
       </div>
+      
 
       {/* Export Buttons */}
       <div className="d-flex justify-content-end gap-3 mt-4">
