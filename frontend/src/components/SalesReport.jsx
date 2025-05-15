@@ -92,6 +92,7 @@ const SalesReport = () => {
     const col1X = margin + 2;
     const col2X = pageWidth / 2;
     const col3X = pageWidth - margin - 2;
+    const col4X = pageWidth - margin - 2;
 
     doc.rect(margin, y - 5, pageWidth - margin * 2, 8, 'F');
     doc.text('Product Name', col1X, y);
@@ -110,7 +111,7 @@ const SalesReport = () => {
       doc.text(productName, col1X, y);
       doc.text(quantity, col2X, y, { align: 'center' });
       doc.text(sales, col3X, y, { align: 'center' });
-      doc.text(amount, col3X, y, { align: 'right' });
+      doc.text(amount, col4X, y, { align: 'right' });
 
       y += 8;
       if (y > pageHeight - 30) {
