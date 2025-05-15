@@ -1,12 +1,16 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSquarePlus } from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { FaEdit, FaTrash } from 'react-icons/fa';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTruck } from '@fortawesome/free-solid-svg-icons';
 import './Supplier.css';
 
-const AddSupplier = () => {
-  const [supplier, setSupplier] = useState({
+const ManageSupplier = () => {
+  const [suppliers, setSuppliers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [editingSupplier, setEditingSupplier] = useState(null);
+  const [formData, setFormData] = useState({
+    _id: '',
     date: new Date().toISOString().split('T')[0],
     supplierName: '',
     phone1: '',
@@ -17,97 +21,83 @@ const AddSupplier = () => {
     supplyProducts: '',
     paymentTerms: '',
   });
+  const [loading, setLoading] = useState(false);
 
-  const [errors, setErrors] = useState({});
+  useEffect(() => {
+    fetchSuppliers();
+  }, []);
+
+  const fetchSuppliers = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get('/api/suppliers');
+      setSuppliers(res.data.reverse());
+    } catch (err) {
+      console.error('Error fetching suppliers:', err);
+      alert('Failed to fetch suppliers.');
+    }
+    setLoading(false);
+  };
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const filteredSuppliers = suppliers.filter(supplier =>
+    supplier.supplierName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    supplier.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    supplier.phone1.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    supplier.phone2.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    supplier.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this supplier?')) return;
+    try {
+      await axios.delete(`/api/suppliers/${id}`);
+      fetchSuppliers();
+    } catch (err) {
+      console.error('Error deleting supplier:', err);
+      alert('Failed to delete supplier.');
+    }
+  };
+
+  const handleEdit = (supplier) => {
+    setEditingSupplier(supplier._id);
+    setFormData({ ...supplier });
+  };
 
   const validatePhoneNumber = (number) => /^\d{10}$/.test(number);
+  const validateEmail = (email) => /^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(email);
 
-  const validateEmail = (email) =>
-    /^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(email);
-
-  const validateFields = (name, value) => {
-    let error = '';
-
-    if (name === 'phone1' || name === 'phone2') {
-      value = value.replace(/\D/g, '');
-      if (value.length > 10) {
-        alert('Contact number must not exceed 10 digits');
-        value = value.slice(0, 10);
-      }
-      if (!validatePhoneNumber(value)) {
-        error = 'Contact number must be exactly 10 digits and numeric';
-      } else if (name === 'phone2' && value === supplier.phone1) {
-        error = 'Primary and Secondary Contact Numbers must not be the same';
-      }
-    }
-
-    if (name === 'email' && value) {
-      if (!validateEmail(value)) {
-        error = 'Email must be a valid @gmail.com address';
-      }
-    }
-
-    if (name === 'address' && !value.trim()) {
-      error = 'Address cannot be empty';
-    }
-
-    setErrors((prev) => ({ ...prev, [name]: error }));
-    return value;
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    const validatedValue = validateFields(name, value);
-    setSupplier({ ...supplier, [name]: validatedValue });
-  };
-
-  const handleSubmit = async (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
 
-    let hasErrors = false;
-    const newErrors = {};
+    if (!formData.supplierName || !formData.phone1 || !formData.address) {
+      alert('Supplier name, contact number and address are required!');
+      return;
+    }
 
-    Object.entries(supplier).forEach(([key, value]) => {
-      let error = '';
+    if (!validatePhoneNumber(formData.phone1)) {
+      alert('Primary contact must be a 10-digit number');
+      return;
+    }
 
-      if (key === 'phone1' || key === 'phone2') {
-        value = value.replace(/\D/g, '');
-        if (value.length > 10) {
-          value = value.slice(0, 10);
-        }
-        if (!validatePhoneNumber(value)) {
-          error = 'Contact number must be exactly 10 digits and numeric';
-        } else if (key === 'phone2' && value === supplier.phone1) {
-          error = 'Primary and Secondary Contact Numbers must not be the same';
-        }
-      }
+    if (formData.phone2 && formData.phone2 === formData.phone1) {
+      alert('Primary and Secondary Contact Numbers must not be the same');
+      return;
+    }
 
-      if (key === 'email' && value && !validateEmail(value)) {
-        error = 'Email must be a valid @gmail.com address';
-      }
-
-      if (key === 'address' && !value.trim()) {
-        error = 'Address cannot be empty';
-      }
-
-      if (error) {
-        newErrors[key] = error;
-        hasErrors = true;
-      }
-    });
-
-    setErrors(newErrors);
-
-    if (hasErrors) {
-      alert("Please fix the validation errors.");
+    if (formData.email && !validateEmail(formData.email)) {
+      alert('Email must be a valid @gmail.com address');
       return;
     }
 
     try {
-      await axios.post('http://localhost:5000/api/suppliers/add', supplier);
-      alert('Supplier added successfully');
-
-      setSupplier({
+      await axios.put(`/api/suppliers/${editingSupplier}`, formData);
+      setEditingSupplier(null);
+      setFormData({
+        _id: '',
         date: new Date().toISOString().split('T')[0],
         supplierName: '',
         phone1: '',
@@ -118,102 +108,121 @@ const AddSupplier = () => {
         supplyProducts: '',
         paymentTerms: '',
       });
-
-      setErrors({});
-    } catch (error) {
-      console.error('Error adding supplier:', error);
-      alert('Failed to add supplier. Please try again.');
+      fetchSuppliers();
+      alert('Supplier updated successfully!');
+    } catch (err) {
+      console.error('Error updating supplier:', err);
+      alert('Failed to update supplier.');
     }
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
   return (
-    <div className="container-i form-container-i" style={{ maxWidth: '50%' }}>
-      <div
-        className="text-center"
-        style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '20px' }}
-      >
-        <FontAwesomeIcon icon={faSquarePlus} /> Add Supplier
-      </div>
+    <div className="container1">
+      <h4 className="manage-title">
+        <FontAwesomeIcon icon={faTruck} className="cus-icon" /> Manage Suppliers
+      </h4>
 
-      <form onSubmit={handleSubmit} autoComplete="off">
-        <div className="form-group-i">
-          <input
-            type="date"
-            className="form-control"
-            name="date"
-            value={supplier.date}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
+      <input
+        type="text"
+        className="form-control mb-3"
+        placeholder="Search by name, contact, or address"
+        value={searchTerm}
+        onChange={handleSearch}
+      />
 
-        {[
-          { label: 'Supplier Name', key: 'supplierName' },
-          { label: 'Contact Number (Primary)', key: 'phone1', required: true },
-          { label: 'Contact Number (Secondary)', key: 'phone2' },
-          { label: 'Fax Number', key: 'fax' },
-          { label: 'Email Address', key: 'email' },
-          { label: 'Address', key: 'address' },
-        ].map((field) => (
-          <div key={field.key} className="form-group-i">
-            <input
-              type="text"
-              className="form-control"
-              name={field.key}
-              value={supplier[field.key]}
-              onChange={handleInputChange}
-              placeholder={field.label}
-              required={field.required || false}
-            />
-            {errors[field.key] && (
-              <div className="alert alert-danger">{errors[field.key]}</div>
+      {loading ? <p>Loading suppliers...</p> : (
+        <table className="table table-striped">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Supplier Name</th>
+              <th>Primary Contact</th>
+              <th>Secondary Contact</th>
+              <th>Email</th>
+              <th>Address</th>
+              <th>Products</th>
+              <th>Payment</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredSuppliers.length > 0 ? (
+              filteredSuppliers.map((supplier, index) => (
+                <tr key={supplier._id}>
+                  <td>{index + 1}</td>
+                  <td>{supplier.supplierName}</td>
+                  <td>{supplier.phone1}</td>
+                  <td>{supplier.phone2}</td>
+                  <td>{supplier.email}</td>
+                  <td>{supplier.address}</td>
+                  <td>{supplier.supplyProducts}</td>
+                  <td>{supplier.paymentTerms}</td>
+                  <td>
+                    <button className="btn1" onClick={() => handleEdit(supplier)}><FaEdit /></button>
+                    <button className="btn2" onClick={() => handleDelete(supplier._id)}><FaTrash /></button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="9" className="text-center text-danger">No Matching Supplier Found!</td>
+              </tr>
             )}
-          </div>
-        ))}
+          </tbody>
+        </table>
+      )}
 
-        <div className="form-group-i">
-          <select
-            className="form-control"
-            name="supplyProducts"
-            value={supplier.supplyProducts}
-            onChange={handleInputChange}
-            required
-          >
-            <option value="" disabled>
-              Select a product
-            </option>
-            <option value="Mattress">Mattress</option>
-            <option value="Cupboard">Cupboard</option>
-            <option value="Chair">Chair</option>
-            <option value="Table">Table</option>
-            <option value="Iron Board">Iron Board</option>
-            <option value="Carrom Board">Carrom Board</option>
-            <option value="Clothes Rack">Clothes Rack</option>
-          </select>
+      {editingSupplier && (
+        <div className="edit-form-container">
+          <form onSubmit={handleUpdate}>
+            <h4 className="add-title"><FontAwesomeIcon icon={faEdit} /> Edit Supplier</h4>
+            <div className="mb-3">
+              <label>Supplier Name</label>
+              <input type="text" name="supplierName" value={formData.supplierName} onChange={handleChange} required />
+            </div>
+            <div className="mb-3">
+              <label>Primary Contact</label>
+              <input type="text" name="phone1" value={formData.phone1} onChange={handleChange} required />
+            </div>
+            <div className="mb-3">
+              <label>Secondary Contact</label>
+              <input type="text" name="phone2" value={formData.phone2} onChange={handleChange} />
+            </div>
+            <div className="mb-3">
+              <label>Email</label>
+              <input type="email" name="email" value={formData.email} onChange={handleChange} />
+            </div>
+            <div className="mb-3">
+              <label>Fax</label>
+              <input type="text" name="fax" value={formData.fax} onChange={handleChange} />
+            </div>
+            <div className="mb-3">
+              <label>Address</label>
+              <input type="text" name="address" value={formData.address} onChange={handleChange} required />
+            </div>
+            <div className="mb-3">
+              <label>Supply Products</label>
+              <input type="text" name="supplyProducts" value={formData.supplyProducts} onChange={handleChange} />
+            </div>
+            <div className="mb-3">
+              <label>Payment Terms</label>
+              <input type="text" name="paymentTerms" value={formData.paymentTerms} onChange={handleChange} />
+            </div>
+            <button type="submit" className="btnUpdate">Update</button>
+            <button type="button" className="btnClose" onClick={() => setEditingSupplier(null)}>Cancel</button>
+          </form>
         </div>
-
-        <div className="form-group-i">
-          <select
-            className="form-control"
-            name="paymentTerms"
-            value={supplier.paymentTerms}
-            onChange={handleInputChange}
-            required
-          >
-            <option value="" disabled>
-              Select a payment method
-            </option>
-            <option value="Cash">Cash</option>
-            <option value="Card">Card</option>
-          </select>
-        </div>
-
-        <button type="submit" className="btn btn-primary-i">
-          Add Supplier
-        </button>
-      </form>
+      )}
     </div>
   );
 };
 
-export default AddSupplier;
+export default ManageSupplier;
