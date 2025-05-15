@@ -20,17 +20,30 @@ const AddSalesRecord = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const newSale = { customerName, productName, quantity, price, amount };
+      // Send quantity and price as numbers
+      const newSale = {
+        customerName,
+        productName,
+        quantity: Number(quantity),
+        price: Number(price)
+        // No amount sent, backend will calculate
+      };
+
       await axios.post('http://localhost:5000/api/sales/add', newSale);
+
+      // Clear form
       setCustomerName('');
       setProductName('');
       setQuantity('');
       setPrice('');
       setAmount(0);
+
       alert('Sale record added successfully!');
     } catch (error) {
       console.error('Error adding sale record:', error);
+      alert('Failed to add sale record');
     }
   };
 
@@ -69,6 +82,8 @@ const AddSalesRecord = () => {
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
             required
+            min="0"
+            step="any"
           />
         </div>
         <div className="mb-3">
@@ -80,6 +95,8 @@ const AddSalesRecord = () => {
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             required
+            min="0"
+            step="any"
           />
         </div>
         <div className="mb-3">
