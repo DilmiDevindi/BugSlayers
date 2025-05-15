@@ -235,7 +235,7 @@ const SalesReport = () => {
             <h5>Report Results</h5>
           </div>
 
-          <table className="table table-striped table-bordered">
+          <table className="sales">
             <thead className="table-dark">
               <tr>
                 <th>Product Name</th>
