@@ -52,9 +52,14 @@ function BillForm() {
     }
   };
 
-  const calculateAmount = () => {
+  const calculatePrice = () => {
     const price = parseFloat(itemPrice || 0);
-    return (price * quantity - discount).toFixed(2);
+    return (price * quantity).toFixed(2);
+  };
+
+  const calculateAmount = () => {
+    const total = parseFloat(calculatePrice());
+    return (total - discount).toFixed(2);
   };
 
   const calculateBalance = () => {
@@ -123,15 +128,23 @@ function BillForm() {
           <input type="number" value={quantity} min="1" onChange={(e) => setQuantity(Number(e.target.value))} />
         </label>
         <br />
+
+        {/* Calculated Price Label */}
+        <label>
+          Price (Item Price × Quantity):
+          <input type="text" value={calculatePrice()} readOnly />
+        </label>
+        <br />
+
         <label>
           Discount:
           <input type="number" value={discount} min="0" onChange={(e) => setDiscount(Number(e.target.value))} />
         </label>
         <br />
-        
-        {/* Proper Amount label */}
+
+        {/* Final Amount after Discount */}
         <label>
-          Amount:
+          Amount (Price − Discount):
           <input type="text" value={calculateAmount()} readOnly />
         </label>
         <br />
@@ -162,7 +175,8 @@ function BillForm() {
           <p><strong>Customer:</strong> {name}</p>
           <p><strong>Item:</strong> {itemName}</p>
           <p><strong>Quantity:</strong> {quantity}</p>
-          <p><strong>Price per item:</strong> ${itemPrice}</p>
+          <p><strong>Item Price:</strong> ${itemPrice}</p>
+          <p><strong>Price:</strong> ${calculatePrice()}</p>
           <p><strong>Discount:</strong> ${discount}</p>
           <p><strong>Amount:</strong> ${calculateAmount()}</p>
           <p><strong>Cash Received:</strong> ${cashReceived}</p>
