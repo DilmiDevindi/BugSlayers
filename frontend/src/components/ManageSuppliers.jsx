@@ -1,139 +1,190 @@
+// ManageSuppliers.jsx
+
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBarsProgress, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
+import { FaEdit, FaTrash } from "react-icons/fa";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTruck, faEdit as faEditIcon } from "@fortawesome/free-solid-svg-icons";
 import './Supplier.css';
 
 const ManageSuppliers = () => {
   const [suppliers, setSuppliers] = useState([]);
-  const [search, setSearch] = useState('');
-  const [filter, setFilter] = useState('');
-  const [dateFilter] = useState('');
-  const [showTable, setShowTable] = useState(false);
-
-  const fetchSuppliers = async () => {
-    try {
-      const response = await axios.get('/api/suppliers', {
-        params: { search, filter, date: dateFilter }
-      });
-      console.log('Suppliers fetched:', response.data); // Debug log to check data structure
-
-      // Sort suppliers by date ascending (handle missing or invalid dates)
-      const sortedSuppliers = response.data.sort((a, b) => {
-        const dateA = a.date ? new Date(a.date) : new Date(0);
-        const dateB = b.date ? new Date(b.date) : new Date(0);
-        return dateA - dateB;
-      });
-
-      setSuppliers(sortedSuppliers);
-    } catch (error) {
-      console.error('Error fetching suppliers:', error.response ? error.response.data : error.message);
-    }
-  };
+  const [searchTerm, setSearchTerm] = useState('');
+  const [editingSupplier, setEditingSupplier] = useState(null);
+  const [formData, setFormData] = useState({
+    supplierName: '',
+    phone1: '',
+    phone2: '',
+    fax: '',
+    email: '',
+    address: '',
+    supplyProducts: '',
+    paymentTerms: ''
+  });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (showTable) {
-      fetchSuppliers();
+    fetchSuppliers();
+  }, []);
+
+  const fetchSuppliers = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get('/api/suppliers');
+      setSuppliers(response.data.reverse());
+    } catch (error) {
+      console.error('Error fetching suppliers:', error);
+      alert('Failed to fetch suppliers');
     }
-  }, [showTable, search, filter, dateFilter]);
+    setLoading(false);
+  };
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const filteredSuppliers = suppliers.filter(supplier =>
+    (supplier.supplierName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (supplier.email || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (supplier.phone1 || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (supplier.address || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (supplier.supplyProducts || '').toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this supplier?')) return;
-
     try {
       await axios.delete(`/api/suppliers/${id}`);
-      setSuppliers(prev => prev.filter(supplier => supplier._id !== id));
-      alert('Supplier deleted successfully!');
+      fetchSuppliers();
     } catch (error) {
-      console.error('Error deleting supplier:', error.response ? error.response.data : error.message);
-      alert('Failed to delete supplier. Please try again.');
+      console.error('Error deleting supplier:', error);
+      alert('Failed to delete supplier');
     }
   };
 
+  const handleEdit = (supplier) => {
+    setEditingSupplier(supplier._id);
+    setFormData({
+      supplierName: supplier.supplierName || '',
+      phone1: supplier.phone1 || '',
+      phone2: supplier.phone2 || '',
+      fax: supplier.fax || '',
+      email: supplier.email || '',
+      address: supplier.address || '',
+      supplyProducts: supplier.supplyProducts || '',
+      paymentTerms: supplier.paymentTerms || ''
+    });
+  };
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.put(`/api/suppliers/${editingSupplier}`, formData);
+      setEditingSupplier(null);
+      setFormData({
+        supplierName: '',
+        phone1: '',
+        phone2: '',
+        fax: '',
+        email: '',
+        address: '',
+        supplyProducts: '',
+        paymentTerms: ''
+      });
+      fetchSuppliers();
+      alert('Supplier updated successfully!');
+    } catch (error) {
+      console.error('Error updating supplier:', error);
+      alert('Failed to update supplier');
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
   return (
-    <div className="container-fluid mt-5 supplier-container">
-      <div className="supplier-title">
-        <span className="supplier-title-icon"><FontAwesomeIcon icon={faBarsProgress} /></span> Manage Supplier
-      </div>
+    <div className="container1">
+      <h4 className="manage-title">
+        <FontAwesomeIcon icon={faTruck} className="cus-icon" /> Manage Suppliers
+      </h4>
 
-      <div className="card p-3 mb-3">
-        <div className="mb-3">
-          <input
-            type="text"
-            className="form-control-i"
-            placeholder="Search by name..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-          />
-        </div>
-        <div className="mb-3">
-          <input
-            type="text"
-            className="form-control-i"
-            placeholder="Filter by products..."
-            value={filter}
-            onChange={e => setFilter(e.target.value)}
-          />
-        </div>
+      <input
+        type="text"
+        className="form-control mb-3"
+        placeholder="Search by name, contact, email, or product"
+        value={searchTerm}
+        onChange={handleSearch}
+      />
 
-        <div className="table-responsive supplier-table-container">
-          <button className="btn btn-info" onClick={() => setShowTable(!showTable)}>
-            {showTable ? 'Hide Table' : 'View Table'}
-          </button>
-        </div>
-      </div>
-
-      {showTable && suppliers.length > 0 ? (
-        <table className="table table-striped table-bordered supplier-table">
-          <thead className="table-white">
+      {loading ? <p>Loading suppliers...</p> : (
+        <table className="table table-striped">
+          <thead>
             <tr>
-              <th>Date</th>
-              <th>Supplier Name</th>
+              <th>Name</th>
               <th>Phone 1</th>
               <th>Phone 2</th>
               <th>Fax</th>
               <th>Email</th>
               <th>Address</th>
-              <th>Supply Products</th>
+              <th>Products</th>
               <th>Payment Terms</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {suppliers.map(supplier => (
-              <tr key={supplier._id}>
-                <td>
-                  {supplier.date
-                    ? new Date(supplier.date).toLocaleDateString('en-GB') // format dd/mm/yyyy
-                    : '-'}
-                </td>
-                <td>{supplier.supplierName || '-'}</td>
-                <td>{supplier.phone1 || '-'}</td>
-                <td>{supplier.phone2 || '-'}</td>
-                <td>{supplier.fax || '-'}</td>
-                <td>{supplier.email || '-'}</td>
-                <td>{supplier.address || '-'}</td>
-                <td>{supplier.supplyProducts || '-'}</td>
-                <td>{supplier.paymentTerms || '-'}</td>
-                <td>
-                  <div className="d-flex gap-2">
-                    <Link to={`/dashboard/suppliers/edit/${supplier._id}`} className="btn btn-warning">
-                      <FontAwesomeIcon icon={faEdit} />
-                    </Link>
-                    <button className="btn btn-danger" onClick={() => handleDelete(supplier._id)}>
-                      <FontAwesomeIcon icon={faTrash} />
-                    </button>
-                  </div>
-                </td>
+            {filteredSuppliers.length > 0 ? (
+              filteredSuppliers.map((supplier) => (
+                <tr key={supplier._id}>
+                  <td>{supplier.supplierName || '-'}</td>
+                  <td>{supplier.phone1 || '-'}</td>
+                  <td>{supplier.phone2 || '-'}</td>
+                  <td>{supplier.fax || '-'}</td>
+                  <td>{supplier.email || '-'}</td>
+                  <td>{supplier.address || '-'}</td>
+                  <td>{supplier.supplyProducts || '-'}</td>
+                  <td>{supplier.paymentTerms || '-'}</td>
+                  <td>
+                    <button className="btn1" onClick={() => handleEdit(supplier)}><FaEdit /></button>
+                    <button className="btn2" onClick={() => handleDelete(supplier._id)}><FaTrash /></button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="9" className="text-center text-danger">No Matching Supplier Found!</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
-      ) : showTable ? (
-        <div className="alert alert-warning text-center">No suppliers found</div>
-      ) : null}
+      )}
+
+      {editingSupplier && (
+        <div className="edit-form-container small-form">
+          <form onSubmit={handleUpdate}>
+            <h4 className='add-title'><FontAwesomeIcon icon={faEditIcon}/> Edit Supplier</h4>
+            <div className="form-grid">
+              {Object.entries(formData).map(([key, value]) => (
+                <div className="form-field" key={key}>
+                  <label>{key.charAt(0).toUpperCase() + key.slice(1)}</label>
+                  <input
+                    type={key === 'email' ? 'email' : 'text'}
+                    name={key}
+                    value={value}
+                    onChange={handleChange}
+                    required={key === 'supplierName' || key === 'email'}
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="button-group">
+              <button type="submit" className="btnUpdate">Update</button>
+              <button type="button" className="btnClose" onClick={() => setEditingSupplier(null)}>Cancel</button>
+            </div>
+          </form>
+        </div>
+      )}
     </div>
   );
 };
