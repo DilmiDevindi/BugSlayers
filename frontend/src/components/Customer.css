@@ -97,3 +97,19 @@ cd/*Manage Customer css*/
 h4{
   color: #100778;
 }
+
+.btn1{
+  background-color:transparent;
+}
+.btn2{
+  background-color:transparent;
+}
+
+.btn1:hover{
+  color: #033681;
+  background-color: transparent;
+}
+.btn2:hover{
+  color: #821504;
+  background-color: transparent;
+}
