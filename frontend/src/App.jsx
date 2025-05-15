@@ -56,7 +56,7 @@ function App() {
 
           <Route path="inventory/reports/low-stock" element={<LowStockReport />} />
           <Route path="inventory/reports/summary" element={<InventorySummary />} />
-       
+      
 
           <Route path="sales/report" element={<SalesReport />} />
           <Route path="purchases/add" element={<AddPurchase />} />
