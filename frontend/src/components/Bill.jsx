@@ -80,7 +80,7 @@ function BillForm() {
 
   return (
     <div>
-      <h2>Invoice</h2>
+      <h2>Invoice Generation</h2>
       <form>
         <h3>Customer Details</h3>
 
