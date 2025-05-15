@@ -296,6 +296,24 @@ const InventorySummary = () => {
               const closingStock = item.quantity || 0;
               const closingValue = closingStock * item.price;
               const profit = salesValue - purchaseValue; // Updated logic
+
+              return (
+              <tr key={item._id} className="bg-light">
+                <td>{index + 1}</td>
+                <td>{item.name}</td>
+                <td>{openingStock}</td>
+                <td>{openingValue.toFixed(2)}</td>
+                <td>{purchases}</td>
+                <td>{purchaseValue.toFixed(2)}</td>
+                <td>{sales}</td>
+                <td>{salesValue.toFixed(2)}</td>
+                <td>{closingStock}</td>
+                <td>{closingValue.toFixed(2)}</td>
+                <td className="text-success fw-bold">{profit.toFixed(2)}</td> {/* Updated Profit Calculation */}
+              </tr>
+            );
+          })}
+ 
             }
           </tbody>
       {/* Export Buttons */}
