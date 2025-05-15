@@ -18,8 +18,15 @@ const ManageSuppliers = () => {
       const response = await axios.get('/api/suppliers', {
         params: { search, filter, date: dateFilter }
       });
-      // Sort suppliers by date ascending
-      const sortedSuppliers = response.data.sort((a, b) => new Date(a.date) - new Date(b.date));
+      console.log('Suppliers fetched:', response.data); // Debug log to check data structure
+
+      // Sort suppliers by date ascending (handle missing or invalid dates)
+      const sortedSuppliers = response.data.sort((a, b) => {
+        const dateA = a.date ? new Date(a.date) : new Date(0);
+        const dateB = b.date ? new Date(b.date) : new Date(0);
+        return dateA - dateB;
+      });
+
       setSuppliers(sortedSuppliers);
     } catch (error) {
       console.error('Error fetching suppliers:', error.response ? error.response.data : error.message);
@@ -97,7 +104,11 @@ const ManageSuppliers = () => {
           <tbody>
             {suppliers.map(supplier => (
               <tr key={supplier._id}>
-                <td>{supplier.date ? new Date(supplier.date).toLocaleDateString() : '-'}</td>
+                <td>
+                  {supplier.date
+                    ? new Date(supplier.date).toLocaleDateString('en-GB') // format dd/mm/yyyy
+                    : '-'}
+                </td>
                 <td>{supplier.supplierName || '-'}</td>
                 <td>{supplier.phone1 || '-'}</td>
                 <td>{supplier.phone2 || '-'}</td>
