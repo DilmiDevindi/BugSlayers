@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -98,15 +97,15 @@ const ManageSuppliers = () => {
           <tbody>
             {suppliers.map(supplier => (
               <tr key={supplier._id}>
-                <td>{new Date(supplier.date).toLocaleDateString()}</td>
-                <td>{supplier.supplierName}</td>
-                <td>{supplier.phone1}</td>
+                <td>{supplier.date ? new Date(supplier.date).toLocaleDateString() : '-'}</td>
+                <td>{supplier.supplierName || '-'}</td>
+                <td>{supplier.phone1 || '-'}</td>
                 <td>{supplier.phone2 || '-'}</td>
                 <td>{supplier.fax || '-'}</td>
                 <td>{supplier.email || '-'}</td>
-                <td>{supplier.address}</td>
-                <td>{supplier.supplyProducts}</td>
-                <td>{supplier.paymentTerms}</td>
+                <td>{supplier.address || '-'}</td>
+                <td>{supplier.supplyProducts || '-'}</td>
+                <td>{supplier.paymentTerms || '-'}</td>
                 <td>
                   <div className="d-flex gap-2">
                     <Link to={`/dashboard/suppliers/edit/${supplier._id}`} className="btn btn-warning">
