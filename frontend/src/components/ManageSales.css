@@ -123,10 +123,14 @@
   
   .sales {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate; /* important for border-radius to work */
+    border-spacing: 0; /* remove gaps between cells */
     margin-top: 20px;
     font-family: Arial, sans-serif;
-  }
+    border: 1px solid #ccc;
+    border-radius: 12px; /* rounded corners */
+    overflow: hidden; /* clip overflow to round corners */
+  } 
   
   .sales th, 
   .sales td {
