@@ -291,6 +291,11 @@ const InventorySummary = () => {
               const openingValue = openingStock * item.price;
               const purchases = item.purchases || 0;
               const purchaseValue = purchases * item.price;
+              const sales = item.sales || 0;
+              const salesValue = sales * item.price;
+              const closingStock = item.quantity || 0;
+              const closingValue = closingStock * item.price;
+              const profit = salesValue - purchaseValue; // Updated logic
             }
           </tbody>
       {/* Export Buttons */}
