@@ -270,6 +270,8 @@ const InventorySummary = () => {
       <div className="card shadow-sm rounded-3 p-3 border-0">
         <div className="table-responsive">
           <table className="table table-bordered table-striped text-center">
+            <thead className="bg-success text-white"> {/* Light Green Headers */}
+              <tr></tr>
 
       {/* Export Buttons */}
       <div className="d-flex justify-content-end gap-3 mt-4">
