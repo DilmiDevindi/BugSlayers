@@ -12,6 +12,11 @@ function BillForm() {
   const [itemName, setItemName] = useState('');
   const [itemPrice, setItemPrice] = useState('');
 
+  const [quantity, setQuantity] = useState(1);
+  const [discount, setDiscount] = useState(0);
+  const [total, setTotal] = useState(0);
+  const [showInvoice, setShowInvoice] = useState(false);
+
   const handleNameChange = async (e) => {
     const enteredName = e.target.value;
     setName(enteredName);
@@ -48,6 +53,25 @@ function BillForm() {
       setItemName('');
       setItemPrice('');
     }
+  };
+
+  const handleQuantityChange = (e) => {
+    setQuantity(Number(e.target.value));
+  };
+
+  const handleDiscountChange = (e) => {
+    setDiscount(Number(e.target.value));
+  };
+
+  const calculateTotal = () => {
+    const price = parseFloat(itemPrice);
+    const totalAmount = (price * quantity) - discount;
+    setTotal(totalAmount > 0 ? totalAmount : 0);
+    setShowInvoice(true);
+  };
+
+  const handlePrint = () => {
+    window.print();
   };
 
   return (
@@ -95,10 +119,36 @@ function BillForm() {
           Item Price:
           <input type="text" value={itemPrice} readOnly />
         </label>
+        <br />
+        <label>
+          Quantity:
+          <input type="number" value={quantity} min="1" onChange={handleQuantityChange} />
+        </label>
+        <br />
+        <label>
+          Discount:
+          <input type="number" value={discount} min="0" onChange={handleDiscountChange} />
+        </label>
+        <br />
+        <button type="button" onClick={calculateTotal}>
+          Generate Invoice
+        </button>
       </form>
+
+      {showInvoice && (
+        <div style={{ marginTop: '20px', border: '1px solid #000', padding: '15px' }}>
+          <h3>Invoice</h3>
+          <p><strong>Date:</strong> {date}</p>
+          <p><strong>Customer:</strong> {name}</p>
+          <p><strong>Item:</strong> {itemName} (x{quantity})</p>
+          <p><strong>Price per item:</strong> ${itemPrice}</p>
+          <p><strong>Discount:</strong> ${discount}</p>
+          <p><strong>Total:</strong> ${total.toFixed(2)}</p>
+          <button onClick={handlePrint}>Print Invoice</button>
+        </div>
+      )}
     </div>
   );
 }
 
 export default BillForm;
-
