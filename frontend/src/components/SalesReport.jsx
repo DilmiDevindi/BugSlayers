@@ -16,8 +16,7 @@ const SalesReport = () => {
   const [endDate, setEndDate] = useState('');
   const [report, setReport] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false); // Track if the form has been submitted
-
+  const [submitted, setSubmitted] = useState(false); 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (new Date(startDate) > new Date(endDate)) {
@@ -43,7 +42,7 @@ const SalesReport = () => {
   };
 
   const totalQuantity = report.reduce((sum, item) => sum + item.totalQuantity, 0);
-  const totalSales = report.reduce((sum, item) => sum + item.totalSales, 0);
+  const totalAmountOfSales = report.reduce((sum, item) => sum + item.totalQuantity*item.totalSales, 0);
 
   // Find the most popular item (with the highest total sales)
   const mostPopularItem = report.reduce((maxItem, item) => 
@@ -97,6 +96,7 @@ const SalesReport = () => {
     doc.rect(margin, y - 5, pageWidth - margin * 2, 8, 'F');
     doc.text('Product Name', col1X, y);
     doc.text('Quantity', col2X, y, { align: 'center' });
+    doc.text('Price', col2X, y, { align: 'center' });
     doc.text('Sales (Rs.)', col3X, y, { align: 'right' });
     y += 8;
 
@@ -105,10 +105,12 @@ const SalesReport = () => {
       const productName = item._id;
       const quantity = item.totalQuantity.toString();
       const sales = item.totalSales.toFixed(2).toString();
+      const amount = (item.totalQuantity * item.totalSales).toFixed(2).toString();
 
       doc.text(productName, col1X, y);
       doc.text(quantity, col2X, y, { align: 'center' });
-      doc.text(sales, col3X, y, { align: 'right' });
+      doc.text(sales, col3X, y, { align: 'center' });
+      doc.text(amount, col3X, y, { align: 'right' });
 
       y += 8;
       if (y > pageHeight - 30) {
@@ -121,7 +123,7 @@ const SalesReport = () => {
     doc.setFont(undefined, 'bold');
     doc.text(`Total Quantity: ${totalQuantity}`, margin, y);
     y += 6;
-    doc.text(`Total Sales: Rs. ${totalSales.toFixed(2)}`, margin, y);
+    doc.text(`Total Sales: Rs. ${totalAmountOfSales.toFixed(2)}`, margin, y);
 
     const footerY = pageHeight - 10;
     doc.setFontSize(9);
@@ -143,7 +145,7 @@ const SalesReport = () => {
     datasets: [
       {
         label: 'Total Sales',
-        data: report.map((item) => item.totalSales),
+        data: report.map((item) => item.totalQuantity*item.totalSales),
         backgroundColor: [
           '#4e73df',
           '#1cc88a',
@@ -240,6 +242,7 @@ const SalesReport = () => {
               <tr>
                 <th>Product Name</th>
                 <th>Total Quantity</th>
+                <th>Price</th>
                 <th>Total Sales</th>
               </tr>
             </thead>
@@ -249,6 +252,7 @@ const SalesReport = () => {
                   <td>{item._id}</td>
                   <td>{item.totalQuantity}</td>
                   <td>Rs. {item.totalSales.toFixed(2)}</td>
+                  <td>Rs. {item.totalQuantity*item.totalSales}</td>
                 </tr>
               ))}
             </tbody>
@@ -256,7 +260,7 @@ const SalesReport = () => {
 
           <div className="mt-3">
             <strong>Total Quantity Sold:</strong> {totalQuantity} <br />
-            <strong>Total Sales:</strong> Rs. {totalSales.toFixed(2)}
+            <strong>Total Amount of Sales:</strong> Rs. {totalAmountOfSales.toFixed(2)}
           </div>
 
           <div className="d-flex justify-content-between mt-4">
