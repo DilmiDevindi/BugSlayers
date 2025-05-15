@@ -90,8 +90,8 @@ const SalesReport = () => {
     doc.setFont(undefined, 'bold');
     doc.setFillColor(230, 230, 230);
     const col1X = margin + 2;
-    const col2X = pageWidth / 2;
-    const col3X = pageWidth - margin - 2;
+    const col2X = pageWidth / 3;
+    const col3X = (pageWidth / 3) * 2;
     const col4X = pageWidth - margin - 2;
 
     doc.rect(margin, y - 5, pageWidth - margin * 2, 8, 'F');
