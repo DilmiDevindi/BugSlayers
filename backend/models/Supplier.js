@@ -3,39 +3,38 @@ const mongoose = require('mongoose');
 const SupplierSchema = new mongoose.Schema({
   date: {
     type: Date,
-    required: true
+    default: Date.now,
   },
   supplierName: {
     type: String,
-    required: true
+    required: true,
   },
   phone1: {
     type: String,
-    required: true
+    required: true,
   },
   phone2: {
-    type: String
+    type: String,
   },
   fax: {
-    type: String
+    type: String,
   },
   email: {
     type: String,
-    required: true
+    required: true,
   },
   address: {
     type: String,
-    required: true
+    required: true,
   },
   supplyProducts: {
     type: String,
-    required: true
+    required: true,
   },
   paymentTerms: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 });
 
 module.exports = mongoose.model('Supplier', SupplierSchema);
-
