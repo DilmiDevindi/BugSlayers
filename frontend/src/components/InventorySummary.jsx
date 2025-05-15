@@ -323,9 +323,14 @@ const InventorySummary = () => {
             <td>{filteredItems.reduce((acc, i) => acc + (i.sales || 0) * i.price, 0).toFixed(2)}</td>
             <td>{filteredItems.reduce((acc, i) => acc + (i.quantity || 0), 0)}</td>
             <td>{filteredItems.reduce((acc, i) => acc + (i.quantity || 0) * i.price, 0).toFixed(2)}</td>
- 
-            }
-          </tbody>
+            <td>{filteredItems.reduce((acc, i) => acc + ((i.sales || 0) * i.price - (i.purchases || 0) * i.price), 0).toFixed(2)}</td> {/* Updated Profit Calculation */}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
       {/* Export Buttons */}
       <div className="d-flex justify-content-end gap-3 mt-4">
         <button className="btn btn-outline-secondary">Export CSV</button>
