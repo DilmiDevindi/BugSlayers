@@ -139,4 +139,4 @@ const EditSupplier = () => {
   );
 };
 
-export default EditSupplier;
+export default EditSupplier; 
