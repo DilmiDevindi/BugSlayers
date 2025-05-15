@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import axios from 'axios';
 import './Bill.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFileInvoice } from '@fortawesome/free-solid-svg-icons';
 
 function BillForm() {
   const [name, setName] = useState('');
@@ -80,9 +82,9 @@ function BillForm() {
 
   return (
     <div className='invoice-form'>
-      <h2>Invoice Generation</h2>
+      <h3><FontAwesomeIcon icon={faFileInvoice} className="addsales-icon" /> Generate Invoice</h3>
       <form>
-        <h3>Customer Details</h3>
+        <h4>Customer Details</h4>
 
         <div className="inline-field">
           <label>Date:</label>
@@ -110,7 +112,7 @@ function BillForm() {
         </div>
 
         <hr />
-        <h3>Item Details</h3>
+        <h4>Item Details</h4>
 
         <div className="inline-field">
           <label>Item Code:</label>
