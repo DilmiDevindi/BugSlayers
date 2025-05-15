@@ -40,6 +40,7 @@ function BillForm() {
   };
 
   const handleDateChange = (e) => setDate(e.target.value);
+
   const handleItemCodeChange = async (e) => {
     const code = e.target.value;
     setItemCode(code);
@@ -129,7 +130,7 @@ function BillForm() {
         </label>
         <br />
         <label>
-          Amount:
+          {itemPrice && quantity ? `${itemPrice} × ${quantity} =` : 'Amount:'}
           <input
             type="text"
             value={(parseFloat(itemPrice || 0) * quantity).toFixed(2)}
