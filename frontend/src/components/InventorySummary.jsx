@@ -126,7 +126,6 @@ const InventorySummary = () => {
       ];
     });
 
-    // @ts-ignore
     doc.autoTable({
       startY: 20,
       head: [tableColumn],
@@ -212,7 +211,7 @@ const InventorySummary = () => {
         <div className="col-md-6">
           <h6>Stock Distribution by Category</h6>
           <div className="card shadow-sm p-3">
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={340}>
               <PieChart>
                 <Pie data={pieData} dataKey="value" nameKey="category" cx="50%" cy="50%" outerRadius={80} labelLine={false} label={renderCustomizedLabel}>
                   {pieData.map((entry, index) => (
@@ -227,9 +226,9 @@ const InventorySummary = () => {
         <div className="col-md-6">
           <h6>Top Stocked Items</h6>
           <div className="card shadow-sm p-3">
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={barData}>
-                <XAxis dataKey="itemName" />
+            <ResponsiveContainer width="100%" height={340}>
+              <BarChart data={barData} margin={{ top: 30, right: 30, left: 0, bottom: 30 }}>
+                <XAxis dataKey="itemName" angle={-45} textAnchor="end" interval={0} height={70} />
                 <YAxis />
                 <Tooltip />
                 <Bar dataKey="quantity" fill="#0d6efd" />
