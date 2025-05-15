@@ -16,19 +16,26 @@ body {
     width: 50%;
   }
   
-  label {
-    display: block;
-    margin-bottom: 12px;
-    font-weight: 500;
-    color: #444;
+  /* Inline form group */
+  .form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
   }
   
-  input[type="text"],
-  input[type="number"],
-  input[type="date"] {
-    width: 100%;
+  .form-group label {
+    width: 150px; /* adjust width as needed */
+    margin-right: 10px;
+    font-weight: 500;
+    color: #444;
+    margin-bottom: 0;
+  }
+  
+  .form-group input[type="text"],
+  .form-group input[type="number"],
+  .form-group input[type="date"] {
+    flex: 1;
     padding: 8px;
-    margin-top: 4px;
     box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 4px;
