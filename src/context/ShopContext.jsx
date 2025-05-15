@@ -37,7 +37,7 @@ const ShopContextProvider = (props) => {
             cartData[itemId] = {};
             cartData[itemId][size] = 1;
          }
-         //console.log("Updated cart data:", cartData);    
+         console.log("Updated cart data:", cartData);    
          setCartItems(cartData);
     }
 
