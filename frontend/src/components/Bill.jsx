@@ -131,7 +131,7 @@ function BillForm() {
 
         {/* Calculated Price Label */}
         <label>
-          Price (Item Price × Quantity):
+          Price :
           <input type="text" value={calculatePrice()} readOnly />
         </label>
         <br />
