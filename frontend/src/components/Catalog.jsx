@@ -29,15 +29,18 @@ const Catalog = () => {
 
   // Fetch products for selected category
   useEffect(() => {
-    if (activeTab) {
-      axios.get(`http://localhost:5000/api/catalog/products?categoryId=${activeTab}`)
-        .then((res) => {
-          setProducts(res.data);
-          setFilteredProducts(res.data); // Initially show all in category
-          setSearchQuery(''); // Reset search when tab changes
-        })
-        .catch((err) => console.error('Error fetching products:', err));
-    }
+    const fetchProducts = async () => {
+      if (!activeTab) return;
+      try {
+        const res = await axios.get(`http://localhost:5000/api/catalog/products?categoryId=${activeTab}`);
+        setProducts(res.data);
+        setFilteredProducts(res.data); // Initially show all in category
+        setSearchQuery(''); // Reset search when tab changes
+      } catch (err) {
+        console.error('Error fetching products:', err);
+      }
+    };
+    fetchProducts();
   }, [activeTab]);
 
   // Search within current category's products
