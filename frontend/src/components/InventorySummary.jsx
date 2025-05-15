@@ -297,13 +297,18 @@ const InventorySummary = () => {
       </div>
 
       <div className="d-flex gap-3 flex-wrap">
-        <button className="btn btn-danger" onClick={exportPDF}>
+        <button className="btn btn-success" onClick={exportPDF}>
           <i className="bi bi-file-pdf" /> Export PDF
         </button>
-        <CSVLink data={generateCSVData()} filename="inventory-summary.csv" className="btn btn-success">
-          <i className="bi bi-file-earmark-spreadsheet" /> Export CSV
-        </CSVLink>
-      </div>
+      <CSVLink
+      data={generateCSVData()}
+      filename="inventory-summary.csv"
+      className="btn btn-success"
+      >
+    <i className="bi bi-file-earmark-spreadsheet" /> Export CSV
+  </CSVLink>
+</div>
+
     </div>
   );
 };
