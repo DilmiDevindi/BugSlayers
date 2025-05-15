@@ -130,18 +130,15 @@ function BillForm() {
         </label>
         <br />
         <label>
-          {itemPrice && quantity ? `${itemPrice} × ${quantity} =` : 'Price:'}
-          <input
-            type="text"
-            value={(parseFloat(itemPrice || 0) * quantity).toFixed(2)}
-            readOnly
-          />
-        </label>
-        <br />
-        <label>
           Discount:
           <input type="number" value={discount} min="0" onChange={handleDiscountChange} />
         </label>
+        
+        {/* Amount label after Discount */}
+        <label style={{ marginLeft: '20px' }}>
+          Amount: <strong>{(parseFloat(itemPrice || 0) - discount).toFixed(2)}</strong>
+        </label>
+
         <br />
         <label>
           Cash Received:
