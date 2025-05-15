@@ -130,7 +130,7 @@ function BillForm() {
         </label>
         <br />
         <label>
-          {itemPrice && quantity ? `${itemPrice} × ${quantity} =` : 'Amount:'}
+          {itemPrice && quantity ? `${itemPrice} × ${quantity} =` : 'Price:'}
           <input
             type="text"
             value={(parseFloat(itemPrice || 0) * quantity).toFixed(2)}
