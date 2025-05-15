@@ -65,12 +65,40 @@ const AddSupplier = () => {
     e.preventDefault();
 
     let hasErrors = false;
+    const newErrors = {};
+
     Object.entries(supplier).forEach(([key, value]) => {
-      const validated = validateFields(key, value);
-      if (errors[key]) hasErrors = true;
+      let error = '';
+
+      if (key === 'phone1' || key === 'phone2') {
+        value = value.replace(/\D/g, '');
+        if (value.length > 10) {
+          value = value.slice(0, 10);
+        }
+        if (!validatePhoneNumber(value)) {
+          error = 'Contact number must be exactly 10 digits and numeric';
+        } else if (key === 'phone2' && value === supplier.phone1) {
+          error = 'Primary and Secondary Contact Numbers must not be the same';
+        }
+      }
+
+      if (key === 'email' && value && !validateEmail(value)) {
+        error = 'Email must be a valid @gmail.com address';
+      }
+
+      if (key === 'address' && !value.trim()) {
+        error = 'Address cannot be empty';
+      }
+
+      if (error) {
+        newErrors[key] = error;
+        hasErrors = true;
+      }
     });
 
-    if (Object.values(errors).some((err) => err) || hasErrors) {
+    setErrors(newErrors);
+
+    if (hasErrors) {
       alert("Please fix the validation errors.");
       return;
     }
