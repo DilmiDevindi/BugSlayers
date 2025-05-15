@@ -18,10 +18,6 @@ import Bill from "./components/Bill";
 import AddSalesRecord from "./components/AddSalesRecord";
 import ManageSales from "./components/ManageSales";
 import Catalog from "./components/Catalog";
-
-
-
-
 import LowStockReport from './components/LowStockReport';
 import InventorySummary from './components/InventorySummary';
 import SalesReport from "./components/SalesReport";
@@ -60,7 +56,7 @@ function App() {
 
           <Route path="inventory/reports/low-stock" element={<LowStockReport />} />
           <Route path="inventory/reports/summary" element={<InventorySummary />} />
-       
+      
 
           <Route path="sales/report" element={<SalesReport />} />
           <Route path="purchases/add" element={<AddPurchase />} />

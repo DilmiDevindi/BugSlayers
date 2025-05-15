@@ -65,6 +65,7 @@
   }
 
   .sales {
+    border: transparent;
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
@@ -73,7 +74,6 @@
   
   .sales th, 
   .sales td {
-    border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
   }
