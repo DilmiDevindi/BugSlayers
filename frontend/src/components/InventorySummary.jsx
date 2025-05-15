@@ -309,7 +309,7 @@ const InventorySummary = () => {
                 <td>{salesValue.toFixed(2)}</td>
                 <td>{closingStock}</td>
                 <td>{closingValue.toFixed(2)}</td>
-                <td className="text-success fw-bold">{profit.toFixed(2)}</td> {/* Updated Profit Calculation */}
+                <td>{profit.toFixed(2)}</td>
               </tr>
             );
           })}
