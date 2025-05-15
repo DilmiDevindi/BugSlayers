@@ -78,7 +78,7 @@ function BillForm() {
     <div>
       <h2>Invoice</h2>
       <form>
-      <h3>Customer Details</h3>
+        <h3>Customer Details</h3>
         <label>
           Date:
           <input type="date" value={date} onChange={handleDateChange} />
@@ -131,10 +131,17 @@ function BillForm() {
           <input type="number" value={discount} min="0" onChange={handleDiscountChange} />
         </label>
         <br />
+        <label>
+          Total Amount:
+          <input type="text" value={total.toFixed(2)} readOnly />
+        </label>
+        <br />
         <button type="button" onClick={calculateTotal}>
           Generate Invoice
         </button>
-        <button onClick={handlePrint}>Print Invoice</button>
+        <button type="button" onClick={handlePrint}>
+          Print Invoice
+        </button>
       </form>
 
       {showInvoice && (
