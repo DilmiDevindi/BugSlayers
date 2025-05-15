@@ -321,7 +321,8 @@ const InventorySummary = () => {
             <td>{filteredItems.reduce((acc, i) => acc + (i.purchases || 0) * i.price, 0).toFixed(2)}</td>
             <td>{filteredItems.reduce((acc, i) => acc + (i.sales || 0), 0)}</td>
             <td>{filteredItems.reduce((acc, i) => acc + (i.sales || 0) * i.price, 0).toFixed(2)}</td>
-
+            <td>{filteredItems.reduce((acc, i) => acc + (i.quantity || 0), 0)}</td>
+            <td>{filteredItems.reduce((acc, i) => acc + (i.quantity || 0) * i.price, 0).toFixed(2)}</td>
  
             }
           </tbody>
