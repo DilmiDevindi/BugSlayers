@@ -126,22 +126,22 @@
     border-collapse: separate; /* important for border-radius to work */
     border-spacing: 0; /* remove gaps between cells */
     margin-top: 20px;
-    font-family: Arial, sans-serif;
-    border: 1px solid #ccc;
+    font-family:  sans-serif;
+    border: none;
     border-radius: 12px; /* rounded corners */
     overflow: hidden; /* clip overflow to round corners */
   } 
   
   .sales th, 
   .sales td {
-    border: 1px solid #ddd;
+    border: none;
     padding: 8px;
     text-align: left;
     font-weight: 400;
   }
   
   .sales th {
-    background-color: #0b0282;
+    background-color: #0b0b0b;
     color: white;
     font-weight: bold;
   }
