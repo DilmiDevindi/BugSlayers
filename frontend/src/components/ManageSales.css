@@ -128,7 +128,7 @@
     margin-top: 20px;
     font-family:  sans-serif;
     border: none;
-    border-radius: 12px; /* rounded corners */
+    border-radius: 12px; 
     overflow: hidden; /* clip overflow to round corners */
   } 
   
