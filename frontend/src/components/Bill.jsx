@@ -76,8 +76,9 @@ function BillForm() {
 
   return (
     <div>
-      <h2>Customer Bill Form</h2>
+      <h2>Invoice</h2>
       <form>
+      <h3>Customer Details</h3>
         <label>
           Date:
           <input type="date" value={date} onChange={handleDateChange} />
