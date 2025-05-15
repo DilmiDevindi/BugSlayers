@@ -15,6 +15,10 @@ function BillForm() {
   const [quantity, setQuantity] = useState(1);
   const [discount, setDiscount] = useState(0);
   const [total, setTotal] = useState(0);
+
+  const [cashReceived, setCashReceived] = useState(0);
+  const [balance, setBalance] = useState(0);
+
   const [showInvoice, setShowInvoice] = useState(false);
 
   const handleNameChange = async (e) => {
@@ -35,10 +39,7 @@ function BillForm() {
     }
   };
 
-  const handleDateChange = (e) => {
-    setDate(e.target.value);
-  };
-
+  const handleDateChange = (e) => setDate(e.target.value);
   const handleItemCodeChange = async (e) => {
     const code = e.target.value;
     setItemCode(code);
@@ -55,19 +56,20 @@ function BillForm() {
     }
   };
 
-  const handleQuantityChange = (e) => {
-    setQuantity(Number(e.target.value));
-  };
-
-  const handleDiscountChange = (e) => {
-    setDiscount(Number(e.target.value));
-  };
+  const handleQuantityChange = (e) => setQuantity(Number(e.target.value));
+  const handleDiscountChange = (e) => setDiscount(Number(e.target.value));
+  const handleCashReceivedChange = (e) => setCashReceived(Number(e.target.value));
 
   const calculateTotal = () => {
     const price = parseFloat(itemPrice);
     const totalAmount = (price * quantity) - discount;
     setTotal(totalAmount > 0 ? totalAmount : 0);
     setShowInvoice(true);
+  };
+
+  const calculateBalance = () => {
+    const balanceAmount = cashReceived - total;
+    setBalance(balanceAmount >= 0 ? balanceAmount : 0);
   };
 
   const handlePrint = () => {
@@ -127,21 +129,33 @@ function BillForm() {
         </label>
         <br />
         <label>
+          Amount:
+          <input
+            type="text"
+            value={(parseFloat(itemPrice || 0) * quantity).toFixed(2)}
+            readOnly
+          />
+        </label>
+        <br />
+        <label>
           Discount:
           <input type="number" value={discount} min="0" onChange={handleDiscountChange} />
         </label>
         <br />
         <label>
-          Total Amount:
-          <input type="text" value={total.toFixed(2)} readOnly />
+          Cash Received:
+          <input type="number" value={cashReceived} onChange={handleCashReceivedChange} />
+        </label>
+        <br />
+        <label>
+          Balance:
+          <input type="text" value={balance.toFixed(2)} readOnly />
         </label>
         <br />
         <button type="button" onClick={calculateTotal}>
           Generate Invoice
         </button>
-        <button type="button" onClick={handlePrint}>
-          Print Invoice
-        </button>
+        <button type="button" onClick={handlePrint}>Print Invoice</button>
       </form>
 
       {showInvoice && (
@@ -153,6 +167,17 @@ function BillForm() {
           <p><strong>Price per item:</strong> ${itemPrice}</p>
           <p><strong>Discount:</strong> ${discount}</p>
           <p><strong>Total:</strong> ${total.toFixed(2)}</p>
+
+          <label>
+            <strong>Cash Received:</strong>
+            <input type="number" value={cashReceived} onChange={handleCashReceivedChange} />
+          </label>
+          <br />
+          <button type="button" onClick={calculateBalance}>
+            Calculate Balance
+          </button>
+          <p><strong>Balance:</strong> ${balance.toFixed(2)}</p>
+
           <button onClick={handlePrint}>Print Invoice</button>
         </div>
       )}
