@@ -134,6 +134,7 @@ function BillForm() {
         <button type="button" onClick={calculateTotal}>
           Generate Invoice
         </button>
+        <button onClick={handlePrint}>Print Invoice</button>
       </form>
 
       {showInvoice && (
