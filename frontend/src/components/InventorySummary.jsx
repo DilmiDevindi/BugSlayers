@@ -263,6 +263,10 @@ const InventorySummary = () => {
           </ResponsiveContainer>
         </div>
       </div>
+
+      {/* table */}
+      <div className="mt-5">
+      <h6 className="fw-bold text-primary">Detailed Inventory Summary</h6>
       
 
       {/* Export Buttons */}
