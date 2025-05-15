@@ -25,7 +25,7 @@ const InventorySummary = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [pieData, setPieData] = useState([]);
   const [barData, setBarData] = useState([]);
-  const [stockTrends] = useState([]); // Placeholder
+  const [stockTrends, setStockTrends] = useState([]);
 
   useEffect(() => {
     fetchInventoryItems();
@@ -98,6 +98,14 @@ const InventorySummary = () => {
       .map(item => ({ itemName: item.name, quantity: item.quantity }));
 
     setBarData(bars);
+
+    // Calculate Stock Value Trends
+    const trends = items.map(item => ({
+      date: item.dateAdded,  // assuming `dateAdded` is a field in your inventory items
+      value: item.quantity * item.price || 0,
+    }));
+
+    setStockTrends(trends);
   };
 
   const renderCustomizedLabel = ({ cx, cy, midAngle, outerRadius, percent, index }) => {
@@ -120,6 +128,9 @@ const InventorySummary = () => {
     );
   };
 
+  // Total Inventory Value Calculation
+  const totalInventoryValue = filteredItems.reduce((acc, item) => acc + (item.quantity * item.price || 0), 0);
+
   return (
     <div className="container py-5">
       <div className="text-center mb-5">
@@ -129,6 +140,7 @@ const InventorySummary = () => {
 
       {/* Summary Cards */}
       <div className="row g-4 mb-4">
+        {/* Total Inventory */}
         <div className="col-lg-3 col-md-6">
           <div className="card shadow-sm">
             <div className="card-body">
@@ -138,6 +150,17 @@ const InventorySummary = () => {
           </div>
         </div>
 
+        {/* Total Inventory Value */}
+        <div className="col-lg-3 col-md-6">
+          <div className="card shadow-sm">
+            <div className="card-body">
+              <h5 className="card-title text-primary">Total Inventory Value</h5>
+              <h6><b>${totalInventoryValue.toFixed(2)}</b></h6>
+            </div>
+          </div>
+        </div>
+
+        {/* Out of Stock */}
         <div className="col-lg-3 col-md-6">
           <div className="card shadow-sm">
             <div className="card-body">
@@ -147,6 +170,7 @@ const InventorySummary = () => {
           </div>
         </div>
 
+        {/* Low Stock */}
         <div className="col-lg-3 col-md-6">
           <div className="card shadow-sm">
             <div className="card-body">
@@ -181,7 +205,7 @@ const InventorySummary = () => {
         />
       </div>
       <br />
-
+      <br />
       {/* Charts */}
       <div className="row g-4 mb-4">
         <div className="col-md-6">
@@ -209,7 +233,7 @@ const InventorySummary = () => {
           </div>
         </div>
         <div className="col-md-6">
-          <h5 className="mb-3">Top Stocked Items</h5>
+          <h6>Top Stocked Items</h6>
           <div className="card shadow-sm p-3">
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={barData}>
@@ -223,9 +247,11 @@ const InventorySummary = () => {
         </div>
       </div>
 
+      
+
       {/* Stock Trends */}
       <div className="mb-5">
-        <h5 className="mb-3">Stock Value Trends</h5>
+        <h6>Stock Value Trends</h6>
         <div className="card shadow-sm p-3">
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={stockTrends}>
@@ -237,6 +263,73 @@ const InventorySummary = () => {
           </ResponsiveContainer>
         </div>
       </div>
+
+      {/* table */}
+      <div className="mt-5">
+      <h6>Detailed Inventory Summary</h6>
+      <div className="card shadow-sm rounded-3 p-3 border-0">
+        <div className="table-responsive">
+          <table className="table table-bordered table-striped text-center">
+            <thead className="bg-success text-white"> {/* Light Green Headers */}
+              <tr>
+                <th>#</th>
+                <th>Product Name</th>
+                <th>Opening Stock</th>
+                <th>Opening Stock Value (Rs)</th>
+                <th>No. of Purchases</th>
+                <th>Value of Purchases (Rs)</th>
+                <th>No. of Sales</th>
+                <th>Value of Sales (Rs)</th>
+                <th>Closing Stock</th>
+                <th>Closing Stock Value (Rs)</th>
+                <th>Profit (Rs)</th>
+              </tr>
+            </thead>
+          <tbody>
+            {filteredItems.map((item, index) => {
+              const openingStock = item.openingStock || 0;
+              const openingValue = openingStock * item.price;
+              const purchases = item.purchases || 0;
+              const purchaseValue = purchases * item.price;
+              const sales = item.sales || 0;
+              const salesValue = sales * item.price;
+              const closingStock = item.quantity || 0;
+              const closingValue = closingStock * item.price;
+              const profit = salesValue - purchaseValue; // Updated logic
+
+              return (
+              <tr key={item._id} className="bg-light">
+                <td>{index + 1}</td>
+                <td>{item.name}</td>
+                <td>{openingStock}</td>
+                <td>{openingValue.toFixed(2)}</td>
+                <td>{purchases}</td>
+                <td>{purchaseValue.toFixed(2)}</td>
+                <td>{sales}</td>
+                <td>{salesValue.toFixed(2)}</td>
+                <td>{closingStock}</td>
+                <td>{closingValue.toFixed(2)}</td>
+                <td>{profit.toFixed(2)}</td>
+              </tr>
+            );
+          })}
+          {/* Total Row */}
+          <tr className="fw-bold bg-info text-dark"> {/* Light Blue */}
+            <td colSpan={2}>Total</td>
+            <td>{filteredItems.reduce((acc, i) => acc + (i.openingStock || 0) * i.price, 0).toFixed(2)}</td>
+            <td>{filteredItems.reduce((acc, i) => acc + (i.purchases || 0), 0)}</td>
+            <td>{filteredItems.reduce((acc, i) => acc + (i.purchases || 0) * i.price, 0).toFixed(2)}</td>
+            <td>{filteredItems.reduce((acc, i) => acc + (i.sales || 0), 0)}</td>
+            <td>{filteredItems.reduce((acc, i) => acc + (i.sales || 0) * i.price, 0).toFixed(2)}</td>
+            <td>{filteredItems.reduce((acc, i) => acc + (i.quantity || 0), 0)}</td>
+            <td>{filteredItems.reduce((acc, i) => acc + (i.quantity || 0) * i.price, 0).toFixed(2)}</td>
+            <td>{filteredItems.reduce((acc, i) => acc + ((i.sales || 0) * i.price - (i.purchases || 0) * i.price), 0).toFixed(2)}</td> {/* Updated Profit Calculation */}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
       {/* Export Buttons */}
       <div className="d-flex justify-content-end gap-3 mt-4">
