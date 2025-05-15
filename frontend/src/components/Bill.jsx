@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import './Bill.css'; 
 
 function BillForm() {
   const [name, setName] = useState('');
@@ -78,7 +79,7 @@ function BillForm() {
   };
 
   return (
-    <div>
+    <div className="form-group">
       <h2>Invoice</h2>
       <form>
         <h3>Customer Details</h3>
