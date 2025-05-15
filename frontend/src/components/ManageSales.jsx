@@ -95,7 +95,7 @@ const ManageSales = () => {
       </div>
 
       {/* Sales Table */}
-      <table className="table table-striped">
+      <table className="sales table table-striped">
         <thead>
           <tr>
             <th>ID</th>
