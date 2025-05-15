@@ -18,10 +18,6 @@ import Bill from "./components/Bill";
 import AddSalesRecord from "./components/AddSalesRecord";
 import ManageSales from "./components/ManageSales";
 import Catalog from "./components/Catalog";
-
-
-
-
 import LowStockReport from './components/LowStockReport';
 import InventorySummary from './components/InventorySummary';
 import SalesReport from "./components/SalesReport";
