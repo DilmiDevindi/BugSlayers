@@ -97,7 +97,7 @@ const SalesReport = () => {
     doc.rect(margin, y - 5, pageWidth - margin * 2, 8, 'F');
     doc.text('Product Name', col1X, y);
     doc.text('Quantity', col2X, y, { align: 'center' });
-    doc.text('Price', col3X, y, { align: 'center' });
+    doc.text('Price', col3X, y, { align: 'right' });
     doc.text('Sales (Rs.)', col4X, y, { align: 'right' });
     y += 8;
 
