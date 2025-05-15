@@ -4,11 +4,10 @@ body {
     padding: 30px;
   }
   
- h3 {
+  .bill-topic {
     text-align: center;
     margin-bottom: 25px;
     color: #100385;
-    margin-left: 480px;
     margin-top: 30px;
   }
 
