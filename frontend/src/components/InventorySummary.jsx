@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
 import { CSVLink } from 'react-csv';
 import {
   PieChart,
@@ -88,57 +86,6 @@ const InventorySummary = () => {
   const getCategoryName = (id) => {
     const cat = categories.find((c) => c._id === id);
     return cat ? cat.categoryName : 'Unknown';
-  };
-
-  const exportPDF = () => {
-    const doc = new jsPDF({ orientation: 'landscape' });
-    doc.text('Inventory Summary Report', 14, 15);
-
-    const headers = [
-      '#',
-      'Product',
-      'Opening Stock',
-      'Opening Value (Rs)',
-      'Purchases',
-      'Purchase Value (Rs)',
-      'Sales',
-      'Sales Value (Rs)',
-      'Closing Stock',
-      'Closing Value (Rs)',
-      'Profit (Rs)'
-    ];
-
-    const rows = filteredItems.map((it, i) => {
-      const os = it.openingStock || 0;
-      const p = it.purchases || 0;
-      const s = it.sales || 0;
-      const cs = it.quantity || 0;
-      const price = it.sellingPrice || 0;
-
-      const ov = os * price;
-      const pv = p * price;
-      const sv = s * price;
-      const cv = cs * price;
-      const profit = sv - pv;
-
-      return [
-        i + 1,
-        it.productName,
-        os,
-        ov.toFixed(2),
-        p,
-        pv.toFixed(2),
-        s,
-        sv.toFixed(2),
-        cs,
-        cv.toFixed(2),
-        profit.toFixed(2)
-      ];
-    });
-
-    doc.autoTable({ head: [headers], body: rows, startY: 20, styles: { fontSize: 8 } });
-
-    doc.save('inventory-summary.pdf');
   };
 
   const generateCSVData = () => {
@@ -294,9 +241,6 @@ const InventorySummary = () => {
       </div>
 
       <div className="export-buttons">
-        <button className="btn btn-pdf" onClick={exportPDF}>
-          <span className="icon-pdf" /> Export PDF
-        </button>
         <CSVLink
           data={generateCSVData()}
           filename="inventory-summary.csv"
