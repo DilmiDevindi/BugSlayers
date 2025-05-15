@@ -14,7 +14,6 @@ const Sidebar = () => {
   const [isSalesOpen, setIsSalesOpen]  = useState(false); 
   const [isInventoryReportOpen, setIsInventoryReportOpen] = useState(false);
 
-   
   const [isPurchasesOpen, setIsPurchasesOpen] = useState(false); // <-- Added separate state for purchases
 
   const toggleSuppliersDropdown = () => {
@@ -222,6 +221,11 @@ const Sidebar = () => {
               <li className="nav-item mb-2">
                 <Link to="/dashboard/sales/report" className="nav-link text-white">
                   Generate Report
+                </Link>
+              </li>
+              <li className="nav-item mb-2">
+                <Link to="/dashboard/sales/dreport" className="nav-link text-white">
+                  Generate Daily Report
                 </Link>
               </li>
             </ul>
