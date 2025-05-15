@@ -90,17 +90,17 @@ const AddInventoryItem = () => {
         <div className="form-row-i">
           <div className="form-group-i input-icon-i">
             <span className="icon"><FontAwesomeIcon icon={faShoppingCart} /></span>
-            <input type="number" className="form-control-i" placeholder="Product Quantity" value={quantity} onChange={(e) => setQuantity(e.target.value)} required />
+            <input type="number" className="form-control-i" placeholder="      Product Quantity" value={quantity} onChange={(e) => setQuantity(e.target.value)} required />
           </div>
         </div>
         <div className="form-row-i">
           <div className="form-group-i input-icon-i">
             <span className="icon"><FontAwesomeIcon icon={faDollarSign} /></span>
-            <input type="number" className="form-control-i" placeholder="Buying Price" min="0" step="0.01" value={buyingPrice} onChange={(e) => setBuyingPrice(e.target.value)} required />
+            <input type="number" className="form-control-i" placeholder="      Buying Price" min="0" step="0.01" value={buyingPrice} onChange={(e) => setBuyingPrice(e.target.value)} required />
           </div>
           <div className="form-group-i input-icon-i">
             <span className="icon"><FontAwesomeIcon icon={faDollarSign} /></span>
-            <input type="number" className="form-control-i" placeholder="Selling Price" min="0" step="0.01" value={sellingPrice} onChange={(e) => setSellingPrice(e.target.value)} required />
+            <input type="number" className="form-control-i" placeholder="      Selling Price" min="0" step="0.01" value={sellingPrice} onChange={(e) => setSellingPrice(e.target.value)} required />
           </div>
         </div>
         <div className="form-group-i">
