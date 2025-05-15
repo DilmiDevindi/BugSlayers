@@ -82,7 +82,7 @@ function BillForm() {
 
   return (
     <div className='invoice-form'>
-      <h3><FontAwesomeIcon icon={faFileInvoice} className="addsales-icon" /> Generate Invoice</h3>
+      <h3><FontAwesomeIcon icon={faFileInvoice} className="bill-icon" /> Generate Invoice</h3>
       <form>
         <h4>Customer Details</h4>
 
