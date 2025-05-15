@@ -5,8 +5,16 @@ const salesSchema = new mongoose.Schema({
   productName: { type: String, required: true },
   quantity: { type: Number, required: true },
   price: { type: Number, required: true },
+  amount: { type: Number, required: true },  // New amount field
   date: { type: Date, default: Date.now }
+});
+
+// Optional: Middleware to calculate amount before saving, if you want backend to calculate
+salesSchema.pre('save', function(next) {
+  this.amount = this.quantity * this.price;
+  next();
 });
 
 const Sales = mongoose.model('Sales', salesSchema);
 module.exports = Sales;
+
