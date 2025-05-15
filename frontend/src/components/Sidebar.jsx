@@ -223,11 +223,6 @@ const Sidebar = () => {
                   Generate Report
                 </Link>
               </li>
-              <li className="nav-item mb-2">
-                <Link to="/dashboard/sales/dreport" className="nav-link text-white">
-                  Generate Daily Report
-                </Link>
-              </li>
             </ul>
           )}
         </li>
