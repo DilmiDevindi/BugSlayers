@@ -317,6 +317,8 @@ const InventorySummary = () => {
           <tr className="fw-bold bg-info text-dark"> {/* Light Blue */}
             <td colSpan={3}>Total</td>
             <td>{filteredItems.reduce((acc, i) => acc + (i.openingStock || 0) * i.price, 0).toFixed(2)}</td>
+            <td>{filteredItems.reduce((acc, i) => acc + (i.purchases || 0), 0)}</td>
+            <td>{filteredItems.reduce((acc, i) => acc + (i.purchases || 0) * i.price, 0).toFixed(2)}</td>
  
             }
           </tbody>
