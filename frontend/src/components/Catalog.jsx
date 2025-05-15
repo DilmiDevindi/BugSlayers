@@ -10,10 +10,10 @@ const Catalog = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [stockFilter, setStockFilter] = useState('all'); // 'all', 'in', 'out'
 
-
   // Fetch all categories on load
   useEffect(() => {
-    axios.get('http://localhost:5000/api/catalog/categories')
+    axios
+      .get('http://localhost:5000/api/catalog/categories')
       .then((res) => {
         setCategories(res.data);
         if (res.data.length > 0) {
@@ -26,42 +26,34 @@ const Catalog = () => {
   // Fetch products for selected category
   useEffect(() => {
     if (activeTab) {
-      axios.get(`http://localhost:5000/api/catalog/products?categoryId=${activeTab}`)
+      axios
+        .get(`http://localhost:5000/api/catalog/products?categoryId=${activeTab}`)
         .then((res) => {
           setProducts(res.data);
-          setFilteredProducts(res.data); // Initially show all in category
-          setSearchQuery(''); // Reset search when tab changes
+          setSearchQuery('');
+          setStockFilter('all'); // Reset filter when changing tab
         })
         .catch((err) => console.error('Error fetching products:', err));
     }
   }, [activeTab]);
 
-  // Search within current category's products
+  // Combined search + stock filter logic
   useEffect(() => {
     const query = searchQuery.toLowerCase();
-    const filtered = products.filter((product) =>
-      product.productName?.toLowerCase().includes(query) ||
-      product.code?.toLowerCase().includes(query)
-    );
-    setFilteredProducts(filtered);
-  }, [searchQuery, products]);
 
-  useEffect(() => {
-    const query = searchQuery.toLowerCase();
     let filtered = products.filter((product) =>
       product.productName?.toLowerCase().includes(query) ||
       product.code?.toLowerCase().includes(query)
     );
-  
+
     if (stockFilter === 'in') {
       filtered = filtered.filter((p) => p.quantity > 0);
     } else if (stockFilter === 'out') {
       filtered = filtered.filter((p) => p.quantity <= 0);
     }
-  
+
     setFilteredProducts(filtered);
   }, [searchQuery, stockFilter, products]);
-  
 
   return (
     <div className="cat-container mt-4">
@@ -78,46 +70,45 @@ const Catalog = () => {
           </li>
         ))}
       </ul>
-  
+
+      {/* Search + Stock Filters */}
       <div className="cat-search-bar-container">
-      {/* Search Bar */}
-      <div className="cat-search">
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Search within this category..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
+        {/* Search Bar */}
+        <div className="cat-search">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Search within this category..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+
+        {/* Filter Buttons */}
+        <div className="d-flex gap-2">
+          <button
+            className={`btn-1 btn-xs ${stockFilter === 'all' ? 'btn-custom-all' : 'btn-outline-custom-all'}`}
+            onClick={() => setStockFilter('all')}
+          >
+            All
+          </button>
+          <button
+            className={`btn-2 btn-xs ${stockFilter === 'in' ? 'btn-custom-in' : 'btn-outline-custom-in'}`}
+            onClick={() => setStockFilter('in')}
+          >
+            In Stock
+          </button>
+          <button
+            className={`btn-3 btn-xs ${stockFilter === 'out' ? 'btn-custom-out' : 'btn-outline-custom-out'}`}
+            onClick={() => setStockFilter('out')}
+          >
+            Out of Stock
+          </button>
+        </div>
       </div>
 
-      {/* Filter Buttons */}
-      <div className="d-flex gap-2">
-        <button
-          className={`btn-1 btn-xs ${stockFilter === 'all' ? 'btn-custom-all' : 'btn-outline-custom-all'}`}
-          onClick={() => setStockFilter('all')}
-        >
-        All
-        </button>
-        <button
-          className={`btn-2 btn-xs ${stockFilter === 'in' ? 'btn-custom-in' : 'btn-outline-custom-in'}`}
-          onClick={() => setStockFilter('in')}
-        >
-        In Stock
-        </button>
-        <button
-          className={`btn-3 btn-xs ${stockFilter === 'out' ? 'btn-custom-out' : 'btn-outline-custom-out'}`}
-          onClick={() => setStockFilter('out')}
-        >
-        Out of Stock
-        </button>
-      </div>
-    </div>
-
-
-  
       {/* Product Grid */}
-      <div className="row ">
+      <div className="row">
         {filteredProducts.length ? (
           filteredProducts.map((product) => (
             <div className="col cat-col mb-4" key={product._id}>
@@ -150,7 +141,6 @@ const Catalog = () => {
       </div>
     </div>
   );
-  
 };
 
 export default Catalog;
