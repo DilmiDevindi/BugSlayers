@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -19,8 +18,14 @@ const ManageSuppliers = () => {
       const response = await axios.get('/api/suppliers', {
         params: { search, filter, date: dateFilter }
       });
-      // Sort suppliers by date in ascending order
-      const sortedSuppliers = response.data.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      // Sort suppliers by date ascending
+      const sortedSuppliers = response.data.sort((a, b) => {
+        const dateA = a.date ? new Date(a.date) : new Date(0);
+        const dateB = b.date ? new Date(b.date) : new Date(0);
+        return dateA - dateB;
+      });
+
       setSuppliers(sortedSuppliers);
     } catch (error) {
       console.error('Error fetching suppliers:', error.response ? error.response.data : error.message);
@@ -37,8 +42,8 @@ const ManageSuppliers = () => {
     if (!window.confirm('Are you sure you want to delete this supplier?')) return;
 
     try {
-      await axios.delete(`/api/suppliers/${id}`); // Fixed API URL
-      setSuppliers(prevSuppliers => prevSuppliers.filter(supplier => supplier._id !== id));
+      await axios.delete(`/api/suppliers/${id}`);
+      setSuppliers(prev => prev.filter(supplier => supplier._id !== id));
       alert('Supplier deleted successfully!');
     } catch (error) {
       console.error('Error deleting supplier:', error.response ? error.response.data : error.message);
@@ -48,8 +53,8 @@ const ManageSuppliers = () => {
 
   return (
     <div className="container-fluid mt-5 supplier-container">
-      <div className='supplier-title'>
-        <span className='supplier-title-icon'><FontAwesomeIcon icon={faBarsProgress} /></span> Manage Supplier
+      <div className="supplier-title">
+        <span className="supplier-title-icon"><FontAwesomeIcon icon={faBarsProgress} /></span> Manage Supplier
       </div>
 
       <div className="card p-3 mb-3">
@@ -59,7 +64,7 @@ const ManageSuppliers = () => {
             className="form-control-i"
             placeholder="Search by name..."
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={e => setSearch(e.target.value)}
           />
         </div>
         <div className="mb-3">
@@ -68,7 +73,7 @@ const ManageSuppliers = () => {
             className="form-control-i"
             placeholder="Filter by products..."
             value={filter}
-            onChange={(e) => setFilter(e.target.value)}
+            onChange={e => setFilter(e.target.value)}
           />
         </div>
 
@@ -80,15 +85,15 @@ const ManageSuppliers = () => {
       </div>
 
       {showTable && suppliers.length > 0 ? (
-        <table className="table table-striped table-bordered supplier-table">
-          <thead className="table-white">
+        <table className="table table-striped table-bordered supplier-table" style={{ minWidth: '1000px' }}>
+          <thead className="table-dark">
             <tr>
               <th>Date</th>
               <th>Supplier Name</th>
-              <th>Phone1</th>
-              <th>Phone2</th>
-              <th>Fax</th>
-              <th>Email</th>
+              <th>Contact Number (Primary)</th>
+              <th>Contact Number (Secondary)</th>
+              <th>Fax Number</th>
+              <th>Email Address</th>
               <th>Address</th>
               <th>Supply Products</th>
               <th>Payment Terms</th>
@@ -98,21 +103,21 @@ const ManageSuppliers = () => {
           <tbody>
             {suppliers.map(supplier => (
               <tr key={supplier._id}>
-                <td>{new Date(supplier.date).toLocaleDateString()}</td>
-                <td>{supplier.supplierName}</td>
-                <td>{supplier.phone1}</td>
+                <td>{supplier.date ? new Date(supplier.date).toLocaleDateString('en-GB') : '-'}</td>
+                <td>{supplier.supplierName || '-'}</td>
+                <td>{supplier.phone1 || '-'}</td>
                 <td>{supplier.phone2 || '-'}</td>
                 <td>{supplier.fax || '-'}</td>
                 <td>{supplier.email || '-'}</td>
-                <td>{supplier.address}</td>
-                <td>{supplier.supplyProducts}</td>
-                <td>{supplier.paymentTerms}</td>
+                <td>{supplier.address || '-'}</td>
+                <td>{supplier.supplyProducts || '-'}</td>
+                <td>{supplier.paymentTerms || '-'}</td>
                 <td>
                   <div className="d-flex gap-2">
-                    <Link to={`/dashboard/suppliers/edit/${supplier._id}`} className="btn btn-warning">
+                    <Link to={`/dashboard/suppliers/edit/${supplier._id}`} className="btn btn-warning" title="Edit Supplier">
                       <FontAwesomeIcon icon={faEdit} />
                     </Link>
-                    <button className="btn btn-danger" onClick={() => handleDelete(supplier._id)}>
+                    <button className="btn btn-danger" onClick={() => handleDelete(supplier._id)} title="Delete Supplier">
                       <FontAwesomeIcon icon={faTrash} />
                     </button>
                   </div>
