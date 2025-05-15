@@ -287,7 +287,10 @@ const InventorySummary = () => {
             </thead>
           <tbody>
             {filteredItems.map((item, index) => {
-              
+              const openingStock = item.openingStock || 0;
+              const openingValue = openingStock * item.price;
+              const purchases = item.purchases || 0;
+              const purchaseValue = purchases * item.price;
             }
           </tbody>
       {/* Export Buttons */}
