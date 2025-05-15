@@ -28,8 +28,6 @@ const InventorySummary = () => {
   const [barData, setBarData] = useState([]);
   const [stockTrends, setStockTrends] = useState([]);
 
-  
-  /* DATA FETCH  */
   useEffect(() => {
     fetchInventoryItems();
     fetchCategories();
@@ -55,15 +53,11 @@ const InventorySummary = () => {
     }
   };
 
-  
-  /* DATA TRANSFORMATIONS */
   useEffect(() => {
     if (!inventoryItems.length) return;
 
-    /* Flat list (no additional filters for now) */
     setFilteredItems(inventoryItems);
 
-    /* Pie: stock distribution by category */
     const pieMap = {};
     inventoryItems.forEach((it) => {
       pieMap[it.category] = (pieMap[it.category] || 0) + (it.quantity || 0);
@@ -75,20 +69,18 @@ const InventorySummary = () => {
       }))
     );
 
-    /* Bar: top‑N stocked products */
     const topN = inventoryItems
       .map((it) => ({
-        inventoryItem: it.productName, // match XAxis dataKey
+        inventoryItem: it.productName,
         quantity: it.quantity || 0
       }))
       .sort((a, b) => b.quantity - a.quantity)
-      .slice(0, 10); // show up to 10
+      .slice(0, 10);
     setBarData(topN);
 
-    /* Line: inventory value trend */
     setStockTrends(
       inventoryItems.map((it) => ({
-        date: it.dateAdded, // assumes ISO date string
+        date: it.dateAdded,
         value: (it.quantity || 0) * (it.sellingPrice || 0)
       }))
     );
@@ -99,8 +91,6 @@ const InventorySummary = () => {
     return cat ? cat.categoryName : 'Unknown';
   };
 
-  
-  /* EXPORT HANDLERS */
   const exportPDF = () => {
     const doc = new jsPDF({ orientation: 'landscape' });
     doc.text('Inventory Summary Report', 14, 15);
@@ -121,8 +111,8 @@ const InventorySummary = () => {
 
     const rows = filteredItems.map((it, i) => {
       const os = it.openingStock || 0;
-      const p  = it.purchases || 0;
-      const s  = it.sales || 0;
+      const p = it.purchases || 0;
+      const s = it.sales || 0;
       const cs = it.quantity || 0;
       const price = it.sellingPrice || 0;
 
@@ -147,7 +137,6 @@ const InventorySummary = () => {
       ];
     });
 
-    // @ts-ignore jspdf-autotable adds autoTable
     doc.autoTable({ head: [headers], body: rows, startY: 20, styles: { fontSize: 8 } });
 
     doc.save('inventory-summary.pdf');
@@ -169,8 +158,8 @@ const InventorySummary = () => {
     ];
     const rows = filteredItems.map((it, i) => {
       const os = it.openingStock || 0;
-      const p  = it.purchases || 0;
-      const s  = it.sales || 0;
+      const p = it.purchases || 0;
+      const s = it.sales || 0;
       const cs = it.quantity || 0;
       const price = it.sellingPrice || 0;
 
@@ -197,7 +186,6 @@ const InventorySummary = () => {
     return [headers, ...rows];
   };
 
-  /* RENDERING */
   const renderPieLabel = ({ cx, cy, midAngle, outerRadius, percent, index }) => {
     const RADIAN = Math.PI / 180;
     const radius = outerRadius * 1.25;
@@ -231,13 +219,12 @@ const InventorySummary = () => {
         </p>
       </div>
 
-      {/* KPI cards */}
       <div className="row g-4 mb-4">
         {[
-          { title: 'Total Items',               value: filteredItems.length,                             color: 'success' },
-          { title: 'Inventory Value',           value: `Rs ${totalValue.toFixed(2)}`,                     color: 'primary' },
-          { title: 'Out of Stock',              value: filteredItems.filter((it) => !it.quantity).length, color: 'danger' },
-          { title: 'Low (<5) Stock',            value: filteredItems.filter((it) => it.quantity < 5).length, color: 'warning' }
+          { title: 'Total Items', value: filteredItems.length, color: 'success' },
+          { title: 'Inventory Value', value: `Rs ${totalValue.toFixed(2)}`, color: 'primary' },
+          { title: 'Out of Stock', value: filteredItems.filter((it) => !it.quantity).length, color: 'danger' },
+          { title: 'Low (<5) Stock', value: filteredItems.filter((it) => it.quantity < 5).length, color: 'warning' }
         ].map((c) => (
           <div key={c.title} className="col-lg-3 col-md-6">
             <div className="card shadow-sm">
@@ -250,9 +237,7 @@ const InventorySummary = () => {
         ))}
       </div>
 
-      {/* Charts  */}
       <div className="row g-4">
-        {/* Pie  */}
         <div className="col-md-6">
           <h6>Stock Distribution by Category</h6>
           <div className="card shadow-sm p-3">
@@ -278,7 +263,6 @@ const InventorySummary = () => {
           </div>
         </div>
 
-        {/* Bar */}
         <div className="col-md-6">
           <h6>Top Stocked Items</h6>
           <div className="card shadow-sm p-3">
@@ -300,7 +284,6 @@ const InventorySummary = () => {
         </div>
       </div>
 
-      {/* Line */}
       <div className="my-5">
         <h6>Inventory Value Trend</h6>
         <div className="card shadow-sm p-3">
@@ -315,7 +298,6 @@ const InventorySummary = () => {
         </div>
       </div>
 
-      {/* Export buttons */}
       <div className="d-flex gap-3 flex-wrap">
         <button className="btn btn-danger" onClick={exportPDF}>
           <i className="bi bi-file-pdf" /> Export PDF
