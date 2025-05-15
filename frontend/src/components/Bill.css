@@ -14,28 +14,22 @@ body {
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 50%;
+    margin-left: 270px;
   }
   
-  /* Inline form group */
-  .form-group {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
-  }
-  
-  .form-group label {
-    width: 150px; /* adjust width as needed */
-    margin-right: 10px;
+  label {
+    display: block;
+    margin-bottom: 12px;
     font-weight: 500;
     color: #444;
-    margin-bottom: 0;
   }
   
-  .form-group input[type="text"],
-  .form-group input[type="number"],
-  .form-group input[type="date"] {
-    flex: 1;
+  input[type="text"],
+  input[type="number"],
+  input[type="date"] {
+    width: 100%;
     padding: 8px;
+    margin-top: 4px;
     box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -101,5 +95,24 @@ body {
     button {
       display: none;
     }
+  }
+  
+  /* Inline label and input */
+.inline-field {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .inline-field label {
+    width: 150px; /* adjust width as needed */
+    margin: 0;
+    margin-right: 10px;
+  }
+  
+  .inline-field input[type="text"],
+  .inline-field input[type="number"],
+  .inline-field input[type="date"] {
+    flex: 1;
   }
   

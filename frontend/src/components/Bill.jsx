@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
-import './Bill.css'; 
+import './Bill.css';
 
 function BillForm() {
   const [name, setName] = useState('');
@@ -79,94 +79,92 @@ function BillForm() {
   };
 
   return (
-    <div className="form-group">
+    <div>
       <h2>Invoice</h2>
       <form>
         <h3>Customer Details</h3>
-        <label>
-          Date:
+
+        <div className="inline-field">
+          <label>Date:</label>
           <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
-        </label>
-        <br />
-        <label>
-          Customer Name:
+        </div>
+
+        <div className="inline-field">
+          <label>Customer Name:</label>
           <input type="text" value={name} onChange={handleNameChange} />
-        </label>
-        <br />
-        <label>
-          Address:
+        </div>
+
+        <div className="inline-field">
+          <label>Address:</label>
           <input type="text" value={address} readOnly />
-        </label>
-        <br />
-        <label>
-          Contact:
+        </div>
+
+        <div className="inline-field">
+          <label>Contact:</label>
           <input type="text" value={contact} readOnly />
-        </label>
-        <br />
-        <label>
-          Email:
+        </div>
+
+        <div className="inline-field">
+          <label>Email:</label>
           <input type="text" value={email} readOnly />
-        </label>
+        </div>
+
         <hr />
         <h3>Item Details</h3>
-        <label>
-          Item Code:
+
+        <div className="inline-field">
+          <label>Item Code:</label>
           <input type="text" value={itemCode} onChange={handleItemCodeChange} />
-        </label>
-        <br />
-        <label>
-          Item Name:
+        </div>
+
+        <div className="inline-field">
+          <label>Item Name:</label>
           <input type="text" value={itemName} readOnly />
-        </label>
-        <br />
-        <label>
-          Item Price:
+        </div>
+
+        <div className="inline-field">
+          <label>Item Price:</label>
           <input type="text" value={itemPrice} readOnly />
-        </label>
-        <br />
-        <label>
-          Quantity:
+        </div>
+
+        <div className="inline-field">
+          <label>Quantity:</label>
           <input type="number" value={quantity} min="1" onChange={(e) => setQuantity(Number(e.target.value))} />
-        </label>
-        <br />
+        </div>
 
-        {/* Calculated Price Label */}
-        <label>
-          Price:
+        <div className="inline-field">
+          <label>Price:</label>
           <input type="text" value={calculatePrice()} readOnly />
-        </label>
-        <br />
+        </div>
 
-        <label>
-          Discount:
+        <div className="inline-field">
+          <label>Discount:</label>
           <input type="number" value={discount} min="0" onChange={(e) => setDiscount(Number(e.target.value))} />
-        </label>
-        <br />
+        </div>
 
-        {/* Final Amount after Discount */}
-        <label>
-          Amount:
+        <div className="inline-field">
+          <label>Amount:</label>
           <input type="text" value={calculateAmount()} readOnly />
-        </label>
-        <br />
+        </div>
 
-        <label>
-          Cash Received:
+        <div className="inline-field">
+          <label>Cash Received:</label>
           <input type="number" value={cashReceived} onChange={(e) => setCashReceived(Number(e.target.value))} />
-        </label>
-        <br />
-        <label>
-          Balance:
-          <input type="text" value={balance.toFixed(2)} readOnly />
-        </label>
-        <br />
+        </div>
 
-        <button type="button" onClick={handleGenerateInvoice}>
-          Generate Invoice
-        </button>
-        <button type="button" onClick={handlePrint}>
-          Print Invoice
-        </button>
+        <div className="inline-field">
+          <label>Balance:</label>
+          <input type="text" value={balance.toFixed(2)} readOnly />
+        </div>
+
+        <div style={{ marginTop: '15px' }}>
+          <button type="button" onClick={handleGenerateInvoice}>
+            Generate Invoice
+          </button>
+          <button type="button" onClick={handlePrint} style={{ marginLeft: '10px' }}>
+            Print Invoice
+          </button>
+        </div>
       </form>
 
       {showInvoice && (
