@@ -18,15 +18,12 @@ const ManageSuppliers = () => {
       const response = await axios.get('/api/suppliers', {
         params: { search, filter, date: dateFilter }
       });
-      console.log('Suppliers fetched:', response.data); // Debug log to check data structure
-
-      // Sort suppliers by date ascending (handle missing or invalid dates)
+      // Sort suppliers by date ascending (handle missing dates)
       const sortedSuppliers = response.data.sort((a, b) => {
         const dateA = a.date ? new Date(a.date) : new Date(0);
         const dateB = b.date ? new Date(b.date) : new Date(0);
         return dateA - dateB;
       });
-
       setSuppliers(sortedSuppliers);
     } catch (error) {
       console.error('Error fetching suppliers:', error.response ? error.response.data : error.message);
@@ -86,8 +83,8 @@ const ManageSuppliers = () => {
       </div>
 
       {showTable && suppliers.length > 0 ? (
-        <table className="table table-striped table-bordered supplier-table">
-          <thead className="table-white">
+        <table className="table table-striped table-bordered supplier-table" style={{ minWidth: '900px' }}>
+          <thead className="table-dark">
             <tr>
               <th>Date</th>
               <th>Supplier Name</th>
@@ -104,11 +101,7 @@ const ManageSuppliers = () => {
           <tbody>
             {suppliers.map(supplier => (
               <tr key={supplier._id}>
-                <td>
-                  {supplier.date
-                    ? new Date(supplier.date).toLocaleDateString('en-GB') // format dd/mm/yyyy
-                    : '-'}
-                </td>
+                <td>{supplier.date ? new Date(supplier.date).toLocaleDateString('en-GB') : '-'}</td>
                 <td>{supplier.supplierName || '-'}</td>
                 <td>{supplier.phone1 || '-'}</td>
                 <td>{supplier.phone2 || '-'}</td>
@@ -119,10 +112,10 @@ const ManageSuppliers = () => {
                 <td>{supplier.paymentTerms || '-'}</td>
                 <td>
                   <div className="d-flex gap-2">
-                    <Link to={`/dashboard/suppliers/edit/${supplier._id}`} className="btn btn-warning">
+                    <Link to={`/dashboard/suppliers/edit/${supplier._id}`} className="btn btn-warning" title="Edit Supplier">
                       <FontAwesomeIcon icon={faEdit} />
                     </Link>
-                    <button className="btn btn-danger" onClick={() => handleDelete(supplier._id)}>
+                    <button className="btn btn-danger" onClick={() => handleDelete(supplier._id)} title="Delete Supplier">
                       <FontAwesomeIcon icon={faTrash} />
                     </button>
                   </div>
