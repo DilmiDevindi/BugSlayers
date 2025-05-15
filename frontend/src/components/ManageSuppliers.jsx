@@ -18,7 +18,7 @@ const ManageSuppliers = () => {
       const response = await axios.get('/api/suppliers', {
         params: { search, filter, date: dateFilter }
       });
-      // Sort suppliers by date in ascending order
+      // Sort suppliers by date ascending
       const sortedSuppliers = response.data.sort((a, b) => new Date(a.date) - new Date(b.date));
       setSuppliers(sortedSuppliers);
     } catch (error) {
@@ -36,8 +36,8 @@ const ManageSuppliers = () => {
     if (!window.confirm('Are you sure you want to delete this supplier?')) return;
 
     try {
-      await axios.delete(`/api/suppliers/${id}`); // Fixed API URL
-      setSuppliers(prevSuppliers => prevSuppliers.filter(supplier => supplier._id !== id));
+      await axios.delete(`/api/suppliers/${id}`);
+      setSuppliers(prev => prev.filter(supplier => supplier._id !== id));
       alert('Supplier deleted successfully!');
     } catch (error) {
       console.error('Error deleting supplier:', error.response ? error.response.data : error.message);
@@ -47,8 +47,8 @@ const ManageSuppliers = () => {
 
   return (
     <div className="container-fluid mt-5 supplier-container">
-      <div className='supplier-title'>
-        <span className='supplier-title-icon'><FontAwesomeIcon icon={faBarsProgress} /></span> Manage Supplier
+      <div className="supplier-title">
+        <span className="supplier-title-icon"><FontAwesomeIcon icon={faBarsProgress} /></span> Manage Supplier
       </div>
 
       <div className="card p-3 mb-3">
@@ -58,7 +58,7 @@ const ManageSuppliers = () => {
             className="form-control-i"
             placeholder="Search by name..."
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={e => setSearch(e.target.value)}
           />
         </div>
         <div className="mb-3">
@@ -67,7 +67,7 @@ const ManageSuppliers = () => {
             className="form-control-i"
             placeholder="Filter by products..."
             value={filter}
-            onChange={(e) => setFilter(e.target.value)}
+            onChange={e => setFilter(e.target.value)}
           />
         </div>
 
@@ -84,8 +84,8 @@ const ManageSuppliers = () => {
             <tr>
               <th>Date</th>
               <th>Supplier Name</th>
-              <th>Phone1</th>
-              <th>Phone2</th>
+              <th>Phone 1</th>
+              <th>Phone 2</th>
               <th>Fax</th>
               <th>Email</th>
               <th>Address</th>
