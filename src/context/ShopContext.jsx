@@ -1,5 +1,5 @@
 //Shop context
-import { createContext, useState, useEffect, } from "react";
+import { createContext, useState } from "react";
 import { products } from "../assets/assets";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -23,7 +23,8 @@ const ShopContextProvider = (props) => {
             return;          
         }
 
-         let cartData = structuredClone(cartItems);
+         let cartData = JSON.parse(JSON.stringify(cartItems));
+
 
          if (cartData[itemId]) {
             if (cartData[itemId][size]) {
@@ -36,7 +37,8 @@ const ShopContextProvider = (props) => {
             cartData[itemId] = {};
             cartData[itemId][size] = 1;
          }
-            setCartItems(cartData);
+         //console.log("Updated cart data:", cartData);    
+         setCartItems(cartData);
     }
 
     const getCartCount = () => {
@@ -48,35 +50,38 @@ const ShopContextProvider = (props) => {
                         totalCount += cartItems[items][item];
                     }
                 } catch (error) {
+                    console.error("Cart calculation error:", error);
                     
                 }}}
         return totalCount;
     }
 
     const updateQuantity = async (itemId, size, quantity) =>{
-        let cartData = structuredClone(cartItems);
+        let cartData = JSON.parse(JSON.stringify(cartItems));
         cartData[itemId][size] = quantity;
         setCartItems(cartData);
     }
 
-    const getCartAmount = () => {
-        let totalAmount = 0;
-        for(const items in cartItems){
-            let itemInfo = products.find((products)=>products._id === items);
-            for(const item in cartItems[items]){
-                try {
-                    if (cartItems[items][item]){
-                        totalAmount +=itemInfo.price * cartItems[items][item];
-                        
-                    }
-                    
-                } catch (error) {
-                    
+   const getCartAmount = () => {
+    let totalAmount = 0;
+    for (const itemId in cartItems) {
+        let itemInfo = products.find((product) => product._id === itemId);
+        if (!itemInfo) {
+            continue;
+        }
+        for (const size in cartItems[itemId]) {
+            try {
+                if (cartItems[itemId][size]) {
+                    totalAmount += itemInfo.price * cartItems[itemId][size];
                 }
+            } catch (error) {
+                console.error("Cart amount calculation error:", error);
             }
         }
-        return totalAmount;
     }
+    return totalAmount;
+};
+
 
     const value = {
         products , currency, deliveryFee,
