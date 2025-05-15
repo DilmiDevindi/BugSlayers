@@ -313,6 +313,8 @@ const InventorySummary = () => {
               </tr>
             );
           })}
+          {/* Total Row */}
+          <tr className="fw-bold bg-info text-dark"> {/* Light Blue */}
  
             }
           </tbody>
