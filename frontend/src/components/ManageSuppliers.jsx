@@ -43,13 +43,16 @@ const ManageSuppliers = () => {
     setSearchTerm(e.target.value);
   };
 
-  const filteredSuppliers = suppliers.filter(supplier =>
-    (supplier.supplierName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (supplier.email || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (supplier.phone1 || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (supplier.address || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (supplier.supplyProducts || '').toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredSuppliers = suppliers.filter(supplier => {
+    const createdAt = supplier.createdAt
+      ? new Date(supplier.createdAt).toLocaleDateString('en-CA') // YYYY-MM-DD
+      : '';
+
+    return (
+      (supplier.supplierName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (createdAt || '').includes(searchTerm)
+    );
+  });
 
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this supplier?')) return;
@@ -113,7 +116,7 @@ const ManageSuppliers = () => {
       <input
         type="text"
         className="form-control mb-3"
-        placeholder="Search by name, contact, email, or product"
+        placeholder="Search by name or created date (YYYY-MM-DD)"
         value={searchTerm}
         onChange={handleSearch}
       />
@@ -130,6 +133,7 @@ const ManageSuppliers = () => {
               <th>Address</th>
               <th>Products</th>
               <th>Payment Terms</th>
+              <th>Date</th> {/* ✅ New column */}
               <th>Actions</th>
             </tr>
           </thead>
@@ -145,6 +149,7 @@ const ManageSuppliers = () => {
                   <td>{supplier.address || '-'}</td>
                   <td>{supplier.supplyProducts || '-'}</td>
                   <td>{supplier.paymentTerms || '-'}</td>
+                  <td>{supplier.createdAt ? new Date(supplier.createdAt).toLocaleDateString('en-CA') : '-'}</td> {/* ✅ Display formatted date */}
                   <td>
                     <button className="btn1" onClick={() => handleEdit(supplier)}><FaEdit /></button>
                     <button className="btn2" onClick={() => handleDelete(supplier._id)}><FaTrash /></button>
@@ -153,7 +158,7 @@ const ManageSuppliers = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="9" className="text-center text-danger">No Matching Supplier Found!</td>
+                <td colSpan="10" className="text-center text-danger">No Matching Supplier Found!</td>
               </tr>
             )}
           </tbody>
