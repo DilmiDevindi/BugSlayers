@@ -23,7 +23,7 @@ const Cart = () => {
         }
       }
     }
-    setcartData(tempData)
+    setcartData(tempData);
   },[cartItems])
 
   return (
