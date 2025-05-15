@@ -18,8 +18,9 @@ const ManageSuppliers = () => {
       const response = await axios.get('/api/suppliers', {
         params: { search, filter, date: dateFilter }
       });
+      console.log('Suppliers fetched:', response.data); // Debug log to check data structure
 
-      // Sort suppliers by date ascending
+      // Sort suppliers by date ascending (handle missing or invalid dates)
       const sortedSuppliers = response.data.sort((a, b) => {
         const dateA = a.date ? new Date(a.date) : new Date(0);
         const dateB = b.date ? new Date(b.date) : new Date(0);
@@ -85,15 +86,15 @@ const ManageSuppliers = () => {
       </div>
 
       {showTable && suppliers.length > 0 ? (
-        <table className="table table-striped table-bordered supplier-table" style={{ minWidth: '1000px' }}>
-          <thead className="table-dark">
+        <table className="table table-striped table-bordered supplier-table">
+          <thead className="table-white">
             <tr>
               <th>Date</th>
               <th>Supplier Name</th>
-              <th>Contact Number (Primary)</th>
-              <th>Contact Number (Secondary)</th>
-              <th>Fax Number</th>
-              <th>Email Address</th>
+              <th>Phone 1</th>
+              <th>Phone 2</th>
+              <th>Fax</th>
+              <th>Email</th>
               <th>Address</th>
               <th>Supply Products</th>
               <th>Payment Terms</th>
@@ -103,7 +104,11 @@ const ManageSuppliers = () => {
           <tbody>
             {suppliers.map(supplier => (
               <tr key={supplier._id}>
-                <td>{supplier.date ? new Date(supplier.date).toLocaleDateString('en-GB') : '-'}</td>
+                <td>
+                  {supplier.date
+                    ? new Date(supplier.date).toLocaleDateString('en-GB') // format dd/mm/yyyy
+                    : '-'}
+                </td>
                 <td>{supplier.supplierName || '-'}</td>
                 <td>{supplier.phone1 || '-'}</td>
                 <td>{supplier.phone2 || '-'}</td>
@@ -114,10 +119,10 @@ const ManageSuppliers = () => {
                 <td>{supplier.paymentTerms || '-'}</td>
                 <td>
                   <div className="d-flex gap-2">
-                    <Link to={`/dashboard/suppliers/edit/${supplier._id}`} className="btn btn-warning" title="Edit Supplier">
+                    <Link to={`/dashboard/suppliers/edit/${supplier._id}`} className="btn btn-warning">
                       <FontAwesomeIcon icon={faEdit} />
                     </Link>
-                    <button className="btn btn-danger" onClick={() => handleDelete(supplier._id)} title="Delete Supplier">
+                    <button className="btn btn-danger" onClick={() => handleDelete(supplier._id)}>
                       <FontAwesomeIcon icon={faTrash} />
                     </button>
                   </div>
