@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Login.css';
 import myImage from '../assets/furniture-log.png';
-import backgroundImage from '../assets/furniture.jpeg'; 
+import backgroundImage from '../assets/furniture.webp'; // Import your image
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -39,7 +39,7 @@ const Login = () => {
       <div className="container-wrapper-login">
         <div className="info-container">
           <img src={myImage} alt="Furniture" className="login-image" />
-          <h1>Welcome To</h1>
+          <h2>Welcome To</h2>
           <p className='logpara'>Manage your furniture business with ease and efficiency, streamline operations.</p>
         </div>
         <div className="login-container">
@@ -69,7 +69,7 @@ const Login = () => {
             </div>
             <button type="submit" className="btn">Login</button>
           </form>
-          <p>Don&apos;t have an account? <a href="/signup">Sign up</a></p>
+          <p className='para'>Don&apos;t have an account? <a href="/signup">Sign up</a></p>
         </div>
       </div>
     </div>
