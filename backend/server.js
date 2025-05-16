@@ -12,6 +12,7 @@ import productRouter from './routes/productRoute.js';
 const app = express()
 const port = process.env.PORT || 4000
 connectDB()
+//console.log('Database connection is disabled (no MongoDB configured)');
 connectClooudinary()
 
 //middleware
