@@ -10,7 +10,6 @@ const ManageSuppliers = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [editingSupplier, setEditingSupplier] = useState(null);
   const [formData, setFormData] = useState({
-    createdAt: new Date().toISOString(),
     supplierName: '',
     phone1: '',
     phone2: '',
@@ -43,14 +42,7 @@ const ManageSuppliers = () => {
   };
 
   const filteredSuppliers = suppliers.filter(supplier => {
-    const createdAt = supplier.createdAt
-      ? new Date(supplier.createdAt).toISOString().split('T')[0]
-      : '';
-
-    return (
-      (supplier.supplierName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (createdAt || '').includes(searchTerm)
-    );
+    return (supplier.supplierName || '').toLowerCase().includes(searchTerm.toLowerCase());
   });
 
   const handleDelete = async (id) => {
@@ -67,7 +59,6 @@ const ManageSuppliers = () => {
   const handleEdit = (supplier) => {
     setEditingSupplier(supplier._id);
     setFormData({
-      createdAt: supplier.createdAt || new Date().toISOString(),
       supplierName: supplier.supplierName || '',
       phone1: supplier.phone1 || '',
       phone2: supplier.phone2 || '',
@@ -85,7 +76,6 @@ const ManageSuppliers = () => {
       await axios.put(`/api/suppliers/${editingSupplier}`, formData);
       setEditingSupplier(null);
       setFormData({
-        createdAt: new Date().toISOString(),
         supplierName: '',
         phone1: '',
         phone2: '',
@@ -117,7 +107,7 @@ const ManageSuppliers = () => {
       <input
         type="text"
         className="form-control mb-3"
-        placeholder="Search by name or created date (YYYY-MM-DD)"
+        placeholder="Search by name"
         value={searchTerm}
         onChange={handleSearch}
       />
@@ -126,7 +116,6 @@ const ManageSuppliers = () => {
         <table className="table table-striped">
           <thead>
             <tr>
-              <th>Date</th>
               <th>Name</th>
               <th>Phone 1</th>
               <th>Phone 2</th>
@@ -142,7 +131,6 @@ const ManageSuppliers = () => {
             {filteredSuppliers.length > 0 ? (
               filteredSuppliers.map((supplier) => (
                 <tr key={supplier._id}>
-                  <td>{supplier.createdAt ? new Date(supplier.createdAt).toISOString().split('T')[0] : '-'}</td>
                   <td>{supplier.supplierName || '-'}</td>
                   <td>{supplier.phone1 || '-'}</td>
                   <td>{supplier.phone2 || '-'}</td>
@@ -159,7 +147,7 @@ const ManageSuppliers = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="10" className="text-center text-danger">No Matching Supplier Found!</td>
+                <td colSpan="9" className="text-center text-danger">No Matching Supplier Found!</td>
               </tr>
             )}
           </tbody>
@@ -174,23 +162,13 @@ const ManageSuppliers = () => {
               {Object.entries(formData).map(([key, value]) => (
                 <div className="form-field" key={key}>
                   <label>{key.charAt(0).toUpperCase() + key.slice(1)}</label>
-                  {key === 'createdAt' ? (
-                    <input
-                      type="date"
-                      name={key}
-                      value={value ? new Date(value).toISOString().split('T')[0] : ''}
-                      onChange={handleChange}
-                      required
-                    />
-                  ) : (
-                    <input
-                      type={key === 'email' ? 'email' : 'text'}
-                      name={key}
-                      value={value}
-                      onChange={handleChange}
-                      required={key === 'supplierName' || key === 'email'}
-                    />
-                  )}
+                  <input
+                    type={key === 'email' ? 'email' : 'text'}
+                    name={key}
+                    value={value}
+                    onChange={handleChange}
+                    required={key === 'supplierName' || key === 'email'}
+                  />
                 </div>
               ))}
             </div>
