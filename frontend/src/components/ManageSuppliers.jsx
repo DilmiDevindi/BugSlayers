@@ -158,7 +158,7 @@ const ManageSuppliers = () => {
         <div className="edit-form-container small-form">
           <form onSubmit={handleUpdate}>
             <h4 className='add-title'><FontAwesomeIcon icon={faEditIcon}/> Edit Supplier</h4>
-            <div className="form-grid">
+            <div className="form-grid two-column">
               {Object.entries(formData).map(([key, value]) => (
                 <div className="form-field" key={key}>
                   <label>{key.charAt(0).toUpperCase() + key.slice(1)}</label>
