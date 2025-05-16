@@ -50,8 +50,7 @@ const ManageCustomer = () => {
                              customer.contact.toLowerCase().includes(searchTerm.toLowerCase()) ||
                              customer.email.toLowerCase().includes(searchTerm.toLowerCase());
   
-    // Date filtering (single date match or range)
-    
+   
 
     return matchSearchTerm ;
   });
