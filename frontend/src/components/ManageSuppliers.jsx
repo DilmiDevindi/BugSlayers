@@ -44,7 +44,7 @@ const ManageSuppliers = () => {
 
   const filteredSuppliers = suppliers.filter(supplier => {
     const createdAt = supplier.createdAt
-      ? new Date(supplier.createdAt).toLocaleDateString('en-CA')
+      ? new Date(supplier.createdAt).toISOString().split('T')[0]
       : '';
 
     return (
@@ -142,7 +142,7 @@ const ManageSuppliers = () => {
             {filteredSuppliers.length > 0 ? (
               filteredSuppliers.map((supplier) => (
                 <tr key={supplier._id}>
-                  <td>{supplier.createdAt ? new Date(supplier.createdAt).toLocaleDateString('en-CA') : '-'}</td>
+                  <td>{supplier.createdAt ? new Date(supplier.createdAt).toISOString().split('T')[0] : '-'}</td>
                   <td>{supplier.supplierName || '-'}</td>
                   <td>{supplier.phone1 || '-'}</td>
                   <td>{supplier.phone2 || '-'}</td>
