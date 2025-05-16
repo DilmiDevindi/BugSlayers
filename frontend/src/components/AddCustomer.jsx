@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
@@ -10,6 +10,34 @@ const AddCustomer = () => {
   const [contact, setContact] = useState('');
   const [email, setEmail] = useState('');
   const [errors, setErrors] = useState({});
+
+  const [customers, setCustomers] = useState([]);
+  const [searchContact, setSearchContact] = useState('');
+
+  useEffect(() => {
+    const fetchCustomers = async () => {
+      try {
+        const res = await axios.get('/api/customers');
+        setCustomers(res.data);
+      } catch (err) {
+        console.error("Error fetching customers:", err.message);
+      }
+    };
+    fetchCustomers();
+  }, []);
+
+  const handleSearch = () => {
+    const found = customers.find(c => c.contact === searchContact.trim());
+    if (found) {
+      alert("Customer already exists! Details filled in the form.");
+      setName(found.name);
+      setAddress(found.address);
+      setContact(found.contact);
+      setEmail(found.email);
+    } else {
+      alert("No customer found with this contact.");
+    }
+  };
 
   const validateFields = () => {
     const newErrors = {};
@@ -26,9 +54,6 @@ const AddCustomer = () => {
     if (!validateFields()) return;
 
     try {
-      const res = await axios.get('/api/customers');
-      const customers = res.data;
-
       if (customers.some(c => c.email === email)) {
         alert("Customer with this email already exists!");
         return;
@@ -47,6 +72,7 @@ const AddCustomer = () => {
         setContact('');
         setEmail('');
         setErrors({});
+        setCustomers(prev => [...prev, newCustomer]);
       } else {
         alert("Error adding customer. Please try again.");
       }
@@ -57,53 +83,70 @@ const AddCustomer = () => {
   };
 
   return (
-    <div className="container-c">
-      <h4 className="add-title" style={{ textAlign: "left" }}>
-        <FontAwesomeIcon icon={faPlusSquare} className="addCus" /> Add New Customer
-      </h4>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          {errors.name && <div className="alert alert-danger">{errors.name}</div>}
-        </div>
-        <div className="mb-3">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Address"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-          />
-          {errors.address && <div className="alert alert-danger">{errors.address}</div>}
-        </div>
-        <div className="mb-3">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Contact"
-            value={contact}
-            onChange={(e) => setContact(e.target.value)}
-          />
-          {errors.contact && <div className="alert alert-danger">{errors.contact}</div>}
-        </div>
-        <div className="mb-3">
-          <input
-            type="email"
-            className="form-control"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value.toLowerCase())}
-          />
-          {errors.email && <div className="alert alert-danger">{errors.email}</div>}
-        </div>
-        <button type="submit" className="btn btn-primary">Add Customer</button>
-      </form>
+    <div className="add">
+
+      {/* 🔍 Search bar OUTSIDE the form */}
+      <div className="search-section mb-4">
+        <h5>🔍 Search by Contact</h5>
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Enter contact number"
+          value={searchContact}
+          onChange={(e) => setSearchContact(e.target.value)}
+        />
+        <button className="btn btn-secondary mt-2" onClick={handleSearch}>Search</button>
+      </div>
+
+      {/* 👤 Add Customer Form */}
+      <div className="container-c">
+        <h4 className="add-title" style={{ textAlign: "left" }}>
+          <FontAwesomeIcon icon={faPlusSquare} className="addCus" /> Add New Customer
+        </h4>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            {errors.name && <div className="alert alert-danger">{errors.name}</div>}
+          </div>
+          <div className="mb-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+            />
+            {errors.address && <div className="alert alert-danger">{errors.address}</div>}
+          </div>
+          <div className="mb-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Contact"
+              value={contact}
+              onChange={(e) => setContact(e.target.value)}
+            />
+            {errors.contact && <div className="alert alert-danger">{errors.contact}</div>}
+          </div>
+          <div className="mb-3">
+            <input
+              type="email"
+              className="form-control"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value.toLowerCase())}
+            />
+            {errors.email && <div className="alert alert-danger">{errors.email}</div>}
+          </div>
+          <button type="submit" className="btn btn-primary">Add Customer</button>
+        </form>
+      </div>
     </div>
   );
 };

@@ -138,3 +138,38 @@ h4{
   background-color: black;
   color: white;
 }
+
+.page-container1 {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.search-section {
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px 20px;
+  margin-bottom: 25px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.search-section h5 {
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: #333;
+}
+
+.search-section input.form-control {
+  width: 100%;
+  padding: 10px;
+  font-size: 15px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.search-section .btn {
+  width: 100%;
+  font-weight: 500;
+}
