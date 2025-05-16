@@ -192,4 +192,6 @@ const EditSupplier = () => {
   );
 };
 
+
 export default EditSupplier;
+
