@@ -21,6 +21,7 @@ const SupplierSchema = new mongoose.Schema({
   },
   email: {
     type: String,
+
   },
   address: {
     type: String,
@@ -30,6 +31,7 @@ const SupplierSchema = new mongoose.Schema({
   },
   paymentTerms: {
     type: String,
+
   },
 });
 
