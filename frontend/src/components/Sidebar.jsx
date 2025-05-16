@@ -130,7 +130,7 @@ const Sidebar = () => {
           </button>
 
           {isOrdersOpen && (
-            <ul className="nav flex-column ms-3">i need create
+            <ul className="nav flex-column ms-3">
               <li className="nav-item mb-2">
                 <Link to="/dashboard/orders/manage" className="nav-link text-white">
                   Manage Orders
