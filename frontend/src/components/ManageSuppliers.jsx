@@ -60,7 +60,7 @@ const ManageSuppliers = () => {
   const handleEdit = (supplier) => {
     setEditingSupplier(supplier._id);
     setFormData({
-      date: supplier.date || '',
+      date: supplier.date ? supplier.date.split('T')[0] : '',
       supplierName: supplier.supplierName || '',
       phone1: supplier.phone1 || '',
       phone2: supplier.phone2 || '',
@@ -116,53 +116,55 @@ const ManageSuppliers = () => {
       />
 
       {loading ? <p>Loading suppliers...</p> : (
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Name</th>
-              <th>Phone 1</th>
-              <th>Phone 2</th>
-              <th>Fax</th>
-              <th>Email</th>
-              <th>Address</th>
-              <th>Products</th>
-              <th>Payment Terms</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredSuppliers.length > 0 ? (
-              filteredSuppliers.map((supplier) => (
-                <tr key={supplier._id}>
-                  <td>{supplier.date || '-'}</td>
-                  <td>{supplier.supplierName || '-'}</td>
-                  <td>{supplier.phone1 || '-'}</td>
-                  <td>{supplier.phone2 || '-'}</td>
-                  <td>{supplier.fax || '-'}</td>
-                  <td>{supplier.email || '-'}</td>
-                  <td>{supplier.address || '-'}</td>
-                  <td>{supplier.supplyProducts || '-'}</td>
-                  <td>{supplier.paymentTerms || '-'}</td>
-                  <td>
-                    <button className="btn1" onClick={() => handleEdit(supplier)}><FaEdit /></button>
-                    <button className="btn2" onClick={() => handleDelete(supplier._id)}><FaTrash /></button>
-                  </td>
-                </tr>
-              ))
-            ) : (
+        <div className="table-responsive">
+          <table className="table table-striped table-bordered supplier-table">
+            <thead>
               <tr>
-                <td colSpan="10" className="text-center text-danger">No Matching Supplier Found!</td>
+                <th style={{ width: '100px' }}>Date</th>
+                <th style={{ width: '150px' }}>Name</th>
+                <th style={{ width: '110px' }}>Phone 1</th>
+                <th style={{ width: '110px' }}>Phone 2</th>
+                <th style={{ width: '100px' }}>Fax</th>
+                <th style={{ width: '200px' }}>Email</th>
+                <th style={{ width: '180px' }}>Address</th>
+                <th style={{ width: '160px' }}>Products</th>
+                <th style={{ width: '130px' }}>Payment Terms</th>
+                <th style={{ width: '90px' }}>Actions</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filteredSuppliers.length > 0 ? (
+                filteredSuppliers.map((supplier) => (
+                  <tr key={supplier._id}>
+                    <td>{supplier.date ? new Date(supplier.date).toISOString().split('T')[0] : '-'}</td>
+                    <td>{supplier.supplierName || '-'}</td>
+                    <td>{supplier.phone1 || '-'}</td>
+                    <td>{supplier.phone2 || '-'}</td>
+                    <td>{supplier.fax || '-'}</td>
+                    <td>{supplier.email || '-'}</td>
+                    <td>{supplier.address || '-'}</td>
+                    <td>{supplier.supplyProducts || '-'}</td>
+                    <td>{supplier.paymentTerms || '-'}</td>
+                    <td>
+                      <button className="btn1" onClick={() => handleEdit(supplier)}><FaEdit /></button>
+                      <button className="btn2" onClick={() => handleDelete(supplier._id)}><FaTrash /></button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="10" className="text-center text-danger">No Matching Supplier Found!</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       )}
 
       {editingSupplier && (
         <div className="edit-form-container small-form">
           <form onSubmit={handleUpdate}>
-            <h4 className='add-title'><FontAwesomeIcon icon={faEditIcon}/> Edit Supplier</h4>
+            <h4 className='add-title'><FontAwesomeIcon icon={faEditIcon} /> Edit Supplier</h4>
             <div className="form-grid two-column">
               {Object.entries(formData).map(([key, value]) => (
                 <div className="form-field" key={key}>
