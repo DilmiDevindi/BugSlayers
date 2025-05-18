@@ -187,3 +187,13 @@ h3 {
 }
 
 
+.same-width-btn {
+  width: 100%;
+  min-width: 180px;
+  height: 45px;
+  font-weight: bold;
+  border-radius: 8px;
+  white-space: nowrap;
+  text-align: center;
+}
+
