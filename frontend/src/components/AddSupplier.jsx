@@ -77,15 +77,16 @@ const AddSupplier = () => {
     setSupplier({ ...supplier, [name]: validatedValue });
   };
 
+  // Updated handleNameCheck function
   const handleNameCheck = () => {
     const name = supplier.supplierName.trim().toLowerCase();
     if (!name) return alert("Please enter a supplier name to check.");
 
     if (existingSupplierNames.includes(name)) {
-      alert("Supplier name already exists.");
+      alert("Already exists.");
       setIsNameAvailable(false);
     } else {
-      alert("Supplier name is available.");
+      alert("Add the new supplier.");
       setIsNameAvailable(true);
     }
   };
