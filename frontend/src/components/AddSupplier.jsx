@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSquarePlus } from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
+import { faSquarePlus, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import './Supplier.css';
@@ -19,6 +19,22 @@ const AddSupplier = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [existingSupplierNames, setExistingSupplierNames] = useState([]);
+  const [isNameAvailable, setIsNameAvailable] = useState(false);
+
+  useEffect(() => {
+    const fetchSupplierNames = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/suppliers');
+        const names = response.data.map((s) => s.supplierName?.toLowerCase());
+        setExistingSupplierNames(names);
+      } catch (error) {
+        console.error('Failed to fetch suppliers:', error);
+      }
+    };
+
+    fetchSupplierNames();
+  }, []);
 
   const validatePhoneNumber = (number) => /^\d{10}$/.test(number);
 
@@ -61,6 +77,19 @@ const AddSupplier = () => {
     setSupplier({ ...supplier, [name]: validatedValue });
   };
 
+  const handleNameCheck = () => {
+    const name = supplier.supplierName.trim().toLowerCase();
+    if (!name) return alert("Please enter a supplier name to check.");
+
+    if (existingSupplierNames.includes(name)) {
+      alert("Supplier name already exists.");
+      setIsNameAvailable(false);
+    } else {
+      alert("Supplier name is available.");
+      setIsNameAvailable(true);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -72,6 +101,11 @@ const AddSupplier = () => {
 
     if (Object.values(errors).some((err) => err) || hasErrors) {
       alert("Please fix the validation errors.");
+      return;
+    }
+
+    if (!isNameAvailable) {
+      alert("Please check the supplier name before submitting.");
       return;
     }
 
@@ -92,6 +126,7 @@ const AddSupplier = () => {
       });
 
       setErrors({});
+      setIsNameAvailable(false);
     } catch (error) {
       console.error('Error adding supplier:', error);
       alert('Failed to add supplier. Please try again.');
@@ -120,9 +155,27 @@ const AddSupplier = () => {
             />
           </div>
 
+          <div className="row align-items-center mb-3">
+            <div className="col-md-10">
+              <input
+                type="text"
+                className="form-control"
+                name="supplierName"
+                value={supplier.supplierName}
+                onChange={handleInputChange}
+                placeholder="Supplier Name"
+                required
+              />
+            </div>
+            <div className="col-md-2">
+              <button type="button" className="btn btn-secondary w-100" onClick={handleNameCheck}>
+                <FontAwesomeIcon icon={faSearch} /> Check
+              </button>
+            </div>
+          </div>
+
           <div className="row">
             {[
-              { label: 'Supplier Name', key: 'supplierName' },
               { label: 'Contact Number (Primary)', key: 'phone1', required: true },
               { label: 'Contact Number (Secondary)', key: 'phone2' },
               { label: 'Fax Number', key: 'fax' },
