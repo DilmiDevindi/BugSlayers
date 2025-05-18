@@ -99,7 +99,7 @@ const AddSupplier = () => {
   };
 
   return (
-    <div className="container-i form-container-i" style={{ maxWidth: '50%' }}>
+    <div className="container-i form-container-i" style={{ maxWidth: '70%' }}>
       <div
         className="text-center"
         style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '20px' }}
@@ -108,7 +108,7 @@ const AddSupplier = () => {
       </div>
 
       <form onSubmit={handleSubmit} autoComplete="off">
-        <div className="form-group-i">
+        <div className="form-group-i mb-3">
           <input
             type="date"
             className="form-control"
@@ -119,68 +119,72 @@ const AddSupplier = () => {
           />
         </div>
 
-        {[
-          { label: 'Supplier Name', key: 'supplierName' },
-          { label: 'Contact Number (Primary)', key: 'phone1', required: true },
-          { label: 'Contact Number (Secondary)', key: 'phone2' },
-          { label: 'Fax Number', key: 'fax' },
-          { label: 'Email Address', key: 'email' },
-          { label: 'Address', key: 'address' },
-        ].map((field) => (
-          <div key={field.key} className="form-group-i">
-            <input
-              type="text"
+        <div className="row">
+          {[
+            { label: 'Supplier Name', key: 'supplierName' },
+            { label: 'Contact Number (Primary)', key: 'phone1', required: true },
+            { label: 'Contact Number (Secondary)', key: 'phone2' },
+            { label: 'Fax Number', key: 'fax' },
+            { label: 'Email Address', key: 'email' },
+            { label: 'Address', key: 'address' },
+          ].map((field, index) => (
+            <div key={field.key} className="col-md-6 mb-3">
+              <input
+                type="text"
+                className="form-control"
+                name={field.key}
+                value={supplier[field.key]}
+                onChange={handleInputChange}
+                placeholder={field.label}
+                required={field.required || false}
+              />
+              {errors[field.key] && (
+                <div className="alert alert-danger mt-1">{errors[field.key]}</div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div className="row">
+          <div className="col-md-6 mb-3">
+            <select
               className="form-control"
-              name={field.key}
-              value={supplier[field.key]}
+              name="supplyProducts"
+              value={supplier.supplyProducts}
               onChange={handleInputChange}
-              placeholder={field.label}
-              required={field.required || false}
-            />
-            {errors[field.key] && (
-              <div className="alert alert-danger">{errors[field.key]}</div>
-            )}
+              required
+            >
+              <option value="" disabled>
+                Select a product
+              </option>
+              <option value="Mattress">Mattress</option>
+              <option value="Cupboard">Cupboard</option>
+              <option value="Chair">Chair</option>
+              <option value="Table">Table</option>
+              <option value="Iron Board">Iron Board</option>
+              <option value="Carrom Board">Carrom Board</option>
+              <option value="Clothes Rack">Clothes Rack</option>
+            </select>
           </div>
-        ))}
 
-        <div className="form-group-i">
-          <select
-            className="form-control"
-            name="supplyProducts"
-            value={supplier.supplyProducts}
-            onChange={handleInputChange}
-            required
-          >
-            <option value="" disabled>
-              Select a product
-            </option>
-            <option value="Mattress">Mattress</option>
-            <option value="Cupboard">Cupboard</option>
-            <option value="Chair">Chair</option>
-            <option value="Table">Table</option>
-            <option value="Iron Board">Iron Board</option>
-            <option value="Carrom Board">Carrom Board</option>
-            <option value="Clothes Rack">Clothes Rack</option>
-          </select>
+          <div className="col-md-6 mb-3">
+            <select
+              className="form-control"
+              name="paymentTerms"
+              value={supplier.paymentTerms}
+              onChange={handleInputChange}
+              required
+            >
+              <option value="" disabled>
+                Select a payment method
+              </option>
+              <option value="Cash">Cash</option>
+              <option value="Card">Card</option>
+            </select>
+          </div>
         </div>
 
-        <div className="form-group-i">
-          <select
-            className="form-control"
-            name="paymentTerms"
-            value={supplier.paymentTerms}
-            onChange={handleInputChange}
-            required
-          >
-            <option value="" disabled>
-              Select a payment method
-            </option>
-            <option value="Cash">Cash</option>
-            <option value="Card">Card</option>
-          </select>
-        </div>
-
-        <button type="submit" className="btn btn-primary-i">
+        <button type="submit" className="btn btn-primary-i w-100">
           Add Supplier
         </button>
       </form>
