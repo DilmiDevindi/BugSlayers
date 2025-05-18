@@ -134,69 +134,62 @@ const AddSupplier = () => {
   return (
     <div className="page-top-center-container">
       <div className="container-i form-container-i" style={{ maxWidth: '70%' }}>
-        <div
-          className="text-center"
-          style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '20px' }}
-        >
+        <div className="text-center mb-4">
           <FontAwesomeIcon icon={faSquarePlus} /> Add Supplier
         </div>
 
-        <form onSubmit={handleSubmit} autoComplete="off">
-          {/* Supplier Name + Check */}
-          <div className="row mb-3">
-            <div className="col-md-6 d-flex">
-              <input
-                type="text"
-                className="form-control me-2"
-                name="supplierName"
-                value={supplier.supplierName}
-                onChange={handleInputChange}
-                placeholder="Supplier Name"
-                required
-              />
-              <button type="button" className="btn btn-secondary same-width-btn" onClick={handleNameCheck}>
-                <FontAwesomeIcon icon={faSearch} /> Check
-              </button>
-            </div>
-            <div className="col-md-6">
-              <input
-                type="date"
-                className="form-control"
-                name="date"
-                value={supplier.date}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
+        {/* Supplier Name Search Row */}
+        <div className="row mb-4 align-items-end gap-2 gap-md-0">
+          <div className="col-md-8 d-flex">
+            <input
+              type="text"
+              className="form-control me-2"
+              name="supplierName"
+              value={supplier.supplierName}
+              onChange={handleInputChange}
+              placeholder="Enter Supplier Name to Check"
+              required
+            />
           </div>
+          <div className="col-md-4">
+            <button
+              type="button"
+              className="btn btn-secondary same-width-btn"
+              onClick={handleNameCheck}
+            >
+              <FontAwesomeIcon icon={faSearch} /> Check Name
+            </button>
+          </div>
+        </div>
 
-          {/* 2-column input grid */}
-          <div className="form-grid two-column">
+        {/* FORM */}
+        <form onSubmit={handleSubmit} autoComplete="off">
+          <div className="row">
             {[
-              { label: 'Contact Number (Primary)', key: 'phone1', required: true },
-              { label: 'Contact Number (Secondary)', key: 'phone2' },
-              { label: 'Fax Number', key: 'fax' },
-              { label: 'Email Address', key: 'email' },
-              { label: 'Address', key: 'address' },
+              { label: 'Date', key: 'date', type: 'date' },
+              { label: 'Contact Number (Primary)', key: 'phone1', type: 'text' },
+              { label: 'Contact Number (Secondary)', key: 'phone2', type: 'text' },
+              { label: 'Fax Number', key: 'fax', type: 'text' },
+              { label: 'Email Address', key: 'email', type: 'text' },
+              { label: 'Address', key: 'address', type: 'text' },
             ].map((field) => (
-              <div key={field.key}>
+              <div className="col-md-6 mb-3" key={field.key}>
                 <input
-                  type="text"
+                  type={field.type}
                   className="form-control"
                   name={field.key}
                   value={supplier[field.key]}
                   onChange={handleInputChange}
                   placeholder={field.label}
-                  required={field.required || false}
+                  required={field.key === 'phone1' || field.key === 'email' || field.key === 'address'}
                 />
                 {errors[field.key] && (
                   <div className="alert alert-danger mt-1">{errors[field.key]}</div>
                 )}
               </div>
             ))}
-          </div>
 
-          <div className="row">
+            {/* Dropdowns: consistent with other fields */}
             <div className="col-md-6 mb-3">
               <select
                 className="form-control"
@@ -205,9 +198,7 @@ const AddSupplier = () => {
                 onChange={handleInputChange}
                 required
               >
-                <option value="" disabled>
-                  Select a product
-                </option>
+                <option value="" disabled>Select a product</option>
                 <option value="Mattress">Mattress</option>
                 <option value="Cupboard">Cupboard</option>
                 <option value="Chair">Chair</option>
@@ -226,17 +217,16 @@ const AddSupplier = () => {
                 onChange={handleInputChange}
                 required
               >
-                <option value="" disabled>
-                  Select a payment method
-                </option>
+                <option value="" disabled>Select a payment method</option>
                 <option value="Cash">Cash</option>
                 <option value="Card">Card</option>
               </select>
             </div>
           </div>
 
-          <div className="text-center">
-            <button type="submit" className="btn btn-primary-i">
+          {/* Submit Button */}
+          <div className="text-center mt-4">
+            <button type="submit" className="btn btn-primary-i same-width-btn">
               Add Supplier
             </button>
           </div>
