@@ -84,28 +84,28 @@ const AddSupplier = () => {
 
     if (existingSupplierNames.includes(name)) {
       alert("Already exists");
-      setIsNameAvailable(false);
+      // No longer preventing submission based on this
     } else {
       alert("Add the new supplier");
-      setIsNameAvailable(true);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const nameToCheck = supplier.supplierName.trim().toLowerCase();
+    // REMOVED name existence check to allow duplicates
+    // const nameToCheck = supplier.supplierName.trim().toLowerCase();
+    // if (existingSupplierNames.includes(nameToCheck)) {
+    //   alert("Supplier name already exists. Please check again.");
+    //   setIsNameAvailable(false);
+    //   return;
+    // }
 
-    if (existingSupplierNames.includes(nameToCheck)) {
-      alert("Supplier name already exists. Please check again.");
-      setIsNameAvailable(false);
-      return;
-    }
-
-    if (!isNameAvailable) {
-      alert("Please check the supplier name before submitting.");
-      return;
-    }
+    // REMOVED isNameAvailable restriction
+    // if (!isNameAvailable) {
+    //   alert("Please check the supplier name before submitting.");
+    //   return;
+    // }
 
     let hasErrors = false;
     Object.entries(supplier).forEach(([key, value]) => {
