@@ -42,15 +42,18 @@ const AddSupplier = () => {
   const validateFields = (name, value) => {
     let error = '';
 
-    if (name === 'phone1' || name === 'phone2') {
+    if (name === 'phone1' || name === 'phone2' || name === 'fax') {
       value = value.replace(/\D/g, '');
       if (value.length > 10) {
-        alert('Contact number must not exceed 10 digits');
+        alert(`${name === 'fax' ? 'Fax' : 'Contact'} number must not exceed 10 digits`);
         value = value.slice(0, 10);
       }
+
       if (!validatePhoneNumber(value)) {
-        error = 'Contact number must be exactly 10 digits and numeric';
-      } else if (name === 'phone2' && value === supplier.phone1) {
+        error = `${name === 'fax' ? 'Fax' : 'Contact'} number must be exactly 10 digits and numeric`;
+      }
+
+      if (name === 'phone2' && value === supplier.phone1) {
         error = 'Primary and Secondary Contact Numbers must not be the same';
       }
     }
@@ -189,7 +192,7 @@ const AddSupplier = () => {
               </div>
             ))}
 
-            {/* Dropdowns: consistent with other fields */}
+            {/* Dropdowns */}
             <div className="col-md-6 mb-3">
               <select
                 className="form-control"
