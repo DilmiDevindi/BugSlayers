@@ -127,7 +127,7 @@ const AddSupplier = () => {
             { label: 'Fax Number', key: 'fax' },
             { label: 'Email Address', key: 'email' },
             { label: 'Address', key: 'address' },
-          ].map((field, index) => (
+          ].map((field) => (
             <div key={field.key} className="col-md-6 mb-3">
               <input
                 type="text"
@@ -154,9 +154,7 @@ const AddSupplier = () => {
               onChange={handleInputChange}
               required
             >
-              <option value="" disabled>
-                Select a product
-              </option>
+              <option value="" disabled>Select a product</option>
               <option value="Mattress">Mattress</option>
               <option value="Cupboard">Cupboard</option>
               <option value="Chair">Chair</option>
@@ -175,18 +173,18 @@ const AddSupplier = () => {
               onChange={handleInputChange}
               required
             >
-              <option value="" disabled>
-                Select a payment method
-              </option>
+              <option value="" disabled>Select a payment method</option>
               <option value="Cash">Cash</option>
               <option value="Card">Card</option>
             </select>
           </div>
         </div>
 
-        <button type="submit" className="btn btn-primary-i w-100">
-          Add Supplier
-        </button>
+        <div className="text-center">
+          <button type="submit" className="btn btn-primary-i">
+            Add Supplier
+          </button>
+        </div>
       </form>
     </div>
   );
