@@ -77,16 +77,15 @@ const AddSupplier = () => {
     setSupplier({ ...supplier, [name]: validatedValue });
   };
 
-  // Updated handleNameCheck function
   const handleNameCheck = () => {
     const name = supplier.supplierName.trim().toLowerCase();
     if (!name) return alert("Please enter a supplier name to check.");
 
     if (existingSupplierNames.includes(name)) {
-      alert("Already exists.");
+      alert("Already exists");
       setIsNameAvailable(false);
     } else {
-      alert("Add the new supplier.");
+      alert("Add the new supplier");
       setIsNameAvailable(true);
     }
   };
@@ -145,17 +144,7 @@ const AddSupplier = () => {
         </div>
 
         <form onSubmit={handleSubmit} autoComplete="off">
-          <div className="form-group-i mb-3">
-            <input
-              type="date"
-              className="form-control"
-              name="date"
-              value={supplier.date}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-
+          {/* Supplier Name + Check button at the top */}
           <div className="row align-items-center mb-3">
             <div className="col-md-10">
               <input
@@ -175,6 +164,19 @@ const AddSupplier = () => {
             </div>
           </div>
 
+          {/* Date input below */}
+          <div className="form-group-i mb-3">
+            <input
+              type="date"
+              className="form-control"
+              name="date"
+              value={supplier.date}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+
+          {/* Other inputs */}
           <div className="row">
             {[
               { label: 'Contact Number (Primary)', key: 'phone1', required: true },
