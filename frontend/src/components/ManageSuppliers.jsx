@@ -98,6 +98,15 @@ const ManageSuppliers = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    // Only validate fax field
+    if (name === 'fax') {
+      const faxRegex = /^[0-9()\-\s]*$/;
+      if (!faxRegex.test(value)) {
+        return; // Stop update if invalid fax format
+      }
+    }
+
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
