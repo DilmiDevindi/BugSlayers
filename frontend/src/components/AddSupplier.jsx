@@ -94,6 +94,19 @@ const AddSupplier = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const nameToCheck = supplier.supplierName.trim().toLowerCase();
+
+    if (existingSupplierNames.includes(nameToCheck)) {
+      alert("Supplier name already exists. Please check again.");
+      setIsNameAvailable(false);
+      return;
+    }
+
+    if (!isNameAvailable) {
+      alert("Please check the supplier name before submitting.");
+      return;
+    }
+
     let hasErrors = false;
     Object.entries(supplier).forEach(([key, value]) => {
       const validated = validateFields(key, value);
@@ -102,11 +115,6 @@ const AddSupplier = () => {
 
     if (Object.values(errors).some((err) => err) || hasErrors) {
       alert("Please fix the validation errors.");
-      return;
-    }
-
-    if (!isNameAvailable) {
-      alert("Please check the supplier name before submitting.");
       return;
     }
 
