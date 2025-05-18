@@ -21,6 +21,7 @@ const AddSupplier = () => {
   const [errors, setErrors] = useState({});
 
   const validatePhoneNumber = (number) => /^\d{10}$/.test(number);
+
   const validateEmail = (email) =>
     /^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(email);
 
@@ -98,7 +99,7 @@ const AddSupplier = () => {
   };
 
   return (
-    <div className="page-center-container">
+    <div className="page-top-center-container">
       <div className="container-i form-container-i" style={{ maxWidth: '70%' }}>
         <div
           className="text-center"
