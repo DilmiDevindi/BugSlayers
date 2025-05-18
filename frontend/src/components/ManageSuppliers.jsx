@@ -10,6 +10,7 @@ const ManageSuppliers = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [editingSupplier, setEditingSupplier] = useState(null);
   const [formData, setFormData] = useState({
+    date: '',
     supplierName: '',
     phone1: '',
     phone2: '',
@@ -59,6 +60,7 @@ const ManageSuppliers = () => {
   const handleEdit = (supplier) => {
     setEditingSupplier(supplier._id);
     setFormData({
+      date: supplier.date || '',
       supplierName: supplier.supplierName || '',
       phone1: supplier.phone1 || '',
       phone2: supplier.phone2 || '',
@@ -76,6 +78,7 @@ const ManageSuppliers = () => {
       await axios.put(`/api/suppliers/${editingSupplier}`, formData);
       setEditingSupplier(null);
       setFormData({
+        date: '',
         supplierName: '',
         phone1: '',
         phone2: '',
@@ -116,6 +119,7 @@ const ManageSuppliers = () => {
         <table className="table table-striped">
           <thead>
             <tr>
+              <th>Date</th>
               <th>Name</th>
               <th>Phone 1</th>
               <th>Phone 2</th>
@@ -131,6 +135,7 @@ const ManageSuppliers = () => {
             {filteredSuppliers.length > 0 ? (
               filteredSuppliers.map((supplier) => (
                 <tr key={supplier._id}>
+                  <td>{supplier.date || '-'}</td>
                   <td>{supplier.supplierName || '-'}</td>
                   <td>{supplier.phone1 || '-'}</td>
                   <td>{supplier.phone2 || '-'}</td>
@@ -147,7 +152,7 @@ const ManageSuppliers = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="9" className="text-center text-danger">No Matching Supplier Found!</td>
+                <td colSpan="10" className="text-center text-danger">No Matching Supplier Found!</td>
               </tr>
             )}
           </tbody>
@@ -163,11 +168,11 @@ const ManageSuppliers = () => {
                 <div className="form-field" key={key}>
                   <label>{key.charAt(0).toUpperCase() + key.slice(1)}</label>
                   <input
-                    type={key === 'email' ? 'email' : 'text'}
+                    type={key === 'email' ? 'email' : key === 'date' ? 'date' : 'text'}
                     name={key}
                     value={value}
                     onChange={handleChange}
-                    required={key === 'supplierName' || key === 'email'}
+                    required={key === 'supplierName' || key === 'email' || key === 'date'}
                   />
                 </div>
               ))}
