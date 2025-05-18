@@ -74,6 +74,14 @@ const ManageSuppliers = () => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
+
+    // Fax number validation
+    const faxPattern = /^(\+?\d[\d\s-]{5,})?$/;
+    if (formData.fax && !faxPattern.test(formData.fax)) {
+      alert("Invalid fax number. Please enter a valid format (e.g., +123-456-7890).");
+      return;
+    }
+
     try {
       await axios.put(`/api/suppliers/${editingSupplier}`, formData);
       setEditingSupplier(null);
@@ -98,15 +106,6 @@ const ManageSuppliers = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    // Only validate fax field
-    if (name === 'fax') {
-      const faxRegex = /^[0-9()\-\s]*$/;
-      if (!faxRegex.test(value)) {
-        return; // Stop update if invalid fax format
-      }
-    }
-
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
