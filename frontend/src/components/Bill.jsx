@@ -5,24 +5,28 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileInvoice } from '@fortawesome/free-solid-svg-icons';
 
 function BillForm() {
+  // State for customer details
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [contact, setContact] = useState('');
   const [email, setEmail] = useState('');
-  const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
+  const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]); // Default to today's date
 
+  // State for item details
   const [itemCode, setItemCode] = useState('');
   const [itemName, setItemName] = useState('');
   const [itemPrice, setItemPrice] = useState('');
 
+  // State for billing inputs
   const [quantity, setQuantity] = useState(1);
   const [discount, setDiscount] = useState(0);
-
   const [cashReceived, setCashReceived] = useState(0);
   const [balance, setBalance] = useState(0);
 
+  // State to show/hide invoice section
   const [showInvoice, setShowInvoice] = useState(false);
 
+  // Auto-fill customer data by name (calls backend)
   const handleNameChange = async (e) => {
     const enteredName = e.target.value;
     setName(enteredName);
@@ -34,12 +38,14 @@ function BillForm() {
       setContact(customer.contact || '');
       setEmail(customer.email || '');
     } catch {
+      // Clear fields if no customer found
       setAddress('');
       setContact('');
       setEmail('');
     }
   };
 
+  // Auto-fill item data by code (calls backend)
   const handleItemCodeChange = async (e) => {
     const code = e.target.value;
     setItemCode(code);
@@ -50,32 +56,38 @@ function BillForm() {
       setItemName(item.name || '');
       setItemPrice(item.price || '');
     } catch {
+      // Clear fields if item not found
       setItemName('');
       setItemPrice('');
     }
   };
 
+  // Calculate total price without discount
   const calculatePrice = () => {
     const price = parseFloat(itemPrice || 0);
     return (price * quantity).toFixed(2);
   };
 
+  // Calculate amount after applying discount
   const calculateAmount = () => {
     const total = parseFloat(calculatePrice());
     return (total - discount).toFixed(2);
   };
 
+  // Calculate balance based on cash received
   const calculateBalance = () => {
     const amount = parseFloat(calculateAmount());
     const balanceAmt = cashReceived - amount;
     setBalance(balanceAmt >= 0 ? balanceAmt : 0);
   };
 
+  // Show invoice section and calculate balance
   const handleGenerateInvoice = () => {
     setShowInvoice(true);
     calculateBalance();
   };
 
+  // Trigger browser print
   const handlePrint = () => {
     window.print();
   };
@@ -83,9 +95,11 @@ function BillForm() {
   return (
     <div className='invoice-form'>
       <h3 className='bill-topic'><FontAwesomeIcon icon={faFileInvoice} className="bill-icon" /> Generate Invoice</h3>
+      
       <form>
         <h4>Customer Details</h4>
 
+        {/* Customer input fields */}
         <div className="inline-field">
           <label>Date:</label>
           <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
@@ -114,6 +128,7 @@ function BillForm() {
         <hr />
         <h4>Item Details</h4>
 
+        {/* Item input fields */}
         <div className="inline-field">
           <label>Item Code:</label>
           <input type="text" value={itemCode} onChange={handleItemCodeChange} />
@@ -159,6 +174,7 @@ function BillForm() {
           <input type="text" value={balance.toFixed(2)} readOnly />
         </div>
 
+        {/* Action buttons */}
         <div style={{ marginTop: '15px' }}>
           <button type="button" onClick={handleGenerateInvoice}>
             Generate Invoice
@@ -169,6 +185,7 @@ function BillForm() {
         </div>
       </form>
 
+      {/* Invoice preview section */}
       {showInvoice && (
         <div style={{ marginTop: '20px', padding: '15px', border: '1px solid #000' }}>
           <h3>Invoice</h3>
@@ -190,3 +207,4 @@ function BillForm() {
 }
 
 export default BillForm;
+
