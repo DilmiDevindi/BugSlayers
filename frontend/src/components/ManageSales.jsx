@@ -126,7 +126,7 @@ const ManageSales = () => {
             <th>Product Name</th>
             <th>Quantity</th>
             <th>Price</th>
-            <th>Amount</th> {/* Added Amount column */}
+            <th>Amount</th> 
             <th>Date</th>
             <th>Actions</th>
           </tr>

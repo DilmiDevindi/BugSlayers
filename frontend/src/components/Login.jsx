@@ -32,6 +32,7 @@ const Login = () => {
     } catch (error) {
       alert('Login failed: ' + error);
     }
+    
   };
 
   return (
