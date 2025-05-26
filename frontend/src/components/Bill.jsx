@@ -10,7 +10,7 @@ function BillForm() {
   const [address, setAddress] = useState('');
   const [contact, setContact] = useState('');
   const [email, setEmail] = useState('');
-  const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]); // Default to today's date
+  const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]); 
 
  
   const [itemCode, setItemCode] = useState('');
