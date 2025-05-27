@@ -212,6 +212,7 @@ const InventorySummary = () => {
                 <XAxis
                   dataKey="inventoryItem"
                   interval={0}
+                  angle={-45}
                   textAnchor="end"
                   height={70}
                 />
