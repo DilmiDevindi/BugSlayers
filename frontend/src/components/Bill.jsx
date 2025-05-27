@@ -38,7 +38,7 @@ function BillForm() {
       setContact(customer.contact || '');
       setEmail(customer.email || '');
     } catch {
-      // Clear fields if no customer found
+      
       setAddress('');
       setContact('');
       setEmail('');
