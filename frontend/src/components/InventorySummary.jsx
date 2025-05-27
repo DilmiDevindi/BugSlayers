@@ -241,7 +241,15 @@ const InventorySummary = () => {
         </div>
       </div>
 
-      
+      <div className="export-buttons">
+        <CSVLink
+          data={generateCSVData()}
+          filename="inventory-summary.csv"
+          className="btn btn-csv"
+        >
+          <span className="icon-csv" /> Export CSV
+        </CSVLink>
+      </div>
     </div>
   );
 };
