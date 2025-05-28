@@ -23,55 +23,50 @@ function BillForm() {
   const [showInvoice, setShowInvoice] = useState(false);
   const [fetchError, setFetchError] = useState('');
 
-  // Debounce ref for contact input
   const debounceRef = useRef(null);
 
-  // Fetch customer data by contact with debounce (trigger only if 10 digits)
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
 
-    if (contact.length === 10) {
+    const cleanContact = contact.trim();
+
+    if (cleanContact.length === 10) {
       debounceRef.current = setTimeout(async () => {
         try {
-          const res = await axios.get(`/api/customers/contact/${contact}`);
+          const res = await axios.get(`/api/customers/contact/${cleanContact}`);
           const customer = res.data;
           setName(customer.name || '');
           setAddress(customer.address || '');
           setEmail(customer.email || '');
           setFetchError('');
         } catch (error) {
-          console.error('Error fetching customer:', error);
-          // Reset fields if not found or error
           setName('');
           setAddress('');
           setEmail('');
           setFetchError('Customer not found');
         }
-      }, 500); // 500ms debounce
+      }, 500);
     } else {
-      // Clear fields if contact invalid length
       setName('');
       setAddress('');
       setEmail('');
       setFetchError('');
     }
 
-    // Cleanup on unmount or next effect call
     return () => clearTimeout(debounceRef.current);
   }, [contact]);
 
-  // Fetch item details by item code
   const handleItemCodeChange = async (e) => {
-    const code = e.target.value;
+    const code = e.target.value.trim();
     setItemCode(code);
 
-    if (code.trim()) {
+    if (code) {
       try {
         const res = await axios.get(`/api/items/code/${code}`);
         const item = res.data;
         setItemName(item.name || '');
-        setItemPrice(item.price || '');
-      } catch {
+        setItemPrice(parseFloat(item.price).toFixed(2) || '');
+      } catch (err) {
         setItemName('');
         setItemPrice('');
       }
@@ -92,7 +87,6 @@ function BillForm() {
     return (total - disc).toFixed(2);
   };
 
-  // Auto calculate balance whenever amount or cashReceived changes
   useEffect(() => {
     const amount = parseFloat(calculateAmount());
     const cash = parseFloat(cashReceived || 0);
@@ -101,8 +95,8 @@ function BillForm() {
   }, [cashReceived, discount, quantity, itemPrice]);
 
   const handleGenerateInvoice = () => {
-    if (!name) {
-      alert('Please enter a valid customer contact to fetch customer details.');
+    if (!name || !email) {
+      alert('Please enter a valid 10-digit contact number to fetch customer details.');
       return;
     }
     setShowInvoice(true);
@@ -131,7 +125,9 @@ function BillForm() {
           <input
             type="text"
             value={contact}
-            onChange={(e) => setContact(e.target.value.replace(/\D/, ''))} // only digits allowed
+            onChange={(e) =>
+              setContact(e.target.value.replace(/\D/g, '').substring(0, 10).trim())
+            }
             maxLength={10}
             placeholder="Enter 10-digit contact"
           />
@@ -176,8 +172,8 @@ function BillForm() {
           <label>Quantity:</label>
           <input
             type="number"
-            value={quantity}
             min="1"
+            value={quantity}
             onChange={(e) => setQuantity(Number(e.target.value))}
           />
         </div>
@@ -191,8 +187,8 @@ function BillForm() {
           <label>Discount:</label>
           <input
             type="number"
-            value={discount}
             min="0"
+            value={discount}
             onChange={(e) => setDiscount(Number(e.target.value))}
           />
         </div>
@@ -206,6 +202,7 @@ function BillForm() {
           <label>Cash Received:</label>
           <input
             type="number"
+            min="0"
             value={cashReceived}
             onChange={(e) => setCashReceived(Number(e.target.value))}
           />
@@ -217,12 +214,8 @@ function BillForm() {
         </div>
 
         <div style={{ marginTop: '15px' }}>
-          <button type="button" onClick={handleGenerateInvoice}>
-            Generate Invoice
-          </button>
-          <button type="button" onClick={handlePrint} style={{ marginLeft: '10px' }}>
-            Print Invoice
-          </button>
+          <button type="button" onClick={handleGenerateInvoice}>Generate Invoice</button>
+          <button type="button" onClick={handlePrint} style={{ marginLeft: '10px' }}>Print Invoice</button>
         </div>
       </form>
 
@@ -231,6 +224,8 @@ function BillForm() {
           <h3>Invoice</h3>
           <p><strong>Date:</strong> {date}</p>
           <p><strong>Customer:</strong> {name}</p>
+          <p><strong>Email:</strong> {email}</p>
+          <p><strong>Address:</strong> {address}</p>
           <p><strong>Item:</strong> {itemName}</p>
           <p><strong>Quantity:</strong> {quantity}</p>
           <p><strong>Item Price:</strong> ${itemPrice}</p>

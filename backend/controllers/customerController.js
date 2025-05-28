@@ -5,8 +5,13 @@ const Customer = require('../models/customerModel'); // Ensure this model exists
 const getCustomerByContact = async (req, res) => {
   try {
     const contact = req.params.contact;
-    
-    const customer = await Customer.findOne({ contact }); // Adjust based on your DB
+    console.log('Searching for contact:', req.params.contact); 
+
+    if (!/^\d{10}$/.test(contact)) {
+      return res.status(400).json({ error: 'Invalid contact format' });
+    }
+
+    const customer = await Customer.findOne({ contact });
 
     if (!customer) {
       return res.status(404).json({ error: 'Customer not found' });
@@ -15,7 +20,7 @@ const getCustomerByContact = async (req, res) => {
     res.json({
       name: customer.name,
       address: customer.address,
-      email: customer.email
+      email: customer.email,
     });
   } catch (err) {
     console.error('Server error:', err.message);
