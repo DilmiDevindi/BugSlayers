@@ -77,6 +77,14 @@ const AddCategory = () => {
           </button>
         </div>
 
+        {subCategories.length > 0 && (
+          <div className="mb-3">
+            <strong>Subcategories:</strong>
+            <ul className="list-group mt-2">
+              {subCategories.map((sub, index) => (
+                <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
+                  {sub}
+
         <button type="submit" className="btn btn-primary-i" disabled={loading}>
           {loading ? 'Adding...' : 'Add Category'}
         </button>
