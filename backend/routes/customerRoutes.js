@@ -6,7 +6,6 @@ const {
   createCustomer,
   updateCustomer,
   deleteCustomer,
-  getCustomerByName,
   getCustomerByContact, // ✅ Import this
 } = require('../controllers/customerController');
 
