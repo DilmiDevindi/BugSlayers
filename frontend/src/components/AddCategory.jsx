@@ -30,7 +30,7 @@ const AddCategory = () => {
     setError('');
 
     try {
-      const newCategory = { categoryName, subCategoryName };
+      const newCategory = { categoryName, subCategories };
       await axios.post('http://localhost:5000/api/category/add', newCategory);
       setCategoryName('');
       alert('Category added successfully!');
