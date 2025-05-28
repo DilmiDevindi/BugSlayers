@@ -7,7 +7,8 @@ import '../Inventory.css';
 
 const AddCategory = () => {
   const [categoryName, setCategoryName] = useState('');
-  const [subCategoryName, setSubCategoryName] = useState('');
+  const [subCategoryInput, setSubCategoryInput] = useState('');
+  const [subCategories, setSubCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
