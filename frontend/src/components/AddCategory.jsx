@@ -60,6 +60,15 @@ const AddCategory = () => {
           />
         </div>
 
+        <div className="form-group-i mb-2 d-flex">
+          <input
+            type="text"
+            className="form-control me-2"
+            placeholder="Subcategory Name"
+            value={subCategoryInput}
+            onChange={(e) => setSubCategoryInput(e.target.value)}
+          />
+
         <button type="submit" className="btn btn-primary-i" disabled={loading}>
           {loading ? 'Adding...' : 'Add Category'}
         </button>
