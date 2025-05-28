@@ -1,23 +1,21 @@
 const express = require('express');
 const router = express.Router();
 
-
-
 const {
   getCustomers,
   createCustomer,
   updateCustomer,
   deleteCustomer,
-  getCustomerByName
- 
+  getCustomerByName,
+  getCustomerByContact, // ✅ Import this
 } = require('../controllers/customerController');
 
-// Define backend routes
-router.get('/', getCustomers); // Fetch all customers
-router.post('/', createCustomer); // Create a new customer
-router.put('/:id', updateCustomer); // Update an existing customer
-router.delete('/:id', deleteCustomer); // Delete a customer
-router.get('/name/:name',getCustomerByName); 
-
+// Routes
+router.get('/', getCustomers);                         // All customers
+router.post('/', createCustomer);                      // Add customer
+router.put('/:id', updateCustomer);                    // Update customer
+router.delete('/:id', deleteCustomer);                 // Delete customer
+          // Get by name
+router.get('/contact/:contact', getCustomerByContact); // ✅ Get by contact
 
 module.exports = router;
