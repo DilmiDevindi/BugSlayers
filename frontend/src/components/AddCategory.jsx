@@ -19,6 +19,11 @@ const AddCategory = () => {
     }
   };
 
+  const handleRemoveSubCategory = (index) => {
+    const updated = subCategories.filter((_, i) => i !== index);
+    setSubCategories(updated);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
