@@ -6,15 +6,15 @@ const {
   createCustomer,
   updateCustomer,
   deleteCustomer,
-  getCustomerByContact, // ✅ Import this
+  getCustomerByContact,
 } = require('../controllers/customerController');
 
 // Routes
-router.get('/', getCustomers);                         // All customers
-router.post('/', createCustomer);                      // Add customer
-router.put('/:id', updateCustomer);                    // Update customer
-router.delete('/:id', deleteCustomer);                 // Delete customer
-          // Get by name
-router.get('/contact/:contact', getCustomerByContact); // ✅ Get by contact
+router.get('/contact/:contact', getCustomerByContact); 
+router.get('/', getCustomers);
+router.post('/', createCustomer);
+router.put('/:id', updateCustomer);
+router.delete('/:id', deleteCustomer);
+
 
 module.exports = router;

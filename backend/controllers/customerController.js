@@ -1,21 +1,30 @@
 const Customer = require('../models/customerModel'); // Ensure this model exists
 
-// Fetch customers (with optional filtering by name)
-const getCustomers = async (req, res) => {
+
+// GET /api/customers/contact/:contact
+const getCustomerByContact = async (req, res) => {
   try {
-    const { name } = req.query;
-    let query = {};
+    const contact = req.params.contact;
     
-    if (name) {
-      query = { name };
+    const customer = await Customer.findOne({ contact }); // Adjust based on your DB
+
+    if (!customer) {
+      return res.status(404).json({ error: 'Customer not found' });
     }
 
-    const customers = await Customer.find(query);
-    res.status(200).json(customers);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching customers', error });
+    res.json({
+      name: customer.name,
+      address: customer.address,
+      email: customer.email
+    });
+  } catch (err) {
+    console.error('Server error:', err.message);
+    res.status(500).json({ error: 'Server error' });
   }
 };
+
+// Other controller functions (getCustomers, createCustomer, etc.) remain unchanged
+
 
 // Create a new customer
 const createCustomer = async (req, res) => {
@@ -80,21 +89,7 @@ const getCustomerByName = async (req, res) => {
   }
 };
 
-// ✅ Get customer by contact number
-const getCustomerByContact = async (req, res) => {
-  try {
-    const { contact } = req.params;
-    const customer = await Customer.findOne({ contact });
 
-    if (!customer) {
-      return res.status(404).json({ message: 'Customer not found' });
-    }
-
-    res.status(200).json(customer);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching customer by contact', error });
-  }
-};
 
 module.exports = {
   getCustomers,
