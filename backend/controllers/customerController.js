@@ -78,7 +78,21 @@ const deleteCustomer = async (req, res) => {
   }
 };
 
-
+const getCustomers = async (req, res) => {
+    try {
+      const { name } = req.query;
+      let query = {};
+      
+      if (name) {
+        query = { name }; // Search by name if provided
+      }
+  
+      const customers = await Customer.find(query);
+      res.status(200).json(customers);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching customers', error });
+    }
+  };
 
 
 
