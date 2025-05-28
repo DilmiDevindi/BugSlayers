@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFolderPlus } from '@fortawesome/free-solid-svg-icons';
+import { faFolderPlus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../Inventory.css';
