@@ -12,6 +12,13 @@ const AddCategory = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  const handleAddSubCategory = () => {
+    if (subCategoryInput.trim() !== '') {
+      setSubCategories([...subCategories, subCategoryInput.trim()]);
+      setSubCategoryInput('');
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
