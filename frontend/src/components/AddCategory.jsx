@@ -68,6 +68,14 @@ const AddCategory = () => {
             value={subCategoryInput}
             onChange={(e) => setSubCategoryInput(e.target.value)}
           />
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={handleAddSubCategory}
+          >
+            <FontAwesomeIcon icon={faPlus} /> Add
+          </button>
+        </div>
 
         <button type="submit" className="btn btn-primary-i" disabled={loading}>
           {loading ? 'Adding...' : 'Add Category'}
