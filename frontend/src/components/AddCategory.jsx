@@ -15,69 +15,60 @@ const AddCategoryAndSubcategory = () => {
   const [success, setSuccess] = useState('');
 
   useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await axios.get('http://localhost:5000/api/category');
+        setCategories(res.data);
+      } catch (err) {
+        console.error('Error fetching categories:', err);
+      }
+    };
     fetchCategories();
   }, []);
-
-  const fetchCategories = async () => {
-    try {
-      const res = await axios.get('http://localhost:5000/api/category');
-      setCategories(res.data);
-    } catch (err) {
-      console.error('Error fetching categories:', err);
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setError('');
-    setSuccess('');
-
-    // Validation: must add subcategory name
     if (!newSubCategory.trim()) {
       setError('Please enter a subcategory name.');
       return;
     }
 
-    // Either new category OR existing category must be selected
-    if (!newCategoryName.trim() && !selectedCategoryId) {
+    if (!selectedCategoryId && !newCategoryName.trim()) {
       setError('Please select an existing category or enter a new category.');
       return;
     }
 
     setLoading(true);
+    setError('');
+    setSuccess('');
 
     try {
       if (newCategoryName.trim()) {
-        // Add new category with subcategory
-        const payload = {
+        // Add new category
+        await axios.post('http://localhost:5000/api/category/add', {
           categoryName: newCategoryName.trim(),
-          subCategoryName: newSubCategory.trim(),
-        };
-
-        // Call your backend "add-or-update" API
-        await axios.post('http://localhost:5000/api/category/add-or-update', payload);
-
-        setSuccess('New category and subcategory added successfully!');
-      } else {
+        });
+        setSuccess('New category added successfully!');
+      } else if (selectedCategoryId) {
         // Add subcategory to existing category
         await axios.post(
           `http://localhost:5000/api/category/${selectedCategoryId}/subcategory`,
           { subcategoryName: newSubCategory.trim() }
         );
-
-        setSuccess('Subcategory added to existing category successfully!');
+        setSuccess('Subcategory added successfully!');
       }
 
-      // Clear form
+      // Refresh categories list after successful add
+      const res = await axios.get('http://localhost:5000/api/category');
+      setCategories(res.data);
+
+      // Clear form inputs
       setNewCategoryName('');
       setSelectedCategoryId('');
       setNewSubCategory('');
-
-      // Refresh categories to show updated list
-      fetchCategories();
     } catch (err) {
-      console.error('Error saving:', err);
+      console.error('Error saving category/subcategory:', err);
       setError('Failed to save category/subcategory. Please try again.');
     } finally {
       setLoading(false);
@@ -94,14 +85,16 @@ const AddCategoryAndSubcategory = () => {
       </div>
       <form onSubmit={handleSubmit}>
         <div className="mb-3 row align-items-center">
-          <label className="col-sm-4 col-form-label">Select Existing Category (optional)</label>
+          <label className="col-sm-4 col-form-label">
+            Select Existing Category (optional)
+          </label>
           <div className="col-sm-8">
             <select
               className="form-select"
               value={selectedCategoryId}
               onChange={(e) => {
                 setSelectedCategoryId(e.target.value);
-                if (e.target.value) setNewCategoryName(''); // Clear new category input if existing selected
+                setNewCategoryName('');
               }}
             >
               <option value="">-- Select Category --</option>
@@ -124,7 +117,7 @@ const AddCategoryAndSubcategory = () => {
               value={newCategoryName}
               onChange={(e) => {
                 setNewCategoryName(e.target.value);
-                if (e.target.value) setSelectedCategoryId(''); // Clear existing selection if typing new
+                setSelectedCategoryId('');
               }}
             />
           </div>
