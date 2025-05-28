@@ -1,5 +1,3 @@
-// controllers/categoryController.js
-
 const Category = require('../models/Category');
 
 // Get all categories
@@ -19,12 +17,42 @@ const addCategory = async (req, res) => {
         return res.status(400).json({ error: 'Category name is required' });
     }
     try {
-        const newCategory = new Category({ categoryName });
+        const newCategory = new Category({ categoryName, subcategories: [] });
         await newCategory.save();
         res.status(201).json(newCategory);
     } catch (error) {
         console.error("Error adding category:", error);
         res.status(500).json({ error: 'Error adding item' });
+    }
+};
+
+// Add a subcategory to an existing category
+const addSubcategory = async (req, res) => {
+    const { categoryId } = req.params;
+    const { subcategoryName } = req.body;
+
+    if (!subcategoryName) {
+        return res.status(400).json({ error: 'Subcategory name is required' });
+    }
+
+    try {
+        const category = await Category.findById(categoryId);
+        if (!category) {
+            return res.status(404).json({ error: 'Category not found' });
+        }
+
+        // Check for duplicates (optional)
+        if (category.subcategories.includes(subcategoryName)) {
+            return res.status(400).json({ error: 'Subcategory already exists' });
+        }
+
+        category.subcategories.push(subcategoryName);
+        await category.save();
+
+        res.status(200).json({ message: 'Subcategory added successfully', category });
+    } catch (error) {
+        console.error('Error adding subcategory:', error);
+        res.status(500).json({ error: 'Error adding subcategory' });
     }
 };
 
@@ -72,6 +100,7 @@ const updateCategory = async (req, res) => {
 module.exports = {
     getAllCategories,
     addCategory,
+    addSubcategory,   // export new controller
     deleteCategory,
     updateCategory
 };
