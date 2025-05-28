@@ -82,6 +82,5 @@ module.exports = {
   createCustomer,
   updateCustomer,
   deleteCustomer,
-  getCustomerByName,
   getCustomerByContact // ✅ Don't forget this!
 };
