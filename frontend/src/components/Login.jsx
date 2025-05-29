@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Login.css';
 import myImage from '../assets/furniture-log.png';
-import backgroundImage from '../assets/furniture.webp'; // Import your image
+import backgroundImage from '../assets/furniture.png'; 
 
 const Login = () => {
   const [email, setEmail] = useState('');
