@@ -19,7 +19,7 @@ const Login = () => {
     // Check if email is valid
     if (!emailRegex.test(email)) {
       alert('Please enter a valid email address');
-      return; // Exit the function if the email is invalid
+      return; 
     }
 
     try {
