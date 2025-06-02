@@ -16,7 +16,7 @@ const Login = () => {
     // Email validation regex 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-   
+    // Check if email is valid
     if (!emailRegex.test(email)) {
       alert('Please enter a valid email address');
       return; 
