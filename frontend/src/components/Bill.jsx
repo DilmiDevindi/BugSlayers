@@ -39,7 +39,7 @@ function BillForm() {
           setAddress(customer.address || '');
           setEmail(customer.email || '');
           setFetchError('');
-        } catch (error) {
+        } catch (err) {
           setName('');
           setAddress('');
           setEmail('');
