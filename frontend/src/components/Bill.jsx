@@ -11,6 +11,7 @@ function BillForm() {
   const [email, setEmail] = useState('');
   const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
 
+  /*item dedails*/ 
   const [itemCode, setItemCode] = useState('');
   const [itemName, setItemName] = useState('');
   const [itemPrice, setItemPrice] = useState('');
