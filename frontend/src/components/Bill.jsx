@@ -21,6 +21,7 @@ function BillForm() {
   const [cashReceived, setCashReceived] = useState(0);
   const [balance, setBalance] = useState(0);
 
+   /*invoice dedails*/ 
   const [showInvoice, setShowInvoice] = useState(false);
   const [fetchError, setFetchError] = useState('');
 
