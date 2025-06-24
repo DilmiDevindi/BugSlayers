@@ -17,7 +17,7 @@ function BillForm() {
   const [itemPrice, setItemPrice] = useState('');
 
   
-   /*dedails*/ 
+  
 
   const [quantity, setQuantity] = useState(1);
   const [discount, setDiscount] = useState(0);
