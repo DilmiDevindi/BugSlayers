@@ -21,6 +21,7 @@ const AddSupplier = () => {
   const [errors, setErrors] = useState({});
   const [existingSupplierNames, setExistingSupplierNames] = useState([]);
 
+  // Category & subcategories
   const productOptions = {
     Mattress: ['Foam', 'Spring', 'Orthopedic'],
     Cupboard: ['Wooden', 'Plastic', 'Steel'],
@@ -83,7 +84,6 @@ const AddSupplier = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-
     if (name === 'supplyProducts') {
       setSupplier((prev) => ({ ...prev, [name]: value }));
     } else {
@@ -108,7 +108,7 @@ const AddSupplier = () => {
 
     let hasErrors = false;
     Object.entries(supplier).forEach(([key, value]) => {
-      const validated = validateFields(key, value);
+      validateFields(key, value);
       if (errors[key]) hasErrors = true;
     });
 
@@ -139,6 +139,9 @@ const AddSupplier = () => {
       alert('Failed to add supplier. Please try again.');
     }
   };
+
+  // Extract the full product name from selected value or empty string
+  const selectedProductFullName = supplier.supplyProducts || '';
 
   return (
     <div className="page-top-center-container">
@@ -199,7 +202,7 @@ const AddSupplier = () => {
             ))}
 
             {/* Product Dropdown */}
-            <div className="col-md-6 mb-3">
+            <div className="col-md-6 mb-1">
               <select
                 className="form-control"
                 name="supplyProducts"
@@ -222,6 +225,13 @@ const AddSupplier = () => {
                 ))}
               </select>
             </div>
+
+            {/* Show the full product name below select */}
+            {selectedProductFullName && (
+              <div className="col-md-6 mb-3">
+                <small className="text-muted">Selected Product: <strong>{selectedProductFullName}</strong></small>
+              </div>
+            )}
 
             {/* Payment Method */}
             <div className="col-md-6 mb-3">
