@@ -11,3 +11,10 @@ router.post('/', async (req, res) => {
       subcategoryName,
       categoryId
     });
+
+    await newSubcategory.save();
+    res.status(201).json({ message: 'Subcategory created successfully', subcategory: newSubcategory });
+  } catch (error) {
+    res.status(500).json({ error: 'Error creating subcategory', details: error.message });
+  }
+});
