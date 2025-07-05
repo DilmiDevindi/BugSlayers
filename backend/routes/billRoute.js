@@ -3,6 +3,6 @@ const router = express.Router();
 const { getItemByCode } = require('../controllers/billController');
 
 // Fetch item using code
-router.get('/item/:code', getItemByCode);
+router.get('/inventoryitems/:code', getItemByCode);
 
 module.exports = router;
