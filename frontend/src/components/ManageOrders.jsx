@@ -84,6 +84,8 @@ const ManageOrders = () => {
         />
       </div>
 
+      
+
       {/* Order Entry Form */}
       <div className="card p-3 mb-4">
         <h5>Add New Order</h5>
@@ -157,6 +159,8 @@ const ManageOrders = () => {
         </tbody>
       </table>
     </div>
+
+    
   );
 };
 
