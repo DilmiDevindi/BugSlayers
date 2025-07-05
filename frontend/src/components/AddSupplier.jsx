@@ -22,7 +22,6 @@ const AddSupplier = () => {
   const [existingSupplierNames, setExistingSupplierNames] = useState([]);
   const [isNameAvailable, setIsNameAvailable] = useState(false);
 
-  // Product categories with subcategories
   const productOptions = {
     Mattress: ['Foam', 'Spring', 'Orthopedic'],
     Cupboard: ['Wooden', 'Plastic', 'Steel'],
@@ -196,7 +195,7 @@ const AddSupplier = () => {
               </div>
             ))}
 
-            {/* Combined Category + Subcategory Product Dropdown */}
+            {/* Product Selection */}
             <div className="col-md-6 mb-3">
               <select
                 className="form-control"
@@ -219,7 +218,16 @@ const AddSupplier = () => {
               </select>
             </div>
 
-            {/* Payment Method */}
+            {/* Display selected product */}
+            {supplier.supplyProducts && (
+              <div className="col-md-6 mb-3 d-flex align-items-center">
+                <p className="mb-0 text-success">
+                  Selected Product: <strong>{supplier.supplyProducts}</strong>
+                </p>
+              </div>
+            )}
+
+            {/* Payment Terms */}
             <div className="col-md-6 mb-3">
               <select
                 className="form-control"
