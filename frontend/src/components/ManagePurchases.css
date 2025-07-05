@@ -77,7 +77,7 @@
   margin-right: 10px;
 }
 
-/* Change the background color of the purchases section */
 .purchases-container {
-  background-color: #e0e0e0; /* Slightly darker gray */
+  background-color: #000000; /* Black background for Purchases */
+  color: #ffffff;           /* Optional: Ensure text is visible */
 }
