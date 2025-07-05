@@ -25,7 +25,6 @@ function BillForm() {
 
   const debounceRef = useRef(null);
 
-  // Fetch customer by contact
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
 
@@ -57,7 +56,6 @@ function BillForm() {
     return () => clearTimeout(debounceRef.current);
   }, [contact]);
 
-  // Fetch item by item code
   const handleItemCodeChange = async (e) => {
     const code = e.target.value.trim();
     setItemCode(code);
@@ -106,6 +104,10 @@ function BillForm() {
 
   const handlePrint = () => {
     window.print();
+  };
+
+  const toggleInvoiceView = () => {
+    setShowInvoice(!showInvoice);
   };
 
   return (
@@ -216,6 +218,9 @@ function BillForm() {
         <div style={{ marginTop: '15px' }}>
           <button type="button" onClick={handleGenerateInvoice}>Generate Invoice</button>
           <button type="button" onClick={handlePrint} style={{ marginLeft: '10px' }}>Print Invoice</button>
+          <button type="button" onClick={toggleInvoiceView} style={{ marginLeft: '10px' }}>
+            {showInvoice ? 'Hide Invoice' : 'View Invoice'}
+          </button>
         </div>
       </form>
 
