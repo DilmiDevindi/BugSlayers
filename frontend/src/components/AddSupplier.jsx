@@ -20,7 +20,6 @@ const AddSupplier = () => {
 
   const [errors, setErrors] = useState({});
   const [existingSupplierNames, setExistingSupplierNames] = useState([]);
-  const [isNameAvailable, setIsNameAvailable] = useState(false);
 
   const productOptions = {
     Mattress: ['Foam', 'Spring', 'Orthopedic'],
@@ -86,9 +85,7 @@ const AddSupplier = () => {
     const { name, value } = e.target;
 
     if (name === 'supplyProducts') {
-      const [sub, cat] = value.split('|');
-      const formatted = `${sub} ${cat}`;
-      setSupplier((prev) => ({ ...prev, [name]: formatted }));
+      setSupplier((prev) => ({ ...prev, [name]: value }));
     } else {
       const validatedValue = validateFields(name, value);
       setSupplier((prev) => ({ ...prev, [name]: validatedValue }));
@@ -137,7 +134,6 @@ const AddSupplier = () => {
       });
 
       setErrors({});
-      setIsNameAvailable(false);
     } catch (error) {
       console.error('Error adding supplier:', error);
       alert('Failed to add supplier. Please try again.');
@@ -202,23 +198,26 @@ const AddSupplier = () => {
               </div>
             ))}
 
-            {/* Product Dropdown (Sub + Category) */}
+            {/* Product Dropdown */}
             <div className="col-md-6 mb-3">
               <select
                 className="form-control"
                 name="supplyProducts"
-                value=""
+                value={supplier.supplyProducts}
                 onChange={handleInputChange}
                 required
               >
                 <option value="" disabled>Select a product</option>
                 {Object.entries(productOptions).map(([category, subcategories]) => (
                   <optgroup key={category} label={category}>
-                    {subcategories.map((sub, idx) => (
-                      <option key={idx} value={`${sub}|${category}`}>
-                        {sub}
-                      </option>
-                    ))}
+                    {subcategories.map((sub, idx) => {
+                      const fullName = `${sub} ${category}`;
+                      return (
+                        <option key={idx} value={fullName}>
+                          {fullName}
+                        </option>
+                      );
+                    })}
                   </optgroup>
                 ))}
               </select>
