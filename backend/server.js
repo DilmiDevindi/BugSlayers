@@ -39,6 +39,7 @@ app.use('/api/catalog', catalogRoutes);
 app.use('/api/purchase', purchaseRoutes);
 app.use('/api/purchase-report', purchasereportRoutes);
 
+
 // MongoDB connection
 mongoose.connect('mongodb://localhost:27017/mern-vite-app', {
   useNewUrlParser: true,
