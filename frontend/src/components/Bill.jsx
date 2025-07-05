@@ -11,7 +11,6 @@ function BillForm() {
   const [email, setEmail] = useState('');
   const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
 
-  /*item dedails*/ 
   const [itemCode, setItemCode] = useState('');
   const [itemName, setItemName] = useState('');
   const [itemPrice, setItemPrice] = useState('');
@@ -21,12 +20,12 @@ function BillForm() {
   const [cashReceived, setCashReceived] = useState(0);
   const [balance, setBalance] = useState(0);
 
-   /*invoice dedails*/ 
   const [showInvoice, setShowInvoice] = useState(false);
   const [fetchError, setFetchError] = useState('');
 
   const debounceRef = useRef(null);
 
+  // Fetch customer by contact
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
 
@@ -35,7 +34,7 @@ function BillForm() {
     if (cleanContact.length === 10) {
       debounceRef.current = setTimeout(async () => {
         try {
-          const res = await axios.get(`/api/customers/contact/${cleanContact}`);
+          const res = await axios.get(`http://localhost:5000/api/customers/contact/${cleanContact}`);
           const customer = res.data;
           setName(customer.name || '');
           setAddress(customer.address || '');
@@ -58,13 +57,14 @@ function BillForm() {
     return () => clearTimeout(debounceRef.current);
   }, [contact]);
 
+  // Fetch item by item code
   const handleItemCodeChange = async (e) => {
     const code = e.target.value.trim();
     setItemCode(code);
 
     if (code) {
       try {
-        const res = await axios.get(`/api/items/code/${code}`);
+        const res = await axios.get(`http://localhost:5000/api/bill/inventoryitems/${code}`);
         const item = res.data;
         setItemName(item.name || '');
         setItemPrice(parseFloat(item.price).toFixed(2) || '');
@@ -127,9 +127,7 @@ function BillForm() {
           <input
             type="text"
             value={contact}
-            onChange={(e) =>
-              setContact(e.target.value.replace(/\D/g, '').substring(0, 10).trim())
-            }
+            onChange={(e) => setContact(e.target.value.replace(/\D/g, '').substring(0, 10).trim())}
             maxLength={10}
             placeholder="Enter 10-digit contact"
           />

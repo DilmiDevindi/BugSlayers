@@ -15,6 +15,8 @@ const catalogRoutes = require('./routes/catalogRoutes');
 const reportRoutes = require('./routes/reportRoutes');
 const purchaseRoutes = require("./routes/purchasesRoutes");
 const purchasereportRoutes = require("./routes/purchasereportRoutes");
+// Import routes
+const billRoutes = require('./routes/billRoutes');
 
 const app = express();
 const PORT = 5000;
@@ -38,6 +40,7 @@ app.use('/api/sales', salesRoutes);
 app.use('/api/catalog', catalogRoutes);
 app.use('/api/purchase', purchaseRoutes);
 app.use('/api/purchase-report', purchasereportRoutes);
+app.use('/api/bill', billRoutes);
 
 // MongoDB connection
 mongoose.connect('mongodb://localhost:27017/mern-vite-app', {
