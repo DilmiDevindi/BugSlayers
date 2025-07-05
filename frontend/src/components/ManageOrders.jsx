@@ -12,7 +12,7 @@ const ManageOrders = () => {
     date: new Date().toISOString().split('T')[0],
   });
 
-  const [recentOrder, setRecentOrder] = useState(null); // For displaying below table
+  const [recentOrder, setRecentOrder] = useState(null);
 
   useEffect(() => {
     fetchOrders();
@@ -46,11 +46,13 @@ const ManageOrders = () => {
     const newEntry = { orderId, quantity, discount, date };
 
     try {
-      const response = await axios.post('/api/orders/add', newEntry);
+      const response = await axios.post('/api/orders', newEntry);
 
+      // Add new order to UI
       setOrders((prev) => [...prev, response.data]);
-      setRecentOrder(response.data); // Set for display below
+      setRecentOrder(response.data);
 
+      // Reset input fields
       setNewOrder({
         orderId: '',
         quantity: '',
@@ -72,7 +74,7 @@ const ManageOrders = () => {
     <div className="container mt-4">
       <h2>Manage Orders</h2>
 
-      {/* Search Field */}
+      {/* Search */}
       <div className="mb-3">
         <input
           type="text"
@@ -134,7 +136,7 @@ const ManageOrders = () => {
         </div>
       </div>
 
-      {/* Order Table */}
+      {/* Main Orders Table */}
       <h5>Order List</h5>
       <table className="table table-striped">
         <thead className="table-dark">
@@ -157,7 +159,7 @@ const ManageOrders = () => {
         </tbody>
       </table>
 
-      {/* Recently Added Order Section */}
+      {/* Recently Added Order */}
       {recentOrder && (
         <div className="card mt-5 p-3 border-success">
           <h5 className="text-success">Recently Added Order</h5>
