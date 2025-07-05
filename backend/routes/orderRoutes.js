@@ -8,3 +8,8 @@ router.post('/', orderController.createOrder); // Create new order
 router.get('/:id', orderController.getOrderById); // Get by ID
 router.put('/:id', orderController.updateOrder); // Update by ID
 router.delete('/:id', orderController.deleteOrder); // Delete by ID
+
+// ✅ Add this route for order report
+router.get('/report/date-range', orderController.getOrdersByDateRange); // Get orders between dates
+
+module.exports = router;
