@@ -28,3 +28,15 @@ router.get('/', async (req, res) => {
     res.status(500).json({ error: 'Error fetching subcategories', details: error.message });
   }
 });
+
+// Get subcategories by category ID (optional but useful)
+router.get('/by-category/:categoryId', async (req, res) => {
+  try {
+    const subcategories = await Subcategory.find({ categoryId: req.params.categoryId });
+    res.json(subcategories);
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching subcategories by category', details: error.message });
+  }
+});
+
+module.exports = router;
