@@ -22,7 +22,7 @@ const AddSupplier = () => {
   const [existingSupplierNames, setExistingSupplierNames] = useState([]);
   const [isNameAvailable, setIsNameAvailable] = useState(false);
 
-  // Product categories and subcategories
+  // Product categories with subcategories
   const productOptions = {
     Mattress: ['Foam', 'Spring', 'Orthopedic'],
     Cupboard: ['Wooden', 'Plastic', 'Steel'],
@@ -196,7 +196,7 @@ const AddSupplier = () => {
               </div>
             ))}
 
-            {/* Product Select Field (Combined with Subcategories) */}
+            {/* Combined Category + Subcategory Product Dropdown */}
             <div className="col-md-6 mb-3">
               <select
                 className="form-control"
@@ -206,15 +206,16 @@ const AddSupplier = () => {
                 required
               >
                 <option value="" disabled>Select a product</option>
-                {Object.entries(productOptions).map(([category, subcategories]) => (
-                  <optgroup key={category} label={category}>
-                    {subcategories.map((sub, idx) => (
-                      <option key={idx} value={`${category} - ${sub}`}>
-                        {sub}
+                {Object.entries(productOptions).map(([category, subcategories]) =>
+                  subcategories.map((sub, index) => {
+                    const combinedName = `${category} - ${sub}`;
+                    return (
+                      <option key={`${category}-${index}`} value={combinedName}>
+                        {combinedName}
                       </option>
-                    ))}
-                  </optgroup>
-                ))}
+                    );
+                  })
+                )}
               </select>
             </div>
 
