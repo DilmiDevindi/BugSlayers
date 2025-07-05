@@ -1,8 +1,6 @@
 const InventoryItem = require('../models/InventoryItem');
 
-// @desc    Get item details by code for billing
-// @route   GET /api/bill/item/:code
-// @access  Public
+// GET /api/bill/item/:code
 const getItemByCode = async (req, res) => {
   const { code } = req.params;
 
@@ -13,13 +11,12 @@ const getItemByCode = async (req, res) => {
       return res.status(404).json({ message: 'Item not found for this code' });
     }
 
-    // Send essential details only
     res.status(200).json({
       name: item.productName,
       price: item.sellingPrice,
       code: item.code,
       quantity: item.quantity,
-      category: item.category,
+      category: item.category
     });
   } catch (error) {
     console.error('Error fetching item by code:', error.message);
@@ -28,7 +25,3 @@ const getItemByCode = async (req, res) => {
 };
 
 module.exports = { getItemByCode };
-
-
-
-
