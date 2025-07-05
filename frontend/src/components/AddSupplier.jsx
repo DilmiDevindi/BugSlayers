@@ -18,9 +18,22 @@ const AddSupplier = () => {
     paymentTerms: '',
   });
 
+  const [selectedSubCategory, setSelectedSubCategory] = useState('');
+  const [subCategoryOptions, setSubCategoryOptions] = useState([]);
+
   const [errors, setErrors] = useState({});
   const [existingSupplierNames, setExistingSupplierNames] = useState([]);
   const [isNameAvailable, setIsNameAvailable] = useState(false);
+
+  const subCategoryMap = {
+    Mattress: ['Foam', 'Spring', 'Orthopedic'],
+    Cupboard: ['Wooden', 'Plastic', 'Steel'],
+    Chair: ['Dining Chair', 'Office Chair', 'Recliner'],
+    Table: ['Dining Table', 'Coffee Table', 'Study Table'],
+    'Iron Board': ['Standard', 'Wall-mounted'],
+    'Carrom Board': ['Full Size', 'Mini'],
+    'Clothes Rack': ['Single Pole', 'Double Pole']
+  };
 
   useEffect(() => {
     const fetchSupplierNames = async () => {
@@ -76,6 +89,11 @@ const AddSupplier = () => {
     const { name, value } = e.target;
     const validatedValue = validateFields(name, value);
     setSupplier({ ...supplier, [name]: validatedValue });
+
+    if (name === 'supplyProducts') {
+      setSubCategoryOptions(subCategoryMap[value] || []);
+      setSelectedSubCategory('');
+    }
   };
 
   const handleNameCheck = () => {
@@ -84,28 +102,13 @@ const AddSupplier = () => {
 
     if (existingSupplierNames.includes(name)) {
       alert("Already exists");
-      // No longer preventing submission based on this
     } else {
-      alert("No already exists.Add the new supplier");
+      alert("No already exists. Add the new supplier");
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // REMOVED name existence check to allow duplicates
-    // const nameToCheck = supplier.supplierName.trim().toLowerCase();
-    // if (existingSupplierNames.includes(nameToCheck)) {
-    //   alert("Supplier name already exists. Please check again.");
-    //   setIsNameAvailable(false);
-    //   return;
-    // }
-
-    // REMOVED isNameAvailable restriction
-    // if (!isNameAvailable) {
-    //   alert("Please check the supplier name before submitting.");
-    //   return;
-    // }
 
     let hasErrors = false;
     Object.entries(supplier).forEach(([key, value]) => {
@@ -118,8 +121,14 @@ const AddSupplier = () => {
       return;
     }
 
+    if (!selectedSubCategory) {
+      alert("Please select a subcategory.");
+      return;
+    }
+
     try {
-      await axios.post('http://localhost:5000/api/suppliers/add', supplier);
+      const payload = { ...supplier, subCategory: selectedSubCategory };
+      await axios.post('http://localhost:5000/api/suppliers/add', payload);
       alert('Supplier added successfully');
 
       setSupplier({
@@ -134,6 +143,8 @@ const AddSupplier = () => {
         paymentTerms: '',
       });
 
+      setSelectedSubCategory('');
+      setSubCategoryOptions([]);
       setErrors({});
       setIsNameAvailable(false);
     } catch (error) {
@@ -200,7 +211,7 @@ const AddSupplier = () => {
               </div>
             ))}
 
-            {/* Dropdowns */}
+            {/* Category Dropdown */}
             <div className="col-md-6 mb-3">
               <select
                 className="form-control"
@@ -220,6 +231,23 @@ const AddSupplier = () => {
               </select>
             </div>
 
+            {/* Subcategory Dropdown */}
+            <div className="col-md-6 mb-3">
+              <select
+                className="form-control"
+                name="subCategory"
+                value={selectedSubCategory}
+                onChange={(e) => setSelectedSubCategory(e.target.value)}
+                required
+              >
+                <option value="" disabled>Select a subcategory</option>
+                {subCategoryOptions.map((sub, index) => (
+                  <option key={index} value={sub}>{sub}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Payment Method */}
             <div className="col-md-6 mb-3">
               <select
                 className="form-control"
