@@ -86,7 +86,7 @@ const AddSupplier = () => {
       alert("Already exists");
       // No longer preventing submission based on this
     } else {
-      alert("Add the new supplier");
+      alert("No already exists.Add the new supplier");
     }
   };
 
