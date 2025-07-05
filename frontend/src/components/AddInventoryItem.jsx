@@ -8,18 +8,21 @@ import '../Inventory.css';
 const AddInventoryItem = () => {
   const [productName, setProductName] = useState('');
   const [category, setCategory] = useState('');
+  const [subcategory, setSubcategory] = useState('');
   const [quantity, setQuantity] = useState('');
   const [buyingPrice, setBuyingPrice] = useState('');
   const [sellingPrice, setSellingPrice] = useState('');
   const [dateAdded, setDateAdded] = useState('');
   const [image, setImage] = useState(null);
+  const [availableForOffer, setAvailableForOffer] = useState('no');
   const [categories, setCategories] = useState([]);
+  const [subcategories, setSubcategories] = useState([]);
   const [generatedCode, setGeneratedCode] = useState('');
-  const [availableForOffer, setAvailableForOffer] = useState('no'); 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
 
+  // Load categories
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -32,10 +35,31 @@ const AddInventoryItem = () => {
     fetchCategories();
   }, []);
 
+  // Load subcategories when category changes
+  useEffect(() => {
+    const fetchSubcategories = async () => {
+      if (category) {
+        try {
+          const response = await axios.get(`/api/subcategories/by-category/${category}`);
+          setSubcategories(response.data);
+        } catch (err) {
+          console.error('Failed to fetch subcategories', err);
+          setSubcategories([]);
+        }
+      } else {
+        setSubcategories([]);
+        setSubcategory('');
+      }
+    };
+    fetchSubcategories();
+  }, [category]);
+
+  // Validate inputs
   const validateFields = () => {
     const errors = {};
     if (!productName.trim()) errors.productName = 'Product name is required';
     if (!category) errors.category = 'Category is required';
+    if (!subcategory) errors.subcategory = 'Subcategory is required';
     if (!quantity || isNaN(quantity) || Number(quantity) <= 0)
       errors.quantity = 'Enter a valid quantity';
     if (!buyingPrice || isNaN(buyingPrice) || Number(buyingPrice) < 0)
@@ -47,26 +71,26 @@ const AddInventoryItem = () => {
     return errors;
   };
 
+  // Submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
     setGeneratedCode('');
     setError('');
     const errors = validateFields();
     setFieldErrors(errors);
-
     if (Object.keys(errors).length > 0) return;
 
     setLoading(true);
-
     const formData = new FormData();
     formData.append('productName', productName);
     formData.append('category', category);
+    formData.append('subcategory', subcategory);
     formData.append('quantity', Number(quantity));
     formData.append('buyingPrice', parseFloat(buyingPrice).toFixed(2));
     formData.append('sellingPrice', parseFloat(sellingPrice).toFixed(2));
     formData.append('dateAdded', dateAdded);
     formData.append('image', image);
-    formData.append('availableForOffer', availableForOffer); // NEW FIELD
+    formData.append('availableForOffer', availableForOffer);
 
     try {
       const response = await axios.post('/api/inventory/add', formData, {
@@ -74,18 +98,21 @@ const AddInventoryItem = () => {
       });
       const addedItem = response.data;
       setGeneratedCode(addedItem.code || 'Code not returned');
+
+      // Reset form
       setProductName('');
       setCategory('');
+      setSubcategory('');
       setQuantity('');
       setBuyingPrice('');
       setSellingPrice('');
       setDateAdded('');
       setImage(null);
-      setAvailableForOffer('no'); 
+      setAvailableForOffer('no');
       alert('Item added successfully!');
-    } catch (error) {
-      console.error('Error adding item:', error);
-      setError(error.response?.data?.error || 'Failed to add item. Please try again.');
+    } catch (err) {
+      console.error('Error adding item:', err);
+      setError(err.response?.data?.error || 'Failed to add item. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -96,6 +123,7 @@ const AddInventoryItem = () => {
       <div className="form-title-i">
         <span className="form-icon-i"><FontAwesomeIcon icon={faSquarePlus} /></span> Add New Product
       </div>
+
       <form onSubmit={handleSubmit} encType="multipart/form-data">
         <div className="form-group-i">
           <input type="text" className="form-control" placeholder="Product Title"
@@ -111,6 +139,16 @@ const AddInventoryItem = () => {
             ))}
           </select>
           {fieldErrors.category && <div className="text-danger">{fieldErrors.category}</div>}
+        </div>
+
+        <div className="form-group-i">
+          <select className="form-control-i" value={subcategory} onChange={(e) => setSubcategory(e.target.value)} required>
+            <option value="">Select Subcategory</option>
+            {subcategories.map((sub) => (
+              <option key={sub._id} value={sub._id}>{sub.subcategoryName}</option>
+            ))}
+          </select>
+          {fieldErrors.subcategory && <div className="text-danger">{fieldErrors.subcategory}</div>}
         </div>
 
         <div className="form-row-i">
@@ -149,39 +187,35 @@ const AddInventoryItem = () => {
           {fieldErrors.image && <div className="text-danger">{fieldErrors.image}</div>}
         </div>
 
-        {/* radio button field */}
         <div className="form-row-i">
           <div className="form-group-i">
-          <label className="mb-1 d-block">Availability for offer a discount:</label>
+            <label className="mb-1 d-block">Availability for offer a discount:</label>
           </div>
           <div className="form-group-i">
-          <div className="form-check form-check-inline">
-            <input
-              className="form-check-input"
-              type="radio"
-              name="offerAvailable"
-              id="offerYes"
-              value="yes"
-              checked={availableForOffer === 'yes'}
-              onChange={(e) => setAvailableForOffer(e.target.value)} 
-            />
-            <label className="form-check-label" htmlFor="offerYes">Yes</label>
-          </div>
-          
-          <div className="form-check form-check-inline">
-            <input
-
-              className="form-check-input"
-              type="radio"
-              name="offerAvailable"
-              id="offerNo"
-              value="no"
-              checked={availableForOffer === 'no'}
-              onChange={(e) => setAvailableForOffer(e.target.value)}
-              defaultChecked
-            />
-            <label className="form-check-label" htmlFor="offerNo">No</label>
-          </div>
+            <div className="form-check form-check-inline">
+              <input
+                className="form-check-input"
+                type="radio"
+                name="offerAvailable"
+                id="offerYes"
+                value="yes"
+                checked={availableForOffer === 'yes'}
+                onChange={(e) => setAvailableForOffer(e.target.value)}
+              />
+              <label className="form-check-label" htmlFor="offerYes">Yes</label>
+            </div>
+            <div className="form-check form-check-inline">
+              <input
+                className="form-check-input"
+                type="radio"
+                name="offerAvailable"
+                id="offerNo"
+                value="no"
+                checked={availableForOffer === 'no'}
+                onChange={(e) => setAvailableForOffer(e.target.value)}
+              />
+              <label className="form-check-label" htmlFor="offerNo">No</label>
+            </div>
           </div>
         </div>
 
