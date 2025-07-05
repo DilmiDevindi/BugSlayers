@@ -21,9 +21,7 @@ const AddSupplier = () => {
   const [errors, setErrors] = useState({});
   const [existingSupplierNames, setExistingSupplierNames] = useState([]);
   const [isNameAvailable, setIsNameAvailable] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState('');
 
-  // Category and Subcategory Map
   const productOptions = {
     Mattress: ['Foam', 'Spring', 'Orthopedic'],
     Cupboard: ['Wooden', 'Plastic', 'Steel'],
@@ -88,9 +86,9 @@ const AddSupplier = () => {
     const { name, value } = e.target;
 
     if (name === 'supplyProducts') {
-      // Format as "Subcategory Category" (e.g., "Full Size Carrom Board")
-      const formattedProduct = `${value} ${selectedCategory}`;
-      setSupplier((prev) => ({ ...prev, [name]: formattedProduct }));
+      const [sub, cat] = value.split('|');
+      const formatted = `${sub} ${cat}`;
+      setSupplier((prev) => ({ ...prev, [name]: formatted }));
     } else {
       const validatedValue = validateFields(name, value);
       setSupplier((prev) => ({ ...prev, [name]: validatedValue }));
@@ -153,7 +151,7 @@ const AddSupplier = () => {
           <FontAwesomeIcon icon={faSquarePlus} /> Add Supplier
         </div>
 
-        {/* Supplier Name Search Row */}
+        {/* Supplier Name Check */}
         <div className="row mb-4 align-items-end gap-2 gap-md-0">
           <div className="col-md-8 d-flex">
             <input
@@ -204,7 +202,7 @@ const AddSupplier = () => {
               </div>
             ))}
 
-            {/* Product Dropdown */}
+            {/* Product Dropdown (Sub + Category) */}
             <div className="col-md-6 mb-3">
               <select
                 className="form-control"
@@ -217,11 +215,7 @@ const AddSupplier = () => {
                 {Object.entries(productOptions).map(([category, subcategories]) => (
                   <optgroup key={category} label={category}>
                     {subcategories.map((sub, idx) => (
-                      <option
-                        key={idx}
-                        value={sub}
-                        onClick={() => setSelectedCategory(category)}
-                      >
+                      <option key={idx} value={`${sub}|${category}`}>
                         {sub}
                       </option>
                     ))}
