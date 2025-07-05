@@ -7,12 +7,15 @@ const ManageOrders = () => {
 
   const [newOrder, setNewOrder] = useState({
     orderId: '',
+    supplierName: '',
+    phone: '',
+    email: '',
     quantity: '',
     discount: '',
+    amountPaid: '',
+    status: 'Not Paid',
     date: new Date().toISOString().split('T')[0],
   });
-
-  const [recentOrder, setRecentOrder] = useState(null);
 
   useEffect(() => {
     fetchOrders();
@@ -36,27 +39,47 @@ const ManageOrders = () => {
   };
 
   const handleAddOrder = async () => {
-    const { orderId, quantity, discount, date } = newOrder;
+    const {
+      orderId,
+      supplierName,
+      phone,
+      email,
+      quantity,
+      discount,
+      amountPaid,
+      status,
+      date,
+    } = newOrder;
 
-    if (!orderId || !quantity || !discount || !date) {
+    if (
+      !orderId ||
+      !supplierName ||
+      !phone ||
+      !email ||
+      !quantity ||
+      !discount ||
+      !amountPaid ||
+      !status ||
+      !date
+    ) {
       alert('Please fill all fields');
       return;
     }
 
-    const newEntry = { orderId, quantity, discount, date };
-
     try {
-      const response = await axios.post('/api/orders', newEntry);
-
-      // Add new order to UI
+      const response = await axios.post('/api/orders', newOrder);
       setOrders((prev) => [...prev, response.data]);
-      setRecentOrder(response.data);
 
-      // Reset input fields
+      // Reset form
       setNewOrder({
         orderId: '',
+        supplierName: '',
+        phone: '',
+        email: '',
         quantity: '',
         discount: '',
+        amountPaid: '',
+        status: 'Not Paid',
         date: new Date().toISOString().split('T')[0],
       });
     } catch (error) {
@@ -66,15 +89,15 @@ const ManageOrders = () => {
   };
 
   const filteredOrders = orders.filter((order) =>
-    order.orderId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    order.date.toLowerCase().includes(searchTerm.toLowerCase())
+    order.orderId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    order.date?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <div className="container mt-4">
       <h2>Manage Orders</h2>
 
-      {/* Search */}
+      {/* Search Field */}
       <div className="mb-3">
         <input
           type="text"
@@ -88,37 +111,40 @@ const ManageOrders = () => {
       {/* Add Order Form */}
       <div className="card p-3 mb-4">
         <h5>Add New Order</h5>
-        <div className="row">
+        <div className="row g-2">
+          {[
+            { name: 'orderId', label: 'Order ID', type: 'text' },
+            { name: 'supplierName', label: 'Supplier Name', type: 'text' },
+            { name: 'phone', label: 'Phone', type: 'text' },
+            { name: 'email', label: 'Email', type: 'email' },
+            { name: 'quantity', label: 'Quantity', type: 'number' },
+            { name: 'discount', label: 'Discount (%)', type: 'number' },
+            { name: 'amountPaid', label: 'Amount Paid', type: 'number' },
+          ].map((field) => (
+            <div className="col-md-3" key={field.name}>
+              <input
+                type={field.type}
+                className="form-control"
+                name={field.name}
+                placeholder={field.label}
+                value={newOrder[field.name]}
+                onChange={handleInputChange}
+              />
+            </div>
+          ))}
+
           <div className="col-md-3">
-            <input
-              type="text"
+            <select
+              name="status"
               className="form-control"
-              name="orderId"
-              placeholder="Order ID"
-              value={newOrder.orderId}
+              value={newOrder.status}
               onChange={handleInputChange}
-            />
+            >
+              <option value="Not Paid">Not Paid</option>
+              <option value="Paid">Paid</option>
+            </select>
           </div>
-          <div className="col-md-2">
-            <input
-              type="number"
-              className="form-control"
-              name="quantity"
-              placeholder="Quantity"
-              value={newOrder.quantity}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className="col-md-2">
-            <input
-              type="number"
-              className="form-control"
-              name="discount"
-              placeholder="Discount (%)"
-              value={newOrder.discount}
-              onChange={handleInputChange}
-            />
-          </div>
+
           <div className="col-md-3">
             <input
               type="date"
@@ -128,7 +154,8 @@ const ManageOrders = () => {
               onChange={handleInputChange}
             />
           </div>
-          <div className="col-md-2">
+
+          <div className="col-md-3">
             <button className="btn btn-primary w-100" onClick={handleAddOrder}>
               Add Order
             </button>
@@ -136,53 +163,40 @@ const ManageOrders = () => {
         </div>
       </div>
 
-      {/* Main Orders Table */}
+      {/* Orders Table */}
       <h5>Order List</h5>
-      <table className="table table-striped">
-        <thead className="table-dark">
-          <tr>
-            <th>Order ID</th>
-            <th>Quantity</th>
-            <th>Discount (%)</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredOrders.map((order) => (
-            <tr key={order._id || order.orderId}>
-              <td>{order.orderId}</td>
-              <td>{order.quantity}</td>
-              <td>{order.discount}</td>
-              <td>{order.date}</td>
+      <div className="table-responsive">
+        <table className="table table-striped table-bordered">
+          <thead className="table-dark">
+            <tr>
+              <th>Order ID</th>
+              <th>Supplier Name</th>
+              <th>Phone</th>
+              <th>Email</th>
+              <th>Quantity</th>
+              <th>Discount (%)</th>
+              <th>Amount Paid</th>
+              <th>Status</th>
+              <th>Date</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-
-      {/* Recently Added Order */}
-      {recentOrder && (
-        <div className="card mt-5 p-3 border-success">
-          <h5 className="text-success">Recently Added Order</h5>
-          <table className="table table-bordered mt-2">
-            <thead className="table-light">
-              <tr>
-                <th>Order ID</th>
-                <th>Quantity</th>
-                <th>Discount (%)</th>
-                <th>Date</th>
+          </thead>
+          <tbody>
+            {filteredOrders.map((order) => (
+              <tr key={order._id}>
+                <td>{order.orderId}</td>
+                <td>{order.supplierName}</td>
+                <td>{order.phone}</td>
+                <td>{order.email}</td>
+                <td>{order.quantity}</td>
+                <td>{order.discount}</td>
+                <td>{order.amountPaid}</td>
+                <td>{order.status}</td>
+                <td>{order.date}</td>
               </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{recentOrder.orderId}</td>
-                <td>{recentOrder.quantity}</td>
-                <td>{recentOrder.discount}</td>
-                <td>{recentOrder.date}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      )}
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
