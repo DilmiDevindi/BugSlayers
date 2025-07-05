@@ -21,8 +21,9 @@ const AddSupplier = () => {
   const [errors, setErrors] = useState({});
   const [existingSupplierNames, setExistingSupplierNames] = useState([]);
   const [isNameAvailable, setIsNameAvailable] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('');
 
-  // Product categories and subcategories
+  // Category and Subcategory Map
   const productOptions = {
     Mattress: ['Foam', 'Spring', 'Orthopedic'],
     Cupboard: ['Wooden', 'Plastic', 'Steel'],
@@ -85,8 +86,15 @@ const AddSupplier = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    const validatedValue = validateFields(name, value);
-    setSupplier((prev) => ({ ...prev, [name]: validatedValue }));
+
+    if (name === 'supplyProducts') {
+      // Format as "Subcategory Category" (e.g., "Full Size Carrom Board")
+      const formattedProduct = `${value} ${selectedCategory}`;
+      setSupplier((prev) => ({ ...prev, [name]: formattedProduct }));
+    } else {
+      const validatedValue = validateFields(name, value);
+      setSupplier((prev) => ({ ...prev, [name]: validatedValue }));
+    }
   };
 
   const handleNameCheck = () => {
@@ -196,12 +204,12 @@ const AddSupplier = () => {
               </div>
             ))}
 
-            {/* Product Select Field (Combined with Subcategories) */}
+            {/* Product Dropdown */}
             <div className="col-md-6 mb-3">
               <select
                 className="form-control"
                 name="supplyProducts"
-                value={supplier.supplyProducts}
+                value=""
                 onChange={handleInputChange}
                 required
               >
@@ -209,7 +217,11 @@ const AddSupplier = () => {
                 {Object.entries(productOptions).map(([category, subcategories]) => (
                   <optgroup key={category} label={category}>
                     {subcategories.map((sub, idx) => (
-                      <option key={idx} value={`${category} - ${sub}`}>
+                      <option
+                        key={idx}
+                        value={sub}
+                        onClick={() => setSelectedCategory(category)}
+                      >
                         {sub}
                       </option>
                     ))}
