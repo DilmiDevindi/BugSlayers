@@ -214,7 +214,7 @@ const AddSupplier = () => {
                       const fullName = `${sub} ${category}`;
                       return (
                         <option key={idx} value={fullName}>
-                          {fullName}
+                          {sub}
                         </option>
                       );
                     })}
