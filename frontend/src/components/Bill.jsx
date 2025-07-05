@@ -64,7 +64,7 @@ function BillForm() {
 
     if (code) {
       try {
-        const res = await axios.get(`http://localhost:5000/api/bill/item/${code}`);
+        const res = await axios.get(`http://localhost:5000/api/inventryitem/item/${code}`);
         const item = res.data;
         setItemName(item.name || '');
         setItemPrice(parseFloat(item.price).toFixed(2) || '');
