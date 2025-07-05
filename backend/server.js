@@ -12,6 +12,7 @@ const authRoutes = require('./routes/authRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const salesRoutes = require('./routes/salesRoutes');
 const catalogRoutes = require('./routes/catalogRoutes');
+const subcategoryRoutes = require('./routes/subcategory');
 const reportRoutes = require('./routes/reportRoutes');
 const purchaseRoutes = require("./routes/purchasesRoutes");
 const purchasereportRoutes = require("./routes/purchasereportRoutes");
