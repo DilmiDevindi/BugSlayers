@@ -1,6 +1,5 @@
 const InventoryItem = require('../models/InventoryItem');
 
-// GET /api/bill/item/:code
 const getItemByCode = async (req, res) => {
   const { code } = req.params;
 
