@@ -29,7 +29,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Get subcategories by category ID (optional but useful)
+// Get subcategories by category ID
 router.get('/by-category/:categoryId', async (req, res) => {
   try {
     const subcategories = await Subcategory.find({ categoryId: req.params.categoryId });
