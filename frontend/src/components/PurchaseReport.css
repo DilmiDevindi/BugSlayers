@@ -49,7 +49,7 @@
     background-color: #fafafa;
   }
   
- /* Change the background color of the reports section */
 .reports-container {
-  background-color: #dcdcdc; /* Medium gray */
+  background-color: #000000; /* Black background for Reports */
+  color: #ffffff;           /* Optional: Ensure text is visible */
 }
