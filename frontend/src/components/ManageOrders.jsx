@@ -9,8 +9,10 @@ const ManageOrders = () => {
     orderId: '',
     quantity: '',
     discount: '',
-    date: new Date().toISOString().split('T')[0], // today's date
+    date: new Date().toISOString().split('T')[0],
   });
+
+  const [recentOrder, setRecentOrder] = useState(null); // For displaying below table
 
   useEffect(() => {
     fetchOrders();
@@ -36,7 +38,6 @@ const ManageOrders = () => {
   const handleAddOrder = async () => {
     const { orderId, quantity, discount, date } = newOrder;
 
-    // Basic validation
     if (!orderId || !quantity || !discount || !date) {
       alert('Please fill all fields');
       return;
@@ -45,13 +46,11 @@ const ManageOrders = () => {
     const newEntry = { orderId, quantity, discount, date };
 
     try {
-      // Send to backend (optional: remove if not needed)
       const response = await axios.post('/api/orders/add', newEntry);
 
-      // Add to frontend state
       setOrders((prev) => [...prev, response.data]);
+      setRecentOrder(response.data); // Set for display below
 
-      // Clear form
       setNewOrder({
         orderId: '',
         quantity: '',
@@ -73,7 +72,7 @@ const ManageOrders = () => {
     <div className="container mt-4">
       <h2>Manage Orders</h2>
 
-      {/* Search Input */}
+      {/* Search Field */}
       <div className="mb-3">
         <input
           type="text"
@@ -84,9 +83,7 @@ const ManageOrders = () => {
         />
       </div>
 
-      
-
-      {/* Order Entry Form */}
+      {/* Add Order Form */}
       <div className="card p-3 mb-4">
         <h5>Add New Order</h5>
         <div className="row">
@@ -138,6 +135,7 @@ const ManageOrders = () => {
       </div>
 
       {/* Order Table */}
+      <h5>Order List</h5>
       <table className="table table-striped">
         <thead className="table-dark">
           <tr>
@@ -158,9 +156,32 @@ const ManageOrders = () => {
           ))}
         </tbody>
       </table>
-    </div>
 
-    
+      {/* Recently Added Order Section */}
+      {recentOrder && (
+        <div className="card mt-5 p-3 border-success">
+          <h5 className="text-success">Recently Added Order</h5>
+          <table className="table table-bordered mt-2">
+            <thead className="table-light">
+              <tr>
+                <th>Order ID</th>
+                <th>Quantity</th>
+                <th>Discount (%)</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{recentOrder.orderId}</td>
+                <td>{recentOrder.quantity}</td>
+                <td>{recentOrder.discount}</td>
+                <td>{recentOrder.date}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
   );
 };
 
