@@ -197,3 +197,7 @@ h3 {
   text-align: center;
 }
 
+/* Change the background color of the supplier section */
+.supplier-container {
+  background-color: #f5f5f5; /* Light gray background */
+}
