@@ -76,3 +76,8 @@
   padding: 8px 16px;
   margin-right: 10px;
 }
+
+/* Change the background color of the purchases section */
+.purchases-container {
+  background-color: #e0e0e0; /* Slightly darker gray */
+}
