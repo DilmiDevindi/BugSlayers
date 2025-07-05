@@ -18,21 +18,19 @@ const AddSupplier = () => {
     paymentTerms: '',
   });
 
-  const [selectedSubCategory, setSelectedSubCategory] = useState('');
-  const [subCategoryOptions, setSubCategoryOptions] = useState([]);
-
   const [errors, setErrors] = useState({});
   const [existingSupplierNames, setExistingSupplierNames] = useState([]);
   const [isNameAvailable, setIsNameAvailable] = useState(false);
 
-  const subCategoryMap = {
+  // Product categories and subcategories
+  const productOptions = {
     Mattress: ['Foam', 'Spring', 'Orthopedic'],
     Cupboard: ['Wooden', 'Plastic', 'Steel'],
     Chair: ['Dining Chair', 'Office Chair', 'Recliner'],
     Table: ['Dining Table', 'Coffee Table', 'Study Table'],
     'Iron Board': ['Standard', 'Wall-mounted'],
     'Carrom Board': ['Full Size', 'Mini'],
-    'Clothes Rack': ['Single Pole', 'Double Pole']
+    'Clothes Rack': ['Single Pole', 'Double Pole'],
   };
 
   useEffect(() => {
@@ -88,12 +86,7 @@ const AddSupplier = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     const validatedValue = validateFields(name, value);
-    setSupplier({ ...supplier, [name]: validatedValue });
-
-    if (name === 'supplyProducts') {
-      setSubCategoryOptions(subCategoryMap[value] || []);
-      setSelectedSubCategory('');
-    }
+    setSupplier((prev) => ({ ...prev, [name]: validatedValue }));
   };
 
   const handleNameCheck = () => {
@@ -121,14 +114,8 @@ const AddSupplier = () => {
       return;
     }
 
-    if (!selectedSubCategory) {
-      alert("Please select a subcategory.");
-      return;
-    }
-
     try {
-      const payload = { ...supplier, subCategory: selectedSubCategory };
-      await axios.post('http://localhost:5000/api/suppliers/add', payload);
+      await axios.post('http://localhost:5000/api/suppliers/add', supplier);
       alert('Supplier added successfully');
 
       setSupplier({
@@ -143,8 +130,6 @@ const AddSupplier = () => {
         paymentTerms: '',
       });
 
-      setSelectedSubCategory('');
-      setSubCategoryOptions([]);
       setErrors({});
       setIsNameAvailable(false);
     } catch (error) {
@@ -211,7 +196,7 @@ const AddSupplier = () => {
               </div>
             ))}
 
-            {/* Category Dropdown */}
+            {/* Product Select Field (Combined with Subcategories) */}
             <div className="col-md-6 mb-3">
               <select
                 className="form-control"
@@ -221,28 +206,14 @@ const AddSupplier = () => {
                 required
               >
                 <option value="" disabled>Select a product</option>
-                <option value="Mattress">Mattress</option>
-                <option value="Cupboard">Cupboard</option>
-                <option value="Chair">Chair</option>
-                <option value="Table">Table</option>
-                <option value="Iron Board">Iron Board</option>
-                <option value="Carrom Board">Carrom Board</option>
-                <option value="Clothes Rack">Clothes Rack</option>
-              </select>
-            </div>
-
-            {/* Subcategory Dropdown */}
-            <div className="col-md-6 mb-3">
-              <select
-                className="form-control"
-                name="subCategory"
-                value={selectedSubCategory}
-                onChange={(e) => setSelectedSubCategory(e.target.value)}
-                required
-              >
-                <option value="" disabled>Select a subcategory</option>
-                {subCategoryOptions.map((sub, index) => (
-                  <option key={index} value={sub}>{sub}</option>
+                {Object.entries(productOptions).map(([category, subcategories]) => (
+                  <optgroup key={category} label={category}>
+                    {subcategories.map((sub, idx) => (
+                      <option key={idx} value={`${category} - ${sub}`}>
+                        {sub}
+                      </option>
+                    ))}
+                  </optgroup>
                 ))}
               </select>
             </div>
