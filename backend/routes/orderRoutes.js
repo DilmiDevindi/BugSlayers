@@ -1,12 +1,20 @@
 const express = require('express');
-  const router = express.Router();
-  const orderController = require('../controllers/orderController');
+const router = express.Router();
+const orderController = require('../controllers/orderController');
 
-  router.get('/', orderController.getAllOrders);
-  router.post('/', orderController.createOrder);
-  router.put('/:id', orderController.updateOrder);
+// GET all orders
+router.get('/', orderController.getAllOrders);
 
-  // New route for report with date range (kept for potential future use)
-  router.get('/report', orderController.getOrderReport);
+// POST create order
+router.post('/', orderController.createOrder);
 
-  module.exports = router;
+// PUT update order by id
+router.put('/:id', orderController.updateOrder);
+
+// DELETE order by id
+router.delete('/:id', orderController.deleteOrder);
+
+// GET report by date range (optional)
+router.get('/report', orderController.getOrdersByDateRange);
+
+module.exports = router;
