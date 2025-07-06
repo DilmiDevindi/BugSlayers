@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './Bill.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -17,39 +17,62 @@ function BillForm() {
 
   const [quantity, setQuantity] = useState(1);
   const [discount, setDiscount] = useState(0);
-
   const [cashReceived, setCashReceived] = useState(0);
   const [balance, setBalance] = useState(0);
 
   const [showInvoice, setShowInvoice] = useState(false);
+  const [fetchError, setFetchError] = useState('');
 
-  const handleNameChange = async (e) => {
-    const enteredName = e.target.value;
-    setName(enteredName);
+  const debounceRef = useRef(null);
 
-    try {
-      const res = await axios.get(`/api/customers/name/${enteredName}`);
-      const customer = res.data;
-      setAddress(customer.address || '');
-      setContact(customer.contact || '');
-      setEmail(customer.email || '');
-    } catch {
+  // Fetch customer by contact
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+
+    const cleanContact = contact.trim();
+
+    if (cleanContact.length === 10) {
+      debounceRef.current = setTimeout(async () => {
+        try {
+          const res = await axios.get(`http://localhost:5000/api/customers/contact/${cleanContact}`);
+          const customer = res.data;
+          setName(customer.name || '');
+          setAddress(customer.address || '');
+          setEmail(customer.email || '');
+          setFetchError('');
+        } catch (error) {
+          setName('');
+          setAddress('');
+          setEmail('');
+          setFetchError('Customer not found');
+        }
+      }, 500);
+    } else {
+      setName('');
       setAddress('');
-      setContact('');
       setEmail('');
+      setFetchError('');
     }
-  };
 
+    return () => clearTimeout(debounceRef.current);
+  }, [contact]);
+
+  // Fetch item by item code
   const handleItemCodeChange = async (e) => {
-    const code = e.target.value;
+    const code = e.target.value.trim();
     setItemCode(code);
 
-    try {
-      const res = await axios.get(`/api/items/code/${code}`);
-      const item = res.data;
-      setItemName(item.name || '');
-      setItemPrice(item.price || '');
-    } catch {
+    if (code) {
+      try {
+        const res = await axios.get(`http://localhost:5000/api/bill/inventoryitems/${code}`);
+        const item = res.data;
+        setItemName(item.name || '');
+        setItemPrice(parseFloat(item.price).toFixed(2) || '');
+      } catch (err) {
+        setItemName('');
+        setItemPrice('');
+      }
+    } else {
       setItemName('');
       setItemPrice('');
     }
@@ -62,18 +85,23 @@ function BillForm() {
 
   const calculateAmount = () => {
     const total = parseFloat(calculatePrice());
-    return (total - discount).toFixed(2);
+    const disc = parseFloat(discount || 0);
+    return (total - disc).toFixed(2);
   };
 
-  const calculateBalance = () => {
+  useEffect(() => {
     const amount = parseFloat(calculateAmount());
-    const balanceAmt = cashReceived - amount;
-    setBalance(balanceAmt >= 0 ? balanceAmt : 0);
-  };
+    const cash = parseFloat(cashReceived || 0);
+    const bal = cash - amount;
+    setBalance(bal >= 0 ? bal : 0);
+  }, [cashReceived, discount, quantity, itemPrice]);
 
   const handleGenerateInvoice = () => {
+    if (!name || !email) {
+      alert('Please enter a valid 10-digit contact number to fetch customer details.');
+      return;
+    }
     setShowInvoice(true);
-    calculateBalance();
   };
 
   const handlePrint = () => {
@@ -82,8 +110,11 @@ function BillForm() {
 
   return (
     <div className='invoice-form'>
-      <h3 className='bill-topic'><FontAwesomeIcon icon={faFileInvoice} className="bill-icon" /> Generate Invoice</h3>
-      <form>
+      <h3 className='bill-topic'>
+        <FontAwesomeIcon icon={faFileInvoice} className="bill-icon" /> Generate Invoice
+      </h3>
+
+      <form onSubmit={(e) => e.preventDefault()}>
         <h4>Customer Details</h4>
 
         <div className="inline-field">
@@ -92,18 +123,26 @@ function BillForm() {
         </div>
 
         <div className="inline-field">
+          <label>Contact:</label>
+          <input
+            type="text"
+            value={contact}
+            onChange={(e) => setContact(e.target.value.replace(/\D/g, '').substring(0, 10).trim())}
+            maxLength={10}
+            placeholder="Enter 10-digit contact"
+          />
+        </div>
+
+        {fetchError && <p style={{ color: 'red' }}>{fetchError}</p>}
+
+        <div className="inline-field">
           <label>Customer Name:</label>
-          <input type="text" value={name} onChange={handleNameChange} />
+          <input type="text" value={name} readOnly />
         </div>
 
         <div className="inline-field">
           <label>Address:</label>
           <input type="text" value={address} readOnly />
-        </div>
-
-        <div className="inline-field">
-          <label>Contact:</label>
-          <input type="text" value={contact} readOnly />
         </div>
 
         <div className="inline-field">
@@ -131,7 +170,12 @@ function BillForm() {
 
         <div className="inline-field">
           <label>Quantity:</label>
-          <input type="number" value={quantity} min="1" onChange={(e) => setQuantity(Number(e.target.value))} />
+          <input
+            type="number"
+            min="1"
+            value={quantity}
+            onChange={(e) => setQuantity(Number(e.target.value))}
+          />
         </div>
 
         <div className="inline-field">
@@ -141,7 +185,12 @@ function BillForm() {
 
         <div className="inline-field">
           <label>Discount:</label>
-          <input type="number" value={discount} min="0" onChange={(e) => setDiscount(Number(e.target.value))} />
+          <input
+            type="number"
+            min="0"
+            value={discount}
+            onChange={(e) => setDiscount(Number(e.target.value))}
+          />
         </div>
 
         <div className="inline-field">
@@ -151,7 +200,12 @@ function BillForm() {
 
         <div className="inline-field">
           <label>Cash Received:</label>
-          <input type="number" value={cashReceived} onChange={(e) => setCashReceived(Number(e.target.value))} />
+          <input
+            type="number"
+            min="0"
+            value={cashReceived}
+            onChange={(e) => setCashReceived(Number(e.target.value))}
+          />
         </div>
 
         <div className="inline-field">
@@ -160,20 +214,18 @@ function BillForm() {
         </div>
 
         <div style={{ marginTop: '15px' }}>
-          <button type="button" onClick={handleGenerateInvoice}>
-            Generate Invoice
-          </button>
-          <button type="button" onClick={handlePrint} style={{ marginLeft: '10px' }}>
-            Print Invoice
-          </button>
+          <button type="button" onClick={handleGenerateInvoice}>Generate Invoice</button>
+          <button type="button" onClick={handlePrint} style={{ marginLeft: '10px' }}>Print Invoice</button>
         </div>
       </form>
 
       {showInvoice && (
-        <div style={{ marginTop: '20px', padding: '15px', border: '1px solid #000' }}>
+        <div className="invoice-preview">
           <h3>Invoice</h3>
           <p><strong>Date:</strong> {date}</p>
           <p><strong>Customer:</strong> {name}</p>
+          <p><strong>Email:</strong> {email}</p>
+          <p><strong>Address:</strong> {address}</p>
           <p><strong>Item:</strong> {itemName}</p>
           <p><strong>Quantity:</strong> {quantity}</p>
           <p><strong>Item Price:</strong> ${itemPrice}</p>

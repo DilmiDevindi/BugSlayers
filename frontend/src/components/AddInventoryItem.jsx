@@ -15,6 +15,7 @@ const AddInventoryItem = () => {
   const [image, setImage] = useState(null);
   const [categories, setCategories] = useState([]);
   const [generatedCode, setGeneratedCode] = useState('');
+  const [availableForOffer, setAvailableForOffer] = useState('no'); 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
@@ -65,6 +66,7 @@ const AddInventoryItem = () => {
     formData.append('sellingPrice', parseFloat(sellingPrice).toFixed(2));
     formData.append('dateAdded', dateAdded);
     formData.append('image', image);
+    formData.append('availableForOffer', availableForOffer); // NEW FIELD
 
     try {
       const response = await axios.post('/api/inventory/add', formData, {
@@ -79,6 +81,7 @@ const AddInventoryItem = () => {
       setSellingPrice('');
       setDateAdded('');
       setImage(null);
+      setAvailableForOffer('no'); 
       alert('Item added successfully!');
     } catch (error) {
       console.error('Error adding item:', error);
@@ -135,13 +138,51 @@ const AddInventoryItem = () => {
         </div>
 
         <div className="form-group-i">
-          <input type="date" className="form-control" value={dateAdded} onChange={(e) => setDateAdded(e.target.value)} />
+          <input type="date" className="form-control"
+            value={dateAdded} onChange={(e) => setDateAdded(e.target.value)} />
           {fieldErrors.dateAdded && <div className="text-danger">{fieldErrors.dateAdded}</div>}
         </div>
 
         <div className="form-group-i">
-          <input type="file" className="form-control" accept="image/*" onChange={(e) => setImage(e.target.files[0])} />
+          <input type="file" className="form-control" accept="image/*"
+            onChange={(e) => setImage(e.target.files[0])} />
           {fieldErrors.image && <div className="text-danger">{fieldErrors.image}</div>}
+        </div>
+
+        {/* radio button field */}
+        <div className="form-row-i">
+          <div className="form-group-i">
+          <label className="mb-1 d-block">Availability for offer a discount:</label>
+          </div>
+          <div className="form-group-i">
+          <div className="form-check form-check-inline">
+            <input
+              className="form-check-input"
+              type="radio"
+              name="offerAvailable"
+              id="offerYes"
+              value="yes"
+              checked={availableForOffer === 'yes'}
+              onChange={(e) => setAvailableForOffer(e.target.value)} 
+            />
+            <label className="form-check-label" htmlFor="offerYes">Yes</label>
+          </div>
+          
+          <div className="form-check form-check-inline">
+            <input
+
+              className="form-check-input"
+              type="radio"
+              name="offerAvailable"
+              id="offerNo"
+              value="no"
+              checked={availableForOffer === 'no'}
+              onChange={(e) => setAvailableForOffer(e.target.value)}
+              defaultChecked
+            />
+            <label className="form-check-label" htmlFor="offerNo">No</label>
+          </div>
+          </div>
         </div>
 
         <button type="submit" className="btn btn-primary-i" disabled={loading}>

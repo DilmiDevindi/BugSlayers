@@ -10,7 +10,7 @@ const Layout = () => {
       <div className="d-flex" style={{ height: '100vh', overflow: 'hidden' }}>
         <Sidebar />
         <div className="flex-grow-1 p-4" style={{ overflowY: 'auto', marginTop: '50px' }}>
-          {/* 70px is for the height of your Navbar */}
+          
           <Outlet />
         </div>
       </div>
