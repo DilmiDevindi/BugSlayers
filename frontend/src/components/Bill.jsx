@@ -226,19 +226,46 @@ function BillForm() {
 
       {showInvoice && (
         <div className="invoice-preview">
-          <h3>Invoice</h3>
+          <h3 style={{ textAlign: 'center' }}>SISIRA FURNITURES</h3>
+          <p style={{ textAlign: 'center' }}>
+            No.156, Matara Road, Kamburupitiya<br />
+            Tel: 041-2292785 / 0718006485
+          </p>
+
+          <p><strong>Invoice #:</strong> 000789</p>
+          <p><strong>Counter:</strong> 03</p>
           <p><strong>Date:</strong> {date}</p>
-          <p><strong>Customer:</strong> {name}</p>
-          <p><strong>Email:</strong> {email}</p>
+          <hr />
+
+          <p><strong>Customer Name:</strong> {name}</p>
+          <p><strong>Contact:</strong> {contact}</p>
           <p><strong>Address:</strong> {address}</p>
+          <p><strong>Email:</strong> {email}</p>
+          <hr />
+
           <p><strong>Item:</strong> {itemName}</p>
           <p><strong>Quantity:</strong> {quantity}</p>
-          <p><strong>Item Price:</strong> ${itemPrice}</p>
-          <p><strong>Price:</strong> ${calculatePrice()}</p>
-          <p><strong>Discount:</strong> ${discount}</p>
-          <p><strong>Amount:</strong> ${calculateAmount()}</p>
-          <p><strong>Cash Received:</strong> ${cashReceived}</p>
-          <p><strong>Balance:</strong> ${balance.toFixed(2)}</p>
+          <p><strong>Item Price:</strong> Rs. {itemPrice}</p>
+          <p><strong>Price:</strong> Rs. {calculatePrice()}</p>
+          <p><strong>Discount:</strong> Rs. {discount}</p>
+          <p><strong>Amount:</strong> Rs. {calculateAmount()}</p>
+          <p><strong>Cash Received:</strong> Rs. {cashReceived}</p>
+          <p><strong>Balance:</strong> Rs. {balance.toFixed(2)}</p>
+          <hr />
+
+          <p><strong>Total Qty:</strong> {quantity}</p>
+          <p style={{ textAlign: 'center' }}>* {Math.floor(Math.random() * 999999).toString().padStart(6, '0')} *</p>
+
+          <p style={{ fontSize: '12px', textAlign: 'center' }}>
+            If any exchangeable item, bring the product<br />
+            in original condition within 03 days
+          </p>
+
+          <p style={{ fontSize: '11px', textAlign: 'center' }}>
+            Software & Technical Support by:<br />
+            Agoyosoft (Pvt) Ltd © 2025
+          </p>
+
           <button onClick={handlePrint}>Print</button>
         </div>
       )}
