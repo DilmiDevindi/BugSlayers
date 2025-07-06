@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 const path = require('path');
 
 // Route imports
@@ -17,18 +18,17 @@ const purchasereportRoutes = require('./routes/purchasereportRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 
 const app = express();
-
-// HARDCODED CONFIG
 const PORT = 5000;
-const MONGO_URI = 'mongodb://localhost:27017/mern-vite-app';
-const FRONTEND_URL = 'http://localhost:5173';
 
 // Middleware
-app.use(cors({ origin: FRONTEND_URL, credentials: true }));
+app.use(cors());
+app.use(bodyParser.json());
 app.use(express.json());
+
+// Static file serving (e.g. images)
 app.use('/uploads', express.static(path.join(__dirname, 'Uploads')));
 
-// Routes
+// API Routes
 app.use('/api/suppliers', supplierRoutes);
 app.use('/api/inventory', inventoryRoutes);
 app.use('/api/customers', customerRoutes);
@@ -41,27 +41,20 @@ app.use('/api/purchase', purchaseRoutes);
 app.use('/api/purchase-report', purchasereportRoutes);
 app.use('/api/orders', orderRoutes);
 
-// Error handler
-app.use((err, req, res, next) => {
-  console.error('Server error:', err.stack);
-  res.status(500).json({
-    error: 'Something went wrong!',
-    message: err.message,
+// MongoDB connection
+mongoose.connect('mongodb://localhost:27017/mern-vite-app')
+  .then(() => {
+    console.log('MongoDB connected');
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error('Error connecting to MongoDB:', err);
   });
-});
 
-// Connect to MongoDB
-mongoose.connect(MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('✅ MongoDB connected'))
-.catch((err) => {
-  console.error('❌ MongoDB connection failed:', err);
-  process.exit(1);
-});
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
