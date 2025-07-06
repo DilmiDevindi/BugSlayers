@@ -136,11 +136,7 @@ const Sidebar = () => {
                   Manage Orders
                 </Link>
               </li>
-              <li className="nav-item mb-2">
-                <Link to="/dashboard/orders/report" className="nav-link text-white">
-                  Order Reports
-                </Link>
-              </li>
+            
             </ul>
           )}
         </li>
