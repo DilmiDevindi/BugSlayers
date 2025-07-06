@@ -4,7 +4,6 @@ import axios from 'axios';
 const ManageOrders = () => {
   const [orders, setOrders] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-
   const [newOrder, setNewOrder] = useState({
     orderId: '',
     quantity: '',
@@ -12,18 +11,16 @@ const ManageOrders = () => {
     date: new Date().toISOString().split('T')[0],
   });
 
-  const [recentOrder, setRecentOrder] = useState(null);
-
   useEffect(() => {
     fetchOrders();
   }, []);
 
   const fetchOrders = async () => {
     try {
-      const response = await axios.get('/api/orders');
-      setOrders(response.data);
-    } catch (error) {
-      console.error('Error fetching orders:', error);
+      const res = await axios.get('/api/orders');
+      setOrders(res.data);
+    } catch (err) {
+      console.error('Failed to fetch orders:', err);
     }
   };
 
@@ -43,31 +40,33 @@ const ManageOrders = () => {
       return;
     }
 
-    const newEntry = { orderId, quantity, discount, date };
+    const newEntry = {
+      orderId,
+      quantity: parseInt(quantity),
+      discount: parseFloat(discount),
+      date,
+    };
 
     try {
-      const response = await axios.post('/api/orders', newEntry);
+      const res = await axios.post('/api/orders', newEntry);
+      setOrders((prev) => [...prev, res.data]);
 
-      // Add new order to UI
-      setOrders((prev) => [...prev, response.data]);
-      setRecentOrder(response.data);
-
-      // Reset input fields
+      // Clear form
       setNewOrder({
         orderId: '',
         quantity: '',
         discount: '',
         date: new Date().toISOString().split('T')[0],
       });
-    } catch (error) {
-      console.error('Error adding order:', error);
+    } catch (err) {
+      console.error('Failed to add order:', err);
       alert('Failed to add order.');
     }
   };
 
   const filteredOrders = orders.filter((order) =>
-    order.orderId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    order.date.toLowerCase().includes(searchTerm.toLowerCase())
+    order.orderId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    order.date?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -85,7 +84,7 @@ const ManageOrders = () => {
         />
       </div>
 
-      {/* Add Order Form */}
+      {/* Add Form */}
       <div className="card p-3 mb-4">
         <h5>Add New Order</h5>
         <div className="row">
@@ -136,7 +135,7 @@ const ManageOrders = () => {
         </div>
       </div>
 
-      {/* Main Orders Table */}
+      {/* Table */}
       <h5>Order List</h5>
       <table className="table table-striped">
         <thead className="table-dark">
@@ -148,41 +147,22 @@ const ManageOrders = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredOrders.map((order) => (
-            <tr key={order._id || order.orderId}>
-              <td>{order.orderId}</td>
-              <td>{order.quantity}</td>
-              <td>{order.discount}</td>
-              <td>{order.date}</td>
+          {filteredOrders.length === 0 ? (
+            <tr>
+              <td colSpan="4" className="text-center text-muted">No orders to display</td>
             </tr>
-          ))}
+          ) : (
+            filteredOrders.map((order) => (
+              <tr key={order._id || order.orderId}>
+                <td>{order.orderId}</td>
+                <td>{order.quantity}</td>
+                <td>{order.discount}</td>
+                <td>{order.date}</td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
-
-      {/* Recently Added Order */}
-      {recentOrder && (
-        <div className="card mt-5 p-3 border-success">
-          <h5 className="text-success">Recently Added Order</h5>
-          <table className="table table-bordered mt-2">
-            <thead className="table-light">
-              <tr>
-                <th>Order ID</th>
-                <th>Quantity</th>
-                <th>Discount (%)</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{recentOrder.orderId}</td>
-                <td>{recentOrder.quantity}</td>
-                <td>{recentOrder.discount}</td>
-                <td>{recentOrder.date}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      )}
     </div>
   );
 };
