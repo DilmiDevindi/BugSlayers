@@ -4,6 +4,7 @@ import axios from 'axios';
 const ManageOrders = () => {
   const [orders, setOrders] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [newOrder, setNewOrder] = useState({
     orderId: '',
     quantity: '',
@@ -26,10 +27,7 @@ const ManageOrders = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewOrder((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setNewOrder((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleAddOrder = async () => {
@@ -50,6 +48,7 @@ const ManageOrders = () => {
     try {
       const res = await axios.post('/api/orders', newEntry);
       setOrders((prev) => [...prev, res.data]);
+      setSuccessMessage('✅ Order added successfully!');
 
       // Clear form
       setNewOrder({
@@ -58,9 +57,12 @@ const ManageOrders = () => {
         discount: '',
         date: new Date().toISOString().split('T')[0],
       });
+
+      // Clear message after 3s
+      setTimeout(() => setSuccessMessage(''), 3000);
     } catch (err) {
       console.error('Failed to add order:', err);
-      alert('Failed to add order.');
+      alert('❌ Failed to add order');
     }
   };
 
@@ -73,6 +75,10 @@ const ManageOrders = () => {
     <div className="container mt-4">
       <h2>Manage Orders</h2>
 
+      {successMessage && (
+        <div className="alert alert-success">{successMessage}</div>
+      )}
+
       {/* Search */}
       <div className="mb-3">
         <input
@@ -84,7 +90,7 @@ const ManageOrders = () => {
         />
       </div>
 
-      {/* Add Form */}
+      {/* Add Order Form */}
       <div className="card p-3 mb-4">
         <h5>Add New Order</h5>
         <div className="row">
@@ -153,7 +159,7 @@ const ManageOrders = () => {
             </tr>
           ) : (
             filteredOrders.map((order) => (
-              <tr key={order._id || order.orderId}>
+              <tr key={order._id}>
                 <td>{order.orderId}</td>
                 <td>{order.quantity}</td>
                 <td>{order.discount}</td>
