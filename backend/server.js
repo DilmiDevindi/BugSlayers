@@ -2,19 +2,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const path = require('path');
-
-// Route imports
-const supplierRoutes = require('./routes/supplierRoutes');
-const inventoryRoutes = require('./routes/inventoryRoutes');
-const customerRoutes = require('./routes/customerRoutes');
-const authRoutes = require('./routes/authRoutes');
-const categoryRoutes = require('./routes/categoryRoutes');
-const salesRoutes = require('./routes/salesRoutes');
-const catalogRoutes = require('./routes/catalogRoutes');
-const reportRoutes = require('./routes/reportRoutes');
-const purchaseRoutes = require('./routes/purchasesRoutes');
-const purchasereportRoutes = require('./routes/purchasereportRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 
 const app = express();
@@ -25,36 +12,21 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());
 
-// Static file serving (e.g. images)
-app.use('/uploads', express.static(path.join(__dirname, 'Uploads')));
-
-// API Routes
-app.use('/api/suppliers', supplierRoutes);
-app.use('/api/inventory', inventoryRoutes);
-app.use('/api/customers', customerRoutes);
-app.use('/api/auth', authRoutes);
-app.use('/api/category', categoryRoutes);
-app.use('/api/reports', reportRoutes);
-app.use('/api/sales', salesRoutes);
-app.use('/api/catalog', catalogRoutes);
-app.use('/api/purchase', purchaseRoutes);
-app.use('/api/purchase-report', purchasereportRoutes);
+// Routes
 app.use('/api/orders', orderRoutes);
 
-// MongoDB connection
-mongoose.connect('mongodb://localhost:27017/mern-vite-app')
+// Connect to MongoDB and start server
+mongoose
+  .connect('mongodb://localhost:27017/mern-vite-app', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => {
     console.log('MongoDB connected');
     app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
+      console.log(`Server running on http://localhost:${PORT}`);
     });
   })
   .catch((err) => {
     console.error('Error connecting to MongoDB:', err);
   });
-
-
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
