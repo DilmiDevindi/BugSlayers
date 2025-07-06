@@ -1,15 +1,32 @@
 const express = require('express');
 const router = express.Router();
-const orderController = require('../controllers/orderController');
+const Order = require('../models/Order');
 
-// Order routes
-router.get('/', orderController.getAllOrders); // Get all orders
-router.post('/', orderController.createOrder); // Create new order
-router.get('/:id', orderController.getOrderById); // Get by ID
-router.put('/:id', orderController.updateOrder); // Update by ID
-router.delete('/:id', orderController.deleteOrder); // Delete by ID
+// Get all orders
+router.get('/', async (req, res) => {
+  try {
+    const orders = await Order.find();
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
-// ✅ Add this route for order report
-router.get('/report/date-range', orderController.getOrdersByDateRange); // Get orders between dates
+// Add new order
+router.post('/', async (req, res) => {
+  const order = new Order({
+    customerName: req.body.customerName,
+    items: req.body.items,
+    total: req.body.total,
+    status: req.body.status
+  });
+
+  try {
+    const newOrder = await order.save();
+    res.status(201).json(newOrder);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
 
 module.exports = router;
