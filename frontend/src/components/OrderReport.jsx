@@ -12,27 +12,39 @@ const OrderReport = () => {
   const handleGenerateReport = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.get("/api/order-report", {
+      const response = await axios.get("http://localhost:5000/api/orders/report", {
         params: { startDate, endDate },
       });
-      setReportData(response.data);
+      // Format dates for display
+      const formattedData = response.data.map(item => ({
+        ...item,
+        date: new Date(item.date).toLocaleDateString(),
+      }));
+      setReportData(formattedData);
     } catch (error) {
       console.error("Error generating order report:", error);
+      alert("Failed to generate report. Check console for details.");
     }
   };
 
   const handleDownloadPDF = () => {
     const doc = new jsPDF();
+    doc.setFontSize(16);
     doc.text("Order Report", 20, 10);
-    doc.text(`From: ${startDate} To: ${endDate}`, 20, 20);
+    doc.setFontSize(12);
+    doc.text(`From: ${new Date(startDate).toLocaleDateString()} To: ${new Date(endDate).toLocaleDateString()}`, 20, 20);
     let y = 30;
     reportData.forEach((item) => {
       doc.text(
-        `Order ID: ${item.orderId}, Qty: ${item.quantity}, Discount: ${item.discount}, Date: ${item.date}`,
+        `Order ID: ${item.orderId}, Qty: ${item.quantity}, Discount: ${item.discount}%, Date: ${item.date}`,
         20,
         y
       );
       y += 10;
+      if (y > 280) {
+        doc.addPage();
+        y = 20;
+      }
     });
     doc.save(`order_report_${startDate}_to_${endDate}.pdf`);
   };
