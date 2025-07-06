@@ -12,20 +12,23 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Add new order
+// ✅ Add new order with orderId, quantity, discount, date
 router.post('/', async (req, res) => {
-  const order = new Order({
-    customerName: req.body.customerName,
-    items: req.body.items,
-    total: req.body.total,
-    status: req.body.status
+  const { orderId, quantity, discount, date } = req.body;
+
+  const newOrder = new Order({
+    orderId,
+    quantity,
+    discount,
+    date,
   });
 
   try {
-    const newOrder = await order.save();
-    res.status(201).json(newOrder);
+    const savedOrder = await newOrder.save();
+    res.status(201).json(savedOrder);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    console.error('Error saving order:', err);
+    res.status(400).json({ message: 'Failed to save order' });
   }
 });
 
