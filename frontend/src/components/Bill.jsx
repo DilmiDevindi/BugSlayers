@@ -133,148 +133,131 @@ function BillForm() {
   };
 
   return (
-    <div className='invoice-form'>
-      <h3 className='bill-topic'>
-        <FontAwesomeIcon icon={faFileInvoice} className="bill-icon" /> Generate Invoice
-      </h3>
+    <div className="invoice-container">
+      <div className="form-section">
+        <h3 className='bill-topic'>
+          <FontAwesomeIcon icon={faFileInvoice} className="bill-icon" /> Generate Invoice
+        </h3>
 
-      <form onSubmit={(e) => e.preventDefault()}>
-        <h4>Customer Details</h4>
+        <form onSubmit={(e) => e.preventDefault()}>
+          <h4>Customer Details</h4>
+          <div className="inline-field">
+            <label>Date:</label>
+            <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+          </div>
+          <div className="inline-field">
+            <label>Contact:</label>
+            <input
+              type="text"
+              value={contact}
+              onChange={(e) => setContact(e.target.value.replace(/\D/g, '').substring(0, 10).trim())}
+              maxLength={10}
+              placeholder="Enter 10-digit contact"
+            />
+          </div>
+          {fetchError && <p style={{ color: 'red' }}>{fetchError}</p>}
 
-        <div className="inline-field">
-          <label>Date:</label>
-          <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
-        </div>
+          <div className="inline-field">
+            <label>Customer Name:</label>
+            <input type="text" value={name} readOnly />
+          </div>
+          <div className="inline-field">
+            <label>Address:</label>
+            <input type="text" value={address} readOnly />
+          </div>
+          <div className="inline-field">
+            <label>Email:</label>
+            <input type="text" value={email} readOnly />
+          </div>
 
-        <div className="inline-field">
-          <label>Contact:</label>
-          <input
-            type="text"
-            value={contact}
-            onChange={(e) => setContact(e.target.value.replace(/\D/g, '').substring(0, 10).trim())}
-            maxLength={10}
-            placeholder="Enter 10-digit contact"
-          />
-        </div>
-
-        {fetchError && <p style={{ color: 'red' }}>{fetchError}</p>}
-
-        <div className="inline-field">
-          <label>Customer Name:</label>
-          <input type="text" value={name} readOnly />
-        </div>
-
-        <div className="inline-field">
-          <label>Address:</label>
-          <input type="text" value={address} readOnly />
-        </div>
-
-        <div className="inline-field">
-          <label>Email:</label>
-          <input type="text" value={email} readOnly />
-        </div>
-
-        <hr />
-        <h4>Item Details</h4>
-
-        <div className="inline-field">
-          <label>Item Code:</label>
-          <input type="text" value={itemCode} onChange={handleItemCodeChange} />
-        </div>
-
-        <div className="inline-field">
-          <label>Item Name:</label>
-          <input type="text" value={itemName} readOnly />
-        </div>
-
-        <div className="inline-field">
-          <label>Item Price:</label>
-          <input type="text" value={itemPrice} readOnly />
-        </div>
-
-        <div className="inline-field">
-          <label>Quantity:</label>
-          <input type="number" min="1" value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} />
-        </div>
-
-        <div className="inline-field">
-          <label>Price:</label>
-          <input type="text" value={calculatePrice()} readOnly />
-        </div>
-
-        <div className="inline-field">
-          <label>Discount:</label>
-          <input type="number" min="0" value={discount} onChange={(e) => setDiscount(Number(e.target.value))} />
-        </div>
-
-        <div className="inline-field">
-          <label>Amount:</label>
-          <input type="text" value={calculateAmount()} readOnly />
-        </div>
-
-        <div className="inline-field">
-          <label>Cash Received:</label>
-          <input type="number" min="0" value={cashReceived} onChange={(e) => setCashReceived(Number(e.target.value))} />
-        </div>
-
-        <div className="inline-field">
-          <label>Balance:</label>
-          <input type="text" value={balance.toFixed(2)} readOnly />
-        </div>
-
-        <div style={{ marginTop: '15px' }}>
-          <button type="button" onClick={handleGenerateInvoice}>Generate Invoice</button>
-          <button type="button" onClick={handlePrint} style={{ marginLeft: '10px' }}>Print Invoice</button>
-          <button type="button" onClick={toggleInvoiceView} style={{ marginLeft: '10px' }}>
-            {showInvoice ? 'Hide Invoice' : 'View Invoice'}
-          </button>
-        </div>
-      </form>
-
-      {showInvoice && (
-        <div className="invoice-preview">
-          <h3 style={{ textAlign: 'center' }}>SISIRA FURNITURES</h3>
-          <p style={{ textAlign: 'center' }}>
-            No.156, Matara Road, Kamburupitiya<br />
-            Tel: 041-2292785 / 0718006485
-          </p>
-
-          <p><strong>Invoice #:</strong> 000789</p>
-          <p><strong>Date:</strong> {date}</p>
           <hr />
+          <h4>Item Details</h4>
+          <div className="inline-field">
+            <label>Item Code:</label>
+            <input type="text" value={itemCode} onChange={handleItemCodeChange} />
+          </div>
+          <div className="inline-field">
+            <label>Item Name:</label>
+            <input type="text" value={itemName} readOnly />
+          </div>
+          <div className="inline-field">
+            <label>Item Price:</label>
+            <input type="text" value={itemPrice} readOnly />
+          </div>
+          <div className="inline-field">
+            <label>Quantity:</label>
+            <input type="number" min="1" value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} />
+          </div>
+          <div className="inline-field">
+            <label>Price:</label>
+            <input type="text" value={calculatePrice()} readOnly />
+          </div>
+          <div className="inline-field">
+            <label>Discount:</label>
+            <input type="number" min="0" value={discount} onChange={(e) => setDiscount(Number(e.target.value))} />
+          </div>
+          <div className="inline-field">
+            <label>Amount:</label>
+            <input type="text" value={calculateAmount()} readOnly />
+          </div>
+          <div className="inline-field">
+            <label>Cash Received:</label>
+            <input type="number" min="0" value={cashReceived} onChange={(e) => setCashReceived(Number(e.target.value))} />
+          </div>
+          <div className="inline-field">
+            <label>Balance:</label>
+            <input type="text" value={balance.toFixed(2)} readOnly />
+          </div>
 
-          <p><strong>Customer Name:</strong> {name}</p>
-          <p><strong>Contact:</strong> {contact}</p>
-          <p><strong>Address:</strong> {address}</p>
-          <p><strong>Email:</strong> {email}</p>
-          <hr />
+          <div style={{ marginTop: '15px' }}>
+            <button type="button" onClick={handleGenerateInvoice}>Generate Invoice</button>
+            <button type="button" onClick={handlePrint} style={{ marginLeft: '10px' }}>Print Invoice</button>
+            <button type="button" onClick={toggleInvoiceView} style={{ marginLeft: '10px' }}>
+              {showInvoice ? 'Hide Invoice' : 'View Invoice'}
+            </button>
+          </div>
+        </form>
+      </div>
 
-          <p><strong>Item:</strong> {itemName}</p>
-          <p><strong>Quantity:</strong> {quantity}</p>
-          <p><strong>Item Price:</strong> Rs. {itemPrice}</p>
-          <p><strong>Price:</strong> Rs. {calculatePrice()}</p>
-          <p><strong>Discount:</strong> Rs. {discount}</p>
-          <p><strong>Amount:</strong> Rs. {calculateAmount()}</p>
-          <p><strong>Cash Received:</strong> Rs. {cashReceived}</p>
-          <p><strong>Balance:</strong> Rs. {balance.toFixed(2)}</p>
-          <hr />
-
-          <p><strong>Total Qty:</strong> {quantity}</p>
-          <p style={{ textAlign: 'center' }}>* {Math.floor(Math.random() * 999999).toString().padStart(6, '0')} *</p>
-
-          <p style={{ fontSize: '12px', textAlign: 'center' }}>
-            Thank you for choosing Sisira Furnitures!<br />
-            We appreciate your trust and support.
-          </p>
-
-          <p style={{ fontSize: '11px', textAlign: 'center' }}>
-            Software & Technical Support by:<br />
-            BugSlayers © 2025
-          </p>
-
-          <button onClick={handlePrint}>Print</button>
-        </div>
-      )}
+      <div className="preview-section">
+        {showInvoice && (
+          <div className="invoice-preview">
+            <h3 style={{ textAlign: 'center' }}>SISIRA FURNITURES</h3>
+            <p style={{ textAlign: 'center' }}>
+              No.156, Matara Road, Kamburupitiya<br />
+              Tel: 041-2292785 / 0718006485
+            </p>
+            <p><strong>Invoice #:</strong> 000789</p>
+            <p><strong>Date:</strong> {date}</p>
+            <hr />
+            <p><strong>Customer Name:</strong> {name}</p>
+            <p><strong>Contact:</strong> {contact}</p>
+            <p><strong>Address:</strong> {address}</p>
+            <p><strong>Email:</strong> {email}</p>
+            <hr />
+            <p><strong>Item:</strong> {itemName}</p>
+            <p><strong>Quantity:</strong> {quantity}</p>
+            <p><strong>Item Price:</strong> Rs. {itemPrice}</p>
+            <p><strong>Price:</strong> Rs. {calculatePrice()}</p>
+            <p><strong>Discount:</strong> Rs. {discount}</p>
+            <p><strong>Amount:</strong> Rs. {calculateAmount()}</p>
+            <p><strong>Cash Received:</strong> Rs. {cashReceived}</p>
+            <p><strong>Balance:</strong> Rs. {balance.toFixed(2)}</p>
+            <hr />
+            <p><strong>Total Qty:</strong> {quantity}</p>
+            <p style={{ textAlign: 'center' }}>* {Math.floor(Math.random() * 999999).toString().padStart(6, '0')} *</p>
+            <p style={{ fontSize: '12px', textAlign: 'center' }}>
+              Thank you for choosing Sisira Furnitures!<br />
+              We appreciate your trust and support.
+            </p>
+            <p style={{ fontSize: '11px', textAlign: 'center' }}>
+              Software & Technical Support by:<br />
+              BugSlayers © 2025
+            </p>
+            <button onClick={handlePrint}>Print</button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
