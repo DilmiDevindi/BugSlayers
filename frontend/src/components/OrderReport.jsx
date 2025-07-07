@@ -17,18 +17,10 @@ const OrderReport = () => {
     }
 
     try {
-      const res = await axios.get('http://localhost:5000/api/orders', {
+      const res = await axios.get('http://localhost:5000/api/orders/report', {
         params: { startDate, endDate },
       });
-      setOrders(
-        res.data.filter((order) => {
-          const orderDate = new Date(order.date);
-          const start = new Date(startDate);
-          const end = new Date(endDate);
-          end.setHours(23, 59, 59, 999);
-          return orderDate >= start && orderDate <= end;
-        })
-      );
+      setOrders(res.data);
       setError(null);
     } catch (err) {
       setError(
@@ -83,6 +75,7 @@ const OrderReport = () => {
     doc.save('order_report.pdf');
   };
 
+  // Clear button resets dates, orders and errors
   const clearReport = () => {
     setStartDate('');
     setEndDate('');
@@ -121,8 +114,7 @@ const OrderReport = () => {
             onChange={(e) => setEndDate(e.target.value)}
           />
         </div>
-
-        <div className="col-md-6 d-flex justify-content-start gap-2">
+        <div className="col-md-6 d-flex gap-2">
           <button className="btn btn-primary" onClick={fetchReport}>
             View Report
           </button>
@@ -130,9 +122,15 @@ const OrderReport = () => {
             className="btn btn-success"
             onClick={generatePDF}
             disabled={orders.length === 0}
-            title={orders.length === 0 ? 'No data to download' : ''}
           >
             Download Report
+          </button>
+          <button
+            className="btn btn-warning"
+            onClick={clearReport}
+            disabled={orders.length === 0 && !startDate && !endDate}
+          >
+            Clear
           </button>
         </div>
       </div>
@@ -140,39 +138,30 @@ const OrderReport = () => {
       {error && <p className="text-danger">{error}</p>}
 
       {orders.length > 0 ? (
-        <>
-          <table className="table table-bordered">
-            <thead className="table-dark">
-              <tr>
-                <th>#</th>
-                <th>Order ID</th>
-                <th>Quantity</th>
-                <th>Discount (%)</th>
-                <th>Date</th>
+        <table className="table table-bordered">
+          <thead className="table-dark">
+            <tr>
+              <th>#</th>
+              <th>Order ID</th>
+              <th>Quantity</th>
+              <th>Discount (%)</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {orders.map((order, idx) => (
+              <tr key={order._id}>
+                <td>{idx + 1}</td>
+                <td>{order.orderId}</td>
+                <td>{order.quantity}</td>
+                <td>{order.discount}</td>
+                <td>{new Date(order.date).toLocaleDateString()}</td>
               </tr>
-            </thead>
-            <tbody>
-              {orders.map((order, idx) => (
-                <tr key={order._id}>
-                  <td>{idx + 1}</td>
-                  <td>{order.orderId}</td>
-                  <td>{order.quantity}</td>
-                  <td>{order.discount}</td>
-                  <td>{new Date(order.date).toLocaleDateString()}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          {/* Clear button shown only when data exists */}
-          <div className="d-flex justify-content-center mt-3">
-            <button className="btn btn-warning" onClick={clearReport}>
-              Clear
-            </button>
-          </div>
-        </>
+            ))}
+          </tbody>
+        </table>
       ) : (
-        <p>No report data to show.</p>
+        <p>No report data to display.</p>
       )}
     </div>
   );
