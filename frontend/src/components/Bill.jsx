@@ -222,7 +222,12 @@ function BillForm() {
       <div className="preview-section">
         {showInvoice && (
           <div className="invoice-preview">
-            
+            <div style={{ textAlign: 'center' }}>
+            <img
+            src="/images/logo.png"  // <-- change this path based on your logo file location
+            alt="Sisira Furnitures Logo"
+            style={{ width: '80px', height: 'auto', marginBottom: '8px' }}
+            />
             <h3 style={{ textAlign: 'center' }}>SISIRA FURNITURES</h3>
             <p style={{ textAlign: 'center' }}>
               No.156, Matara Road, Kamburupitiya<br />
