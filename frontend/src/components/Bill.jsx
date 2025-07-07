@@ -228,7 +228,7 @@ function BillForm() {
               <img
                 src={logo}
                 alt="Sisira Furnitures Logo"
-                style={{ width: '800px', height: 'auto', marginBottom: '8px' }}
+                style={{ width: '80px', height: 'auto', marginBottom: '8px' }}
               />
               <h3>SISIRA FURNITURES</h3>
               <p>
