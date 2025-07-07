@@ -1,96 +1,165 @@
-{
-  max-width: 600px;
-  margin: auto;
-  padding: 20px 30px;
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  font-family: 'Arial', sans-serif;
+/* ==== Page Layout ==== */
+.page-top-center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 0;
+  background-color: #f5f5f5;
+  min-height: 100vh;
 }
 
+.supplier-page {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+/* ==== Add Supplier Button - smaller and centered ==== */
+.btn-add-supplier {
+  display: block;          /* Make it block to use margin auto */
+  margin: 20px auto 30px auto; /* Top 20px, bottom 30px, horizontally centered */
+  padding: 8px 16px;       /* Smaller padding */
+  font-size: 14px;         /* Smaller font size */
+  font-weight: bold;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  min-width: 120px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-add-supplier:hover {
+  background-color: #218838;
+}
+
+/* ==== Edit Form Overlay ==== */
+.edit-form-overlay {
+  position: fixed;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #1a1a1a; /* Dark background */
+  padding: 25px 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  width: 90%;
+  max-width: 700px;
+  color: #fff;
+}
+
+/* ==== Section Headings ==== */
 .text-center {
   font-size: 2rem;
   font-weight: bold;
-  color: #333333;
+  color: #0b0b0b;
   margin-bottom: 20px;
   text-align: center;
 }
 
-.form-group-i {
+/* Updated Edit Supplier Title */
+.edit-form-overlay h3 {
+  color: #ffffff;         /* White color */
+  font-size: 28px;        /* Increased font size */
+  font-weight: bold;
   margin-bottom: 20px;
+  text-align: center;     /* Center horizontally */
 }
 
-.form-label {
-  display: block;
+/* ==== Form Fields ==== */
+.edit-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  background-color: #1a1a1a;
+}
+
+.edit-form-grid .form-group-i {
+  display: flex;
+  flex-direction: column;
+  background-color: #1a1a1a;
+}
+
+.edit-form-grid .form-group-i label {
   font-weight: bold;
-  margin-bottom: 5px;
-  color: #444444;
-}
-
-.form-control-i {
-  width: 50%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 16px;
-  color: #333333;
-  transition: all 0.3s ease;
-}
-
-.form-control:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-  outline: none;
-}
-
-select.form-control {
-  background-color: #ffffff;
-}
-
-.btn-primary-i {
-  width: 50%;
-  padding: 8px 12px;
-  background-color: #007bff;
-  color: #ffffff;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  display: block; /* Make the button a block element */
-  margin: 0 auto; /* Center the button horizontally */
-}
-
-.btn-primary-i:hover {
-  background-color: #0056b3;
-}
-
-.alert-danger {
   font-size: 14px;
-  margin-top: 5px;
-  color: #721c24;
-  background-color: #b56d73;
-  border-color: #f5c6cb;
-  padding: 8px 12px;
-  border-radius: 5px;
+  margin-bottom: 6px;
+  color: #e0e0e0;
 }
 
-textarea {
-  resize: none;
-  font-size: 16px;
-  color: #333333;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 10px;
+.edit-form-grid .form-group-i input,
+.edit-form-grid .form-group-i select /* Added for selects */
+{
+  padding: 8px 10px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background-color: #2a2a2a;
+  color: #ffffff;
+  transition: border-color 0.3s;
+  appearance: none; /* Remove default arrow for better styling */
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 
-textarea:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+.edit-form-grid .form-group-i input:focus,
+.edit-form-grid .form-group-i select:focus {
+  border-color: #66afe9;
+  outline: none;
+  box-shadow: 0 0 5px rgba(102, 175, 233, 0.5);
 }
 
+/* For better custom arrow on selects */
+.edit-form-grid .form-group-i select {
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M1 1L6 6L11 1' stroke='%23fff' stroke-width='2'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px 8px;
+  cursor: pointer;
+}
+
+/* ==== Form Actions ==== */
+.edit-form-actions {
+  grid-column: span 2;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+/* ==== Buttons ==== */
+.btn-success,
+.btn-secondary {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  min-width: 120px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-success {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+/* ==== Table Styling ==== */
 .supplier-report-container {
   background-color: #f8f9fa;
   padding: 20px;
@@ -98,23 +167,22 @@ textarea:focus {
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-h3 {
-  color: #0f0e0e;
-  font-size: 22px;
-  font-weight: bold;
-}
-
 .table {
-  border-radius: 10px;
+  width: 100%;
+  border-collapse: collapse;
   margin-top: 20px;
   background-color: #7a8a9a;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .table th,
 .table td {
-  padding: 12px;
+  padding: 10px;
   font-size: 14px;
-  color: rgb(5, 2, 2);
+  color: #050202;
+  text-align: left;
+  vertical-align: middle;
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
@@ -127,78 +195,39 @@ h3 {
 
 .table-hover tbody tr:hover {
   background-color: #007bff;
+  color: white;
 }
 
-.spinner-container {
-  margin-top: 50px;
-}
-
-.form-container {
-  width: 100%;
-  max-width: 1000px;
-}
-
-
-
-.form-grid.two-column {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-
-.btn-primary-i {
-  width: 50%;
-  padding: 10px 12px;
-  background-color: #007bff;
-  color: #ffffff;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
+/* ==== Action Buttons ==== */
+.action-buttons {
   display: flex;
+  gap: 8px;
   justify-content: center;
   align-items: center;
-  text-align: center;
-  margin: 0 auto;
 }
 
-/* Center form at top of the page */
-.page-top-center-container {
-  display: flex;
-  justify-content: center;
-  padding-top: 50px; /* Push form slightly down from the top */
-  background-color: #f5f5f5;
-  min-height: 100vh;
+.action-buttons button {
+  padding: 6px 8px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  font-size: 13px;
 }
 
-.form-grid.two-column {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+.action-buttons button:first-child {
+  background-color: #28a745;
 }
 
-.same-width-btn {
-  flex-shrink: 0;
-  width: 130px;
-  white-space: nowrap;
+.action-buttons button:first-child:hover {
+  background-color: #218838;
 }
 
-
-.same-width-btn {
-  width: 100%;
-  min-width: 180px;
-  height: 45px;
-  font-weight: bold;
-  border-radius: 8px;
-  white-space: nowrap;
-  text-align: center;
+.action-buttons button:last-child {
+  background-color: #dc3545;
 }
 
-/* Ensure the container class matches the HTML structure */
-.supplier-page {
-  background-color: #000000 !important; /* Black background */
-  color: #ffffff !important;             /* White text for contrast */
+.action-buttons button:last-child:hover {
+  background-color: #c82333;
 }
+
