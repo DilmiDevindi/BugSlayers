@@ -233,7 +233,7 @@ function BillForm() {
           </p>
 
           <p><strong>Invoice #:</strong> 000789</p>
-          <p><strong>Counter:</strong> 03</p>
+          
           <p><strong>Date:</strong> {date}</p>
           <hr />
 
