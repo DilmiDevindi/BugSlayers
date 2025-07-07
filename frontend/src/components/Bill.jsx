@@ -224,7 +224,7 @@ function BillForm() {
           <div className="invoice-preview">
             <div style={{ textAlign: 'center' }}>
               <img
-                src="/assets/furniture-logo.png"
+                src="/assets/furniture-logo.jpeg"
                 alt="Sisira Furnitures Logo"
                 style={{ width: '80px', height: 'auto', marginBottom: '8px' }}
               />
