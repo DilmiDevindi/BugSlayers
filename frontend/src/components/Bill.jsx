@@ -1,3 +1,4 @@
+// BillForm.jsx
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './Bill.css';
@@ -152,57 +153,31 @@ function BillForm() {
         <form onSubmit={(e) => e.preventDefault()}>
           <h4>Customer Details</h4>
 
-          <label>Date</label>
-          <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
-
-          <label>Time</label>
-          <input type="time" value={time} onChange={(e) => setTime(e.target.value)} />
-
-          <label>Contact Number</label>
-          <input type="text" value={contact} onChange={(e) => setContact(e.target.value.replace(/\D/g, '').substring(0, 10))} placeholder="Contact (10 digits)" />
+          <div className="form-row"><label>Date:</label><input type="date" value={date} onChange={(e) => setDate(e.target.value)} /></div>
+          <div className="form-row"><label>Time:</label><input type="time" value={time} onChange={(e) => setTime(e.target.value)} /></div>
+          <div className="form-row"><label>Contact:</label><input type="text" value={contact} onChange={(e) => setContact(e.target.value.replace(/\D/g, '').substring(0, 10))} /></div>
           {fetchError && <p style={{ color: 'red' }}>{fetchError}</p>}
-
-          <label>Customer Name</label>
-          <input type="text" value={name} readOnly />
-
-          <label>Address</label>
-          <input type="text" value={address} readOnly />
-
-          <label>Email</label>
-          <input type="text" value={email} readOnly />
+          <div className="form-row"><label>Name:</label><input type="text" value={name} readOnly /></div>
+          <div className="form-row"><label>Address:</label><input type="text" value={address} readOnly /></div>
+          <div className="form-row"><label>Email:</label><input type="text" value={email} readOnly /></div>
 
           <h4>Item Details</h4>
           {items.map((item, index) => (
             <div key={index} className="item-box">
-              <label>Item Code</label>
-              <input type="text" value={item.itemCode} onChange={(e) => handleItemChange(index, 'itemCode', e.target.value)} />
-
-              <label>Item Name</label>
-              <input type="text" value={item.itemName} readOnly />
-
-              <label>Item Price</label>
-              <input type="text" value={item.itemPrice} readOnly />
-
-              <label>Quantity</label>
-              <input type="number" value={item.quantity} onChange={(e) => handleItemChange(index, 'quantity', e.target.value)} min="1" />
-
-              <label>Discount</label>
-              <input type="number" value={item.discount} onChange={(e) => handleItemChange(index, 'discount', e.target.value)} min="0" />
-
-              <label>Total</label>
-              <input type="text" value={calculateItemTotal(item)} readOnly />
-
+              <div className="form-row"><label>Item Code:</label><input type="text" value={item.itemCode} onChange={(e) => handleItemChange(index, 'itemCode', e.target.value)} /></div>
+              <div className="form-row"><label>Item Name:</label><input type="text" value={item.itemName} readOnly /></div>
+              <div className="form-row"><label>Price:</label><input type="text" value={item.itemPrice} readOnly /></div>
+              <div className="form-row"><label>Qty:</label><input type="number" value={item.quantity} onChange={(e) => handleItemChange(index, 'quantity', e.target.value)} /></div>
+              <div className="form-row"><label>Discount:</label><input type="number" value={item.discount} onChange={(e) => handleItemChange(index, 'discount', e.target.value)} /></div>
+              <div className="form-row"><label>Total:</label><input type="text" value={calculateItemTotal(item)} readOnly /></div>
               {items.length > 1 && <button type="button" onClick={() => handleRemoveItem(index)}>Remove</button>}
             </div>
           ))}
 
-          <button type="button" onClick={handleAddItem}>+ Add Another Item</button>
+          <button type="button" onClick={handleAddItem}>+ Add Item</button>
 
-          <label>Cash Received</label>
-          <input type="number" value={cashReceived} onChange={(e) => setCashReceived(Number(e.target.value))} />
-
-          <label>Balance</label>
-          <input type="text" value={balance.toFixed(2)} readOnly />
+          <div className="form-row"><label>Cash Received:</label><input type="number" value={cashReceived} onChange={(e) => setCashReceived(Number(e.target.value))} /></div>
+          <div className="form-row"><label>Balance:</label><input type="text" value={balance.toFixed(2)} readOnly /></div>
 
           <button type="button" onClick={handleSaveInvoice}>Save Invoice</button>
           <button type="button" onClick={() => setShowInvoice(!showInvoice)}>{showInvoice ? 'Hide Invoice' : 'View Invoice'}</button>
@@ -218,7 +193,6 @@ function BillForm() {
             <p>Tel: 041-2292785 / 0718006485</p>
           </div>
           <hr />
-          <p><strong>Invoice #:</strong> 000789</p>
           <p><strong>Date:</strong> {date} {formatTimeToAMPM(time)}</p>
           <h4>Customer</h4>
           <p>Name: {name}</p>
@@ -254,12 +228,8 @@ function BillForm() {
           <p><strong>Cash Received:</strong> Rs. {cashReceived}</p>
           <p><strong>Balance:</strong> Rs. {balance.toFixed(2)}</p>
           <p style={{ textAlign: 'center' }}>* {Math.floor(Math.random() * 999999).toString().padStart(6, '0')} *</p>
-          <p style={{ fontSize: '12px', textAlign: 'center' }}>
-            Thank you for choosing Sisira Furnitures!<br />We appreciate your trust and support.
-          </p>
-          <p style={{ fontSize: '11px', textAlign: 'center' }}>
-            Software & Technical Support by:<br />BugSlayers © 2025
-          </p>
+          <p style={{ fontSize: '12px', textAlign: 'center' }}>Thank you for choosing Sisira Furnitures!<br />We appreciate your trust and support.</p>
+          <p style={{ fontSize: '11px', textAlign: 'center' }}>Software & Technical Support by:<br />BugSlayers © 2025</p>
           <button onClick={handlePrint} className="print-hide">Print</button>
         </div>
       )}
