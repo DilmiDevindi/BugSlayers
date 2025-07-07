@@ -10,4 +10,8 @@ router.get('/products', catalogController.getProductsByCategory);
 
 router.get('/search', catalogController.getProductsBySearch);
 
+router.get('/subcategories', catalogController.getSubcategoriesByCategory);
+
+router.get('/products-by-subcategory', catalogController.getProductsBySubcategory);
+
 module.exports = router;

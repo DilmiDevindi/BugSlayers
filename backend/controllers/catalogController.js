@@ -1,5 +1,6 @@
 const InventoryItem = require('../models/InventoryItem');
 const Category = require('../models/Category');
+const Subcategory = require('../models/Subcategory');
 
 const getCategories = async (req, res) => {
   try {
@@ -11,6 +12,17 @@ const getCategories = async (req, res) => {
   }
 };
 
+const getSubcategoriesByCategory = async (req, res) => {
+  const { categoryId } = req.query;
+  try {
+    const subcategories = await Subcategory.find({ categoryId });
+    res.status(200).json(subcategories);
+  } catch (error) {
+    console.error('Error fetching subcategories:', error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
 const getProductsByCategory = async (req, res) => {
   const { categoryId } = req.query;
   try {
@@ -18,6 +30,17 @@ const getProductsByCategory = async (req, res) => {
     res.status(200).json(products);
   } catch (error) {
     console.error('Error fetching products:', error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+const getProductsBySubcategory = async (req, res) => {
+  const { subcategoryId } = req.query;
+  try {
+    const products = await InventoryItem.find({ subcategory: subcategoryId });
+    res.status(200).json(products);
+  } catch (error) {
+    console.error('Error fetching products by subcategory:', error);
     res.status(500).json({ message: 'Server Error' });
   }
 };
@@ -43,5 +66,7 @@ const getProductsBySearch = async (req, res) => {
 module.exports = {
   getCategories,
   getProductsByCategory,
-  getProductsBySearch
+  getProductsBySearch,
+  getSubcategoriesByCategory,
+  getProductsBySubcategory,
 };
