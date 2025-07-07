@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquarePlus, faSearch } from '@fortawesome/free-solid-svg-icons';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import './Supplier.css';
@@ -19,31 +19,18 @@ const AddSupplier = () => {
   });
 
   const [errors, setErrors] = useState({});
-  const [existingSupplierNames, setExistingSupplierNames] = useState([]);
+  const [canSubmit, setCanSubmit] = useState(false);
+  const [checkPerformed, setCheckPerformed] = useState(false);
 
   const productOptions = {
     Mattress: ['Foam', 'Spring', 'Orthopedic'],
     Cupboard: ['Wooden', 'Plastic', 'Steel'],
     Chair: ['Dining Chair', 'Office Chair', 'Recliner'],
     Table: ['Dining Table', 'Coffee Table', 'Study Table'],
-    'Iron Board': ['Standard', 'Wall-mounted'],
-    'Carrom Board': ['Full Size', 'Mini'],
-    'Clothes Rack': ['Single Pole', 'Double Pole'],
+    IronBoard: ['Standard', 'Wall-mounted'],
+    CarromBoard: ['Full Size', 'Mini'],
+    ClothesRack: ['Single Pole', 'Double Pole'],
   };
-
-  useEffect(() => {
-    const fetchSupplierNames = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/api/suppliers');
-        const names = response.data.map((s) => s.supplierName?.toLowerCase());
-        setExistingSupplierNames(names);
-      } catch (error) {
-        console.error('Failed to fetch suppliers:', error);
-      }
-    };
-
-    fetchSupplierNames();
-  }, []);
 
   const validatePhoneNumber = (number) => /^\d{10}$/.test(number);
   const validateEmail = (email) => /^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(email);
@@ -52,67 +39,106 @@ const AddSupplier = () => {
     let error = '';
 
     if (name === 'phone1' || name === 'phone2' || name === 'fax') {
-      value = value.replace(/\D/g, '');
-      if (value.length > 10) {
-        alert(`${name === 'fax' ? 'Fax' : 'Contact'} number must not exceed 10 digits`);
-        value = value.slice(0, 10);
+      const cleanedValue = value.replace(/\D/g, '');
+      if (cleanedValue.length > 10) {
+        return { error: `${name === 'fax' ? 'Fax' : 'Contact'} number must not exceed 10 digits`, value: cleanedValue.slice(0, 10) };
       }
-
-      if (!validatePhoneNumber(value)) {
-        error = `${name === 'fax' ? 'Fax' : 'Contact'} number must be exactly 10 digits and numeric`;
+      if (value && !validatePhoneNumber(value)) {
+        error = `${name === 'fax' ? 'Fax' : 'Contact'} number must be exactly 10 digits`;
       }
-
-      if (name === 'phone2' && value === supplier.phone1) {
+      if (name === 'phone2' && value && value === supplier.phone1) {
         error = 'Primary and Secondary Contact Numbers must not be the same';
       }
+      return { error, value: cleanedValue };
     }
 
-    if (name === 'email' && value) {
-      if (!validateEmail(value)) {
-        error = 'Email must be a valid @gmail.com address';
-      }
+    if (name === 'email' && value && !validateEmail(value)) {
+      error = 'Email must be a valid @gmail.com address';
     }
 
     if (name === 'address' && !value.trim()) {
       error = 'Address cannot be empty';
     }
 
-    setErrors((prev) => ({ ...prev, [name]: error }));
-    return value;
+    if (name === 'supplierName' && !value.trim()) {
+      error = 'Supplier name cannot be empty';
+    }
+
+    if (name === 'paymentTerms' && !value) {
+      error = 'Payment method is required';
+    }
+
+    if (name === 'supplyProducts' && !value) {
+      error = 'Product selection is required';
+    }
+
+    return { error, value };
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    const { error, value: validatedValue } = validateFields(name, value);
 
-    if (name === 'supplyProducts') {
-      setSupplier((prev) => ({ ...prev, [name]: value }));
-    } else {
-      const validatedValue = validateFields(name, value);
-      setSupplier((prev) => ({ ...prev, [name]: validatedValue }));
-    }
+    setErrors((prev) => ({ ...prev, [name]: error }));
+    setSupplier((prev) => ({ ...prev, [name]: validatedValue }));
+    setCanSubmit(false); // reset check
+    setCheckPerformed(false);
   };
 
-  const handleNameCheck = () => {
-    const name = supplier.supplierName.trim().toLowerCase();
+  const handleNameCheck = async () => {
+    const name = supplier.supplierName.trim();
     if (!name) return alert("Please enter a supplier name to check.");
 
-    if (existingSupplierNames.includes(name)) {
-      alert("Already exists");
-    } else {
-      alert("No already exists. Add the new supplier");
+    try {
+      const response = await axios.get('http://localhost:5000/api/suppliers', {
+        params: { search: name }
+      });
+
+      if (!Array.isArray(response.data)) {
+        console.error('Unexpected response:', response.data);
+        alert('Invalid response from server.');
+        return;
+      }
+
+      const exists = response.data.some(
+        (s) => s.supplierName?.toLowerCase() === name.toLowerCase()
+      );
+
+      if (exists) {
+        alert("Already exists");
+        setCanSubmit(false);
+      } else {
+        alert("No, not found. Add new supplier");
+        setCanSubmit(true);
+      }
+
+      setCheckPerformed(true);
+    } catch (error) {
+      console.error('Error checking supplier name:', error);
+      alert('Failed to check supplier name. Please ensure backend is running.');
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!checkPerformed || !canSubmit) {
+      alert("Please check supplier name before submitting.");
+      return;
+    }
+
+    const validationResults = {};
     let hasErrors = false;
+
     Object.entries(supplier).forEach(([key, value]) => {
-      const validated = validateFields(key, value);
-      if (errors[key]) hasErrors = true;
+      const { error } = validateFields(key, value);
+      validationResults[key] = error;
+      if (error) hasErrors = true;
     });
 
-    if (Object.values(errors).some((err) => err) || hasErrors) {
+    setErrors(validationResults);
+
+    if (hasErrors) {
       alert("Please fix the validation errors.");
       return;
     }
@@ -120,7 +146,6 @@ const AddSupplier = () => {
     try {
       await axios.post('http://localhost:5000/api/suppliers/add', supplier);
       alert('Supplier added successfully');
-
       setSupplier({
         date: new Date().toISOString().split('T')[0],
         supplierName: '',
@@ -132,11 +157,12 @@ const AddSupplier = () => {
         supplyProducts: '',
         paymentTerms: '',
       });
-
       setErrors({});
+      setCanSubmit(false);
+      setCheckPerformed(false);
     } catch (error) {
       console.error('Error adding supplier:', error);
-      alert('Failed to add supplier. Please try again.');
+      alert(error.response?.data?.message || 'Failed to add supplier.');
     }
   };
 
@@ -169,6 +195,9 @@ const AddSupplier = () => {
               <FontAwesomeIcon icon={faSearch} /> Check Name
             </button>
           </div>
+          {errors.supplierName && (
+            <div className="alert alert-danger mt-1">{errors.supplierName}</div>
+          )}
         </div>
 
         {/* FORM */}
@@ -190,7 +219,7 @@ const AddSupplier = () => {
                   value={supplier[field.key]}
                   onChange={handleInputChange}
                   placeholder={field.label}
-                  required={field.key === 'phone1' || field.key === 'email' || field.key === 'address'}
+                  required={field.key === 'phone1' || field.key === 'address'}
                 />
                 {errors[field.key] && (
                   <div className="alert alert-danger mt-1">{errors[field.key]}</div>
@@ -208,19 +237,19 @@ const AddSupplier = () => {
                 required
               >
                 <option value="" disabled>Select a product</option>
-                {Object.entries(productOptions).map(([category, subcategories]) => (
+                {Object.entries(productOptions).map(([category, subs]) => (
                   <optgroup key={category} label={category}>
-                    {subcategories.map((sub, idx) => {
-                      const fullName = `${sub} ${category}`;
-                      return (
-                        <option key={idx} value={fullName}>
-                          {sub}
-                        </option>
-                      );
-                    })}
+                    {subs.map((sub, i) => (
+                      <option key={i} value={`${sub} ${category}`}>
+                        {sub}
+                      </option>
+                    ))}
                   </optgroup>
                 ))}
               </select>
+              {errors.supplyProducts && (
+                <div className="alert alert-danger mt-1">{errors.supplyProducts}</div>
+              )}
             </div>
 
             {/* Payment Method */}
@@ -236,14 +265,15 @@ const AddSupplier = () => {
                 <option value="Cash">Cash</option>
                 <option value="Card">Card</option>
               </select>
+              {errors.paymentTerms && (
+                <div className="alert alert-danger mt-1">{errors.paymentTerms}</div>
+              )}
             </div>
           </div>
 
           {/* Submit Button */}
           <div className="text-center mt-4">
-            <button type="submit" className="btn btn-primary-i same-width-btn">
-              Add Supplier
-            </button>
+            <button className="btn-add-supplier">Add Supplier</button>
           </div>
         </form>
       </div>
