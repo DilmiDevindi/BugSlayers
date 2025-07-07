@@ -25,7 +25,7 @@ function BillForm() {
   const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
   const [time, setTime] = useState(() => {
     const now = new Date();
-    return now.toTimeString().slice(0,5);
+    return now.toTimeString().slice(0, 5);
   });
 
   const [itemCode, setItemCode] = useState('');
@@ -41,6 +41,7 @@ function BillForm() {
   const [fetchError, setFetchError] = useState('');
 
   const debounceRef = useRef(null);
+  const invoiceRef = useRef(null); // For printing only invoice
 
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -143,7 +144,19 @@ function BillForm() {
   };
 
   const handlePrint = () => {
-    window.print();
+    if (!invoiceRef.current) return;
+
+    const printContents = invoiceRef.current.innerHTML;
+    const printWindow = window.open('', '', 'height=700,width=900');
+    printWindow.document.write('<html><head><title>Invoice</title>');
+    printWindow.document.write('<style>body{font-family: Arial; padding: 20px;} hr{border: 1px solid #000;} img{max-width:80px;}</style>');
+    printWindow.document.write('</head><body>');
+    printWindow.document.write(printContents);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
   };
 
   const toggleInvoiceView = () => {
@@ -161,18 +174,11 @@ function BillForm() {
           <h4>Customer Details</h4>
           <div className="inline-field">
             <label>Date:</label>
-            <input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-            />
+            <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
             <label style={{ marginLeft: '10px' }}>Time:</label>
-            <input
-              type="time"
-              value={time}
-              onChange={(e) => setTime(e.target.value)}
-            />
+            <input type="time" value={time} onChange={(e) => setTime(e.target.value)} />
           </div>
+
           <div className="inline-field">
             <label>Contact:</label>
             <input
@@ -242,7 +248,6 @@ function BillForm() {
 
           <div style={{ marginTop: '15px' }}>
             <button type="button" onClick={handleGenerateInvoice}>Generate Invoice</button>
-            <button type="button" onClick={handlePrint} style={{ marginLeft: '10px' }}>Print Invoice</button>
             <button type="button" onClick={toggleInvoiceView} style={{ marginLeft: '10px' }}>
               {showInvoice ? 'Hide Invoice' : 'View Invoice'}
             </button>
@@ -252,18 +257,11 @@ function BillForm() {
 
       <div className="preview-section">
         {showInvoice && (
-          <div className="invoice-preview">
+          <div className="invoice-preview" ref={invoiceRef}>
             <div style={{ textAlign: 'center' }}>
-              <img
-                src={logo}
-                alt="Sisira Furnitures Logo"
-                style={{ width: '80px', height: 'auto', marginBottom: '8px' }}
-              />
+              <img src={logo} alt="Sisira Furnitures Logo" style={{ width: '80px', marginBottom: '8px' }} />
               <h3>SISIRA FURNITURES</h3>
-              <p>
-                No.156, Matara Road, Kamburupitiya<br />
-                Tel: 041-2292785 / 0718006485
-              </p>
+              <p>No.156, Matara Road, Kamburupitiya<br />Tel: 041-2292785 / 0718006485</p>
             </div>
             <p><strong>Invoice #:</strong> 000789</p>
             <p><strong>Date:</strong> {date} {formatTimeToAMPM(time)}</p>
@@ -285,12 +283,10 @@ function BillForm() {
             <p><strong>Total Qty:</strong> {quantity}</p>
             <p style={{ textAlign: 'center' }}>* {Math.floor(Math.random() * 999999).toString().padStart(6, '0')} *</p>
             <p style={{ fontSize: '12px', textAlign: 'center' }}>
-              Thank you for choosing Sisira Furnitures!<br />
-              We appreciate your trust and support.
+              Thank you for choosing Sisira Furnitures!<br />We appreciate your trust and support.
             </p>
             <p style={{ fontSize: '11px', textAlign: 'center' }}>
-              Software & Technical Support by:<br />
-              BugSlayers © 2025
+              Software & Technical Support by:<br />BugSlayers © 2025
             </p>
             <button onClick={handlePrint}>Print</button>
           </div>
