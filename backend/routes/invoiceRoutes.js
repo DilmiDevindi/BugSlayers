@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const Invoice = require('../models/Invoice'); // Mongoose model
+const Invoice = require('../models/Invoice');
 
-// POST /api/invoices
 router.post('/', async (req, res) => {
   try {
     const invoice = new Invoice(req.body);
