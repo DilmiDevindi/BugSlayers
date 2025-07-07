@@ -25,28 +25,18 @@ const upload = multer({
 
 // Helper function to generate a unique numeric code
 const generateItemCode = async () => {
-  // Get all existing items
   const existingItems = await InventoryItem.find();
-
-  // Get the highest numeric code among existing items
   let maxCode = 0;
   existingItems.forEach(item => {
-  if (item.code) { // Check if item.code is defined
-    const match = item.code.match(/^\d+$/); // Match only numeric codes
-    if (match) {
-      const number = parseInt(item.code);
-      if (number > maxCode) {
-        maxCode = number;
+    if (item.code) {
+      const match = item.code.match(/^\d+$/);
+      if (match) {
+        const number = parseInt(item.code);
+        if (number > maxCode) maxCode = number;
       }
     }
-  }
   });
-
-
-  // Generate the next sequential code
   const nextCode = maxCode + 1;
-
-  // Ensure the code is 3 digits (e.g., "001", "002")
   return String(nextCode).padStart(3, '0');
 };
 
@@ -63,11 +53,21 @@ const getInventoryItems = async (req, res) => {
 // Add a new inventory item
 const addInventoryItem = async (req, res) => {
   try {
-    const { productName, category, quantity, buyingPrice, sellingPrice, dateAdded } = req.body;
-    const image = req.file ? req.file.filename : null;  // Check if the image is correctly attached
+    const {
+      productName,
+      category,
+      subcategory,
+      quantity,
+      buyingPrice,
+      sellingPrice,
+      dateAdded,
+      availableForOffer
+    } = req.body;
+
+    const image = req.file ? req.file.filename : null;
 
     // Validate inputs
-    if (!productName || !category || !quantity || !buyingPrice || !sellingPrice || !dateAdded) {
+    if (!productName || !category || !subcategory || !quantity || !buyingPrice || !sellingPrice || !dateAdded) {
       return res.status(400).json({ error: 'All fields are required!' });
     }
     if (isNaN(quantity) || quantity <= 0) {
@@ -80,8 +80,8 @@ const addInventoryItem = async (req, res) => {
       return res.status(400).json({ error: 'Invalid date format!' });
     }
 
-    // Check if the product already exists
-    const existingItem = await InventoryItem.findOne({ productName, category });
+    // Check if product exists
+    const existingItem = await InventoryItem.findOne({ productName, category, subcategory });
     if (existingItem) {
       return res.status(409).json({
         error: 'Product already exists!',
@@ -91,22 +91,25 @@ const addInventoryItem = async (req, res) => {
       });
     }
 
-    // Generate a new numeric code for the product
+    // Generate code
     const code = await generateItemCode();
 
-    // Create a new item
+    // Create item
     const newItem = new InventoryItem({
       code,
       productName,
       category,
+      subcategory,
       quantity: parseInt(quantity),
       buyingPrice: parseFloat(buyingPrice).toFixed(2),
       sellingPrice: parseFloat(sellingPrice).toFixed(2),
       dateAdded,
       image,
+      availableForOffer: availableForOffer || 'no',
     });
 
     const savedItem = await newItem.save();
+
     return res.status(201).json({
       message: 'New item added successfully!',
       code: savedItem.code,
@@ -118,7 +121,6 @@ const addInventoryItem = async (req, res) => {
   }
 };
 
-
 // Get inventory count
 const getInventoryCount = async (req, res) => {
   try {
@@ -129,18 +131,29 @@ const getInventoryCount = async (req, res) => {
   }
 };
 
-// Update an inventory item
+// Update inventory item
 const updateInventoryItem = async (req, res) => {
   const { id } = req.params;
-  const { productName, category, quantity, buyingPrice, sellingPrice, dateAdded } = req.body;
-
-  const updateData = {
+  const {
     productName,
     category,
+    subcategory,
     quantity,
     buyingPrice,
     sellingPrice,
     dateAdded,
+    availableForOffer
+  } = req.body;
+
+  const updateData = {
+    productName,
+    category,
+    subcategory,
+    quantity,
+    buyingPrice,
+    sellingPrice,
+    dateAdded,
+    availableForOffer,
   };
 
   if (req.file) {
@@ -159,7 +172,7 @@ const updateInventoryItem = async (req, res) => {
   }
 };
 
-// Delete an inventory item
+// Delete inventory item
 const deleteInventoryItem = async (req, res) => {
   const { id } = req.params;
   try {

@@ -4,21 +4,22 @@ import '../ProductCatalog.css';
 
 const Catalog = () => {
   const [categories, setCategories] = useState([]);
+  const [subcategories, setSubcategories] = useState([]);
   const [products, setProducts] = useState([]);
-  const [activeTab, setActiveTab] = useState(null);
+  const [activeCategory, setActiveCategory] = useState(null);
+  const [activeSubcategory, setActiveSubcategory] = useState(null);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [stockFilter, setStockFilter] = useState('all'); // 'all', 'in', 'out'
+  const [stockFilter, setStockFilter] = useState('all');
 
-
-  // Fetch all categories on load
+  // Load categories on mount
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const res = await axios.get('http://localhost:5000/api/catalog/categories');
         setCategories(res.data);
         if (res.data.length > 0) {
-          setActiveTab(res.data[0]._id);
+          setActiveCategory(res.data[0]._id);
         }
       } catch (err) {
         console.error('Error fetching categories:', err);
@@ -27,105 +28,115 @@ const Catalog = () => {
     fetchCategories();
   }, []);
 
-  // Fetch products for selected category
+  // Load subcategories when activeCategory changes
+  useEffect(() => {
+    const fetchSubcategories = async () => {
+      if (!activeCategory) return;
+      try {
+        const res = await axios.get(`http://localhost:5000/api/catalog/subcategories?categoryId=${activeCategory}`);
+        setSubcategories(res.data);
+        if (res.data.length > 0) {
+          setActiveSubcategory(res.data[0]._id);
+        } else {
+          setActiveSubcategory(null);
+          setProducts([]);
+          setFilteredProducts([]);
+        }
+      } catch (err) {
+        console.error('Error fetching subcategories:', err);
+      }
+    };
+    fetchSubcategories();
+  }, [activeCategory]);
+
+  // Load products when activeSubcategory changes
   useEffect(() => {
     const fetchProducts = async () => {
-      if (!activeTab) return;
+      if (!activeSubcategory) return;
       try {
-        const res = await axios.get(`http://localhost:5000/api/catalog/products?categoryId=${activeTab}`);
+        const res = await axios.get(`http://localhost:5000/api/catalog/products-by-subcategory?subcategoryId=${activeSubcategory}`);
         setProducts(res.data);
-        setFilteredProducts(res.data); // Initially show all in category
-        setSearchQuery(''); // Reset search when tab changes
+        setFilteredProducts(res.data);
       } catch (err) {
         console.error('Error fetching products:', err);
       }
     };
     fetchProducts();
-  }, [activeTab]);
+  }, [activeSubcategory]);
 
-  // Search within current category's products
+  // Filter logic
   useEffect(() => {
-    const query = searchQuery.toLowerCase();
-    const filtered = products.filter((product) =>
-      product.productName?.toLowerCase().includes(query) ||
-      product.code?.toLowerCase().includes(query)
-    );
-    setFilteredProducts(filtered);
-  }, [searchQuery, products]);
+    let result = products;
 
-  useEffect(() => {
-    const query = searchQuery.toLowerCase();
-    let filtered = products.filter((product) =>
-      product.productName?.toLowerCase().includes(query) ||
-      product.code?.toLowerCase().includes(query)
-    );
-  
-    if (stockFilter === 'in') {
-      filtered = filtered.filter((p) => p.quantity > 0);
-    } else if (stockFilter === 'out') {
-      filtered = filtered.filter((p) => p.quantity <= 0);
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(
+        (p) =>
+          p.productName?.toLowerCase().includes(q) ||
+          p.code?.toLowerCase().includes(q)
+      );
     }
-  
-    setFilteredProducts(filtered);
+
+    if (stockFilter === 'in') {
+      result = result.filter((p) => p.quantity > 0);
+    } else if (stockFilter === 'out') {
+      result = result.filter((p) => p.quantity <= 0);
+    }
+
+    setFilteredProducts(result);
   }, [searchQuery, stockFilter, products]);
-  
 
   return (
     <div className="cat-container mt-4">
       {/* Category Tabs */}
-      <ul className="nav cat-nav-tabs mb-4">
-        {categories.map((category) => (
-          <li className="nav-item" key={category._id}>
+      <ul className="nav cat-nav-tabs mb-2">
+        {categories.map((cat) => (
+          <li className="nav-item" key={cat._id}>
             <button
-              className={`cat-nav-link ${activeTab === category._id ? 'active' : ''}`}
-              onClick={() => setActiveTab(category._id)}
+              className={`cat-nav-link ${activeCategory === cat._id ? 'active' : ''}`}
+              onClick={() => setActiveCategory(cat._id)}
             >
-              {category.categoryName}
+              {cat.categoryName}
             </button>
           </li>
         ))}
       </ul>
-  
-      <div className="cat-search-bar-container">
-      {/* Search Bar */}
-      <div className="cat-search">
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Search within this category..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
+
+      {/* Subcategory Tabs */}
+      <ul className="nav cat-nav-tabs mb-4">
+        {subcategories.map((subcat) => (
+          <li className="nav-item" key={subcat._id}>
+            <button
+              className={`cat-nav-link ${activeSubcategory === subcat._id ? 'active' : ''}`}
+              onClick={() => setActiveSubcategory(subcat._id)}
+            >
+              {subcat.subcategoryName}
+            </button>
+          </li>
+        ))}
+      </ul>
+
+      {/* Search and Filter */}
+      <div className="cat-search-bar-container mb-3">
+        <div className="cat-search">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Search products..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+        <div className="d-flex gap-2">
+          <button className={`btn-xs ${stockFilter === 'all' ? 'btn-custom-all' : 'btn-outline-custom-all'}`} onClick={() => setStockFilter('all')}>All</button>
+          <button className={`btn-xs ${stockFilter === 'in' ? 'btn-custom-in' : 'btn-outline-custom-in'}`} onClick={() => setStockFilter('in')}>In Stock</button>
+          <button className={`btn-xs ${stockFilter === 'out' ? 'btn-custom-out' : 'btn-outline-custom-out'}`} onClick={() => setStockFilter('out')}>Out of Stock</button>
+        </div>
       </div>
 
-      {/* Filter Buttons */}
-      <div className="d-flex gap-2">
-        <button
-          className={`btn-1 btn-xs ${stockFilter === 'all' ? 'btn-custom-all' : 'btn-outline-custom-all'}`}
-          onClick={() => setStockFilter('all')}
-        >
-        All
-        </button>
-        <button
-          className={`btn-2 btn-xs ${stockFilter === 'in' ? 'btn-custom-in' : 'btn-outline-custom-in'}`}
-          onClick={() => setStockFilter('in')}
-        >
-        In Stock
-        </button>
-        <button
-          className={`btn-3 btn-xs ${stockFilter === 'out' ? 'btn-custom-out' : 'btn-outline-custom-out'}`}
-          onClick={() => setStockFilter('out')}
-        >
-        Out of Stock
-        </button>
-      </div>
-    </div>
-
-
-  
-      {/* Product Grid */}
-      <div className="row ">
-        {filteredProducts.length ? (
+      {/* Product Cards */}
+      <div className="row">
+        {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
             <div className="col cat-col mb-4" key={product._id}>
               <div className="card cat-card compact-spacing h-100 shadow-sm">
@@ -152,12 +163,11 @@ const Catalog = () => {
             </div>
           ))
         ) : (
-          <p>No products found in this category.</p>
+          <p>No products available in this subcategory.</p>
         )}
       </div>
     </div>
   );
-  
 };
 
 export default Catalog;

@@ -6,34 +6,25 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../Inventory.css';
 
 const ManageCategory = () => {
-  const [category, setCategory] = useState([]);
+  const [categoryData, setCategoryData] = useState([]);
   const [search, setSearch] = useState('');
   const [editCategory, setEditCategory] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchCategory();
+    fetchCategoryData();
   }, []);
 
-  const fetchCategory = async () => {
+  const fetchCategoryData = async () => {
     setLoading(true);
     setError('');
     try {
-      const response = await axios.get('http://localhost:5000/api/category');
-      const groupedCategory = response.data.reduce((acc, category) => {
-        if (!acc[category.categoryName]) {
-          acc[category.categoryName] = { ...category, inStock: category.quantity };
-        } else {
-          acc[category.categoryName].inStock += category.quantity;
-        }
-        return acc;
-      }, {});
-
-      setCategory(Object.values(groupedCategory).reverse());
+      const response = await axios.get('http://localhost:5000/api/category/with-subcategories');
+      setCategoryData(response.data.reverse()); // reverse to show latest first
     } catch (err) {
-      setError('Error fetching category items');
-      console.error('Error fetching category items:', err);
+      setError('Error fetching category data');
+      console.error('Error fetching category data:', err);
     } finally {
       setLoading(false);
     }
@@ -44,7 +35,7 @@ const ManageCategory = () => {
 
     try {
       await axios.delete(`http://localhost:5000/api/category/${id}`);
-      fetchCategory(); // Refresh list after deletion
+      fetchCategoryData();
       alert('Category deleted successfully!');
     } catch (err) {
       setError('Error deleting category');
@@ -53,12 +44,12 @@ const ManageCategory = () => {
   };
 
   const handleEdit = (category) => {
-    setEditCategory({ ...category }); // Ensure it's a fresh copy
+    setEditCategory({ ...category });
   };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-  
+
     if (!editCategory || !editCategory._id) {
       setError("Invalid category selected for update.");
       return;
@@ -69,7 +60,7 @@ const ManageCategory = () => {
         categoryName: editCategory.categoryName
       });
 
-      fetchCategory();
+      fetchCategoryData();
       setEditCategory(null);
       alert('Category updated successfully!');
     } catch (err) {
@@ -79,15 +70,16 @@ const ManageCategory = () => {
     }
   };
 
-  const filteredCategory = category.filter((category) =>
-    category.categoryName.toLowerCase().includes(search.toLowerCase())
+  const filteredCategories = categoryData.filter((cat) =>
+    cat.categoryName.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
     <div className="container-fluid mt-4 inventory-container">
       <div className='inventory-title'>
-        <span className='inventory-title-icon'><FontAwesomeIcon icon={faBarsProgress} /></span> Manage Category
+        <span className='inventory-title-icon'><FontAwesomeIcon icon={faBarsProgress} /></span> Manage Category & Subcategory
       </div>
+
       {error && <div className="alert alert-danger">{error}</div>}
 
       <div className="row mb-3">
@@ -105,27 +97,39 @@ const ManageCategory = () => {
       <div className="table-responsive inventory-table-container">
         {loading ? (
           <div>Loading...</div>
-        ) : filteredCategory.length === 0 ? (
+        ) : filteredCategories.length === 0 ? (
           <div className='no-items'>No items found</div>
         ) : (
           <table className="table table-striped table-bordered inventory-table">
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Category Name</th>
+                <th>#</th>
+                <th>Category</th>
+                <th>Subcategories</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {filteredCategory.map((category, index) => (
-                <tr key={category._id}>
+              {filteredCategories.map((cat, index) => (
+                <tr key={cat._id}>
                   <td>{index + 1}</td>
-                  <td>{category.categoryName}</td>
+                  <td>{cat.categoryName}</td>
                   <td>
-                    <span className='inventory-edit-icon' onClick={() => handleEdit(category)}>
+                    {cat.subcategories.length > 0 ? (
+                      <ul className="mb-0 ps-3">
+                        {cat.subcategories.map((sub) => (
+                          <li key={sub._id}>{sub.subcategoryName}</li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <em>No subcategories</em>
+                    )}
+                  </td>
+                  <td>
+                    <span className='inventory-edit-icon' onClick={() => handleEdit(cat)}>
                       <FontAwesomeIcon icon={faEdit} />
                     </span>
-                    <span className='inventory-delete-icon' onClick={() => handleDelete(category._id)}>
+                    <span className='inventory-delete-icon' onClick={() => handleDelete(cat._id)}>
                       <FontAwesomeIcon icon={faTrash} />
                     </span>
                   </td>
@@ -138,14 +142,14 @@ const ManageCategory = () => {
 
       {editCategory && (
         <div className="inventory-form-container mt-4">
-          <span className="form-icon-i"><FontAwesomeIcon icon={faEdit} /></span>Update Category
+          <span className="form-icon-i"><FontAwesomeIcon icon={faEdit} /></span> Update Category
           <form onSubmit={handleUpdate}>
             <div className="mb-3">
               <label className="form-label">Category Name</label>
               <input
                 type="text"
                 className="form-control"
-                value={editCategory?.categoryName || ''}
+                value={editCategory.categoryName}
                 onChange={(e) =>
                   setEditCategory((prev) => ({
                     ...prev,
@@ -156,14 +160,14 @@ const ManageCategory = () => {
               />
             </div>
             <div className="inventory-row">
-            <button type="submit" className="btn btn-success">Update Category</button>
-            <button
-              type="button"
-              className="btn btn-secondary ms-2"
-              onClick={() => setEditCategory(null)}
-            >
-              Cancel
-            </button>
+              <button type="submit" className="btn btn-success">Update</button>
+              <button
+                type="button"
+                className="btn btn-secondary ms-2"
+                onClick={() => setEditCategory(null)}
+              >
+                Cancel
+              </button>
             </div>
           </form>
         </div>

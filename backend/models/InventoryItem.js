@@ -1,21 +1,29 @@
 const mongoose = require('mongoose');
 
-// Define the schema for inventory items
 const inventoryItemSchema = new mongoose.Schema({
-  productName: { type: String, required: true },
-  category: { 
-    type: String, 
-    required: true 
+  code: String,
+  productName: String,
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category',
+    required: true
   },
-  quantity: { type: Number, required: true },
-  buyingPrice: { type: Number, required: true },
-  sellingPrice: { type: Number, required: true },
-  dateAdded: { type: Date, required: true }, 
-  image: { type: String },
-  code: { type: String, unique: true, required: true } //  Product code added here
+  subcategory: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Subcategory',
+    required: true
+  },
+  quantity: Number,
+  buyingPrice: Number,
+  sellingPrice: Number,
+  dateAdded: String,
+  image: String,
+  availableForOffer: {
+    type: String,
+    enum: ['yes', 'no'],
+    default: 'no'
+  }
 });
 
-// Create and export the model
 const InventoryItem = mongoose.model('InventoryItem', inventoryItemSchema);
-
 module.exports = InventoryItem;

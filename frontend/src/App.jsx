@@ -13,6 +13,7 @@ import ManageInventories from "./components/ManageInventories"; // Ensure the pa
 import AddCustomer from "./components/AddCustomer";
 import ManageCustomer from "./components/ManageCustomer"; // Ensure the path is correct
 import AddCategory from "./components/AddCategory";
+import AddSubcategory from "./components/AddSubcategory";
 import ManageCategories from "./components/ManageCategory";
 import Bill from "./components/Bill";
 import AddSalesRecord from "./components/AddSalesRecord";
@@ -48,6 +49,7 @@ function App() {
           <Route path="customers/add" element={<AddCustomer />} />
           <Route path="customers/manage" element={<ManageCustomer />} />
           <Route path="category/add" element={<AddCategory />} />
+          <Route path="subcategory/add" element={<AddSubcategory />} />
           <Route path="category/add1" element={<ManageCategories />} />
           <Route path="/dashboard/bill" element={<Bill />} />
           <Route path="sales/add" element={<AddSalesRecord />} />
