@@ -256,6 +256,10 @@ function BillForm() {
           <p style={{ textAlign: 'center' }}>* {Math.floor(Math.random() * 999999).toString().padStart(6, '0')} *</p>
 
           
+          <p style={{ fontSize: '12px', textAlign: 'center' }}>
+          Thank you for choosing Sisira Furnitures!<br />
+          We appreciate your trust and support.
+          </p> 
 
           <p style={{ fontSize: '11px', textAlign: 'center' }}>
             Software & Technical Support by:<br />
