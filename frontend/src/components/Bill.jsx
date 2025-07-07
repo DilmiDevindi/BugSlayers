@@ -1,4 +1,3 @@
-// BillForm.jsx
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './Bill.css';
@@ -23,11 +22,10 @@ function BillForm() {
   const [email, setEmail] = useState('');
   const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
   const [time, setTime] = useState(() => new Date().toTimeString().slice(0, 5));
-  const [discount, setDiscount] = useState('');
   const [cashReceived, setCashReceived] = useState('');
   const [balance, setBalance] = useState(0);
   const [items, setItems] = useState([
-    { itemCode: '', itemName: '', itemPrice: '', quantity: 1 }
+    { itemCode: '', itemName: '', itemPrice: '', quantity: 1, discount: 0 }
   ]);
   const [showInvoice, setShowInvoice] = useState(false);
   const [fetchError, setFetchError] = useState('');
@@ -61,6 +59,7 @@ function BillForm() {
   const handleItemChange = async (index, field, value) => {
     const updatedItems = [...items];
     updatedItems[index][field] = value;
+
     if (field === 'itemCode') {
       try {
         const res = await axios.get(`http://localhost:5000/api/bill/inventoryitems/${value}`);
@@ -71,11 +70,12 @@ function BillForm() {
         updatedItems[index].itemPrice = '';
       }
     }
+
     setItems(updatedItems);
   };
 
   const handleAddItem = () => {
-    setItems([...items, { itemCode: '', itemName: '', itemPrice: '', quantity: 1 }]);
+    setItems([...items, { itemCode: '', itemName: '', itemPrice: '', quantity: 1, discount: 0 }]);
   };
 
   const handleRemoveItem = (index) => {
@@ -86,17 +86,16 @@ function BillForm() {
   const calculateItemTotal = (item) => {
     const price = parseFloat(item.itemPrice || 0);
     const qty = parseInt(item.quantity || 1);
-    return (price * qty).toFixed(2);
+    const disc = parseFloat(item.discount || 0);
+    return (price * qty - disc).toFixed(2);
   };
 
   const calculateSubtotal = () => {
-    return items.reduce((total, item) => total + parseFloat(calculateItemTotal(item)), 0).toFixed(2);
+    return items.reduce((total, item) => total + (parseFloat(item.itemPrice || 0) * parseInt(item.quantity || 1)), 0).toFixed(2);
   };
 
   const calculateAmount = () => {
-    const subtotal = parseFloat(calculateSubtotal());
-    const disc = parseFloat(discount || 0);
-    return (subtotal - disc).toFixed(2);
+    return items.reduce((total, item) => total + parseFloat(calculateItemTotal(item)), 0).toFixed(2);
   };
 
   useEffect(() => {
@@ -104,17 +103,17 @@ function BillForm() {
     const cash = parseFloat(cashReceived || 0);
     const bal = cash - amount;
     setBalance(bal >= 0 ? bal : 0);
-  }, [cashReceived, discount, items]);
+  }, [cashReceived, items]);
 
   const handleSaveInvoice = async () => {
     if (!name || !email) {
       alert('Please enter a valid 10-digit contact number to fetch customer details.');
       return;
     }
+
     const invoiceData = {
       date, time, contact, name, address, email,
       items,
-      discount,
       subtotal: calculateSubtotal(),
       amount: calculateAmount(),
       cashReceived,
@@ -167,13 +166,13 @@ function BillForm() {
               <input type="text" value={item.itemName} readOnly placeholder="Item Name" />
               <input type="text" value={item.itemPrice} readOnly placeholder="Item Price" />
               <input type="number" value={item.quantity} onChange={(e) => handleItemChange(index, 'quantity', e.target.value)} min="1" />
+              <input type="number" value={item.discount} onChange={(e) => handleItemChange(index, 'discount', e.target.value)} min="0" placeholder="Discount" />
               <input type="text" value={calculateItemTotal(item)} readOnly placeholder="Total" />
               {items.length > 1 && <button type="button" onClick={() => handleRemoveItem(index)}>Remove</button>}
             </div>
           ))}
           <button type="button" onClick={handleAddItem}>+ Add Another Item</button>
 
-          <input type="number" value={discount} onChange={(e) => setDiscount(Number(e.target.value))} placeholder="Discount" />
           <input type="number" value={cashReceived} onChange={(e) => setCashReceived(Number(e.target.value))} placeholder="Cash Received" />
           <input type="text" value={balance.toFixed(2)} readOnly placeholder="Balance" />
 
@@ -183,7 +182,7 @@ function BillForm() {
       </div>
 
       {showInvoice && (
-        <div className="preview-section" ref={invoiceRef}>
+        <div className="preview-section invoice-preview" ref={invoiceRef}>
           <div style={{ textAlign: 'center' }}>
             <img src={logo} alt="Logo" style={{ width: '80px' }} />
             <h2>SISIRA FURNITURES</h2>
@@ -205,6 +204,7 @@ function BillForm() {
                 <th>Item</th>
                 <th>Qty</th>
                 <th>Price</th>
+                <th>Discount</th>
                 <th>Total</th>
               </tr>
             </thead>
@@ -214,13 +214,14 @@ function BillForm() {
                   <td>{item.itemName}</td>
                   <td>{item.quantity}</td>
                   <td>Rs. {item.itemPrice}</td>
+                  <td>Rs. {item.discount}</td>
                   <td>Rs. {calculateItemTotal(item)}</td>
                 </tr>
               ))}
             </tbody>
           </table>
           <hr />
-          <p><strong>Discount:</strong> Rs. {discount}</p>
+          <p><strong>Subtotal:</strong> Rs. {calculateSubtotal()}</p>
           <p><strong>Amount:</strong> Rs. {calculateAmount()}</p>
           <p><strong>Cash Received:</strong> Rs. {cashReceived}</p>
           <p><strong>Balance:</strong> Rs. {balance.toFixed(2)}</p>
