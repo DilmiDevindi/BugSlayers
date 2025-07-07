@@ -123,26 +123,6 @@ body {
     flex: 1;
   }
 
-  .invoice-container {
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
-  padding: 20px;
-  box-sizing: border-box;
-  max-height: 90vh;
-  overflow: hidden;
-}
-
-.form-section,
-.preview-section {
-  flex: 1;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  background-color: #fff;
-  overflow-y: auto;
-  max-height: 90vh;
-}
 
 .bill-topic {
   color: #1a1a8e;
