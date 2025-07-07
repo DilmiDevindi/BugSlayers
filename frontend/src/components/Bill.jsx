@@ -263,7 +263,7 @@ function BillForm() {
 
           <p style={{ fontSize: '11px', textAlign: 'center' }}>
             Software & Technical Support by:<br />
-             © 2025
+            BugSlayers © 2025
           </p>
 
           <button onClick={handlePrint}>Print</button>
