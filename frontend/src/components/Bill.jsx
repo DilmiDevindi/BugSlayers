@@ -255,10 +255,7 @@ function BillForm() {
           <p><strong>Total Qty:</strong> {quantity}</p>
           <p style={{ textAlign: 'center' }}>* {Math.floor(Math.random() * 999999).toString().padStart(6, '0')} *</p>
 
-          <p style={{ fontSize: '12px', textAlign: 'center' }}>
-            If any exchangeable item, bring the product<br />
-            in original condition within 03 days
-          </p>
+          
 
           <p style={{ fontSize: '11px', textAlign: 'center' }}>
             Software & Technical Support by:<br />
