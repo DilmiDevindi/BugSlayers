@@ -63,9 +63,9 @@ function App() {
 
           {/* Supplier Routes */}
           <Route path="suppliers/add" element={<AddSupplier />} />
-          <Route path="suppliers/manage" element={<ManageSuppliers />} />
-          <Route path="suppliers/edit/:id" element={<EditSupplier />} />
-
+          <Route path="/dashboard/suppliers/manage" element={<ManageSuppliers />} />
+        <Route path="/dashboard/suppliers/edit/:id" element={<EditSupplier />} />
+        
           {/* Inventory Routes */}
           <Route path="inventory/add" element={<AddInventoryItem />} />
           <Route path="inventory/add1" element={<ManageInventories />} />
