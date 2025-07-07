@@ -5,13 +5,19 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileInvoice } from '@fortawesome/free-solid-svg-icons';
 import logo from "../assets/furniture-log.png";
 
-
 function BillForm() {
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [contact, setContact] = useState('');
   const [email, setEmail] = useState('');
+
+  // Initialize date as YYYY-MM-DD (today)
   const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
+  // Initialize time as HH:mm (current time)
+  const [time, setTime] = useState(() => {
+    const now = new Date();
+    return now.toTimeString().slice(0,5);
+  });
 
   const [itemCode, setItemCode] = useState('');
   const [itemName, setItemName] = useState('');
@@ -101,6 +107,7 @@ function BillForm() {
 
     const invoiceData = {
       date,
+      time,             // include time here too
       contact,
       name,
       address,
@@ -145,14 +152,24 @@ function BillForm() {
           <h4>Customer Details</h4>
           <div className="inline-field">
             <label>Date:</label>
-            <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+            />
+            <label style={{ marginLeft: '10px' }}>Time:</label>
+            <input
+              type="time"
+              value={time}
+              onChange={(e) => setTime(e.target.value)}
+            />
           </div>
           <div className="inline-field">
             <label>Contact:</label>
             <input
               type="text"
               value={contact}
-              onChange={(e) => setContact(e.target.value.replace(/\D/g, '').substring(0, 10).trim())}
+              onChange={(e) => e.target.value.replace(/\D/g, '').substring(0, 10).trim() && setContact(e.target.value.replace(/\D/g, '').substring(0, 10).trim())}
               maxLength={10}
               placeholder="Enter 10-digit contact"
             />
@@ -237,7 +254,7 @@ function BillForm() {
               </p>
             </div>
             <p><strong>Invoice #:</strong> 000789</p>
-            <p><strong>Date:</strong> {date}</p>
+            <p><strong>Date:</strong> {date} {time}</p>
             <hr />
             <p><strong>Customer Name:</strong> {name}</p>
             <p><strong>Contact:</strong> {contact}</p>
