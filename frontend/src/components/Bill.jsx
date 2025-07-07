@@ -3,6 +3,8 @@ import axios from 'axios';
 import './Bill.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileInvoice } from '@fortawesome/free-solid-svg-icons';
+import logo from "../assets/furniture-logo.png";
+
 
 function BillForm() {
   const [name, setName] = useState('');
@@ -224,9 +226,9 @@ function BillForm() {
           <div className="invoice-preview">
             <div style={{ textAlign: 'center' }}>
               <img
-                src="/assets/furniture-logo.jpeg"
+                src={logo}
                 alt="Sisira Furnitures Logo"
-                style={{ width: '80px', height: 'auto', marginBottom: '8px' }}
+                style={{ width: '800px', height: 'auto', marginBottom: '8px' }}
               />
               <h3>SISIRA FURNITURES</h3>
               <p>
