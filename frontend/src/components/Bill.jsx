@@ -222,6 +222,7 @@ function BillForm() {
       <div className="preview-section">
         {showInvoice && (
           <div className="invoice-preview">
+            
             <h3 style={{ textAlign: 'center' }}>SISIRA FURNITURES</h3>
             <p style={{ textAlign: 'center' }}>
               No.156, Matara Road, Kamburupitiya<br />
