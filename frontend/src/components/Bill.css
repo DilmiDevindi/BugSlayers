@@ -261,5 +261,38 @@ button:hover {
   }
 }
 
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  .invoice-preview {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    font-size: 12pt;
+    page-break-inside: avoid;
+  }
+
+  .print-hide {
+    display: none !important;
+  }
+
+  .invoice-container, .form-section {
+    display: none !important;
+  }
+
+  .preview-section {
+    display: block !important;
+  }
+}
+
+
 
 

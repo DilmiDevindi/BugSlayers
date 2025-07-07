@@ -27,8 +27,8 @@ function BillForm() {
   const [itemName, setItemName] = useState('');
   const [itemPrice, setItemPrice] = useState('');
   const [quantity, setQuantity] = useState(1);
-  const [discount, setDiscount] = useState(0);
-  const [cashReceived, setCashReceived] = useState(0);
+  const [discount, setDiscount] = useState('');
+  const [cashReceived, setCashReceived] = useState('');
   const [balance, setBalance] = useState(0);
   const [showInvoice, setShowInvoice] = useState(false);
   const [fetchError, setFetchError] = useState('');
@@ -140,7 +140,16 @@ function BillForm() {
     const printContents = invoiceRef.current.innerHTML;
     const printWindow = window.open('', '', 'height=700,width=900');
     printWindow.document.write('<html><head><title>Invoice</title>');
-    printWindow.document.write('<style>body{font-family: Arial; padding: 20px;} hr{border: 1px solid #000;} img{max-width:80px;} @media print { .print-hide { display: none !important; } }</style>');
+    printWindow.document.write(`
+      <style>
+        @page { size: A4 portrait; margin: 10mm; }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+        .invoice-preview { width: 100%; margin: 0 auto; font-size: 12pt; }
+        hr { border: 1px solid #000; }
+        img { max-width: 80px; }
+        .print-hide { display: none !important; }
+      </style>
+    `);
     printWindow.document.write('</head><body>');
     printWindow.document.write(printContents);
     printWindow.document.write('</body></html>');
@@ -148,10 +157,6 @@ function BillForm() {
     printWindow.focus();
     printWindow.print();
     printWindow.close();
-  };
-
-  const toggleInvoiceView = () => {
-    setShowInvoice(!showInvoice);
   };
 
   return (
@@ -200,7 +205,7 @@ function BillForm() {
 
           <div style={{ marginTop: '15px' }}>
             <button type="button" onClick={handleGenerateInvoice}>Generate Invoice</button>
-            <button type="button" onClick={toggleInvoiceView} style={{ marginLeft: '10px' }}>
+            <button type="button" onClick={() => setShowInvoice(!showInvoice)} style={{ marginLeft: '10px' }}>
               {showInvoice ? 'Hide Invoice' : 'View Invoice'}
             </button>
           </div>
@@ -218,7 +223,6 @@ function BillForm() {
             </div>
 
             <hr />
-
             <table style={{ width: '100%', fontSize: '14px' }}>
               <tbody>
                 <tr>
@@ -280,7 +284,6 @@ function BillForm() {
             <p style={{ fontSize: '11px', textAlign: 'center' }}>
               Software & Technical Support by:<br />BugSlayers © 2025
             </p>
-
             <button onClick={handlePrint} className="print-hide">Print</button>
           </div>
         )}
