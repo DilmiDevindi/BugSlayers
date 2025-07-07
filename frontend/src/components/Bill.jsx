@@ -4,7 +4,7 @@ import axios from 'axios';
 import './Bill.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileInvoice } from '@fortawesome/free-solid-svg-icons';
-import logo from "../assets/furniture-log.png";
+
 
 function formatTimeToAMPM(time24) {
   if (!time24) return '';
