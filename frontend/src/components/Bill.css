@@ -122,5 +122,30 @@ body {
   .inline-field input[type="date"] {
     flex: 1;
   }
-  
+
+  .invoice-container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+}
+
+.form-section, .preview-section {
+  flex: 1;
+  background: #f9f9f9;
+  padding: 20px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  overflow-y: auto;
+  max-height: 90vh;
+}
+
+.invoice-preview {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  font-size: 14px;
+}
+
   
