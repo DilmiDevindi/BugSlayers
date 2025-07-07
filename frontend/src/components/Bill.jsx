@@ -223,16 +223,17 @@ function BillForm() {
         {showInvoice && (
           <div className="invoice-preview">
             <div style={{ textAlign: 'center' }}>
-            <img
-            src="/images/logo.png"  // <-- change this path based on your logo file location
-            alt="Sisira Furnitures Logo"
-            style={{ width: '80px', height: 'auto', marginBottom: '8px' }}
-            />
-            <h3 style={{ textAlign: 'center' }}>SISIRA FURNITURES</h3>
-            <p style={{ textAlign: 'center' }}>
-              No.156, Matara Road, Kamburupitiya<br />
-              Tel: 041-2292785 / 0718006485
-            </p>
+              <img
+                src="/assets/furniture-logo.png"
+                alt="Sisira Furnitures Logo"
+                style={{ width: '80px', height: 'auto', marginBottom: '8px' }}
+              />
+              <h3>SISIRA FURNITURES</h3>
+              <p>
+                No.156, Matara Road, Kamburupitiya<br />
+                Tel: 041-2292785 / 0718006485
+              </p>
+            </div>
             <p><strong>Invoice #:</strong> 000789</p>
             <p><strong>Date:</strong> {date}</p>
             <hr />
