@@ -5,6 +5,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileInvoice } from '@fortawesome/free-solid-svg-icons';
 import logo from "../assets/furniture-log.png";
 
+// Convert 24-hour to 12-hour format
+function formatTimeToAMPM(time24) {
+  if (!time24) return '';
+  const [hourStr, minute] = time24.split(':');
+  let hour = parseInt(hourStr, 10);
+  const ampm = hour >= 12 ? 'PM' : 'AM';
+  hour = hour % 12;
+  hour = hour === 0 ? 12 : hour;
+  return `${hour}:${minute} ${ampm}`;
+}
 
 function BillForm() {
   const [name, setName] = useState('');
@@ -12,20 +22,19 @@ function BillForm() {
   const [contact, setContact] = useState('');
   const [email, setEmail] = useState('');
   const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
-
+  const [time, setTime] = useState(() => new Date().toTimeString().slice(0, 5));
   const [itemCode, setItemCode] = useState('');
   const [itemName, setItemName] = useState('');
   const [itemPrice, setItemPrice] = useState('');
-
   const [quantity, setQuantity] = useState(1);
   const [discount, setDiscount] = useState(0);
   const [cashReceived, setCashReceived] = useState(0);
   const [balance, setBalance] = useState(0);
-
   const [showInvoice, setShowInvoice] = useState(false);
   const [fetchError, setFetchError] = useState('');
 
   const debounceRef = useRef(null);
+  const invoiceRef = useRef(null);
 
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -52,7 +61,6 @@ function BillForm() {
       setEmail('');
       setFetchError('');
     }
-
     return () => clearTimeout(debounceRef.current);
   }, [contact]);
 
@@ -101,6 +109,7 @@ function BillForm() {
 
     const invoiceData = {
       date,
+      time,
       contact,
       name,
       address,
@@ -127,7 +136,18 @@ function BillForm() {
   };
 
   const handlePrint = () => {
-    window.print();
+    if (!invoiceRef.current) return;
+    const printContents = invoiceRef.current.innerHTML;
+    const printWindow = window.open('', '', 'height=700,width=900');
+    printWindow.document.write('<html><head><title>Invoice</title>');
+    printWindow.document.write('<style>body{font-family: Arial; padding: 20px;} hr{border: 1px solid #000;} img{max-width:80px;} @media print { .print-hide { display: none !important; } }</style>');
+    printWindow.document.write('</head><body>');
+    printWindow.document.write(printContents);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
   };
 
   const toggleInvoiceView = () => {
@@ -140,80 +160,46 @@ function BillForm() {
         <h3 className='bill-topic'>
           <FontAwesomeIcon icon={faFileInvoice} className="bill-icon" /> Generate Invoice
         </h3>
-
         <form onSubmit={(e) => e.preventDefault()}>
           <h4>Customer Details</h4>
           <div className="inline-field">
             <label>Date:</label>
             <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+            <label style={{ marginLeft: '10px' }}>Time:</label>
+            <input type="time" value={time} onChange={(e) => setTime(e.target.value)} />
           </div>
           <div className="inline-field">
             <label>Contact:</label>
             <input
               type="text"
               value={contact}
-              onChange={(e) => setContact(e.target.value.replace(/\D/g, '').substring(0, 10).trim())}
+              onChange={(e) => {
+                const val = e.target.value.replace(/\D/g, '').substring(0, 10).trim();
+                setContact(val);
+              }}
               maxLength={10}
               placeholder="Enter 10-digit contact"
             />
           </div>
           {fetchError && <p style={{ color: 'red' }}>{fetchError}</p>}
-
-          <div className="inline-field">
-            <label>Customer Name:</label>
-            <input type="text" value={name} readOnly />
-          </div>
-          <div className="inline-field">
-            <label>Address:</label>
-            <input type="text" value={address} readOnly />
-          </div>
-          <div className="inline-field">
-            <label>Email:</label>
-            <input type="text" value={email} readOnly />
-          </div>
+          <div className="inline-field"><label>Customer Name:</label><input type="text" value={name} readOnly /></div>
+          <div className="inline-field"><label>Address:</label><input type="text" value={address} readOnly /></div>
+          <div className="inline-field"><label>Email:</label><input type="text" value={email} readOnly /></div>
 
           <hr />
           <h4>Item Details</h4>
-          <div className="inline-field">
-            <label>Item Code:</label>
-            <input type="text" value={itemCode} onChange={handleItemCodeChange} />
-          </div>
-          <div className="inline-field">
-            <label>Item Name:</label>
-            <input type="text" value={itemName} readOnly />
-          </div>
-          <div className="inline-field">
-            <label>Item Price:</label>
-            <input type="text" value={itemPrice} readOnly />
-          </div>
-          <div className="inline-field">
-            <label>Quantity:</label>
-            <input type="number" min="1" value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} />
-          </div>
-          <div className="inline-field">
-            <label>Price:</label>
-            <input type="text" value={calculatePrice()} readOnly />
-          </div>
-          <div className="inline-field">
-            <label>Discount:</label>
-            <input type="number" min="0" value={discount} onChange={(e) => setDiscount(Number(e.target.value))} />
-          </div>
-          <div className="inline-field">
-            <label>Amount:</label>
-            <input type="text" value={calculateAmount()} readOnly />
-          </div>
-          <div className="inline-field">
-            <label>Cash Received:</label>
-            <input type="number" min="0" value={cashReceived} onChange={(e) => setCashReceived(Number(e.target.value))} />
-          </div>
-          <div className="inline-field">
-            <label>Balance:</label>
-            <input type="text" value={balance.toFixed(2)} readOnly />
-          </div>
+          <div className="inline-field"><label>Item Code:</label><input type="text" value={itemCode} onChange={handleItemCodeChange} /></div>
+          <div className="inline-field"><label>Item Name:</label><input type="text" value={itemName} readOnly /></div>
+          <div className="inline-field"><label>Item Price:</label><input type="text" value={itemPrice} readOnly /></div>
+          <div className="inline-field"><label>Quantity:</label><input type="number" min="1" value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} /></div>
+          <div className="inline-field"><label>Price:</label><input type="text" value={calculatePrice()} readOnly /></div>
+          <div className="inline-field"><label>Discount:</label><input type="number" min="0" value={discount} onChange={(e) => setDiscount(Number(e.target.value))} /></div>
+          <div className="inline-field"><label>Amount:</label><input type="text" value={calculateAmount()} readOnly /></div>
+          <div className="inline-field"><label>Cash Received:</label><input type="number" min="0" value={cashReceived} onChange={(e) => setCashReceived(Number(e.target.value))} /></div>
+          <div className="inline-field"><label>Balance:</label><input type="text" value={balance.toFixed(2)} readOnly /></div>
 
           <div style={{ marginTop: '15px' }}>
             <button type="button" onClick={handleGenerateInvoice}>Generate Invoice</button>
-            <button type="button" onClick={handlePrint} style={{ marginLeft: '10px' }}>Print Invoice</button>
             <button type="button" onClick={toggleInvoiceView} style={{ marginLeft: '10px' }}>
               {showInvoice ? 'Hide Invoice' : 'View Invoice'}
             </button>
@@ -223,47 +209,79 @@ function BillForm() {
 
       <div className="preview-section">
         {showInvoice && (
-          <div className="invoice-preview">
+          <div className="invoice-preview" ref={invoiceRef}>
             <div style={{ textAlign: 'center' }}>
-              <img
-                src={logo}
-                alt="Sisira Furnitures Logo"
-                style={{ width: '80px', height: 'auto', marginBottom: '8px' }}
-              />
-              <h3>SISIRA FURNITURES</h3>
-              <p>
-                No.156, Matara Road, Kamburupitiya<br />
-                Tel: 041-2292785 / 0718006485
-              </p>
+              <img src={logo} alt="Sisira Furnitures Logo" style={{ width: '80px', marginBottom: '8px' }} />
+              <h2 style={{ margin: 0 }}>SISIRA FURNITURES</h2>
+              <p style={{ margin: 0, fontSize: '14px' }}>No.156, Matara Road, Kamburupitiya</p>
+              <p style={{ fontSize: '14px' }}>Tel: 041-2292785 / 0718006485</p>
             </div>
-            <p><strong>Invoice #:</strong> 000789</p>
-            <p><strong>Date:</strong> {date}</p>
+
             <hr />
-            <p><strong>Customer Name:</strong> {name}</p>
-            <p><strong>Contact:</strong> {contact}</p>
-            <p><strong>Address:</strong> {address}</p>
-            <p><strong>Email:</strong> {email}</p>
+
+            <table style={{ width: '100%', fontSize: '14px' }}>
+              <tbody>
+                <tr>
+                  <td><strong>Invoice #:</strong></td>
+                  <td>000789</td>
+                  <td><strong>Date:</strong></td>
+                  <td>{date} {formatTimeToAMPM(time)}</td>
+                </tr>
+              </tbody>
+            </table>
+
             <hr />
-            <p><strong>Item:</strong> {itemName}</p>
-            <p><strong>Quantity:</strong> {quantity}</p>
-            <p><strong>Item Price:</strong> Rs. {itemPrice}</p>
-            <p><strong>Price:</strong> Rs. {calculatePrice()}</p>
-            <p><strong>Discount:</strong> Rs. {discount}</p>
-            <p><strong>Amount:</strong> Rs. {calculateAmount()}</p>
-            <p><strong>Cash Received:</strong> Rs. {cashReceived}</p>
-            <p><strong>Balance:</strong> Rs. {balance.toFixed(2)}</p>
+            <h4>Customer Details</h4>
+            <table style={{ width: '100%', fontSize: '14px' }}>
+              <tbody>
+                <tr><td><strong>Name:</strong></td><td>{name}</td></tr>
+                <tr><td><strong>Contact:</strong></td><td>{contact}</td></tr>
+                <tr><td><strong>Address:</strong></td><td>{address}</td></tr>
+                <tr><td><strong>Email:</strong></td><td>{email}</td></tr>
+              </tbody>
+            </table>
+
             <hr />
-            <p><strong>Total Qty:</strong> {quantity}</p>
+            <h4>Item Details</h4>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
+              <thead>
+                <tr>
+                  <th style={{ borderBottom: '1px solid #000', textAlign: 'left' }}>Item</th>
+                  <th style={{ borderBottom: '1px solid #000' }}>Qty</th>
+                  <th style={{ borderBottom: '1px solid #000' }}>Price</th>
+                  <th style={{ borderBottom: '1px solid #000' }}>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{itemName}</td>
+                  <td style={{ textAlign: 'center' }}>{quantity}</td>
+                  <td style={{ textAlign: 'center' }}>Rs. {itemPrice}</td>
+                  <td style={{ textAlign: 'center' }}>Rs. {calculatePrice()}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <hr />
+            <table style={{ width: '100%', fontSize: '14px' }}>
+              <tbody>
+                <tr><td><strong>Discount:</strong></td><td>Rs. {discount}</td></tr>
+                <tr><td><strong>Amount:</strong></td><td>Rs. {calculateAmount()}</td></tr>
+                <tr><td><strong>Cash Received:</strong></td><td>Rs. {cashReceived}</td></tr>
+                <tr><td><strong>Balance:</strong></td><td>Rs. {balance.toFixed(2)}</td></tr>
+              </tbody>
+            </table>
+
+            <hr />
             <p style={{ textAlign: 'center' }}>* {Math.floor(Math.random() * 999999).toString().padStart(6, '0')} *</p>
             <p style={{ fontSize: '12px', textAlign: 'center' }}>
-              Thank you for choosing Sisira Furnitures!<br />
-              We appreciate your trust and support.
+              Thank you for choosing Sisira Furnitures!<br />We appreciate your trust and support.
             </p>
             <p style={{ fontSize: '11px', textAlign: 'center' }}>
-              Software & Technical Support by:<br />
-              BugSlayers © 2025
+              Software & Technical Support by:<br />BugSlayers © 2025
             </p>
-            <button onClick={handlePrint}>Print</button>
+
+            <button onClick={handlePrint} className="print-hide">Print</button>
           </div>
         )}
       </div>
