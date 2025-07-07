@@ -117,16 +117,17 @@ function BillForm() {
       items,
       subtotal: calculateSubtotal(),
       amount: calculateAmount(),
-      cashReceived,
+      cashReceived: String(cashReceived),
       balance: balance.toFixed(2),
     };
 
     try {
-      await axios.post('http://localhost:5000/api/invoices', invoiceData);
+      const res = await axios.post('http://localhost:5000/api/invoices', invoiceData);
+      console.log("Invoice saved:", res.data);
       alert("Invoice saved successfully!");
       setShowInvoice(true);
     } catch (error) {
-      console.error("Error saving invoice:", error);
+      console.error("Error saving invoice:", error.response?.data || error.message);
       alert("Failed to save invoice. Please try again.");
     }
   };
@@ -152,7 +153,6 @@ function BillForm() {
         <h3 className='bill-topic'><FontAwesomeIcon icon={faFileInvoice} className="bill-icon" /> Generate Invoice</h3>
         <form onSubmit={(e) => e.preventDefault()}>
           <h4>Customer Details</h4>
-
           <div className="form-row"><label>Date:</label><input type="date" value={date} onChange={(e) => setDate(e.target.value)} /></div>
           <div className="form-row"><label>Time:</label><input type="time" value={time} onChange={(e) => setTime(e.target.value)} /></div>
           <div className="form-row"><label>Contact:</label><input type="text" value={contact} onChange={(e) => setContact(e.target.value.replace(/\D/g, '').substring(0, 10))} /></div>
