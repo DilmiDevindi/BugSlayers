@@ -151,30 +151,58 @@ function BillForm() {
         <h3 className='bill-topic'><FontAwesomeIcon icon={faFileInvoice} className="bill-icon" /> Generate Invoice</h3>
         <form onSubmit={(e) => e.preventDefault()}>
           <h4>Customer Details</h4>
+
+          <label>Date</label>
           <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+
+          <label>Time</label>
           <input type="time" value={time} onChange={(e) => setTime(e.target.value)} />
+
+          <label>Contact Number</label>
           <input type="text" value={contact} onChange={(e) => setContact(e.target.value.replace(/\D/g, '').substring(0, 10))} placeholder="Contact (10 digits)" />
           {fetchError && <p style={{ color: 'red' }}>{fetchError}</p>}
-          <input type="text" value={name} readOnly placeholder="Customer Name" />
-          <input type="text" value={address} readOnly placeholder="Address" />
-          <input type="text" value={email} readOnly placeholder="Email" />
+
+          <label>Customer Name</label>
+          <input type="text" value={name} readOnly />
+
+          <label>Address</label>
+          <input type="text" value={address} readOnly />
+
+          <label>Email</label>
+          <input type="text" value={email} readOnly />
 
           <h4>Item Details</h4>
           {items.map((item, index) => (
             <div key={index} className="item-box">
-              <input type="text" value={item.itemCode} onChange={(e) => handleItemChange(index, 'itemCode', e.target.value)} placeholder="Item Code" />
-              <input type="text" value={item.itemName} readOnly placeholder="Item Name" />
-              <input type="text" value={item.itemPrice} readOnly placeholder="Item Price" />
+              <label>Item Code</label>
+              <input type="text" value={item.itemCode} onChange={(e) => handleItemChange(index, 'itemCode', e.target.value)} />
+
+              <label>Item Name</label>
+              <input type="text" value={item.itemName} readOnly />
+
+              <label>Item Price</label>
+              <input type="text" value={item.itemPrice} readOnly />
+
+              <label>Quantity</label>
               <input type="number" value={item.quantity} onChange={(e) => handleItemChange(index, 'quantity', e.target.value)} min="1" />
-              <input type="number" value={item.discount} onChange={(e) => handleItemChange(index, 'discount', e.target.value)} min="0" placeholder="Discount" />
-              <input type="text" value={calculateItemTotal(item)} readOnly placeholder="Total" />
+
+              <label>Discount</label>
+              <input type="number" value={item.discount} onChange={(e) => handleItemChange(index, 'discount', e.target.value)} min="0" />
+
+              <label>Total</label>
+              <input type="text" value={calculateItemTotal(item)} readOnly />
+
               {items.length > 1 && <button type="button" onClick={() => handleRemoveItem(index)}>Remove</button>}
             </div>
           ))}
+
           <button type="button" onClick={handleAddItem}>+ Add Another Item</button>
 
-          <input type="number" value={cashReceived} onChange={(e) => setCashReceived(Number(e.target.value))} placeholder="Cash Received" />
-          <input type="text" value={balance.toFixed(2)} readOnly placeholder="Balance" />
+          <label>Cash Received</label>
+          <input type="number" value={cashReceived} onChange={(e) => setCashReceived(Number(e.target.value))} />
+
+          <label>Balance</label>
+          <input type="text" value={balance.toFixed(2)} readOnly />
 
           <button type="button" onClick={handleSaveInvoice}>Save Invoice</button>
           <button type="button" onClick={() => setShowInvoice(!showInvoice)}>{showInvoice ? 'Hide Invoice' : 'View Invoice'}</button>
