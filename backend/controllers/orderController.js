@@ -1,6 +1,5 @@
 const Order = require('../models/orderModel');
 
-// Get all orders
 exports.getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find().sort({ date: -1 });
@@ -10,57 +9,51 @@ exports.getAllOrders = async (req, res) => {
   }
 };
 
-// Create order
 exports.createOrder = async (req, res) => {
   try {
-    const { orderId, quantity, discount, date } = req.body;
-    const order = new Order({ orderId, quantity, discount, date });
+    const { orderId, companyName, quantity, discount, date } = req.body;
+    if (!orderId || !companyName || !quantity || !discount || !date) {
+      return res.status(400).json({ error: 'Please fill all fields' });
+    }
+    const order = new Order({ orderId, companyName, quantity, discount, date });
     await order.save();
     res.status(201).json(order);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to create order' });
+    res.status(500).json({ error: 'Failed to create order', details: err.message });
   }
 };
 
-// Update order
 exports.updateOrder = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { orderId, quantity, discount, date } = req.body;
+    const { orderId, companyName, quantity, discount, date } = req.body;
+    if (!orderId || !companyName || !quantity || !discount || !date) {
+      return res.status(400).json({ error: 'Please fill all fields' });
+    }
+
     const updatedOrder = await Order.findByIdAndUpdate(
-      id,
-      { orderId, quantity, discount, date },
-      { new: true }
+      req.params.id,
+      { orderId, companyName, quantity, discount, date },
+      { new: true, runValidators: true }
     );
+
     if (!updatedOrder) {
       return res.status(404).json({ error: 'Order not found' });
     }
+
     res.json(updatedOrder);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to update order' });
+    res.status(500).json({ error: 'Failed to update order', details: err.message });
   }
 };
 
-// Delete order
 exports.deleteOrder = async (req, res) => {
   try {
-    const deleted = await Order.findByIdAndDelete(req.params.id);
-    if (!deleted) return res.status(404).json({ error: 'Order not found' });
+    const order = await Order.findByIdAndDelete(req.params.id);
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
     res.json({ message: 'Order deleted successfully' });
   } catch (err) {
-    res.status(500).json({ error: 'Error deleting order' });
-  }
-};
-
-// Get orders by date range (optional)
-exports.getOrdersByDateRange = async (req, res) => {
-  try {
-    const { startDate, endDate } = req.query;
-    const orders = await Order.find({
-      date: { $gte: new Date(startDate), $lte: new Date(endDate) },
-    }).sort({ date: -1 });
-    res.json(orders);
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch report' });
+    res.status(500).json({ error: 'Failed to delete order' });
   }
 };
