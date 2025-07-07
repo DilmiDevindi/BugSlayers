@@ -4,7 +4,7 @@ import {assets} from '../assets/assets'
 const NavBar = () => {
   return (
     <div>
-      {/* <img src={assets.logo} alt="logo" /> */}
+       <img src={assets.logo} alt="logo.png" /> 
       <button>Logout</button>
     </div>
   )
