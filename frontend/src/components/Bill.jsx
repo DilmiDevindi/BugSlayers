@@ -27,9 +27,7 @@ function BillForm() {
 
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
-
     const cleanContact = contact.trim();
-
     if (cleanContact.length === 10) {
       debounceRef.current = setTimeout(async () => {
         try {
@@ -59,7 +57,6 @@ function BillForm() {
   const handleItemCodeChange = async (e) => {
     const code = e.target.value.trim();
     setItemCode(code);
-
     if (code) {
       try {
         const res = await axios.get(`http://localhost:5000/api/bill/inventoryitems/${code}`);
@@ -94,12 +91,37 @@ function BillForm() {
     setBalance(bal >= 0 ? bal : 0);
   }, [cashReceived, discount, quantity, itemPrice]);
 
-  const handleGenerateInvoice = () => {
+  const handleGenerateInvoice = async () => {
     if (!name || !email) {
       alert('Please enter a valid 10-digit contact number to fetch customer details.');
       return;
     }
-    setShowInvoice(true);
+
+    const invoiceData = {
+      date,
+      contact,
+      name,
+      address,
+      email,
+      itemName,
+      itemCode,
+      itemPrice,
+      quantity,
+      price: calculatePrice(),
+      discount,
+      amount: calculateAmount(),
+      cashReceived,
+      balance: balance.toFixed(2),
+    };
+
+    try {
+      await axios.post('http://localhost:5000/api/invoices', invoiceData);
+      alert("Invoice saved successfully!");
+      setShowInvoice(true);
+    } catch (error) {
+      console.error("Error saving invoice:", error);
+      alert("Failed to save invoice. Please try again.");
+    }
   };
 
   const handlePrint = () => {
@@ -172,12 +194,7 @@ function BillForm() {
 
         <div className="inline-field">
           <label>Quantity:</label>
-          <input
-            type="number"
-            min="1"
-            value={quantity}
-            onChange={(e) => setQuantity(Number(e.target.value))}
-          />
+          <input type="number" min="1" value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} />
         </div>
 
         <div className="inline-field">
@@ -187,12 +204,7 @@ function BillForm() {
 
         <div className="inline-field">
           <label>Discount:</label>
-          <input
-            type="number"
-            min="0"
-            value={discount}
-            onChange={(e) => setDiscount(Number(e.target.value))}
-          />
+          <input type="number" min="0" value={discount} onChange={(e) => setDiscount(Number(e.target.value))} />
         </div>
 
         <div className="inline-field">
@@ -202,12 +214,7 @@ function BillForm() {
 
         <div className="inline-field">
           <label>Cash Received:</label>
-          <input
-            type="number"
-            min="0"
-            value={cashReceived}
-            onChange={(e) => setCashReceived(Number(e.target.value))}
-          />
+          <input type="number" min="0" value={cashReceived} onChange={(e) => setCashReceived(Number(e.target.value))} />
         </div>
 
         <div className="inline-field">
@@ -255,11 +262,10 @@ function BillForm() {
           <p><strong>Total Qty:</strong> {quantity}</p>
           <p style={{ textAlign: 'center' }}>* {Math.floor(Math.random() * 999999).toString().padStart(6, '0')} *</p>
 
-          
           <p style={{ fontSize: '12px', textAlign: 'center' }}>
-          Thank you for choosing Sisira Furnitures!<br />
-          We appreciate your trust and support.
-          </p> 
+            Thank you for choosing Sisira Furnitures!<br />
+            We appreciate your trust and support.
+          </p>
 
           <p style={{ fontSize: '11px', textAlign: 'center' }}>
             Software & Technical Support by:<br />
