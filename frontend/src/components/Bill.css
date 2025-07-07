@@ -261,5 +261,140 @@ button:hover {
   }
 }
 
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  .invoice-preview {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    font-size: 12pt;
+    page-break-inside: avoid;
+  }
+
+  .print-hide {
+    display: none !important;
+  }
+
+  .invoice-container, .form-section {
+    display: none !important;
+  }
+
+  .preview-section {
+    display: block !important;
+  }
+}
+
+/* Bill.css */
+
+.invoice-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f8f8f8;
+}
+
+.bill-topic {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.bill-icon {
+  margin-right: 10px;
+}
+
+.form-section {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.form-row label {
+  width: 140px;
+  font-weight: 600;
+  margin-right: 10px;
+}
+
+.form-row input {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.item-box {
+  border: 1px solid #ddd;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  background-color: #fefefe;
+}
+
+.item-box .form-row {
+  margin-bottom: 8px;
+}
+
+button {
+  padding: 8px 16px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #1976d2;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #115293;
+}
+
+.preview-section {
+  background: #fff;
+  padding: 20px;
+  margin-top: 30px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+table, th, td {
+  border: 1px solid #ddd;
+}
+
+th, td {
+  padding: 8px;
+  text-align: left;
+}
+
+@media print {
+  .print-hide {
+    display: none !important;
+  }
+}
+
+
 
 

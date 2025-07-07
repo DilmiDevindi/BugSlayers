@@ -65,6 +65,8 @@ function App() {
           <Route path="purchases/manage" element={<ManagePurchase />} />
           <Route path="purchases/report" element={<PurchaseReport />} />
 
+          <Route path="/dashboard/bill" element={<Bill />} />
+
         </Route>
       </Routes>
     </Router>

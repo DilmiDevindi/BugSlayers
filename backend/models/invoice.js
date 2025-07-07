@@ -1,20 +1,28 @@
+// models/invoice.js
 const mongoose = require('mongoose');
 
-const invoiceSchema = new mongoose.Schema({
+const ItemSchema = new mongoose.Schema({
+  itemCode: String,
+  itemName: String,
+  itemPrice: String,
+  quantity: Number,
+  discount: Number,
+});
+
+const InvoiceSchema = new mongoose.Schema({
   date: String,
+  time: String,
   contact: String,
   name: String,
   address: String,
   email: String,
-  itemName: String,
-  itemCode: String,
-  itemPrice: String,
-  quantity: Number,
-  price: String,
-  discount: String,
+  items: [ItemSchema],
+  subtotal: String,
   amount: String,
   cashReceived: String,
-  balance: String
+  balance: String,
+}, {
+  timestamps: true,
 });
 
-module.exports = mongoose.model('Invoice', invoiceSchema);
+module.exports = mongoose.model('Invoice', InvoiceSchema);
