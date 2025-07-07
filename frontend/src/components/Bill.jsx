@@ -288,7 +288,7 @@ function BillForm() {
             <p style={{ fontSize: '11px', textAlign: 'center' }}>
               Software & Technical Support by:<br />BugSlayers © 2025
             </p>
-            <button onClick={handlePrint}>Print</button>
+            <button onClick={handlePrint} className="print-hide">Print</button>
           </div>
         )}
       </div>
