@@ -21,6 +21,7 @@ const ManageCategory = () => {
     setError('');
     try {
       const response = await axios.get('http://localhost:5000/api/category/with-subcategories');
+      console.log('📦 Fetched categories:', response.data); // Debug log
       setCategoryData(response.data.reverse());
     } catch (err) {
       setError('Error fetching category data');
@@ -44,8 +45,7 @@ const ManageCategory = () => {
   };
 
   const handleEdit = (category) => {
-    // Deep clone to avoid direct mutation of original category
-    setEditCategory(JSON.parse(JSON.stringify(category)));
+    setEditCategory(JSON.parse(JSON.stringify(category))); // Deep clone to avoid mutation
   };
 
   const handleUpdate = async (e) => {
@@ -57,11 +57,10 @@ const ManageCategory = () => {
     }
 
     try {
-      // Filter out empty subcategory names and trim spaces
       const cleanedSubcategories = editCategory.subcategories
         .filter((sub) => sub.subcategoryName && sub.subcategoryName.trim() !== '')
         .map((sub) => ({
-          _id: sub._id, // keep _id if exists for update
+          _id: sub._id,
           subcategoryName: sub.subcategoryName.trim(),
         }));
 
@@ -70,11 +69,15 @@ const ManageCategory = () => {
         subcategories: cleanedSubcategories,
       };
 
-      console.log('Sending update payload:', payload); // Debug payload
+      console.log('📤 Sending update payload:', payload);
 
       await axios.put(`http://localhost:5000/api/category/${editCategory._id}`, payload);
 
-      fetchCategoryData();
+      // 🔍 Fetch data immediately after update to verify backend results
+      const response = await axios.get('http://localhost:5000/api/category/with-subcategories');
+      console.log('✅ Fetched categories after update:', response.data);
+
+      setCategoryData(response.data.reverse());
       setEditCategory(null);
       alert('Category updated successfully!');
     } catch (err) {
