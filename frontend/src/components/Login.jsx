@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom'; // ✅ Added 'Link' here
 import axios from 'axios';
 import './Login.css';
 import myImage from '../assets/furniture-log.png';
@@ -13,7 +13,6 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(email)) {
@@ -31,7 +30,6 @@ const Login = () => {
     } catch (error) {
       alert('Login failed: ' + error);
     }
-    
   };
 
   return (
@@ -70,6 +68,13 @@ const Login = () => {
             <button type="submit" className="btn">Login</button>
           </form>
           <p className='para'>Don&apos;t have an account? <a href="/signup">Sign up</a></p>
+
+          {/* 🔽 Moved inside the login container for better layout */}
+          <div className="mt-3 text-center">
+            <Link to="/change-password" className="change-password-link">
+              Change Password?
+            </Link>
+          </div>
         </div>
       </div>
     </div>

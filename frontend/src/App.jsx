@@ -25,6 +25,7 @@ import AddPurchase from "./components/AddPurchase";
 import ManagePurchase from "./components/ManagePurchase"; 
 import PurchaseReport from "./components/PurchaseReports";
 import SaveInvoice from './components/SaveInvoice';
+import ForgotPassword from './components/ForgotPassword';
 
 function App() {
   return (
@@ -59,6 +60,9 @@ function App() {
 
           {/* ✅ Add these here (inside dashboard) */}
           <Route path="invoices" element={<SaveInvoice />} />
+
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+
         </Route>
       </Routes>
     </Router>
