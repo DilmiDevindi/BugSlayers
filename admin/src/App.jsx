@@ -3,7 +3,8 @@ import NavBar from './components/NavBar'
 import Sidebar from './components/Sidebar'
 import {Routes, Route} from 'react-router-dom'
 import Add from './pages/Add'
-import List from '/pages/List'
+import List from './pages/List'
+import Orders from './pages/Orders'
 const App = () => {
   return (
     <div className='bg-gray-50 min-h-screen'>
