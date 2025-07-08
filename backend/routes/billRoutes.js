@@ -1,8 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { getItemByCode } = require('../controllers/billController');
+const invoiceController = require('../controllers/invoiceController');
 
-// Fetch item using code
-router.get('/inventoryitems/:code', getItemByCode);
+router.post('/', invoiceController.createInvoice);
+router.get('/', invoiceController.getAllInvoices);
+router.get('/:id', invoiceController.getInvoiceById); // 🆕 Get single invoice
+router.put('/:id', invoiceController.updateInvoice);  // 🆕 Update invoice
+router.delete('/:id', invoiceController.deleteInvoice); // 🆕 Delete invoice
 
 module.exports = router;
+

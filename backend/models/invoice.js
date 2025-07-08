@@ -1,4 +1,3 @@
-// models/invoice.js
 const mongoose = require('mongoose');
 
 const ItemSchema = new mongoose.Schema({
@@ -10,6 +9,7 @@ const ItemSchema = new mongoose.Schema({
 });
 
 const InvoiceSchema = new mongoose.Schema({
+  invoiceId: String, // ✅ Add this line
   date: String,
   time: String,
   contact: String,
