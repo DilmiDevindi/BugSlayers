@@ -51,10 +51,12 @@ const deleteCategory = async (req, res) => {
     }
 };
 
-// ✅ Update a category and its subcategories
+//  Update a category and its subcategories
 const updateCategory = async (req, res) => {
     const { id } = req.params;
     const { categoryName, subcategories } = req.body;
+
+    console.log(' Received update data:', req.body);
 
     if (!categoryName) {
         return res.status(400).json({ error: 'Category name is required' });
@@ -72,15 +74,39 @@ const updateCategory = async (req, res) => {
             return res.status(404).json({ error: 'Category not found' });
         }
 
-        // 2. Update each subcategory by ID
+        // 2. Fetch all existing subcategories for this category from DB
+        const existingSubs = await Subcategory.find({ categoryId: id });
+        const existingSubIds = existingSubs.map(sub => sub._id.toString());
+
+        // 3. Get list of subcategory IDs from incoming request
+        const incomingSubIds = (subcategories || [])
+            .filter(sub => sub._id)
+            .map(sub => sub._id);
+
+        // 4. Identify subcategories to delete (present in DB but missing from update payload)
+        const toDeleteIds = existingSubIds.filter(existingId => !incomingSubIds.includes(existingId));
+
+        if (toDeleteIds.length > 0) {
+            await Subcategory.deleteMany({ _id: { $in: toDeleteIds } });
+        }
+
+        // 5. Update existing subcategories and add new ones if any
         if (Array.isArray(subcategories)) {
             for (const sub of subcategories) {
                 if (sub._id && sub.subcategoryName) {
+                    // Update existing subcategory
                     await Subcategory.findByIdAndUpdate(
                         sub._id,
                         { subcategoryName: sub.subcategoryName },
                         { new: true, runValidators: true }
                     );
+                } else if (sub.subcategoryName && !sub._id) {
+                    // Add new subcategory (no _id yet)
+                    const newSub = new Subcategory({
+                        subcategoryName: sub.subcategoryName,
+                        categoryId: id
+                    });
+                    await newSub.save();
                 }
             }
         }
@@ -91,6 +117,7 @@ const updateCategory = async (req, res) => {
         res.status(500).json({ error: 'Error updating category and subcategories' });
     }
 };
+
 
 module.exports = {
     getAllCategories,
