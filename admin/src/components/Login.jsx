@@ -11,6 +11,12 @@ const Login = () => {
                 <input type="email" placeholder='your@gmail.com' required/>
                 
             </div>
+            <div>
+                <p>Email Address</p>
+                <input type="password" placeholder='Enter your Password' required/>
+                
+            </div>
+            <button type="Submit">Login</button>
         </form>
 
         </div>
