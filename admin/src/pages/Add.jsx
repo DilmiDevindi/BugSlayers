@@ -27,9 +27,42 @@ const Add = () => {
       </div>
       </div>
 
-      <div>
-       <p>Product name</p> 
+      <div className='w-full'>
+       <p className='mb-2'>Product name</p> 
        <input className='w-full max-w-[500px] px-3 py-2' type="text" placeholder='Type here' required/>
+      </div>
+      <div className='w-full'>
+       <p className='mb-2'>Product Description</p> 
+       <textarea className='w-full max-w-[500px] px-3 py-2' type="text" placeholder='Write Content Here' required/>
+      </div>
+      <div>
+        <div>
+          <p>
+            Product Category
+            <select className='w-full px-3 py-2' >
+              <option value="Bed">Bed</option>
+              <option value="Table">Table</option>
+              <option value="Chair">Chair</option>
+
+            </select>
+          </p>
+        </div>
+
+         <div>
+          <p>
+            Sub Category</p>
+            <select className='w-full px-3 py-2' >
+              <option value="Timber">Timber</option>
+              <option value="Glass">Glass</option>
+              <option value="plastic">plastic</option>
+
+            </select>
+          
+        </div>
+        <div>
+          <p>Product Price</p>
+          <input type="Number" placeholder="25"></input>
+        </div>
       </div>
     </form>
     
