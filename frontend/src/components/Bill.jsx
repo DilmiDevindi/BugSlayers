@@ -16,6 +16,8 @@ function formatTimeToAMPM(time24) {
 }
 
 function BillForm() {
+  const [invoiceIdInput, setInvoiceIdInput] = useState('');
+  const [invoiceId, setInvoiceId] = useState('');
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [contact, setContact] = useState('');
@@ -24,10 +26,7 @@ function BillForm() {
   const [time, setTime] = useState(() => new Date().toTimeString().slice(0, 5));
   const [cashReceived, setCashReceived] = useState('');
   const [balance, setBalance] = useState(0);
-  const [invoiceId, setInvoiceId] = useState('');
-  const [items, setItems] = useState([
-    { itemCode: '', itemName: '', itemPrice: '', quantity: 1, discount: 0 }
-  ]);
+  const [items, setItems] = useState([{ itemCode: '', itemName: '', itemPrice: '', quantity: 1, discount: 0 }]);
   const [showInvoice, setShowInvoice] = useState(false);
   const [fetchError, setFetchError] = useState('');
 
@@ -112,11 +111,8 @@ function BillForm() {
       return;
     }
 
-    const generatedId = 'INV-' + Date.now();
-    setInvoiceId(generatedId);
-
-    const invoiceData = {
-      invoiceId: generatedId,
+    const payload = {
+      invoiceId: invoiceId || 'INV-' + Date.now(),
       date, time, contact, name, address, email,
       items,
       subtotal: calculateSubtotal(),
@@ -126,12 +122,54 @@ function BillForm() {
     };
 
     try {
-      await axios.post('http://localhost:5000/api/invoices', invoiceData);
-      alert("Invoice saved successfully!");
+      if (invoiceId) {
+        await axios.put(`http://localhost:5000/api/invoices/${invoiceId}`, payload);
+        alert("Invoice updated successfully!");
+      } else {
+        const res = await axios.post('http://localhost:5000/api/invoices', payload);
+        setInvoiceId(res.data.invoiceId);
+        alert("Invoice created successfully!");
+      }
       setShowInvoice(true);
-    } catch (error) {
-      console.error("Error saving invoice:", error.response?.data || error.message);
-      alert("Failed to save invoice. Please try again.");
+    } catch (err) {
+      alert("Failed to save invoice.");
+      console.error(err);
+    }
+  };
+
+  const handleFetchInvoice = async () => {
+    if (!invoiceIdInput) return alert('Enter an invoice ID');
+    try {
+      const res = await axios.get(`http://localhost:5000/api/invoices/${invoiceIdInput}`);
+      const inv = res.data;
+      setInvoiceId(inv.invoiceId);
+      setDate(inv.date);
+      setTime(inv.time);
+      setContact(inv.contact);
+      setName(inv.name);
+      setAddress(inv.address);
+      setEmail(inv.email);
+      setItems(inv.items);
+      setCashReceived(inv.cashReceived);
+      setBalance(parseFloat(inv.balance));
+      alert('Invoice loaded for editing.');
+    } catch (err) {
+      alert('Invoice not found.');
+      console.error(err);
+    }
+  };
+
+  const handleDeleteInvoice = async () => {
+    if (!invoiceIdInput) return alert('Enter an invoice ID');
+    const confirm = window.confirm('Are you sure you want to delete this invoice?');
+    if (!confirm) return;
+    try {
+      await axios.delete(`http://localhost:5000/api/invoices/${invoiceIdInput}`);
+      alert('Invoice deleted.');
+      window.location.reload();
+    } catch (err) {
+      alert('Error deleting invoice.');
+      console.error(err);
     }
   };
 
@@ -153,7 +191,17 @@ function BillForm() {
   return (
     <div className="invoice-container">
       <div className="form-section">
-        <h3 className='bill-topic'><FontAwesomeIcon icon={faFileInvoice} className="bill-icon" /> Generate Invoice</h3>
+        <h3 className='bill-topic'><FontAwesomeIcon icon={faFileInvoice} className="bill-icon" /> Invoice Manager</h3>
+
+        {/* Edit/Delete Input */}
+        <div className="form-row">
+          <label>Invoice ID:</label>
+          <input type="text" value={invoiceIdInput} onChange={(e) => setInvoiceIdInput(e.target.value)} />
+          <button onClick={handleFetchInvoice}>Edit</button>
+          <button onClick={handleDeleteInvoice}>Delete</button>
+        </div>
+
+        {/* Form */}
         <form onSubmit={(e) => e.preventDefault()}>
           <h4>Customer Details</h4>
           <div className="form-row"><label>Date:</label><input type="date" value={date} onChange={(e) => setDate(e.target.value)} /></div>
@@ -179,7 +227,7 @@ function BillForm() {
           <button type="button" onClick={handleAddItem}>+ Add Item</button>
           <div className="form-row"><label>Cash Received:</label><input type="number" value={cashReceived} onChange={(e) => setCashReceived(Number(e.target.value))} /></div>
           <div className="form-row"><label>Balance:</label><input type="text" value={balance.toFixed(2)} readOnly /></div>
-          <button type="button" onClick={handleSaveInvoice}>Save Invoice</button>
+          <button type="button" onClick={handleSaveInvoice}>{invoiceId ? 'Update Invoice' : 'Save Invoice'}</button>
           <button type="button" onClick={() => setShowInvoice(!showInvoice)}>{showInvoice ? 'Hide Invoice' : 'View Invoice'}</button>
         </form>
       </div>
@@ -203,13 +251,7 @@ function BillForm() {
           <h4>Items</h4>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
-              <tr>
-                <th>Item</th>
-                <th>Qty</th>
-                <th>Price</th>
-                <th>Discount</th>
-                <th>Total</th>
-              </tr>
+              <tr><th>Item</th><th>Qty</th><th>Price</th><th>Discount</th><th>Total</th></tr>
             </thead>
             <tbody>
               {items.map((item, index) => (
