@@ -2,16 +2,10 @@
 
 const Invoice = require('../models/invoice');
 
-// Helper to generate numeric invoice ID
-const generateInvoiceId = async () => {
-  const now = Date.now();
-  return now.toString(); // Returns something like '1720375000000'
-};
-
 // Create a new invoice
 exports.createInvoice = async (req, res) => {
   try {
-    const invoiceId = await generateInvoiceId();
+    const invoiceId = req.body.invoiceId || Date.now().toString(); // ✅ Use frontend-provided or fallback
     const invoiceData = { ...req.body, invoiceId };
 
     const newInvoice = new Invoice(invoiceData);
