@@ -24,6 +24,7 @@ import SalesReport from "./components/SalesReport";
 import AddPurchase from "./components/AddPurchase";
 import ManagePurchase from "./components/ManagePurchase"; 
 import PurchaseReport from "./components/PurchaseReports";
+import SaveInvoice from './SaveInvoice';
 
 
 function App() {
@@ -64,6 +65,9 @@ function App() {
           <Route path="purchases/report" element={<PurchaseReport />} />
 
           <Route path="/dashboard/bill" element={<Bill />} />
+
+          <Route path="/" element={<Bill />} />
+          <Route path="/invoices" element={<SaveInvoice />} />
 
         </Route>
       </Routes>
