@@ -57,8 +57,10 @@ const ManageCategory = () => {
 
     try {
       await axios.put(`http://localhost:5000/api/category/${editCategory._id}`, {
-        categoryName: editCategory.categoryName
+        categoryName: editCategory.categoryName,
+        subcategories: editCategory.subcategories
       });
+
 
       fetchCategoryData();
       setEditCategory(null);
@@ -144,21 +146,47 @@ const ManageCategory = () => {
         <div className="inventory-form-container mt-4">
           <span className="form-icon-i"><FontAwesomeIcon icon={faEdit} /></span> Update Category
           <form onSubmit={handleUpdate}>
-            <div className="mb-3">
-              <label className="form-label">Category Name</label>
-              <input
-                type="text"
-                className="form-control"
-                value={editCategory.categoryName}
-                onChange={(e) =>
-                  setEditCategory((prev) => ({
-                    ...prev,
-                    categoryName: e.target.value,
-                  }))
-                }
-                required
-              />
-            </div>
+  <div className="mb-3">
+    <label className="form-label">Category Name</label>
+    <input
+      type="text"
+      className="form-control"
+      value={editCategory.categoryName}
+      onChange={(e) =>
+        setEditCategory((prev) => ({
+          ...prev,
+          categoryName: e.target.value,
+        }))
+      }
+      required
+    />
+  </div>
+
+  <div className="mb-3">
+    <label className="form-label">Subcategories</label>
+    {editCategory.subcategories?.length > 0 ? (
+      editCategory.subcategories.map((sub, index) => (
+        <input
+          key={sub._id}
+          type="text"
+          className="form-control mb-2"
+          value={sub.subcategoryName}
+          onChange={(e) => {
+            const updatedSubs = [...editCategory.subcategories];
+            updatedSubs[index].subcategoryName = e.target.value;
+            setEditCategory((prev) => ({
+              ...prev,
+              subcategories: updatedSubs,
+            }));
+          }}
+          required
+        />
+      ))
+    ) : (
+      <div>No subcategories</div>
+    )}
+  </div>
+
             <div className="inventory-row">
               <button type="submit" className="btn btn-success">Update</button>
               <button
