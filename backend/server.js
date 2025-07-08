@@ -19,7 +19,7 @@ const purchasereportRoutes = require("./routes/purchasereportRoutes");
 // Import routes
 const billRoutes = require('./routes/billRoutes');
 const invoiceRoutes = require('./routes/invoiceRoutes');
-const authRoutes = require('./routes/auth');
+
 
 
 
