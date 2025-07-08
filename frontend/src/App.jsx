@@ -25,17 +25,18 @@ import AddPurchase from "./components/AddPurchase";
 import ManagePurchase from "./components/ManagePurchase"; 
 import PurchaseReport from "./components/PurchaseReports";
 import SaveInvoice from './components/SaveInvoice';
-import ForgotPassword from './components/ForgotPassword';
+import ForgotPassword from './components/ForgotPassword'; // ✅ Import here
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* Public Routes */}
+        {/* ✅ Public Routes */}
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
-        {/* Protected Routes under Layout */}
+        {/* ✅ Protected Routes under Layout */}
         <Route path="/dashboard" element={<Layout />}>
           <Route index element={<Dashboard />} />
           <Route path="suppliers/add" element={<AddSupplier />} />
@@ -57,12 +58,7 @@ function App() {
           <Route path="purchases/add" element={<AddPurchase />} />
           <Route path="purchases/manage" element={<ManagePurchase />} />
           <Route path="purchases/report" element={<PurchaseReport />} />
-
-          {/* ✅ Add these here (inside dashboard) */}
           <Route path="invoices" element={<SaveInvoice />} />
-
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-
         </Route>
       </Routes>
     </Router>

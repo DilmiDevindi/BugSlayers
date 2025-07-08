@@ -70,11 +70,11 @@ const Login = () => {
           <p className='para'>Don&apos;t have an account? <a href="/signup">Sign up</a></p>
 
           {/* 🔽 Moved inside the login container for better layout */}
-          <div className="mt-3 text-center">
-            <Link to="/change-password" className="change-password-link">
-              Change Password?
-            </Link>
-          </div>
+          <div className="mt-2 text-center">
+          <Link to="/forgot-password" className="forgot-password-link">
+          Forgot Password?
+        </Link>
+           </div>
         </div>
       </div>
     </div>
