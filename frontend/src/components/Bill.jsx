@@ -1,11 +1,9 @@
-// BillForm.jsx
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './Bill.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileInvoice } from '@fortawesome/free-solid-svg-icons';
 import logo from '../assets/furniture-log.png';
-
 
 function formatTimeToAMPM(time24) {
   if (!time24) return '';
@@ -26,6 +24,7 @@ function BillForm() {
   const [time, setTime] = useState(() => new Date().toTimeString().slice(0, 5));
   const [cashReceived, setCashReceived] = useState('');
   const [balance, setBalance] = useState(0);
+  const [invoiceId, setInvoiceId] = useState('');
   const [items, setItems] = useState([
     { itemCode: '', itemName: '', itemPrice: '', quantity: 1, discount: 0 }
   ]);
@@ -113,7 +112,11 @@ function BillForm() {
       return;
     }
 
+    const generatedId = 'INV-' + Date.now();
+    setInvoiceId(generatedId);
+
     const invoiceData = {
+      invoiceId: generatedId,
       date, time, contact, name, address, email,
       items,
       subtotal: calculateSubtotal(),
@@ -123,8 +126,7 @@ function BillForm() {
     };
 
     try {
-      const res = await axios.post('http://localhost:5000/api/invoices', invoiceData);
-      console.log("Invoice saved:", res.data);
+      await axios.post('http://localhost:5000/api/invoices', invoiceData);
       alert("Invoice saved successfully!");
       setShowInvoice(true);
     } catch (error) {
@@ -174,12 +176,9 @@ function BillForm() {
               {items.length > 1 && <button type="button" onClick={() => handleRemoveItem(index)}>Remove</button>}
             </div>
           ))}
-
           <button type="button" onClick={handleAddItem}>+ Add Item</button>
-
           <div className="form-row"><label>Cash Received:</label><input type="number" value={cashReceived} onChange={(e) => setCashReceived(Number(e.target.value))} /></div>
           <div className="form-row"><label>Balance:</label><input type="text" value={balance.toFixed(2)} readOnly /></div>
-
           <button type="button" onClick={handleSaveInvoice}>Save Invoice</button>
           <button type="button" onClick={() => setShowInvoice(!showInvoice)}>{showInvoice ? 'Hide Invoice' : 'View Invoice'}</button>
         </form>
@@ -194,6 +193,7 @@ function BillForm() {
             <p>Tel: 041-2292785 / 0718006485</p>
           </div>
           <hr />
+          <p><strong>Invoice ID:</strong> {invoiceId}</p>
           <p><strong>Date:</strong> {date} {formatTimeToAMPM(time)}</p>
           <h4>Customer</h4>
           <p>Name: {name}</p>
