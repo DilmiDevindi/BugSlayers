@@ -1,49 +1,35 @@
+// components/ForgotPassword.jsx
 import { useState } from 'react';
 import axios from 'axios';
-import './ForgotPassword.css'; // optional styling
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
 
-  const handleForgotPassword = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!email) {
-      setMessage('Please enter your email address.');
-      return;
-    }
-
     try {
-      const response = await axios.post('/api/auth/forgot-password', { email });
-      if (response.data.success) {
-        setMessage('Password reset link sent to your email.');
-      } else {
-        setMessage(response.data.message || 'Something went wrong.');
-      }
-    } catch (error) {
-      setMessage('Error: ' + error.message);
+      const res = await axios.post('http://localhost:5000/api/auth/forgot-password', { email });
+      setMessage(res.data.message);
+    } catch (err) {
+      setMessage(err.response?.data?.message || 'Something went wrong');
     }
   };
 
   return (
-    <div className="forgot-password-container">
+    <div>
       <h2>Forgot Password</h2>
-      <form onSubmit={handleForgotPassword}>
-        <div className="mb-3">
-          <label htmlFor="email">Enter your email address</label>
-          <input
-            type="email"
-            id="email"
-            className="form-control"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit" className="btn">Send Reset Link</button>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="email"
+          placeholder="Enter your email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <button type="submit">Send Reset Link</button>
       </form>
-      {message && <p className="message">{message}</p>}
+      {message && <p>{message}</p>}
     </div>
   );
 };
