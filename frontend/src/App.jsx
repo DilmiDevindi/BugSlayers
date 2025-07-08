@@ -24,7 +24,7 @@ import SalesReport from "./components/SalesReport";
 import AddPurchase from "./components/AddPurchase";
 import ManagePurchase from "./components/ManagePurchase"; 
 import PurchaseReport from "./components/PurchaseReports";
-import SaveInvoice from './SaveInvoice';
+import SaveInvoice from './components/SaveInvoice';
 
 
 function App() {
