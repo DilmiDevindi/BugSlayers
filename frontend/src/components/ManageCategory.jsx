@@ -21,7 +21,7 @@ const ManageCategory = () => {
     setError('');
     try {
       const response = await axios.get('http://localhost:5000/api/category/with-subcategories');
-      setCategoryData(response.data.reverse()); // reverse to show latest first
+      setCategoryData(response.data.reverse());
     } catch (err) {
       setError('Error fetching category data');
       console.error('Error fetching category data:', err);
@@ -44,7 +44,8 @@ const ManageCategory = () => {
   };
 
   const handleEdit = (category) => {
-    setEditCategory({ ...category });
+    // Deep clone to avoid direct mutation of original category
+    setEditCategory(JSON.parse(JSON.stringify(category)));
   };
 
   const handleUpdate = async (e) => {
@@ -56,11 +57,22 @@ const ManageCategory = () => {
     }
 
     try {
-      await axios.put(`http://localhost:5000/api/category/${editCategory._id}`, {
-        categoryName: editCategory.categoryName,
-        subcategories: editCategory.subcategories
-      });
+      // Filter out empty subcategory names and trim spaces
+      const cleanedSubcategories = editCategory.subcategories
+        .filter((sub) => sub.subcategoryName && sub.subcategoryName.trim() !== '')
+        .map((sub) => ({
+          _id: sub._id, // keep _id if exists for update
+          subcategoryName: sub.subcategoryName.trim(),
+        }));
 
+      const payload = {
+        categoryName: editCategory.categoryName.trim(),
+        subcategories: cleanedSubcategories,
+      };
+
+      console.log('Sending update payload:', payload); // Debug payload
+
+      await axios.put(`http://localhost:5000/api/category/${editCategory._id}`, payload);
 
       fetchCategoryData();
       setEditCategory(null);
@@ -146,46 +158,60 @@ const ManageCategory = () => {
         <div className="inventory-form-container mt-4">
           <span className="form-icon-i"><FontAwesomeIcon icon={faEdit} /></span> Update Category
           <form onSubmit={handleUpdate}>
-  <div className="mb-3">
-    <label className="form-label">Category Name</label>
-    <input
-      type="text"
-      className="form-control"
-      value={editCategory.categoryName}
-      onChange={(e) =>
-        setEditCategory((prev) => ({
-          ...prev,
-          categoryName: e.target.value,
-        }))
-      }
-      required
-    />
-  </div>
+            <div className="mb-3">
+              <label className="form-label">Category Name</label>
+              <input
+                type="text"
+                className="form-control"
+                value={editCategory.categoryName}
+                onChange={(e) =>
+                  setEditCategory((prev) => ({
+                    ...prev,
+                    categoryName: e.target.value,
+                  }))
+                }
+                required
+              />
+            </div>
 
-  <div className="mb-3">
-    <label className="form-label">Subcategories</label>
-    {editCategory.subcategories?.length > 0 ? (
-      editCategory.subcategories.map((sub, index) => (
-        <input
-          key={sub._id}
-          type="text"
-          className="form-control mb-2"
-          value={sub.subcategoryName}
-          onChange={(e) => {
-            const updatedSubs = [...editCategory.subcategories];
-            updatedSubs[index].subcategoryName = e.target.value;
-            setEditCategory((prev) => ({
-              ...prev,
-              subcategories: updatedSubs,
-            }));
-          }}
-          required
-        />
-      ))
-    ) : (
-      <div>No subcategories</div>
-    )}
-  </div>
+            <div className="mb-3">
+              <label className="form-label">Subcategories</label>
+              {editCategory.subcategories?.length > 0 ? (
+                editCategory.subcategories.map((sub, index) => (
+                  <div key={sub._id || index} className="input-group mb-2 align-items-center">
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={sub.subcategoryName}
+                      onChange={(e) => {
+                        const updatedSubs = [...editCategory.subcategories];
+                        updatedSubs[index].subcategoryName = e.target.value;
+                        setEditCategory((prev) => ({
+                          ...prev,
+                          subcategories: updatedSubs,
+                        }));
+                      }}
+                      required
+                    />
+                    <span
+                      className="ms-2 inventory-delete-icon"
+                      title="Delete Subcategory"
+                      onClick={() => {
+                        const updatedSubs = editCategory.subcategories.filter((_, i) => i !== index);
+                        setEditCategory((prev) => ({
+                          ...prev,
+                          subcategories: updatedSubs,
+                        }));
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
+                    </span>
+                  </div>
+                ))
+              ) : (
+                <div>No subcategories</div>
+              )}
+            </div>
 
             <div className="inventory-row">
               <button type="submit" className="btn btn-success">Update</button>
