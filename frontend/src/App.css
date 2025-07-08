@@ -3,7 +3,7 @@
   height: 100vh; /* Full height */
   position: fixed;
   background-color: #343a40;
-  width: 220px; /* Fixed sidebar width */
+  width: 200px; /* Fixed sidebar width */
   top: 0;
   left: 0;
   z-index: 1000; /* Keeps sidebar on top */

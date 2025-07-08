@@ -19,7 +19,7 @@ const Catalog = () => {
         const res = await axios.get('http://localhost:5000/api/catalog/categories');
         setCategories(res.data);
         if (res.data.length > 0) {
-          setActiveCategory(res.data[0]._id);
+          setActiveCategory(res.data[0]._id);  // Select first category by default
         }
       } catch (err) {
         console.error('Error fetching categories:', err);
@@ -36,7 +36,7 @@ const Catalog = () => {
         const res = await axios.get(`http://localhost:5000/api/catalog/subcategories?categoryId=${activeCategory}`);
         setSubcategories(res.data);
         if (res.data.length > 0) {
-          setActiveSubcategory(res.data[0]._id);
+          setActiveSubcategory(res.data[0]._id);  // Select first subcategory by default
         } else {
           setActiveSubcategory(null);
           setProducts([]);
@@ -44,6 +44,10 @@ const Catalog = () => {
         }
       } catch (err) {
         console.error('Error fetching subcategories:', err);
+        setSubcategories([]);
+        setActiveSubcategory(null);
+        setProducts([]);
+        setFilteredProducts([]);
       }
     };
     fetchSubcategories();
@@ -59,12 +63,14 @@ const Catalog = () => {
         setFilteredProducts(res.data);
       } catch (err) {
         console.error('Error fetching products:', err);
+        setProducts([]);
+        setFilteredProducts([]);
       }
     };
     fetchProducts();
   }, [activeSubcategory]);
 
-  // Filter logic
+  // Filter products based on search and stock status
   useEffect(() => {
     let result = products;
 
@@ -102,31 +108,36 @@ const Catalog = () => {
         ))}
       </ul>
 
-      {/* Subcategory Tabs */}
-      <ul className="nav cat-nav-tabs mb-4">
-        {subcategories.map((subcat) => (
-          <li className="nav-item" key={subcat._id}>
-            <button
-              className={`cat-nav-link ${activeSubcategory === subcat._id ? 'active' : ''}`}
-              onClick={() => setActiveSubcategory(subcat._id)}
-            >
-              {subcat.subcategoryName}
-            </button>
-          </li>
-        ))}
-      </ul>
+      {/* Subcategory Dropdown */}
+      {subcategories.length > 0 && (
+        <div className="mb-4">
+          <label htmlFor="subcategory-select" style={{ marginRight: '10px', fontWeight: 'bold' }}>Select Subcategory:</label>
+          <select
+            id="subcategory-select"
+            value={activeSubcategory || ''}
+            onChange={(e) => setActiveSubcategory(e.target.value)}
+            className="form-select"
+            style={{ maxWidth: '300px', display: 'inline-block' }}
+          >
+            {subcategories.map((subcat) => (
+              <option key={subcat._id} value={subcat._id}>
+                {subcat.subcategoryName}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       {/* Search and Filter */}
-      <div className="cat-search-bar-container mb-3">
-        <div className="cat-search">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Search products..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
+      <div className="cat-search-bar-container mb-3 d-flex align-items-center gap-3">
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Search products..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          style={{ maxWidth: '300px' }}
+        />
         <div className="d-flex gap-2">
           <button className={`btn-xs ${stockFilter === 'all' ? 'btn-custom-all' : 'btn-outline-custom-all'}`} onClick={() => setStockFilter('all')}>All</button>
           <button className={`btn-xs ${stockFilter === 'in' ? 'btn-custom-in' : 'btn-outline-custom-in'}`} onClick={() => setStockFilter('in')}>In Stock</button>
