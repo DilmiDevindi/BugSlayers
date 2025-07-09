@@ -1,4 +1,4 @@
-const Supplier = require('../models/Supplier');
+const Supplier = require("../models/Supplier");
 
 // Get all suppliers with optional search and filter
 const getSuppliers = async (req, res) => {
@@ -7,17 +7,19 @@ const getSuppliers = async (req, res) => {
     let query = {};
 
     if (search) {
-      query.supplierName = { $regex: search, $options: 'i' };
+      query.supplierName = { $regex: search, $options: "i" };
     }
 
     if (filter) {
-      query.supplyProducts = { $regex: filter, $options: 'i' };
+      query.supplyProducts = { $in: [new RegExp(filter, "i")] };
     }
 
     const suppliers = await Supplier.find(query);
     res.json(suppliers);
   } catch (error) {
-    res.status(500).json({ message: 'Error retrieving suppliers', error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error retrieving suppliers", error: error.message });
   }
 };
 
@@ -38,60 +40,104 @@ const getSupplierById = async (req, res) => {
     if (supplier) {
       res.json(supplier);
     } else {
-      res.status(404).json({ message: 'Supplier not found' });
+      res.status(404).json({ message: "Supplier not found" });
     }
   } catch (error) {
-    res.status(500).json({ message: 'Error retrieving supplier', error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error retrieving supplier", error: error.message });
   }
 };
 
 // Create a new supplier
 const createSupplier = async (req, res) => {
   try {
-    const supplier = new Supplier({
-      date: req.body.date,
-      supplierName: req.body.supplierName,
-      phone1: req.body.phone1,
-      phone2: req.body.phone2,
-      fax: req.body.fax,
-      email: req.body.email,
-      address: req.body.address,
-      supplyProducts: req.body.supplyProducts,
-      paymentTerms: req.body.paymentTerms
-    });
+    const { supplyProducts, ...supplierData } = req.body;
 
-    const newSupplier = await supplier.save();
-    res.status(201).json(newSupplier);
+    // If supplyProducts is an array, create multiple entries
+    if (Array.isArray(supplyProducts) && supplyProducts.length > 0) {
+      const supplierEntries = [];
+
+      for (const product of supplyProducts) {
+        const supplier = new Supplier({
+          date: supplierData.date,
+          supplierName: supplierData.supplierName,
+          phone1: supplierData.phone1,
+          phone2: supplierData.phone2,
+          fax: supplierData.fax,
+          email: supplierData.email,
+          address: supplierData.address,
+          supplyProducts: [product], // Single product per row
+          paymentTerms: supplierData.paymentTerms,
+        });
+
+        const savedSupplier = await supplier.save();
+        supplierEntries.push(savedSupplier);
+      }
+
+      res.status(201).json({
+        message: `${supplierEntries.length} supplier entries created successfully`,
+        suppliers: supplierEntries,
+      });
+    } else {
+      // Single product or fallback
+      const supplier = new Supplier({
+        date: supplierData.date,
+        supplierName: supplierData.supplierName,
+        phone1: supplierData.phone1,
+        phone2: supplierData.phone2,
+        fax: supplierData.fax,
+        email: supplierData.email,
+        address: supplierData.address,
+        supplyProducts: Array.isArray(supplyProducts)
+          ? supplyProducts
+          : [supplyProducts],
+        paymentTerms: supplierData.paymentTerms,
+      });
+
+      const newSupplier = await supplier.save();
+      res.status(201).json(newSupplier);
+    }
   } catch (error) {
-    res.status(400).json({ message: 'Error creating supplier', error: error.message });
+    res
+      .status(400)
+      .json({ message: "Error creating supplier", error: error.message });
   }
 };
 
 // Update a supplier by ID
 const updateSupplier = async (req, res) => {
-    try {
-        const updatedSupplier = await Supplier.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        if (updatedSupplier) {
-          res.json(updatedSupplier);
-        } else {
-          res.status(404).json({ message: 'Supplier not found' });
-        }
-      } catch (error) {
-        res.status(400).json({ message: 'Error updating supplier', error: error.message });
-      }
-}
+  try {
+    const updatedSupplier = await Supplier.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    if (updatedSupplier) {
+      res.json(updatedSupplier);
+    } else {
+      res.status(404).json({ message: "Supplier not found" });
+    }
+  } catch (error) {
+    res
+      .status(400)
+      .json({ message: "Error updating supplier", error: error.message });
+  }
+};
 
 // Delete a supplier by ID
 const deleteSupplier = async (req, res) => {
   try {
     const deletedSupplier = await Supplier.findByIdAndDelete(req.params.id);
     if (deletedSupplier) {
-      res.json({ message: 'Supplier deleted successfully' });
+      res.json({ message: "Supplier deleted successfully" });
     } else {
-      res.status(404).json({ message: 'Supplier not found' });
+      res.status(404).json({ message: "Supplier not found" });
     }
   } catch (error) {
-    res.status(500).json({ message: 'Error deleting supplier', error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error deleting supplier", error: error.message });
   }
 };
 
@@ -101,5 +147,5 @@ module.exports = {
   getSupplierById,
   createSupplier,
   updateSupplier,
-  deleteSupplier
+  deleteSupplier,
 };
