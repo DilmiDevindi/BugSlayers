@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { assets } from '../assets/assets';
+import axios from 'axios';
+import { backendUrl } from '../App';
+import { toast } from 'react-toastify';
 
-const Add = () => {
+const Add = ({token}) => {
   //const [category, setCategory] = useState('Bed');
 
   const getSizeOptions = () => {
-    switch (Category) {
+    switch (category) {
       case 'Bed':
         return ['King', 'Queen', 'Normal'];
       case 'Table':
@@ -16,28 +19,92 @@ const Add = () => {
         return [];
     }
   };
-  const [images,setImages] = useState([null,null,null,null]);
+  const [images, setImages] = useState([null, null, null, null]);
+  
  
 
   const [name,setName] = useState('');
   const[description,setDescription] = useState('');
   const [price,setPrice] = useState('');
-  const [Category,setCategory] = useState('Bed');
+  const [category,setCategory] = useState('Bed');
   const [subCategory,setSubCategory] = useState('Timber');
   const [bestseller, setBestseller]=useState(false);
   const [sizes,setSizes]=useState([]);
 
+  const onSubmitHandler =  async(e)=> {
+    e.preventDefault();
+
+    try{
+      const formData=new FormData()
+
+      formData.append("name",name);
+      formData.append("description",description);
+      formData.append("price",price);
+      formData.append("category",category);
+      formData.append("subCategory",subCategory);
+      formData.append("bestseller",bestseller);
+      formData.append("sizes",JSON.stringify(sizes));
+
+      images [0] && formData.append("image1",images[0]);
+      images [1] && formData.append("image2",images[1]);
+      images [2] && formData.append("image3",images[2]);
+      images [3] && formData.append("image4",images[3]);
+
+      const response =await axios.post(backendUrl + "/api/product/add",formData,{headers:{token}})
+      
+      if(response.data.success){
+        toast.success(response.data.message)
+        setName('')
+        setDescription('')
+        setImages([null, null, null, null]);
+
+        setPrice('')
+
+      }else{
+        toast.error(response.data.message)
+      }
+
+
+
+
+    }
+    catch(error){
+      console.error(error);
+      toast.error(error.message)
+      
+    }
+
+
+  }
   return (
-    <form className='flex flex-col w-full items-start gap-3'>
+    <form onSubmit={onSubmitHandler} className='flex flex-col w-full items-start gap-3'>
       <div>
         <p className='mb-2'>Upload Image</p>
         <div className='flex gap-2'>
-          {[1, 2, 3, 4].map((n) => (
-            <label key={n} htmlFor={`image${n}`}>
-              <img className='w-20' src={!image[0]?assets.upload_area:URL.createObjectURL(image[0])} alt='' />
-              <input onChange={(e)=>setImage(e.target.files[0])} type='file' id={`image${n}`} hidden />
-            </label>
-          ))}
+          {[0, 1, 2, 3].map((index) => (
+  <label key={index} htmlFor={`image${index}`}>
+    <img
+      className='w-20 h-20 object-cover border'
+      src={
+        images[index]
+          ? URL.createObjectURL(images[index])
+          : assets.upload_area
+      }
+      alt=''
+    />
+    <input
+      type='file'
+      id={`image${index}`}
+      hidden
+      onChange={(e) => {
+        const newImages = [...images];
+        newImages[index] = e.target.files[0];
+        setImages(newImages);
+      }}
+    />
+  </label>
+))}
+
         </div>
       </div>
 
@@ -85,7 +152,17 @@ const Add = () => {
         <p className='mb-2'>Product Sizes</p>
         <div className='flex gap-2 flex-wrap'>
           {getSizeOptions().map((size) => (
-            <div key={size} className='border px-3 py-1 rounded-md bg-gray-100'>
+            <div key={size} onClick={() =>
+          setSizes((prev) =>
+            prev.includes(size)
+              ? prev.filter((s) => s !== size) // remove if already selected
+              : [...prev, size]               // add if not selected
+          )
+        } className={`border px-3 py-1 rounded-md cursor-pointer transition duration-200 ${
+  sizes.includes(size)
+    ? 'bg-black text-white'
+    : 'bg-gray-100 text-black'
+}`}>
               {size}
             </div>
           ))}
@@ -93,7 +170,7 @@ const Add = () => {
         </div>
       </div>
       <div className='flex gap-2 mt-2'>
-        <input type="checkbox" id="bestseller"/>
+        <input onChange ={()=>setBestseller(prev=>!prev)}checked={bestseller} type="checkbox" id="bestseller"/>
         <label className='cursor-pointer' htmlFor="bestseller">Add to Bestseller</label>
       </div>
 
