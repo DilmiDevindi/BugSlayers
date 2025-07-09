@@ -69,3 +69,9 @@ const InventorySummary = () => {
         value: val,
       }))
     );
+
+        const topItems = inventoryItems
+      .map((it) => ({ inventoryItem: it.productName, quantity: it.quantity || 0 }))
+      .sort((a, b) => b.quantity - a.quantity)
+      .slice(0, 10);
+    setBarData(topItems);
