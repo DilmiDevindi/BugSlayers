@@ -25,3 +25,8 @@ const InventorySummary = () => {
   const [pieData, setPieData] = useState([]);
   const [barData, setBarData] = useState([]);
   const [lineData, setLineData] = useState([]);
+
+  useEffect(() => {
+    fetchInventoryItems();
+    fetchCategories();
+  }, []);
