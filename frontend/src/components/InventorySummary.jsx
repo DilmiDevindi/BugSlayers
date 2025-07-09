@@ -75,3 +75,14 @@ const InventorySummary = () => {
       .sort((a, b) => b.quantity - a.quantity)
       .slice(0, 10);
     setBarData(topItems);
+
+    const sortedLineData = lineTemp
+      .filter((d) => d.date)
+      .sort((a, b) => new Date(a.date) - new Date(b.date));
+    setLineData(sortedLineData);
+    }, [inventoryItems, categories]);
+
+    const getCategoryName = (id) => {
+      const cat = categories.find((c) => c._id === id);
+      return cat ? cat.categoryName : 'Unknown';
+    };  
