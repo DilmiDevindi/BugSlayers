@@ -1,13 +1,3 @@
-
-  max-width: 600px;
-  margin: auto;
-  padding: 20px 30px;
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  font-family: 'Arial', sans-serif;
-}
-
 .text-center {
   font-size: 2rem;
   font-weight: bold;
@@ -138,5 +128,65 @@ h3 {
   max-width: 1000px;
 }
 
+.edit-form-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
 
+.small-form {
+  max-width: 400px; /* 🔴 Might override your width! */
+}
 
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+label {
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+input {
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 100%;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.btnUpdate,
+.btnClose {
+  padding: 0.5rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btnUpdate {
+  background-color: #2563eb;
+  color: white;
+}
+
+.btnClose {
+  background-color: #e5e7eb;
+  color: #374151;
+}
