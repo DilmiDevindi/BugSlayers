@@ -34,6 +34,7 @@ const InventorySummary = () => {
     try {
       const res = await fetch('http://localhost:5000/api/inventory');
       const data = await res.json();
+      console.log('Inventory Items:', data); // <-- Debug: check if itemCode is present
       setInventoryItems(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error('Error fetching inventory items:', err);
@@ -94,28 +95,16 @@ const InventorySummary = () => {
   const totalUsers = 35;   // placeholder
 
   const generateCSVData = () => {
-    const headers = [
-      'No',
-      'Product',
-      'SKU',
-      'Category',
-      'Opening Stock',
-      'Purchased',
-      'Sold',
-      'Closing Stock',
-      'Unit Price (Rs)',
-      'Total Value (Rs)'
-    ];
+    const headers = ['No', 'Product', 'Item Code', 'Category', 'Date', 'Supplier', 'Quantity', 'Unit Price (Rs)', 'Total Value (Rs)'];
     const rows = inventoryItems.map((item, i) => {
       const total = (item.quantity || 0) * (item.sellingPrice || 0);
       return [
         i + 1,
-        item.productName,
-        item.itemCode,
+        item.productName || 'N/A',
+        item.itemCode || 'N/A',
         getCategoryName(item.category),
-        item.openingStock || 0,
-        item.purchases || 0,
-        item.sales || 0,
+        item.dateAdded || 'N/A',
+        item.supplier || 'N/A',
         item.quantity || 0,
         (item.sellingPrice || 0).toFixed(2),
         total.toFixed(2)
@@ -175,68 +164,70 @@ const InventorySummary = () => {
       </section>
 
       <section className="charts-row">
-        <div className="chart-container half-chart">
-          <h5>Stock Distribution by Category</h5>
-          <ResponsiveContainer width="100%" height={200}>
-            <PieChart>
-              <Pie
-                data={pieData}
-                dataKey="value"
-                nameKey="category"
-                cx="50%"
-                cy="50%"
-                outerRadius={60}
-                label={({ category, percent }) => `${category}: ${(percent * 100).toFixed(0)}%`}
-              >
-                {pieData.map((_, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip formatter={(value) => `${value} items`} />
-              <Legend verticalAlign="bottom" height={36} />
-            </PieChart>
-          </ResponsiveContainer>
+        <div className="chart-row-top" style={{ display: 'flex', gap: '1rem' }}>
+          <div className="chart-container" style={{ flex: 1 }}>
+            <h5>Stock Distribution by Category</h5>
+            <ResponsiveContainer width="100%" height={250}>
+              <PieChart>
+                <Pie
+                  data={pieData}
+                  dataKey="value"
+                  nameKey="category"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  label={({ category, percent }) => `${category}: ${(percent * 100).toFixed(0)}%`}
+                >
+                  {pieData.map((_, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip formatter={(value) => `${value} items`} />
+                <Legend verticalAlign="bottom" height={36} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+
+          <div className="chart-container" style={{ flex: 1 }}>
+            <h5>Top 10 Stocked Items</h5>
+            <ResponsiveContainer width="100%" height={250}>
+              <BarChart data={barData} margin={{ top: 10, right: 20, left: 0, bottom: 40 }}>
+                <XAxis dataKey="inventoryItem" angle={-45} textAnchor="end" height={60} />
+                <YAxis label={{ value: 'Qty', angle: -90, position: 'insideLeft' }} />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="quantity" fill="#0d6efd" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
 
-        <div className="chart-container half-chart">
-          <h5>Top 10 Stocked Items</h5>
-          <ResponsiveContainer width="100%" height={200}>
-            <BarChart data={barData} margin={{ top: 10, right: 20, left: 0, bottom: 40 }}>
-              <XAxis dataKey="inventoryItem" angle={-45} textAnchor="end" height={60} />
-              <YAxis label={{ value: 'Qty', angle: -90, position: 'insideLeft' }} />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="quantity" fill="#0d6efd" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </section>
-
-      <section className="charts-row">
-        <div className="chart-container full-chart">
-          <h5>Inventory Value Trend</h5>
-          <ResponsiveContainer width="100%" height={220}>
-            <LineChart data={lineData} margin={{ top: 10, right: 30, left: 20, bottom: 30 }}>
-              <XAxis
-                dataKey="date"
-                tickFormatter={(tick) => new Date(tick).toLocaleDateString('en-GB')}
-                angle={-45}
-                textAnchor="end"
-                height={50}
-              />
-              <YAxis label={{ value: 'Value (Rs)', angle: -90, position: 'insideLeft' }} />
-              <Tooltip formatter={(value) => `Rs ${value.toFixed(2)}`} />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="value"
-                stroke="#198754"
-                strokeWidth={2}
-                dot={{ r: 3 }}
-                activeDot={{ r: 6 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+        <div className="chart-row-bottom" style={{ marginTop: '1rem' }}>
+          <div className="chart-container">
+            <h5>Inventory Value Trend</h5>
+            <ResponsiveContainer width="100%" height={250}>
+              <LineChart data={lineData} margin={{ top: 10, right: 30, left: 20, bottom: 30 }}>
+                <XAxis
+                  dataKey="date"
+                  tickFormatter={(tick) => new Date(tick).toLocaleDateString('en-GB')}
+                  angle={-45}
+                  textAnchor="end"
+                  height={50}
+                />
+                <YAxis label={{ value: 'Value (Rs)', angle: -90, position: 'insideLeft' }} />
+                <Tooltip formatter={(value) => `Rs ${value.toFixed(2)}`} />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="value"
+                  stroke="#198754"
+                  strokeWidth={2}
+                  dot={{ r: 3 }}
+                  activeDot={{ r: 6 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </section>
 
@@ -246,12 +237,11 @@ const InventorySummary = () => {
             <tr>
               <th>No</th>
               <th>Product</th>
-              <th>SKU</th>
+              <th>Item Code</th>
               <th>Category</th>
-              <th>Opening Stock</th>
-              <th>Purchased</th>
-              <th>Sold</th>
-              <th>Closing Stock</th>
+              <th>Date</th>
+              <th>Supplier</th>
+              <th>Quantity</th>
               <th>Unit Price (Rs)</th>
               <th>Total Value (Rs)</th>
             </tr>
@@ -262,12 +252,11 @@ const InventorySummary = () => {
               return (
                 <tr key={item._id}>
                   <td>{i + 1}</td>
-                  <td>{item.productName}</td>
-                  <td>{item.itemCode}</td>
+                  <td>{item.productName || 'N/A'}</td>
+                  <td>{item.itemCode || 'N/A'}</td>
                   <td>{getCategoryName(item.category)}</td>
-                  <td>{item.openingStock || 0}</td>
-                  <td>{item.purchases || 0}</td>
-                  <td>{item.sales || 0}</td>
+                  <td>{item.dateAdded || 'N/A'}</td>
+                  <td>{item.supplier || 'N/A'}</td>
                   <td>{item.quantity || 0}</td>
                   <td>{(item.sellingPrice || 0).toFixed(2)}</td>
                   <td>{total.toFixed(2)}</td>
