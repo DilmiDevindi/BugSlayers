@@ -62,3 +62,10 @@ const InventorySummary = () => {
         value: (it.quantity || 0) * (it.sellingPrice || 0),
       });
     });
+
+       setPieData(
+      Object.entries(pieMap).map(([id, val]) => ({
+        category: getCategoryName(id),
+        value: val,
+      }))
+    );
