@@ -86,3 +86,235 @@ const InventorySummary = () => {
       const cat = categories.find((c) => c._id === id);
       return cat ? cat.categoryName : 'Unknown';
     };  
+
+      const totalValue = inventoryItems.reduce(
+    (sum, it) => sum + (it.quantity || 0) * (it.sellingPrice || 0),
+    0
+  );
+
+  const totalItems = inventoryItems.length;
+  const outOfStock = inventoryItems.filter(it => (it.quantity || 0) === 0).length;
+  const lowStock = inventoryItems.filter(it => (it.quantity || 0) < 5 && (it.quantity || 0) > 0).length;
+
+  // Replace previous undefined values
+  const totalCategories = totalValue.toFixed(2); // Inventory Value
+  const totalOrders = outOfStock;                // Out of Stock
+  const totalUsers = lowStock;                   // Low Stock
+
+  const generateCSVData = () => {
+    const headers = [
+      'No',
+      'Product',
+      'Item Code',
+      'Category',
+      'Date',
+      'Supplier',
+      'Quantity',
+      'Unit Price (Rs)',
+      'Total Value (Rs)',
+    ];
+    const rows = inventoryItems.map((item, i) => {
+      const total = (item.quantity || 0) * (item.sellingPrice || 0);
+      return [
+        i + 1,
+        item.productName || 'N/A',
+        item.itemCode || 'N/A',
+        getCategoryName(item.category),
+        item.dateAdded || 'N/A',
+        item.supplier || 'N/A',
+        item.quantity || 0,
+        (item.sellingPrice || 0).toFixed(2),
+        total.toFixed(2),
+      ];
+    });
+    return [headers, ...rows];
+  };
+
+  const generatePDF = () => {
+    const doc = new jsPDF();
+
+    doc.setFontSize(16);
+    doc.setTextColor('#34495e');
+    doc.text('Inventory Summary Reports', 14, 20);
+
+    const tableColumn = [
+      'No',
+      'Product',
+      'Item Code',
+      'Category',
+      'Date',
+      'Supplier',
+      'Quantity',
+      'Unit Price (Rs)',
+      'Total Value (Rs)',
+    ];
+
+    const tableRows = inventoryItems.map((item, i) => {
+      const total = (item.quantity || 0) * (item.sellingPrice || 0);
+      return [
+        i + 1,
+        item.productName || 'N/A',
+        item.itemCode || 'N/A',
+        getCategoryName(item.category),
+        item.dateAdded || 'N/A',
+        item.supplier || 'N/A',
+        item.quantity || 0,
+        (item.sellingPrice || 0).toFixed(2),
+        total.toFixed(2),
+      ];
+    });
+
+    doc.autoTable({
+      startY: 30,
+      head: [tableColumn],
+      body: tableRows,
+      styles: { fontSize: 8, textColor: '#222' },
+      headStyles: { fillColor: [52, 73, 94] },
+      alternateRowStyles: { fillColor: [245, 245, 245] },
+      margin: { left: 14, right: 14 },
+    });
+
+    doc.save('inventory-summary-report.pdf');
+  };
+
+  return (
+    <div className="inventory-report-wrapper">
+      <header className="report-header">
+        <h2 className="report-title">Inventory Summary Reports</h2>
+      </header>
+
+      <section className="summary-cards">
+        <div className="summary-card">
+          <div className="card-value">{totalItems}</div>
+          <div className="card-label">Total Inventory Items</div>
+        </div>
+        <div className="summary-card">
+          <div className="card-value">{totalCategories}</div>
+          <div className="card-label">Inventory Value (Rs)</div>
+        </div>
+        <div className="summary-card">
+          <div className="card-value">{totalOrders}</div>
+          <div className="card-label">Out of Stock</div>
+        </div>
+        <div className="summary-card">
+          <div className="card-value">{totalUsers}</div>
+          <div className="card-label">Low Stock</div>
+        </div>
+      </section>
+
+      <section className="charts-row" style={{ marginBottom: '1rem' }}>
+        <div className="chart-row-top" style={{ display: 'flex', gap: '1rem' }}>
+          <div className="chart-container" style={{ flex: 1 }}>
+            <h5>Stock Distribution by Category</h5>
+            <ResponsiveContainer width="100%" height={220}>
+              <PieChart>
+                <Pie
+                  data={pieData}
+                  dataKey="value"
+                  nameKey="category"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={70}
+                  label={({ category, percent }) =>
+                    `${category}: ${(percent * 100).toFixed(0)}%`
+                  }
+                >
+                  {pieData.map((_, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip formatter={(value) => `${value} items`} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+
+          <div className="chart-container" style={{ flex: 1 }}>
+            <h5>Top 10 Stocked Items</h5>
+            <ResponsiveContainer width="100%" height={220}>
+              <BarChart data={barData} margin={{ top: 10, right: 20, left: 0, bottom: 40 }}>
+                <XAxis dataKey="inventoryItem" angle={-45} textAnchor="end" height={60} />
+                <YAxis label={{ value: 'Quantity', angle: -90, position: 'insideLeft' }} />
+                <Tooltip />
+                <Bar dataKey="quantity" fill="#34495e" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        <div className="chart-row-bottom" style={{ marginTop: '1rem' }}>
+          <div className="chart-container">
+            <h5>Inventory Value Trends</h5>
+            <ResponsiveContainer width="100%" height={220}>
+              <LineChart data={lineData} margin={{ top: 10, right: 30, left: 20, bottom: 30 }}>
+                <XAxis
+                  dataKey="date"
+                  tickFormatter={(tick) => new Date(tick).toLocaleDateString('en-GB')}
+                  angle={-45}
+                  textAnchor="end"
+                  height={50}
+                />
+                <YAxis label={{ value: 'Value (Rs)', angle: -90, position: 'insideLeft' }} />
+                <Tooltip formatter={(value) => `Rs ${value.toFixed(2)}`} />
+                <Line
+                  type="monotone"
+                  dataKey="value"
+                  stroke="#27ae60"
+                  strokeWidth={2}
+                  dot={{ r: 3 }}
+                  activeDot={{ r: 6 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </section>
+
+      <section className="table-section">
+        <table className="inventory-table">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Product</th>
+              <th>Item Code</th>
+              <th>Category</th>
+              <th>Date</th>
+              <th>Supplier</th>
+              <th>Quantity</th>
+              <th>Unit Price (Rs)</th>
+              <th>Total Value (Rs)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {inventoryItems.map((item, i) => {
+              const total = (item.quantity || 0) * (item.sellingPrice || 0);
+              return (
+                <tr key={item._id}>
+                  <td>{i + 1}</td>
+                  <td>{item.productName || 'N/A'}</td>
+                  <td>{item.itemCode || 'N/A'}</td>
+                  <td>{getCategoryName(item.category)}</td>
+                  <td>{item.dateAdded || 'N/A'}</td>
+                  <td>{item.supplier || 'N/A'}</td>
+                  <td>{item.quantity || 0}</td>
+                  <td>{(item.sellingPrice || 0).toFixed(2)}</td>
+                  <td>{total.toFixed(2)}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </section>
+
+      <footer className="report-footer">
+        <button className="pdf-button" onClick={generatePDF}>
+          Generate PDF
+        </button>
+        <CSVLink className="csv-button" data={generateCSVData()} filename="inventory-report.csv">
+          Export to CSV
+        </CSVLink>
+      </footer>
+    </div>
+  );
+};
+
+export default InventorySummary;
