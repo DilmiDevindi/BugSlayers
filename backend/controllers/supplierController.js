@@ -54,33 +54,39 @@ const createSupplier = async (req, res) => {
   try {
     const { supplyProducts, ...supplierData } = req.body;
 
-    // If supplyProducts is an array, create multiple entries
-    if (Array.isArray(supplyProducts) && supplyProducts.length > 0) {
-      const supplierEntries = [];
+    // Check if a supplier with the same name already exists
+    const existingSupplier = await Supplier.findOne({
+      supplierName: supplierData.supplierName,
+    });
 
-      for (const product of supplyProducts) {
-        const supplier = new Supplier({
-          date: supplierData.date,
-          supplierName: supplierData.supplierName,
-          phone1: supplierData.phone1,
-          phone2: supplierData.phone2,
-          fax: supplierData.fax,
-          email: supplierData.email,
-          address: supplierData.address,
-          supplyProducts: [product], // Single product per row
-          paymentTerms: supplierData.paymentTerms,
+    if (existingSupplier) {
+      // Update existing supplier by adding new products to the array
+      const newProducts = Array.isArray(supplyProducts)
+        ? supplyProducts
+        : [supplyProducts];
+
+      // Add only new products that don't already exist
+      const uniqueNewProducts = newProducts.filter(
+        (product) => !existingSupplier.supplyProducts.includes(product)
+      );
+
+      if (uniqueNewProducts.length > 0) {
+        existingSupplier.supplyProducts.push(...uniqueNewProducts);
+        const updatedSupplier = await existingSupplier.save();
+
+        res.status(200).json({
+          message: `Added ${uniqueNewProducts.length} new products to existing supplier`,
+          supplier: updatedSupplier,
+          addedProducts: uniqueNewProducts,
         });
-
-        const savedSupplier = await supplier.save();
-        supplierEntries.push(savedSupplier);
+      } else {
+        res.status(400).json({
+          message: "All selected products already exist for this supplier",
+          supplier: existingSupplier,
+        });
       }
-
-      res.status(201).json({
-        message: `${supplierEntries.length} supplier entries created successfully`,
-        suppliers: supplierEntries,
-      });
     } else {
-      // Single product or fallback
+      // Create new supplier with all products in one entry
       const supplier = new Supplier({
         date: supplierData.date,
         supplierName: supplierData.supplierName,
@@ -96,7 +102,10 @@ const createSupplier = async (req, res) => {
       });
 
       const newSupplier = await supplier.save();
-      res.status(201).json(newSupplier);
+      res.status(201).json({
+        message: "New supplier created successfully",
+        supplier: newSupplier,
+      });
     }
   } catch (error) {
     res

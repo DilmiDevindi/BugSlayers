@@ -34,29 +34,8 @@ const AddSupplier = ({ onSupplierSelected }) => {
       setIsLoading(true);
       const response = await axios.get("http://localhost:5000/api/suppliers/");
 
-      // Group suppliers by name for display
-      const groupedSuppliers = response.data.reduce((acc, supplier) => {
-        const existing = acc.find(
-          (s) => s.supplierName === supplier.supplierName
-        );
-        if (existing) {
-          // Combine products from same supplier
-          existing.supplyProducts = [
-            ...existing.supplyProducts,
-            ...supplier.supplyProducts,
-          ];
-          existing.combinedIds = existing.combinedIds || [existing._id];
-          existing.combinedIds.push(supplier._id);
-        } else {
-          acc.push({
-            ...supplier,
-            combinedIds: [supplier._id],
-          });
-        }
-        return acc;
-      }, []);
-
-      setExistingSuppliers(groupedSuppliers);
+      // Since backend now stores suppliers with products as arrays, no need to group
+      setExistingSuppliers(response.data);
     } catch (error) {
       console.error("Error fetching suppliers:", error);
     } finally {
@@ -166,23 +145,15 @@ const AddSupplier = ({ onSupplierSelected }) => {
           supplier
         );
 
-        // Handle multiple entries response
-        if (response.data.message && response.data.suppliers) {
-          const message = isExistingSupplier
-            ? `Success! Added ${
-                response.data.suppliers.length
-              } new product entries for ${
-                supplier.supplierName
-              }\nNew products: ${supplier.supplyProducts.join(", ")}`
-            : `Success! ${response.data.message}\nCreated ${
-                response.data.suppliers.length
-              } supplier entries for: ${supplier.supplyProducts.join(", ")}`;
-          alert(message);
+        // Handle the new response format
+        if (response.data.message) {
+          alert(
+            `${response.data.message}\nProducts: ${supplier.supplyProducts.join(
+              ", "
+            )}`
+          );
         } else {
-          const message = isExistingSupplier
-            ? `New products added successfully for ${supplier.supplierName}`
-            : "Supplier added successfully";
-          alert(message);
+          alert("Supplier operation completed successfully");
         }
 
         setSupplier({
@@ -203,7 +174,11 @@ const AddSupplier = ({ onSupplierSelected }) => {
         fetchExistingSuppliers(); // Refresh the suppliers list
       } catch (error) {
         console.error("Error adding supplier:", error);
-        alert("Failed to add supplier. Please try again.");
+        if (error.response?.data?.message) {
+          alert(error.response.data.message);
+        } else {
+          alert("Failed to add supplier. Please try again.");
+        }
       }
     } else {
       // Using existing supplier
@@ -343,10 +318,7 @@ const AddSupplier = ({ onSupplierSelected }) => {
             </option>
             {existingSuppliers.map((supplier) => (
               <option key={supplier._id} value={supplier._id}>
-                {supplier.supplierName} -{" "}
-                {Array.isArray(supplier.supplyProducts)
-                  ? supplier.supplyProducts.join(", ")
-                  : supplier.supplyProducts}
+                {supplier.supplierName} - {supplier.supplyProducts.join(", ")}
               </option>
             ))}
             <option value="add_new">Add Completely New Supplier</option>
@@ -380,14 +352,9 @@ const AddSupplier = ({ onSupplierSelected }) => {
               </div>
               <div style={{ fontSize: "1rem", marginBottom: "8px" }}>
                 <strong>Products:</strong>{" "}
-                {(() => {
-                  const selectedSupplierData = existingSuppliers.find(
-                    (s) => s._id === selectedSupplier
-                  );
-                  return Array.isArray(selectedSupplierData?.supplyProducts)
-                    ? selectedSupplierData.supplyProducts.join(", ")
-                    : selectedSupplierData?.supplyProducts;
-                })()}
+                {existingSuppliers
+                  .find((s) => s._id === selectedSupplier)
+                  ?.supplyProducts?.join(", ")}
               </div>
               <div style={{ fontSize: "1rem" }}>
                 <strong>Contact:</strong>{" "}
@@ -425,7 +392,7 @@ const AddSupplier = ({ onSupplierSelected }) => {
                 }}
               >
                 {selectedSupplier && selectedSupplier !== ""
-                  ? `Add New Products for: ${supplier.supplierName}`
+                  ? `Add Products for: ${supplier.supplierName}`
                   : "Add New Supplier Details"}
               </h5>
             </div>
@@ -785,7 +752,7 @@ const AddSupplier = ({ onSupplierSelected }) => {
             }}
           >
             {selectedSupplier && selectedSupplier !== ""
-              ? "Add New Products to Existing Supplier"
+              ? "Add Products to Existing Supplier"
               : isAddingNew
               ? "Add New Supplier"
               : "Select Supplier"}
