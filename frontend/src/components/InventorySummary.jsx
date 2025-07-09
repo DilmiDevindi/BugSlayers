@@ -50,3 +50,15 @@ const InventorySummary = () => {
       console.error('Error fetching categories:', err);
     }
   };
+
+    useEffect(() => {
+    const pieMap = {};
+    const lineTemp = [];
+
+    inventoryItems.forEach((it) => {
+      pieMap[it.category] = (pieMap[it.category] || 0) + (it.quantity || 0);
+      lineTemp.push({
+        date: it.dateAdded,
+        value: (it.quantity || 0) * (it.sellingPrice || 0),
+      });
+    });
