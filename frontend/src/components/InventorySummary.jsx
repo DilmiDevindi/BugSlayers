@@ -17,7 +17,7 @@ import {
 } from 'recharts';
 import './InventorySummary.css';
 
-const COLORS = ['#34495e', '#27ae60', '#c0392b', '#f39c12', '#8e44ad', '#d35400'];
+const COLORS = ['#FF6B6B', '#6BCB77', '#4D96FF', '#FFD93D', '#9D4EDD', '#00B8A9'];
 
 const InventorySummary = () => {
   const [inventoryItems, setInventoryItems] = useState([]);
@@ -51,7 +51,7 @@ const InventorySummary = () => {
     }
   };
 
-    useEffect(() => {
+  useEffect(() => {
     const pieMap = {};
     const lineTemp = [];
 
@@ -63,7 +63,7 @@ const InventorySummary = () => {
       });
     });
 
-       setPieData(
+    setPieData(
       Object.entries(pieMap).map(([id, val]) => ({
         category: getCategoryName(id),
         value: val,
@@ -80,14 +80,14 @@ const InventorySummary = () => {
       .filter((d) => d.date)
       .sort((a, b) => new Date(a.date) - new Date(b.date));
     setLineData(sortedLineData);
-    }, [inventoryItems, categories]);
+  }, [inventoryItems, categories]);
 
-    const getCategoryName = (id) => {
-      const cat = categories.find((c) => c._id === id);
-      return cat ? cat.categoryName : 'Unknown';
-    };  
+  const getCategoryName = (id) => {
+    const cat = categories.find((c) => c._id === id);
+    return cat ? cat.categoryName : 'Unknown';
+  };
 
-      const totalValue = inventoryItems.reduce(
+  const totalValue = inventoryItems.reduce(
     (sum, it) => sum + (it.quantity || 0) * (it.sellingPrice || 0),
     0
   );
@@ -96,22 +96,14 @@ const InventorySummary = () => {
   const outOfStock = inventoryItems.filter(it => (it.quantity || 0) === 0).length;
   const lowStock = inventoryItems.filter(it => (it.quantity || 0) < 5 && (it.quantity || 0) > 0).length;
 
-  // Replace previous undefined values
-  const totalCategories = totalValue.toFixed(2); // Inventory Value
-  const totalOrders = outOfStock;                // Out of Stock
-  const totalUsers = lowStock;                   // Low Stock
+  const totalCategories = totalValue.toFixed(2);
+  const totalOrders = outOfStock;
+  const totalUsers = lowStock;
 
   const generateCSVData = () => {
     const headers = [
-      'No',
-      'Product',
-      'Item Code',
-      'Category',
-      'Date',
-      'Supplier',
-      'Quantity',
-      'Unit Price (Rs)',
-      'Total Value (Rs)',
+      'No', 'Product', 'Item Code', 'Category', 'Date', 'Supplier',
+      'Quantity', 'Unit Price (Rs)', 'Total Value (Rs)',
     ];
     const rows = inventoryItems.map((item, i) => {
       const total = (item.quantity || 0) * (item.sellingPrice || 0);
@@ -132,23 +124,13 @@ const InventorySummary = () => {
 
   const generatePDF = () => {
     const doc = new jsPDF();
-
     doc.setFontSize(16);
     doc.setTextColor('#34495e');
     doc.text('Inventory Summary Reports', 14, 20);
-
     const tableColumn = [
-      'No',
-      'Product',
-      'Item Code',
-      'Category',
-      'Date',
-      'Supplier',
-      'Quantity',
-      'Unit Price (Rs)',
-      'Total Value (Rs)',
+      'No', 'Product', 'Item Code', 'Category', 'Date', 'Supplier',
+      'Quantity', 'Unit Price (Rs)', 'Total Value (Rs)',
     ];
-
     const tableRows = inventoryItems.map((item, i) => {
       const total = (item.quantity || 0) * (item.sellingPrice || 0);
       return [
@@ -163,7 +145,6 @@ const InventorySummary = () => {
         total.toFixed(2),
       ];
     });
-
     doc.autoTable({
       startY: 30,
       head: [tableColumn],
@@ -173,39 +154,47 @@ const InventorySummary = () => {
       alternateRowStyles: { fillColor: [245, 245, 245] },
       margin: { left: 14, right: 14 },
     });
-
     doc.save('inventory-summary-report.pdf');
   };
 
   return (
+    
     <div className="inventory-report-wrapper">
-      <header className="report-header">
-        <h2 className="report-title">Inventory Summary Reports</h2>
+      {/* Company Details */}
+      <header className="company-header">
+        <h6 className="company-name"><b><center>New Sisira Furniture</center></b></h6>
+        <h6 className="report-name"><b><center>Inventory Summary Report</center></b></h6>
       </header>
+      <br />
+      <br />
+   
 
+      {/* Summary Cards */}
       <section className="summary-cards">
         <div className="summary-card">
-          <div className="card-value">{totalItems}</div>
           <div className="card-label">Total Inventory Items</div>
+          <div className="card-value">{totalItems}</div>
         </div>
         <div className="summary-card">
+          <div className="card-label">Total Value (Rs)</div>
           <div className="card-value">{totalCategories}</div>
-          <div className="card-label">Inventory Value (Rs)</div>
         </div>
         <div className="summary-card">
-          <div className="card-value">{totalOrders}</div>
           <div className="card-label">Out of Stock</div>
+          <div className="card-value">{totalOrders}</div>
         </div>
         <div className="summary-card">
-          <div className="card-value">{totalUsers}</div>
           <div className="card-label">Low Stock</div>
+          <div className="card-value">{totalUsers}</div>
         </div>
       </section>
 
+      <br />
+      {/* Charts */}
       <section className="charts-row" style={{ marginBottom: '1rem' }}>
         <div className="chart-row-top" style={{ display: 'flex', gap: '1rem' }}>
           <div className="chart-container" style={{ flex: 1 }}>
-            <h5>Stock Distribution by Category</h5>
+            <h7><b>Stock Distribution by Category</b></h7>
             <ResponsiveContainer width="100%" height={220}>
               <PieChart>
                 <Pie
@@ -218,6 +207,7 @@ const InventorySummary = () => {
                   label={({ category, percent }) =>
                     `${category}: ${(percent * 100).toFixed(0)}%`
                   }
+                  labelStyle={{ fill: 'black' }}
                 >
                   {pieData.map((_, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -229,7 +219,7 @@ const InventorySummary = () => {
           </div>
 
           <div className="chart-container" style={{ flex: 1 }}>
-            <h5>Top 10 Stocked Items</h5>
+            <h7><b>Top 10 Stocked Items</b></h7>
             <ResponsiveContainer width="100%" height={220}>
               <BarChart data={barData} margin={{ top: 10, right: 20, left: 0, bottom: 40 }}>
                 <XAxis dataKey="inventoryItem" angle={-45} textAnchor="end" height={60} />
@@ -241,9 +231,11 @@ const InventorySummary = () => {
           </div>
         </div>
 
+        <br />
+
         <div className="chart-row-bottom" style={{ marginTop: '1rem' }}>
           <div className="chart-container">
-            <h5>Inventory Value Trends</h5>
+            <h7><b>Inventory Value Trends</b></h7>
             <ResponsiveContainer width="100%" height={220}>
               <LineChart data={lineData} margin={{ top: 10, right: 30, left: 20, bottom: 30 }}>
                 <XAxis
@@ -269,6 +261,9 @@ const InventorySummary = () => {
         </div>
       </section>
 
+      <br />
+
+      {/* Table */}
       <section className="table-section">
         <table className="inventory-table">
           <thead>
@@ -305,6 +300,7 @@ const InventorySummary = () => {
         </table>
       </section>
 
+      {/* Footer */}
       <footer className="report-footer">
         <button className="pdf-button" onClick={generatePDF}>
           Generate PDF
