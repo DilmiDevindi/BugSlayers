@@ -1,0 +1,87 @@
+
+.topic {
+  font-size: 18px;
+  color: #033668;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.invoice-icon {
+  color: #007bff;
+}
+
+.invoice-table {
+  border: none;
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 10px; 
+  overflow: hidden;
+}
+
+.invoice-table th {
+  background-color: #1a1a1a;
+  color: white;
+  padding: 10px;
+  font-size: 13px;
+  text-align: left;
+  border: none;
+  
+}
+
+.invoice-table td {
+  padding: 10px;
+  font-size: 13px;
+  border-bottom: 1px solid #e0e0e0;
+  border: none;
+}
+
+.invoice-table tr:hover {
+  background-color: #f4f4f4;
+}
+
+.invoice-id-btn {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.invoice-id-btn:hover {
+  text-decoration: none;
+  color: #f2f4f5;
+  
+}
+
+.delete-icon {
+  color: red;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.expanded-row td {
+  background-color: #f9f9f9;
+  padding: 16px;
+}
+
+.nested-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.nested-table th,
+.nested-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  font-size: 13px;
+  text-align: center;
+}
+
+.nested-table th {
+  background-color: #f0f0f0;
+}
