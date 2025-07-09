@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FaTrash } from 'react-icons/fa';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFileInvoice } from '@fortawesome/free-solid-svg-icons';
 
 function SaveInvoice() {
   const [invoices, setInvoices] = useState([]);
@@ -43,8 +45,8 @@ function SaveInvoice() {
 
   return (
     <div>
-      <h2>Manage Invoices</h2>
-      <table border="1" cellPadding="8" style={{ borderCollapse: 'collapse', width: '100%' }}>
+      <h2 className='topic'><FontAwesomeIcon icon={faFileInvoice} className="invoice-icon" />Manage Invoices</h2>
+      <table className="invoice-table" border ="1" cellPadding="8" style={{ borderCollapse: 'collapse', width: '100%' }}>
         <thead>
           <tr>
             <th>Invoice ID</th>
@@ -66,9 +68,9 @@ function SaveInvoice() {
             <React.Fragment key={inv._id}>
               <tr>
                 <td>
-                  <button
+                  <button className='invoice-id-btn'
                     onClick={() => toggleExpand(inv._id)}
-                    style={{ cursor: 'pointer', background: 'none', border: 'none', color: 'blue' }}
+                    
                   >
                     {inv.invoiceId}
                   </button>

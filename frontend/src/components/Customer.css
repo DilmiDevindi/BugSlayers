@@ -1,4 +1,18 @@
-cd/*Manage Customer css*/
+.custom-search-btn{
+    background-color: #9ea4ae;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.custom-search-btn:hover {
+    background-color: #7b828c;
+}
+/*Manage Customer css*/
 
 .container1{
     width: 100%;

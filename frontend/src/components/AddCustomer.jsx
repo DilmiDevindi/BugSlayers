@@ -84,26 +84,33 @@ const AddCustomer = () => {
 
   return (
     <div className="add">
-
-      {/* 🔍 Search bar OUTSIDE the form */}
-      <div className="search-section mb-4">
-        <h5>🔍 Search by Contact</h5>
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Enter contact number"
-          value={searchContact}
-          onChange={(e) => setSearchContact(e.target.value)}
-        />
-        <button className="btn btn-secondary mt-2" onClick={handleSearch}>Search</button>
-      </div>
-
-      {/* 👤 Add Customer Form */}
       <div className="container-c">
         <h4 className="add-title" style={{ textAlign: "left" }}>
           <FontAwesomeIcon icon={faPlusSquare} className="addCus" /> Add New Customer
         </h4>
+
         <form onSubmit={handleSubmit}>
+          {/* 🔍 Search inside form */}
+          <div className="search-section mb-3">
+            
+            <div className="input-group">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Enter contact number"
+                value={searchContact}
+                onChange={(e) => setSearchContact(e.target.value)}
+              />
+              <button
+                type="button"
+                className="custom-search-btn btn-outline-secondary"
+                onClick={handleSearch}
+              >
+                Search
+              </button>
+            </div>
+          </div>
+
           <div className="mb-3">
             <input
               type="text"
@@ -114,6 +121,7 @@ const AddCustomer = () => {
             />
             {errors.name && <div className="alert alert-danger">{errors.name}</div>}
           </div>
+
           <div className="mb-3">
             <input
               type="text"
@@ -124,6 +132,7 @@ const AddCustomer = () => {
             />
             {errors.address && <div className="alert alert-danger">{errors.address}</div>}
           </div>
+
           <div className="mb-3">
             <input
               type="text"
@@ -134,6 +143,7 @@ const AddCustomer = () => {
             />
             {errors.contact && <div className="alert alert-danger">{errors.contact}</div>}
           </div>
+
           <div className="mb-3">
             <input
               type="email"
@@ -144,6 +154,7 @@ const AddCustomer = () => {
             />
             {errors.email && <div className="alert alert-danger">{errors.email}</div>}
           </div>
+
           <button type="submit" className="btn btn-primary">Add Customer</button>
         </form>
       </div>
