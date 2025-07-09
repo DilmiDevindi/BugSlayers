@@ -30,3 +30,23 @@ const InventorySummary = () => {
     fetchInventoryItems();
     fetchCategories();
   }, []);
+
+  const fetchInventoryItems = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/api/inventory');
+      const data = await res.json();
+      setInventoryItems(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error('Error fetching inventory items:', err);
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/api/category');
+      const data = await res.json();
+      setCategories(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error('Error fetching categories:', err);
+    }
+  };
