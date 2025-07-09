@@ -4,6 +4,7 @@ import './Bill.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileInvoice } from '@fortawesome/free-solid-svg-icons';
 import logo from '../assets/furniture-log.png';
+import { useNavigate } from 'react-router-dom';
 
 function formatTimeToAMPM(time24) {
   if (!time24) return '';
@@ -16,6 +17,7 @@ function formatTimeToAMPM(time24) {
 }
 
 function BillForm() {
+  const navigate = useNavigate();
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [contact, setContact] = useState('');
@@ -181,6 +183,9 @@ function BillForm() {
           <div className="form-row"><label>Balance:</label><input type="text" value={balance.toFixed(2)} readOnly /></div>
           <button type="button" onClick={handleSaveInvoice}>Save Invoice</button>
           <button type="button" onClick={() => setShowInvoice(!showInvoice)}>{showInvoice ? 'Hide Invoice' : 'View Invoice'}</button>
+          <button type="button" onClick={() => navigate('/dashboard/invoices')}>Manage Invoice</button>
+
+    
         </form>
       </div>
 
