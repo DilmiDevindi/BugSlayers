@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { assets } from '../assets/assets';
 
 const Add = () => {
-  const [category, setCategory] = useState('');
+  //const [category, setCategory] = useState('Bed');
 
   const getSizeOptions = () => {
-    switch (category) {
+    switch (Category) {
       case 'Bed':
         return ['King', 'Queen', 'Normal'];
       case 'Table':
@@ -16,6 +16,16 @@ const Add = () => {
         return [];
     }
   };
+  const [images,setImages] = useState([null,null,null,null]);
+ 
+
+  const [name,setName] = useState('');
+  const[description,setDescription] = useState('');
+  const [price,setPrice] = useState('');
+  const [Category,setCategory] = useState('Bed');
+  const [subCategory,setSubCategory] = useState('Timber');
+  const [bestseller, setBestseller]=useState(false);
+  const [sizes,setSizes]=useState([]);
 
   return (
     <form className='flex flex-col w-full items-start gap-3'>
@@ -24,8 +34,8 @@ const Add = () => {
         <div className='flex gap-2'>
           {[1, 2, 3, 4].map((n) => (
             <label key={n} htmlFor={`image${n}`}>
-              <img className='w-20' src={assets.upload_area} alt='' />
-              <input type='file' id={`image${n}`} hidden />
+              <img className='w-20' src={!image[0]?assets.upload_area:URL.createObjectURL(image[0])} alt='' />
+              <input onChange={(e)=>setImage(e.target.files[0])} type='file' id={`image${n}`} hidden />
             </label>
           ))}
         </div>
@@ -33,12 +43,12 @@ const Add = () => {
 
       <div className='w-full'>
         <p className='mb-2'>Product Name</p>
-        <input className='w-full max-w-[500px] px-3 py-2' type='text' placeholder='Type here' required />
+        <input onChange={(e)=>setName(e.target.value)} value={name} className='w-full max-w-[500px] px-3 py-2' type='text' placeholder='Type here' required />
       </div>
 
       <div className='w-full'>
         <p className='mb-2'>Product Description</p>
-        <textarea className='w-full max-w-[500px] px-3 py-2' placeholder='Write Content Here' required />
+        <textarea onChange={(e)=>setDescription(e.target.value)} value={description} className='w-full max-w-[500px] px-3 py-2' placeholder='Write Content Here' required />
       </div>
 
       <div className='flex flex-col sm:flex-row gap-2 w-full sm:gap-8'>
@@ -58,7 +68,7 @@ const Add = () => {
 
         <div>
           <p className='mb-2'>Sub Category</p>
-          <select className='w-full px-3 py-2'>
+          <select onChange={(e)=>setSubCategory(e.target.value)} className='w-full px-3 py-2'>
             <option value='Timber'>Timber</option>
             <option value='Glass'>Glass</option>
             <option value='Plastic'>Plastic</option>
@@ -67,7 +77,7 @@ const Add = () => {
 
         <div>
           <p className='mb-2'>Product Price</p>
-          <input className='w-full px-3 py-2 sm:w-[120px]' type='number' placeholder='25' />
+          <input onChange={(e)=>setPrice(e.target.value)} value={price} className='w-full px-3 py-2 sm:w-[120px]' type='number' placeholder='25' />
         </div>
       </div>
 
@@ -86,6 +96,8 @@ const Add = () => {
         <input type="checkbox" id="bestseller"/>
         <label className='cursor-pointer' htmlFor="bestseller">Add to Bestseller</label>
       </div>
+
+      <button type ="Submit" className='w-28 py-3 mt-4 bg-black text-white'>Add</button>
     </form>
   );
 };

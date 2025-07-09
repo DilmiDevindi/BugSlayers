@@ -1,11 +1,13 @@
 import axios from 'axios'
 import React, { useState } from 'react'
 import { backendUrl } from '../App'
+import { toast } from 'react-toastify';
+
 
 const Login = ({ setToken }) => {
 
     const[email,setEmail]=useState('')
-    const[password,setpassword]=useState('')
+    const[password,setpassword]= useState('')
 
     const onSubmitHandler=async(e)=>{
         try{
@@ -20,8 +22,9 @@ const Login = ({ setToken }) => {
                 toast.error(response.data.message)
             }
         }catch(error){
-            console.error(response.data.message)
-            toast.error(error.message)
+            console.error(error.response?.data?.message || error.message);
+            toast.error(error.response?.data?.message || error.message);
+
 
             
         }
