@@ -41,6 +41,28 @@
   color: #34495e;
   line-height: 1.6;
 }
+label {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+#report-month {
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  border: 1.5px solid #34495e; /* dark blue-grey */
+  border-radius: 6px;
+  background-color: white;
+  color: #34495e;
+  outline: none;
+  transition: border-color 0.3s ease;
+  cursor: pointer;
+  width: 160px;
+}
+
+#report-month:focus {
+  border-color: #27ae60; /* green highlight on focus */
+  box-shadow: 0 0 6px #27ae60a0;
+}
+
 
 .card-value {
   color: #16a085;
