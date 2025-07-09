@@ -435,7 +435,7 @@ const AddSupplier = ({ onSupplierSelected }) => {
               style={{
                 display: "grid",
                 gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-                gap: "20px",
+                gap: "1px",
               }}
             >
               {/* Date Field */}
