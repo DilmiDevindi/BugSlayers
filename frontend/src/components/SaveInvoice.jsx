@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { FaTrash } from 'react-icons/fa';
 
 function SaveInvoice() {
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [expandedInvoiceId, setExpandedInvoiceId] = useState(null);
 
-  // Fetch all invoices on component mount
   useEffect(() => {
     const fetchInvoices = async () => {
       try {
@@ -18,17 +19,32 @@ function SaveInvoice() {
         setLoading(false);
       }
     };
-
     fetchInvoices();
   }, []);
+
+  const toggleExpand = (invoiceId) => {
+    setExpandedInvoiceId(prevId => (prevId === invoiceId ? null : invoiceId));
+  };
+
+  const handleDelete = async (id) => {
+    const confirm = window.confirm('Are you sure you want to delete this invoice?');
+    if (!confirm) return;
+    try {
+      await axios.delete(`http://localhost:5000/api/invoices/${id}`);
+      setInvoices((prev) => prev.filter((inv) => inv._id !== id));
+      alert('Invoice deleted successfully');
+    } catch (err) {
+      alert('Failed to delete invoice.');
+    }
+  };
 
   if (loading) return <p>Loading invoices...</p>;
   if (error) return <p style={{ color: 'red' }}>{error}</p>;
 
   return (
     <div>
-      <h2>All Invoices</h2>
-      <table border="1" cellPadding="10" style={{ borderCollapse: 'collapse', width: '100%' }}>
+      <h2>Manage Invoices</h2>
+      <table border="1" cellPadding="8" style={{ borderCollapse: 'collapse', width: '100%' }}>
         <thead>
           <tr>
             <th>Invoice ID</th>
@@ -37,26 +53,76 @@ function SaveInvoice() {
             <th>Customer Name</th>
             <th>Contact</th>
             <th>Email</th>
+            <th>Total Items</th>
             <th>Subtotal</th>
             <th>Amount</th>
             <th>Cash Received</th>
             <th>Balance</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
           {invoices.map((inv) => (
-            <tr key={inv._id}>
-              <td>{inv.invoiceId}</td>
-              <td>{inv.date}</td>
-              <td>{inv.time}</td>
-              <td>{inv.name}</td>
-              <td>{inv.contact}</td>
-              <td>{inv.email}</td>
-              <td>{inv.subtotal}</td>
-              <td>{inv.amount}</td>
-              <td>{inv.cashReceived}</td>
-              <td>{inv.balance}</td>
-            </tr>
+            <React.Fragment key={inv._id}>
+              <tr>
+                <td>
+                  <button
+                    onClick={() => toggleExpand(inv._id)}
+                    style={{ cursor: 'pointer', background: 'none', border: 'none', color: 'blue' }}
+                  >
+                    {inv.invoiceId}
+                  </button>
+                </td>
+                <td>{inv.date}</td>
+                <td>{inv.time}</td>
+                <td>{inv.name}</td>
+                <td>{inv.contact}</td>
+                <td>{inv.email}</td>
+                <td>{inv.items?.length || 0}</td>
+                <td>{inv.subtotal}</td>
+                <td>{inv.amount}</td>
+                <td>{inv.cashReceived}</td>
+                <td>{inv.balance}</td>
+                <td>
+                  <FaTrash
+                    onClick={() => handleDelete(inv._id)}
+                    style={{ cursor: 'pointer', color: 'red' }}
+                  />
+                </td>
+              </tr>
+
+              {expandedInvoiceId === inv._id && (
+                <tr>
+                  <td colSpan="12" style={{ backgroundColor: '#f9f9f9' }}>
+                    <strong>Item Details:</strong>
+                    <table border="1" cellPadding="6" style={{ marginTop: '10px', width: '100%' }}>
+                      <thead>
+                        <tr>
+                          <th>Item Code</th>
+                          <th>Item Name</th>
+                          <th>Price</th>
+                          <th>Quantity</th>
+                          <th>Discount</th>
+                          <th>Total</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {inv.items?.map((item, idx) => (
+                          <tr key={idx}>
+                            <td>{item.itemCode}</td>
+                            <td>{item.itemName}</td>
+                            <td>{item.itemPrice}</td>
+                            <td>{item.quantity}</td>
+                            <td>{item.discount}</td>
+                            <td>{(item.itemPrice * item.quantity - item.discount).toFixed(2)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              )}
+            </React.Fragment>
           ))}
         </tbody>
       </table>
