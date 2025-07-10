@@ -318,7 +318,7 @@ function BillForm() {
             <strong>Date:</strong> {date} {formatTimeToAMPM(time)}
           </p>
           
-          <h4>Items</h4>
+          
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr>
