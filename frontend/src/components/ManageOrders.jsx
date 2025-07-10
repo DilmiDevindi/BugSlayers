@@ -6,10 +6,9 @@ import {
   faTrash,
   faTimes,
   faSave,
-  faFilePdf,
+  faEye,
 } from "@fortawesome/free-solid-svg-icons";
-import jsPDF from "jspdf";
-import "jspdf-autotable";
+import { useNavigate } from "react-router-dom";
 import "./ManageOrders.css";
 
 function ManageOrders() {
@@ -25,6 +24,7 @@ function ManageOrders() {
     date: "",
   });
 
+  const navigate = useNavigate();
   const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
   useEffect(() => {
@@ -32,7 +32,6 @@ function ManageOrders() {
   }, []);
 
   const fetchOrders = async () => {
-    setLoading(true);
     try {
       const res = await axios.get(`${BASE_URL}/api/orders`);
       setOrders(res.data);
@@ -83,39 +82,6 @@ function ManageOrders() {
     }
   };
 
-  // PDF generation function
-  const generatePDF = () => {
-    const doc = new jsPDF();
-
-    doc.setFontSize(18);
-    doc.text("Orders Report", 14, 22);
-
-    const tableColumn = ["Order ID", "Supplier", "Quantity", "Discount", "Date"];
-    const tableRows = [];
-
-    orders.forEach((order) => {
-      const orderData = [
-        order.orderId,
-        order.companyName,
-        order.quantity.toString(),
-        order.discount.toString(),
-        order.date ? order.date.slice(0, 10) : "",
-      ];
-      tableRows.push(orderData);
-    });
-
-    doc.autoTable({
-      startY: 30,
-      head: [tableColumn],
-      body: tableRows,
-      theme: "grid",
-      headStyles: { fillColor: [41, 128, 185] }, // blue header
-      styles: { fontSize: 10, cellPadding: 3 },
-    });
-
-    doc.save(`orders_report_${new Date().toISOString().slice(0, 10)}.pdf`);
-  };
-
   return (
     <div className="container mt-5">
       <h2 className="mb-4 text-center">Manage Orders</h2>
@@ -148,7 +114,6 @@ function ManageOrders() {
                           value={editForm.orderId}
                           onChange={handleEditChange}
                           className="form-control"
-                          required
                         />
                       </td>
                       <td>
@@ -157,7 +122,6 @@ function ManageOrders() {
                           value={editForm.companyName}
                           onChange={handleEditChange}
                           className="form-control"
-                          required
                         />
                       </td>
                       <td>
@@ -167,8 +131,6 @@ function ManageOrders() {
                           value={editForm.quantity}
                           onChange={handleEditChange}
                           className="form-control"
-                          min={1}
-                          required
                         />
                       </td>
                       <td>
@@ -178,8 +140,6 @@ function ManageOrders() {
                           value={editForm.discount}
                           onChange={handleEditChange}
                           className="form-control"
-                          min={0}
-                          required
                         />
                       </td>
                       <td>
@@ -189,7 +149,6 @@ function ManageOrders() {
                           value={editForm.date}
                           onChange={handleEditChange}
                           className="form-control"
-                          required
                         />
                       </td>
                       <td className="d-flex gap-2">
@@ -239,15 +198,14 @@ function ManageOrders() {
             </table>
           </div>
 
-          {/* PDF Download Button */}
-          <div className="download-container">
+          {/* View Report Button */}
+          <div className="report-button-container">
             <button
-              className="btn btn-pdf"
-              onClick={generatePDF}
-              title="Download PDF"
+              className="btn btn-view"
+              onClick={() => navigate("/dashboard/orders/report")}
             >
-              <FontAwesomeIcon icon={faFilePdf} />
-              Download PDF
+              <FontAwesomeIcon icon={faEye} />
+              View Report
             </button>
           </div>
         </>
