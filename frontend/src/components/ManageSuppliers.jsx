@@ -1,23 +1,26 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTruck, faEdit as faEditIcon } from "@fortawesome/free-solid-svg-icons";
-import './Supplier.css';
+import {
+  faTruck,
+  faEdit as faEditIcon,
+} from "@fortawesome/free-solid-svg-icons";
+import "./Supplier.css";
 
 const ManageSuppliers = () => {
   const [suppliers, setSuppliers] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [editingSupplier, setEditingSupplier] = useState(null);
   const [formData, setFormData] = useState({
-    supplierName: '',
-    phone1: '',
-    phone2: '',
-    fax: '',
-    email: '',
-    address: '',
-    supplyProducts: '',
-    paymentTerms: ''
+    supplierName: "",
+    phone1: "",
+    phone2: "",
+    fax: "",
+    email: "",
+    address: "",
+    supplyProducts: "",
+    paymentTerms: "",
   });
   const [loading, setLoading] = useState(false);
 
@@ -28,11 +31,11 @@ const ManageSuppliers = () => {
   const fetchSuppliers = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('/api/suppliers');
+      const response = await axios.get("/api/suppliers");
       setSuppliers(response.data.reverse());
     } catch (error) {
-      console.error('Error fetching suppliers:', error);
-      alert('Failed to fetch suppliers');
+      console.error("Error fetching suppliers:", error);
+      alert("Failed to fetch suppliers");
     }
     setLoading(false);
   };
@@ -41,32 +44,35 @@ const ManageSuppliers = () => {
     setSearchTerm(e.target.value);
   };
 
-  const filteredSuppliers = suppliers.filter(supplier => {
-    return (supplier.supplierName || '').toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredSuppliers = suppliers.filter((supplier) => {
+    return (supplier.supplierName || "")
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
   });
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this supplier?')) return;
+    if (!window.confirm("Are you sure you want to delete this supplier?"))
+      return;
     try {
       await axios.delete(`/api/suppliers/${id}`);
       fetchSuppliers();
     } catch (error) {
-      console.error('Error deleting supplier:', error);
-      alert('Failed to delete supplier');
+      console.error("Error deleting supplier:", error);
+      alert("Failed to delete supplier");
     }
   };
 
   const handleEdit = (supplier) => {
     setEditingSupplier(supplier._id);
     setFormData({
-      supplierName: supplier.supplierName || '',
-      phone1: supplier.phone1 || '',
-      phone2: supplier.phone2 || '',
-      fax: supplier.fax || '',
-      email: supplier.email || '',
-      address: supplier.address || '',
-      supplyProducts: supplier.supplyProducts || '',
-      paymentTerms: supplier.paymentTerms || ''
+      supplierName: supplier.supplierName || "",
+      phone1: supplier.phone1 || "",
+      phone2: supplier.phone2 || "",
+      fax: supplier.fax || "",
+      email: supplier.email || "",
+      address: supplier.address || "",
+      supplyProducts: supplier.supplyProducts || "",
+      paymentTerms: supplier.paymentTerms || "",
     });
   };
 
@@ -76,26 +82,26 @@ const ManageSuppliers = () => {
       await axios.put(`/api/suppliers/${editingSupplier}`, formData);
       setEditingSupplier(null);
       setFormData({
-        supplierName: '',
-        phone1: '',
-        phone2: '',
-        fax: '',
-        email: '',
-        address: '',
-        supplyProducts: '',
-        paymentTerms: ''
+        supplierName: "",
+        phone1: "",
+        phone2: "",
+        fax: "",
+        email: "",
+        address: "",
+        supplyProducts: "",
+        paymentTerms: "",
       });
       fetchSuppliers();
-      alert('Supplier updated successfully!');
+      alert("Supplier updated successfully!");
     } catch (error) {
-      console.error('Error updating supplier:', error);
-      alert('Failed to update supplier');
+      console.error("Error updating supplier:", error);
+      alert("Failed to update supplier");
     }
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
@@ -112,7 +118,9 @@ const ManageSuppliers = () => {
         onChange={handleSearch}
       />
 
-      {loading ? <p>Loading suppliers...</p> : (
+      {loading ? (
+        <p>Loading suppliers...</p>
+      ) : (
         <table className="table table-striped">
           <thead>
             <tr>
@@ -131,23 +139,35 @@ const ManageSuppliers = () => {
             {filteredSuppliers.length > 0 ? (
               filteredSuppliers.map((supplier) => (
                 <tr key={supplier._id}>
-                  <td>{supplier.supplierName || '-'}</td>
-                  <td>{supplier.phone1 || '-'}</td>
-                  <td>{supplier.phone2 || '-'}</td>
-                  <td>{supplier.fax || '-'}</td>
-                  <td>{supplier.email || '-'}</td>
-                  <td>{supplier.address || '-'}</td>
-                  <td>{supplier.supplyProducts || '-'}</td>
-                  <td>{supplier.paymentTerms || '-'}</td>
+                  <td>{supplier.supplierName || "-"}</td>
+                  <td>{supplier.phone1 || "-"}</td>
+                  <td>{supplier.phone2 || "-"}</td>
+                  <td>{supplier.fax || "-"}</td>
+                  <td>{supplier.email || "-"}</td>
+                  <td>{supplier.address || "-"}</td>
+                  <td>{supplier.supplyProducts || "-"}</td>
+                  <td>{supplier.paymentTerms || "-"}</td>
                   <td>
-                    <button className="btn1" onClick={() => handleEdit(supplier)}><FaEdit /></button>
-                    <button className="btn2" onClick={() => handleDelete(supplier._id)}><FaTrash /></button>
+                    <button
+                      className="btn1"
+                      onClick={() => handleEdit(supplier)}
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      className="btn2"
+                      onClick={() => handleDelete(supplier._id)}
+                    >
+                      <FaTrash />
+                    </button>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="9" className="text-center text-danger">No Matching Supplier Found!</td>
+                <td colSpan="9" className="text-center text-danger">
+                  No Matching Supplier Found!
+                </td>
               </tr>
             )}
           </tbody>
@@ -155,26 +175,46 @@ const ManageSuppliers = () => {
       )}
 
       {editingSupplier && (
-        <div className="edit-form-container small-form">
-          <form onSubmit={handleUpdate}>
-            <h4 className='add-title'><FontAwesomeIcon icon={faEditIcon}/> Edit Supplier</h4>
-            <div className="form-grid">
-              {Object.entries(formData).map(([key, value]) => (
-                <div className="form-field" key={key}>
-                  <label>{key.charAt(0).toUpperCase() + key.slice(1)}</label>
+        <div className="edit-form-container">
+          <form onSubmit={handleUpdate} className="form">
+            <h4 className="form-title mb-4 text-lg font-semibold">
+              <FontAwesomeIcon icon={faEditIcon} /> Edit Supplier
+            </h4>
+
+            {/* Two-column layout */}
+            <div className="grid grid-cols-2 gap-6">
+              {Object.entries(formData).map(([key, value], index) => (
+                <div key={key} className="flex flex-col">
+                  <label className="text-sm font-medium mb-1">
+                    {key.charAt(0).toUpperCase() + key.slice(1)}
+                  </label>
                   <input
-                    type={key === 'email' ? 'email' : 'text'}
+                    type={key === "email" ? "email" : "text"}
                     name={key}
                     value={value}
                     onChange={handleChange}
-                    required={key === 'supplierName' || key === 'email'}
+                    required={key === "supplierName" || key === "email"}
+                    className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
               ))}
             </div>
-            <div className="button-group">
-              <button type="submit" className="btnUpdate">Update</button>
-              <button type="button" className="btnClose" onClick={() => setEditingSupplier(null)}>Cancel</button>
+
+            {/* Action buttons */}
+            <div className="flex justify-end gap-3 mt-6">
+              <button
+                type="submit"
+                className="btnUpdate px-5 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700"
+              >
+                Update
+              </button>
+              <button
+                type="button"
+                onClick={() => setEditingSupplier(null)}
+                className="btnClose px-5 py-2 rounded-md bg-gray-300 text-gray-800 hover:bg-gray-400"
+              >
+                Cancel
+              </button>
             </div>
           </form>
         </div>
