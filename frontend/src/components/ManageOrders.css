@@ -1,21 +1,18 @@
-/* Container styling */
 .container {
-  background: #f0f4f8; /* light blue-gray */
+  background: #f0f4f8;
   padding: 30px 20px;
   border-radius: 10px;
   box-shadow: 0 8px 20px rgb(0 0 0 / 0.1);
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Page heading */
 h2 {
-  color: #2c3e50; /* dark slate blue */
+  color: #2c3e50;
   font-weight: 700;
-  text-shadow: 1px 1px 3px rgba(44, 62, 80, 0.2);
   margin-bottom: 30px;
+  text-align: center;
 }
 
-/* Table styles */
 .table {
   background-color: #ffffff;
   border-radius: 6px;
@@ -27,143 +24,213 @@ h2 {
 }
 
 .table thead {
-  background-color: #2980b9; /* nice blue */
+  background-color: #2980b9;
   color: #ffffff;
   font-weight: 600;
 }
 
 .table th,
 .table td {
-  vertical-align: middle !important;
+  vertical-align: middle;
   text-align: center;
   padding: 12px 15px;
-  border-color: #dfe6e9;
 }
 
-/* Table row hover */
 .table tbody tr:hover {
   background-color: #d6eaf8;
-  cursor: pointer;
 }
 
-/* Buttons container spacing */
 .d-flex.gap-2 {
   justify-content: center;
 }
 
-/* Buttons base styling */
 .btn {
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 4px;
   font-size: 0.85rem;
-  cursor: pointer;
-  transition: background-color 0.25s ease, border-color 0.25s ease;
   padding: 4px 10px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-sm {
   width: 36px;
   height: 32px;
 }
 
-/* Save button styling */
-.btn-success.btn-sm {
-  background-color: #000000;
-  border: 1.5px solid #000000;
+.btn-success,
+.btn-secondary,
+.btn-primary,
+.btn-danger {
+  background-color: #000;
   color: #fff;
+  border: 1.5px solid #000;
 }
 
-.btn-success.btn-sm:hover {
-  background-color: #333333;
-  border-color: #333333;
+.btn-success:hover,
+.btn-secondary:hover,
+.btn-primary:hover,
+.btn-danger:hover {
+  background-color: #333;
+  border-color: #333;
 }
 
-/* Cancel button styling */
-.btn-secondary.btn-sm {
-  background-color: #000000;
-  border: 1.5px solid #000000;
-  color: #fff;
-}
-
-.btn-secondary.btn-sm:hover {
-  background-color: #333333;
-  border-color: #333333;
-}
-
-/* Edit button styling */
-.btn-primary.btn-sm {
-  background-color: #000000;
-  border: 1.5px solid #000000;
-  color: #fff;
-}
-
-.btn-primary.btn-sm:hover {
-  background-color: #333333;
-  border-color: #333333;
-}
-
-/* Delete button styling (same size as edit) */
-.btn-danger.btn-sm {
-  background-color: #000000;
-  border: 1.5px solid #000000;
-  color: #fff;
-}
-
-.btn-danger.btn-sm:hover {
-  background-color: #333333;
-  border-color: #333333;
-}
-
-/* Inputs inside edit row */
-input.form-control {
-  font-size: 0.9rem;
-  padding: 6px 8px;
-  border: 1.5px solid #bdc3c7;
-  border-radius: 5px;
-  transition: border-color 0.25s ease;
-  text-align: center;
-}
-
-input.form-control:focus {
-  border-color: #2980b9;
-  outline: none;
-  box-shadow: 0 0 6px rgba(41, 128, 185, 0.4);
-}
-
-/* Error alert */
-.alert-danger {
-  background-color: #f8d7da;
-  color: #842029;
-  border-radius: 6px;
-  padding: 10px 15px;
-  font-weight: 600;
-  text-align: center;
-}
-
-/* Download button container */
-.download-container {
+/* View Report Button Styling */
+.report-button-container {
+  margin-top: 25px;
   display: flex;
   justify-content: center;
-  margin-top: 25px;
 }
 
-/* PDF Download button */
-.btn-pdf {
-  font-size: 0.9rem;
-  padding: 8px 20px;
-  width: auto;
-  height: 38px;
+.btn-view {
+  background-color: #2980b9;
+  color: white;
+  padding: 10px 18px;
   border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  background-color: #c0392b;
-  border: none;
-  color: #fff;
-  gap: 8px;
-  transition: background-color 0.3s ease;
+  font-size: 0.9rem;
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 8px;
+  transition: background-color 0.3s ease;
 }
 
-.btn-pdf:hover {
-  background-color: #e74c3c;
+.btn-view:hover {
+  background-color: #1f6691;
+}
+/* Back to Manage Orders button */
+.btn-back {
+  background-color: #000; /* Black background */
+  color: #fff;            /* White text */
+  border: 3px solid #000; /* Black border */
+  font-weight: 700;
+  padding: 16px 48px;     /* Bigger padding */
+  font-size: 1.3rem;      /* Larger font size */
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+  width: 280px;           /* Fixed width */
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  user-select: none;
+  letter-spacing: 0.05em;
+  margin-bottom: 30px;    /* Space below */
+}
+
+/* Hover effect: red background and border */
+.btn-back:hover {
+  background-color: #c0392b; /* Red */
+  border-color: #c0392b;
+  color: #fff;
+}
+
+/* Responsive: full width on smaller screens */
+@media (max-width: 768px) {
+  .btn-back {
+    width: 100%;
+    padding: 14px 0;
+  }
+}
+/* Back to Manage Orders button - smaller size */
+.btn-back {
+  background-color: #000; /* Black background */
+  color: #fff;            /* White text */
+  border: 2px solid #000; /* Black border */
+  font-weight: 600;
+  padding: 10px 24px;     /* Smaller padding */
+  font-size: 1rem;        /* Smaller font size */
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+  width: 180px;           /* Reduced width */
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  user-select: none;
+  letter-spacing: 0.04em;
+  margin-bottom: 20px;    /* Space below */
+}
+
+/* Hover effect: red background and border */
+.btn-back:hover {
+  background-color: #c0392b; /* Red */
+  border-color: #c0392b;
+  color: #fff;
+}
+
+/* Responsive: full width on smaller screens */
+@media (max-width: 768px) {
+  .btn-back {
+    width: 100%;
+    padding: 10px 0;
+  }
+}
+
+/* Back to Manage Orders button - smaller size and nowrap */
+.btn-back {
+  background-color: #000; /* Black background */
+  color: #fff;            /* White text */
+  border: 2px solid #000; /* Black border */
+  font-weight: 600;
+  padding: 10px 24px;     /* Padding */
+  font-size: 1rem;        /* Font size */
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+  width: 180px;           /* Width */
+  white-space: nowrap;    /* Prevent line breaks */
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  user-select: none;
+  letter-spacing: 0.04em;
+  margin-bottom: 20px;    /* Space below */
+}
+
+/* Hover effect */
+.btn-back:hover {
+  background-color: #c0392b; /* Red hover */
+  border-color: #c0392b;
+  color: #fff;
+}
+
+/* Responsive: full width on smaller screens */
+@media (max-width: 768px) {
+  .btn-back {
+    width: 100%;
+    padding: 10px 0;
+  }
+}
+
+/* Back to Manage Orders button - wider and nowrap */
+.btn-back {
+  background-color: #000; /* Black background */
+  color: #fff;            /* White text */
+  border: 2px solid #000; /* Black border */
+  font-weight: 600;
+  padding: 10px 24px;     /* Padding */
+  font-size: 1rem;        /* Font size */
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+  width: 280px;           /* Increased width */
+  white-space: nowrap;    /* Prevent line breaks */
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  user-select: none;
+  letter-spacing: 0.04em;
+  margin-bottom: 20px;    /* Space below */
+}
+
+/* Hover effect */
+.btn-back:hover {
+  background-color: #c0392b; /* Red hover */
+  border-color: #c0392b;
+  color: #fff;
+}
+
+/* Responsive: full width on smaller screens */
+@media (max-width: 768px) {
+  .btn-back {
+    width: 100%;
+    padding: 10px 0;
+  }
 }
