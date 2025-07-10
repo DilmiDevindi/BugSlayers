@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { CSVLink } from "react-csv";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPen,
+  faTrash,
+  faTimes,
+  faSave,
+  faFilePdf,
+} from "@fortawesome/free-solid-svg-icons";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import "./ManageOrders.css";
 
 function ManageOrders() {
   const [orders, setOrders] = useState([]);
@@ -14,16 +24,8 @@ function ManageOrders() {
     discount: "",
     date: "",
   });
-  const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
-  // CSV headers for export
-  const csvHeaders = [
-    { label: "Order ID", key: "orderId" },
-    { label: "Supplier", key: "companyName" },
-    { label: "Quantity", key: "quantity" },
-    { label: "Discount", key: "discount" },
-    { label: "Date", key: "date" },
-  ];
+  const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
   useEffect(() => {
     fetchOrders();
@@ -81,137 +83,174 @@ function ManageOrders() {
     }
   };
 
+  // PDF generation function
+  const generatePDF = () => {
+    const doc = new jsPDF();
+
+    doc.setFontSize(18);
+    doc.text("Orders Report", 14, 22);
+
+    const tableColumn = ["Order ID", "Supplier", "Quantity", "Discount", "Date"];
+    const tableRows = [];
+
+    orders.forEach((order) => {
+      const orderData = [
+        order.orderId,
+        order.companyName,
+        order.quantity.toString(),
+        order.discount.toString(),
+        order.date ? order.date.slice(0, 10) : "",
+      ];
+      tableRows.push(orderData);
+    });
+
+    doc.autoTable({
+      startY: 30,
+      head: [tableColumn],
+      body: tableRows,
+      theme: "grid",
+      headStyles: { fillColor: [41, 128, 185] }, // blue header
+      styles: { fontSize: 10, cellPadding: 3 },
+    });
+
+    doc.save(`orders_report_${new Date().toISOString().slice(0, 10)}.pdf`);
+  };
+
   return (
     <div className="container mt-5">
       <h2 className="mb-4 text-center">Manage Orders</h2>
-      <div className="mb-3 text-end">
-        <CSVLink
-          data={orders.map((o) => ({
-            ...o,
-            date: o.date ? o.date.slice(0, 10) : "",
-          }))}
-          headers={csvHeaders}
-          filename={`orders_report_${new Date()
-            .toISOString()
-            .slice(0, 10)}.csv`}
-          className="btn btn-success"
-        >
-          Download Excel
-        </CSVLink>
-      </div>
+
       {loading ? (
         <div>Loading...</div>
       ) : error ? (
         <div className="alert alert-danger">{error}</div>
       ) : (
-        <div className="table-responsive">
-          <table className="table table-bordered table-hover">
-            <thead className="table-light">
-              <tr>
-                <th>Order ID</th>
-                <th>Supplier</th>
-                <th>Quantity</th>
-                <th>Discount</th>
-                <th>Date</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((order) =>
-                editId === order._id ? (
-                  <tr key={order._id}>
-                    <td>
-                      <input
-                        name="orderId"
-                        value={editForm.orderId}
-                        onChange={handleEditChange}
-                        className="form-control"
-                        required
-                      />
-                    </td>
-                    <td>
-                      <input
-                        name="companyName"
-                        value={editForm.companyName}
-                        onChange={handleEditChange}
-                        className="form-control"
-                        required
-                      />
-                    </td>
-                    <td>
-                      <input
-                        name="quantity"
-                        type="number"
-                        value={editForm.quantity}
-                        onChange={handleEditChange}
-                        className="form-control"
-                        min={1}
-                        required
-                      />
-                    </td>
-                    <td>
-                      <input
-                        name="discount"
-                        type="number"
-                        value={editForm.discount}
-                        onChange={handleEditChange}
-                        className="form-control"
-                        min={0}
-                        required
-                      />
-                    </td>
-                    <td>
-                      <input
-                        name="date"
-                        type="date"
-                        value={editForm.date}
-                        onChange={handleEditChange}
-                        className="form-control"
-                        required
-                      />
-                    </td>
-                    <td>
-                      <button
-                        className="btn btn-success btn-sm me-2"
-                        onClick={handleEditSubmit}
-                      >
-                        Save
-                      </button>
-                      <button
-                        className="btn btn-secondary btn-sm"
-                        onClick={() => setEditId(null)}
-                      >
-                        Cancel
-                      </button>
-                    </td>
-                  </tr>
-                ) : (
-                  <tr key={order._id}>
-                    <td>{order.orderId}</td>
-                    <td>{order.companyName}</td>
-                    <td>{order.quantity}</td>
-                    <td>{order.discount}</td>
-                    <td>{order.date ? order.date.slice(0, 10) : ""}</td>
-                    <td>
-                      <button
-                        className="btn btn-primary btn-sm me-2"
-                        onClick={() => handleEdit(order)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="btn btn-danger btn-sm"
-                        onClick={() => handleDelete(order._id)}
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                )
-              )}
-            </tbody>
-          </table>
-        </div>
+        <>
+          <div className="table-responsive">
+            <table className="table table-bordered table-hover">
+              <thead className="table-light">
+                <tr>
+                  <th>Order ID</th>
+                  <th>Supplier</th>
+                  <th>Quantity</th>
+                  <th>Discount</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orders.map((order) =>
+                  editId === order._id ? (
+                    <tr key={order._id}>
+                      <td>
+                        <input
+                          name="orderId"
+                          value={editForm.orderId}
+                          onChange={handleEditChange}
+                          className="form-control"
+                          required
+                        />
+                      </td>
+                      <td>
+                        <input
+                          name="companyName"
+                          value={editForm.companyName}
+                          onChange={handleEditChange}
+                          className="form-control"
+                          required
+                        />
+                      </td>
+                      <td>
+                        <input
+                          name="quantity"
+                          type="number"
+                          value={editForm.quantity}
+                          onChange={handleEditChange}
+                          className="form-control"
+                          min={1}
+                          required
+                        />
+                      </td>
+                      <td>
+                        <input
+                          name="discount"
+                          type="number"
+                          value={editForm.discount}
+                          onChange={handleEditChange}
+                          className="form-control"
+                          min={0}
+                          required
+                        />
+                      </td>
+                      <td>
+                        <input
+                          name="date"
+                          type="date"
+                          value={editForm.date}
+                          onChange={handleEditChange}
+                          className="form-control"
+                          required
+                        />
+                      </td>
+                      <td className="d-flex gap-2">
+                        <button
+                          className="btn btn-success btn-sm"
+                          onClick={handleEditSubmit}
+                          title="Save"
+                        >
+                          <FontAwesomeIcon icon={faSave} />
+                        </button>
+                        <button
+                          className="btn btn-secondary btn-sm"
+                          onClick={() => setEditId(null)}
+                          title="Cancel"
+                        >
+                          <FontAwesomeIcon icon={faTimes} />
+                        </button>
+                      </td>
+                    </tr>
+                  ) : (
+                    <tr key={order._id}>
+                      <td>{order.orderId}</td>
+                      <td>{order.companyName}</td>
+                      <td>{order.quantity}</td>
+                      <td>{order.discount}</td>
+                      <td>{order.date ? order.date.slice(0, 10) : ""}</td>
+                      <td className="d-flex gap-2">
+                        <button
+                          className="btn btn-primary btn-sm"
+                          onClick={() => handleEdit(order)}
+                          title="Edit"
+                        >
+                          <FontAwesomeIcon icon={faPen} />
+                        </button>
+                        <button
+                          className="btn btn-danger btn-sm"
+                          onClick={() => handleDelete(order._id)}
+                          title="Delete"
+                        >
+                          <FontAwesomeIcon icon={faTrash} />
+                        </button>
+                      </td>
+                    </tr>
+                  )
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* PDF Download Button */}
+          <div className="download-container">
+            <button
+              className="btn btn-pdf"
+              onClick={generatePDF}
+              title="Download PDF"
+            >
+              <FontAwesomeIcon icon={faFilePdf} />
+              Download PDF
+            </button>
+          </div>
+        </>
       )}
     </div>
   );
