@@ -1,4 +1,3 @@
-// ⬇️ your imports (unchanged)
 import { useState, useEffect, useMemo } from 'react';
 import { CSVLink } from 'react-csv';
 import jsPDF from 'jspdf';
@@ -25,6 +24,7 @@ const InventorySummary = () => {
   const [inventoryItems, setInventoryItems] = useState([]);
   const [categories, setCategories] = useState([]);
 
+  // Report month in YYYY-MM format
   const [reportMonth, setReportMonth] = useState(() => {
     const now = new Date();
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
@@ -55,6 +55,7 @@ const InventorySummary = () => {
     }
   };
 
+  // Filter items by reportMonth
   const filteredItems = useMemo(() => {
     if (!reportMonth) return inventoryItems;
     const [year, month] = reportMonth.split('-').map(Number);
@@ -65,10 +66,13 @@ const InventorySummary = () => {
     });
   }, [inventoryItems, reportMonth]);
 
+  // Helper to get category name from id
   const getCategoryName = (id) => {
     const cat = categories.find((c) => c._id === id);
     return cat ? cat.categoryName : 'Unknown';
   };
+
+  // Calculate stats and chart data from filteredItems
 
   const totalValue = filteredItems.reduce(
     (sum, it) => sum + (it.quantity || 0) * (it.sellingPrice || 0),
@@ -79,6 +83,7 @@ const InventorySummary = () => {
   const outOfStock = filteredItems.filter(it => (it.quantity || 0) === 0).length;
   const lowStock = filteredItems.filter(it => (it.quantity || 0) < 5 && (it.quantity || 0) > 0).length;
 
+  // Pie data: sum quantities grouped by category for filteredItems
   const pieData = Object.entries(
     filteredItems.reduce((acc, it) => {
       acc[it.category] = (acc[it.category] || 0) + (it.quantity || 0);
@@ -89,18 +94,21 @@ const InventorySummary = () => {
     value: val,
   }));
 
+  // Bar data: top 10 stocked items by quantity from filteredItems
   const barData = filteredItems
     .map(it => ({ inventoryItem: it.productName, quantity: it.quantity || 0 }))
     .sort((a, b) => b.quantity - a.quantity)
     .slice(0, 10);
 
-  const lineData = filteredItems
-    .map(it => ({
-      date: it.dateAdded,
-      value: (it.quantity || 0) * (it.sellingPrice || 0),
-    }))
-    .sort((a, b) => new Date(a.date) - new Date(b.date));
+  // Line data: inventory value trends by date for filteredItems
+  const lineDataTemp = filteredItems.map(it => ({
+    date: it.dateAdded,
+    value: (it.quantity || 0) * (it.sellingPrice || 0),
+  })).sort((a, b) => new Date(a.date) - new Date(b.date));
 
+  const lineData = lineDataTemp;
+
+  // CSV data generation
   const generateCSVData = () => {
     const headers = [
       'No', 'Product', 'Item Code', 'Category', 'Date', 'Supplier',
@@ -111,7 +119,7 @@ const InventorySummary = () => {
       return [
         i + 1,
         item.productName || 'N/A',
-        item.code || 'N/A', // ✅ fixed line
+        item.itemCode || 'N/A',
         getCategoryName(item.category),
         item.dateAdded || 'N/A',
         item.supplier || 'N/A',
@@ -123,14 +131,17 @@ const InventorySummary = () => {
     return [headers, ...rows];
   };
 
-  const getReportMonthYear = (date) => {
+  // Format month-year string like "July 2025"
+  function getReportMonthYear(date) {
     const options = { year: 'numeric', month: 'long' };
     return date.toLocaleDateString('en-GB', options);
-  };
+  }
 
+  // Generate PDF using filteredItems
   const generatePDF = (reportDate = new Date()) => {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
+
     const reportMonthYear = getReportMonthYear(reportDate);
 
     const companyName = 'New Sisira Furniture';
@@ -140,6 +151,7 @@ const InventorySummary = () => {
 
     try {
       doc.addImage(furnitureLogo, 'PNG', 14, 10, 25, 25);
+
       doc.setFontSize(13);
       doc.setTextColor(40);
       doc.text(companyName, 45, 15);
@@ -169,7 +181,7 @@ const InventorySummary = () => {
         return [
           i + 1,
           item.productName || 'N/A',
-          item.code || 'N/A', // ✅ fixed line
+          item.itemCode || 'N/A',
           getCategoryName(item.category),
           item.dateAdded || 'N/A',
           item.supplier || 'N/A',
@@ -200,6 +212,7 @@ const InventorySummary = () => {
     }
   };
 
+  // Handler for generate PDF button
   const handleGeneratePDF = () => {
     const [year, month] = reportMonth.split('-');
     generatePDF(new Date(year, month - 1));
@@ -207,6 +220,7 @@ const InventorySummary = () => {
 
   return (
     <div className="inventory-report-wrapper">
+      {/* Company Details */}
       <header className="company-header">
         <h6 className="company-name"><b><center>New Sisira Furniture</center></b></h6>
         <h6 className="report-name"><b><center>Inventory Summary Report</center></b></h6>
@@ -214,6 +228,7 @@ const InventorySummary = () => {
 
       <br />
 
+      {/* Month picker */}
       <div style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
         <label htmlFor="report-month">Select Report Month:</label>
         <input
@@ -224,6 +239,7 @@ const InventorySummary = () => {
         />
       </div>
 
+      {/* Summary Cards */}
       <section className="summary-cards">
         <div className="summary-card">
           <div className="card-label">Total Inventory Items</div>
@@ -245,6 +261,7 @@ const InventorySummary = () => {
 
       <br />
 
+      {/* Charts */}
       <section className="charts-row" style={{ marginBottom: '1rem' }}>
         <div className="chart-row-top" style={{ display: 'flex', gap: '1rem' }}>
           <div className="chart-container" style={{ flex: 1 }}>
@@ -261,6 +278,7 @@ const InventorySummary = () => {
                   label={({ category, percent }) =>
                     `${category}: ${(percent * 100).toFixed(0)}%`
                   }
+                  labelStyle={{ fill: 'black' }}
                 >
                   {pieData.map((_, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -316,6 +334,7 @@ const InventorySummary = () => {
 
       <br />
 
+      {/* Table */}
       <section className="table-section">
         <table className="inventory-table">
           <thead>
@@ -338,7 +357,7 @@ const InventorySummary = () => {
                 <tr key={item._id}>
                   <td>{i + 1}</td>
                   <td>{item.productName || 'N/A'}</td>
-                  <td>{item.code || 'N/A'}</td> {/* ✅ fixed line */}
+                  <td>{item.itemCode || 'N/A'}</td>
                   <td>{getCategoryName(item.category)}</td>
                   <td>{item.dateAdded || 'N/A'}</td>
                   <td>{item.supplier || 'N/A'}</td>
@@ -352,6 +371,7 @@ const InventorySummary = () => {
         </table>
       </section>
 
+      {/* Footer */}
       <footer className="report-footer">
         <button className="pdf-button" onClick={handleGeneratePDF}>
           Generate Monthly PDF
