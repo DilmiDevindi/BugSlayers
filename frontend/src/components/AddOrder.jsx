@@ -7,7 +7,6 @@ const AddOrder = () => {
     orderId: '',
     companyName: '',
     quantity: '',
-    discount: '',
     date: '',
   });
   const [message, setMessage] = useState('');
@@ -33,16 +32,15 @@ const AddOrder = () => {
     }
   };
 
-  // SINGLE handleChange function
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { orderId, companyName, quantity, discount, date } = form;
+    const { orderId, companyName, quantity, date } = form;
 
-    if (!orderId || !companyName || !quantity || !discount || !date) {
+    if (!orderId || !companyName || !quantity || !date) {
       setMessage('Please fill in all fields.');
       return;
     }
@@ -52,7 +50,6 @@ const AddOrder = () => {
         orderId,
         companyName,
         quantity: Number(quantity),
-        discount: Number(discount),
         date,
       });
 
@@ -62,7 +59,6 @@ const AddOrder = () => {
         orderId: '',
         companyName: '',
         quantity: '',
-        discount: '',
         date: '',
       });
     } catch (err) {
@@ -108,12 +104,10 @@ const AddOrder = () => {
             name="orderId"
             value={form.orderId}
             onChange={handleChange}
-            readOnly // Order ID is read-only (auto-generated)
+            readOnly
             required
           />
         </div>
-
-
 
         <div className="mb-3">
           <label className="form-label" htmlFor="companyName">
@@ -149,23 +143,6 @@ const AddOrder = () => {
             value={form.quantity}
             onChange={handleChange}
             min={1}
-            required
-          />
-        </div>
-
-        <div className="mb-3">
-          <label className="form-label" htmlFor="discount">
-            Discount
-          </label>
-          <input
-            className="form-control"
-            id="discount"
-            type="number"
-            name="discount"
-            placeholder="Discount"
-            value={form.discount}
-            onChange={handleChange}
-            min={0}
             required
           />
         </div>

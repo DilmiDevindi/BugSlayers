@@ -18,7 +18,7 @@ const AddSupplier = ({ onSupplierSelected }) => {
     fax: "",
     email: "",
     address: "",
-    supplyProducts: [],
+    supplyProducts: [], // will not be used anymore, but kept for backend compatibility
     paymentTerms: "",
   });
 
@@ -33,8 +33,6 @@ const AddSupplier = ({ onSupplierSelected }) => {
     try {
       setIsLoading(true);
       const response = await axios.get("http://localhost:5000/api/suppliers/");
-
-      // Since backend now stores suppliers with products as arrays, no need to group
       setExistingSuppliers(response.data);
     } catch (error) {
       console.error("Error fetching suppliers:", error);
@@ -83,23 +81,6 @@ const AddSupplier = ({ onSupplierSelected }) => {
     setSupplier({ ...supplier, [name]: validatedValue });
   };
 
-  const handleProductChange = (e) => {
-    const { value, checked } = e.target;
-    if (checked) {
-      setSupplier({
-        ...supplier,
-        supplyProducts: [...supplier.supplyProducts, value],
-      });
-    } else {
-      setSupplier({
-        ...supplier,
-        supplyProducts: supplier.supplyProducts.filter(
-          (product) => product !== value
-        ),
-      });
-    }
-  };
-
   const handleSupplierNameBlur = (e) => {
     const value = e.target.value;
     if (value) {
@@ -116,19 +97,11 @@ const AddSupplier = ({ onSupplierSelected }) => {
     }
 
     if (isAddingNew) {
-      // Check if at least one product is selected
-      if (supplier.supplyProducts.length === 0) {
-        alert("Please select at least one product.");
-        return;
-      }
-
-      // Check if this is adding products to existing supplier
-      const isExistingSupplier = selectedSupplier && selectedSupplier !== "";
+      // Removed product selection validation here because products are removed
 
       let hasErrors = false;
       Object.entries(supplier).forEach(([key, value]) => {
         if (key !== "supplyProducts") {
-          // Skip supplyProducts as it's an array
           const validated = validateFields(key, value);
           if (errors[key]) hasErrors = true;
         }
@@ -145,13 +118,8 @@ const AddSupplier = ({ onSupplierSelected }) => {
           supplier
         );
 
-        // Handle the new response format
         if (response.data.message) {
-          alert(
-            `${response.data.message}\nProducts: ${supplier.supplyProducts.join(
-              ", "
-            )}`
-          );
+          alert(response.data.message);
         } else {
           alert("Supplier operation completed successfully");
         }
@@ -164,14 +132,14 @@ const AddSupplier = ({ onSupplierSelected }) => {
           fax: "",
           email: "",
           address: "",
-          supplyProducts: [],
+          supplyProducts: [], // empty as products removed
           paymentTerms: "",
         });
 
         setErrors({});
         setIsAddingNew(false);
         setSelectedSupplier("");
-        fetchExistingSuppliers(); // Refresh the suppliers list
+        fetchExistingSuppliers();
       } catch (error) {
         console.error("Error adding supplier:", error);
         if (error.response?.data?.message) {
@@ -187,7 +155,6 @@ const AddSupplier = ({ onSupplierSelected }) => {
       );
       if (selected) {
         alert(`Selected supplier: ${selected.supplierName}`);
-        // Call parent callback if provided
         if (onSupplierSelected) {
           onSupplierSelected(selected);
         }
@@ -202,7 +169,6 @@ const AddSupplier = ({ onSupplierSelected }) => {
     if (value === "add_new") {
       setIsAddingNew(true);
       setSelectedSupplier("");
-      // Reset form for completely new supplier
       setSupplier({
         date: new Date().toISOString().split("T")[0],
         supplierName: "",
@@ -211,16 +177,15 @@ const AddSupplier = ({ onSupplierSelected }) => {
         fax: "",
         email: "",
         address: "",
-        supplyProducts: [],
+        supplyProducts: [], // empty
         paymentTerms: "",
       });
     } else if (value) {
-      // Existing supplier selected - auto fill form
       const selectedSupplierData = existingSuppliers.find(
         (s) => s._id === value
       );
       if (selectedSupplierData) {
-        setIsAddingNew(true); // Show the form
+        setIsAddingNew(true);
         setSupplier({
           date: new Date().toISOString().split("T")[0],
           supplierName: selectedSupplierData.supplierName,
@@ -229,7 +194,7 @@ const AddSupplier = ({ onSupplierSelected }) => {
           fax: selectedSupplierData.fax || "",
           email: selectedSupplierData.email || "",
           address: selectedSupplierData.address || "",
-          supplyProducts: [], // Start with empty products for new addition
+          supplyProducts: [], // start empty, no product selection
           paymentTerms: selectedSupplierData.paymentTerms || "",
         });
       }
@@ -318,7 +283,7 @@ const AddSupplier = ({ onSupplierSelected }) => {
             </option>
             {existingSuppliers.map((supplier) => (
               <option key={supplier._id} value={supplier._id}>
-                {supplier.supplierName} - {supplier.supplyProducts.join(", ")}
+                {supplier.supplierName}
               </option>
             ))}
             <option value="add_new">Add Completely New Supplier</option>
@@ -345,29 +310,19 @@ const AddSupplier = ({ onSupplierSelected }) => {
                 }}
               >
                 <strong>Selected Supplier:</strong>{" "}
-                {
-                  existingSuppliers.find((s) => s._id === selectedSupplier)
-                    ?.supplierName
-                }
+                {existingSuppliers.find((s) => s._id === selectedSupplier)
+                  ?.supplierName}
               </div>
               <div style={{ fontSize: "1rem", marginBottom: "8px" }}>
-                <strong>Products:</strong>{" "}
-                {existingSuppliers
-                  .find((s) => s._id === selectedSupplier)
-                  ?.supplyProducts?.join(", ")}
-              </div>
-              <div style={{ fontSize: "1rem" }}>
                 <strong>Contact:</strong>{" "}
-                {
-                  existingSuppliers.find((s) => s._id === selectedSupplier)
-                    ?.phone1
-                }
+                {existingSuppliers.find((s) => s._id === selectedSupplier)
+                  ?.phone1}
               </div>
             </div>
           </div>
         )}
 
-        {/* Show form only when adding new supplier */}
+        {/* Show form only when adding new supplier or adding products */}
         {isAddingNew && (
           <div
             style={{
@@ -392,7 +347,7 @@ const AddSupplier = ({ onSupplierSelected }) => {
                 }}
               >
                 {selectedSupplier && selectedSupplier !== ""
-                  ? `Add Products for: ${supplier.supplierName}`
+                  ? `Edit Supplier: ${supplier.supplierName}`
                   : "Add New Supplier Details"}
               </h5>
             </div>
@@ -507,14 +462,11 @@ const AddSupplier = ({ onSupplierSelected }) => {
                           : "text",
                     }}
                     onFocus={(e) => {
-                      if (!e.target.readOnly)
-                        e.target.style.borderColor = "#666";
+                      if (!e.target.readOnly) e.target.style.borderColor = "#666";
                     }}
                     onBlur={(e) => {
-                      if (!e.target.readOnly)
-                        e.target.style.borderColor = "#ddd";
-                      if (field.key === "supplierName")
-                        handleSupplierNameBlur(e);
+                      if (!e.target.readOnly) e.target.style.borderColor = "#ddd";
+                      if (field.key === "supplierName") handleSupplierNameBlur(e);
                     }}
                   />
                   {selectedSupplier &&
@@ -599,121 +551,6 @@ const AddSupplier = ({ onSupplierSelected }) => {
                 )}
               </div>
             </div>
-
-            {/* Products Selection Section */}
-            <div className="form-group-i">
-              <label
-                style={{
-                  fontWeight: "600",
-                  marginBottom: "12px",
-                  color: "#2c3e50",
-                  fontSize: "1.1rem",
-                  display: "block",
-                }}
-              >
-                {selectedSupplier && selectedSupplier !== ""
-                  ? "Select New Products to Add (Multiple Selection):"
-                  : "Select Products (Multiple Selection):"}
-              </label>
-              {selectedSupplier && selectedSupplier !== "" && (
-                <div
-                  style={{
-                    background: "#e9ecef",
-                    border: "1px solid #ced4da",
-                    borderRadius: "6px",
-                    padding: "12px",
-                    marginBottom: "15px",
-                  }}
-                >
-                  <strong>Current Products:</strong>{" "}
-                  {existingSuppliers
-                    .find((s) => s._id === selectedSupplier)
-                    ?.supplyProducts?.join(", ")}
-                </div>
-              )}
-              <div
-                style={{
-                  border: "2px solid #ddd",
-                  padding: "20px",
-                  borderRadius: "10px",
-                  background: "white",
-                }}
-              >
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-                    gap: "12px",
-                  }}
-                >
-                  {[
-                    "Mattress",
-                    "Cupboard",
-                    "Chair",
-                    "Table",
-                    "Iron Board",
-                    "Carrom Board",
-                    "Clothes Rack",
-                  ].map((product) => (
-                    <div
-                      key={product}
-                      style={{
-                        background: supplier.supplyProducts.includes(product)
-                          ? "#f8f9fa"
-                          : "white",
-                        padding: "12px 15px",
-                        borderRadius: "8px",
-                        border: supplier.supplyProducts.includes(product)
-                          ? "2px solid #6c757d"
-                          : "2px solid #e9ecef",
-                        transition: "all 0.3s ease",
-                        cursor: "pointer",
-                      }}
-                    >
-                      <label
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          cursor: "pointer",
-                          margin: 0,
-                          color: "#2c3e50",
-                          fontWeight: supplier.supplyProducts.includes(product)
-                            ? "600"
-                            : "normal",
-                        }}
-                      >
-                        <input
-                          type="checkbox"
-                          value={product}
-                          checked={supplier.supplyProducts.includes(product)}
-                          onChange={handleProductChange}
-                          style={{
-                            marginRight: "10px",
-                            transform: "scale(1.2)",
-                          }}
-                        />
-                        {product}
-                      </label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              {supplier.supplyProducts.length === 0 && (
-                <div
-                  style={{
-                    marginTop: "15px",
-                    padding: "12px 16px",
-                    borderRadius: "6px",
-                    background: "#fff3cd",
-                    border: "1px solid #ffeaa7",
-                    color: "#856404",
-                    fontSize: "0.95rem",
-                  }}
-                >
-                  Please select at least one product
-                </div>
-              )}
-            </div>
           </div>
         )}
 
@@ -752,7 +589,7 @@ const AddSupplier = ({ onSupplierSelected }) => {
             }}
           >
             {selectedSupplier && selectedSupplier !== ""
-              ? "Add Products to Existing Supplier"
+              ? "Update Existing Supplier"
               : isAddingNew
               ? "Add New Supplier"
               : "Select Supplier"}
