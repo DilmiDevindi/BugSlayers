@@ -329,11 +329,11 @@ function BillForm() {
               <tr>
                 <th>Item</th>
                 <th>Qty</th>
-                <th>Selling</th>
+                <th>Price</th>
                 <th>Discount</th>
                 <th>Buying</th>
                 <th>Total</th>
-                
+            
               </tr>
             </thead>
             <tbody>
@@ -363,9 +363,7 @@ function BillForm() {
           <p>
             <strong>Balance:</strong> Rs. {balance.toFixed(2)}
           </p>
-          <p>
-            <strong>Total Profit:</strong> Rs. {calculateTotalProfit()}
-          </p>
+          
           <p style={{ textAlign: 'center' }}>* {Math.floor(Math.random() * 999999).toString().padStart(6, '0')} *</p>
           <p style={{ fontSize: '12px', textAlign: 'center' }}>
             Thank you for choosing Sisira Furnitures!
