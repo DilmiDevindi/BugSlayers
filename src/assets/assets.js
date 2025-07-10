@@ -81,10 +81,12 @@ import star_icon from './star_icon.png'
 import star_dull_icon from './star_dull_icon.png'
 import bin_icon from './bin_icon.png'
 import cross_icon from './cross_icon.png'
+
 import Master from './Master.png'
 import Visa from './Visa.png'
 import About from './About.jpg'
 import Contact from './Contact.jpg'
+
 
 
 
@@ -112,10 +114,12 @@ export const assets = {
     star_dull_icon,
     bin_icon,
     cross_icon,
+
     Master,
     Visa,
     About,
     Contact,
+
 
 }
 
