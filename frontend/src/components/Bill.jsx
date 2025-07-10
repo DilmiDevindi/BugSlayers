@@ -345,7 +345,7 @@ function BillForm() {
                   <td>Rs. {item.discount}</td>
                   <td>Rs. {item.buyingPrice}</td>
                   <td>Rs. {calculateItemTotal(item)}</td>
-                  <td>Rs. {calculateItemProfit(item)}</td>
+                  
                 </tr>
               ))}
             </tbody>
