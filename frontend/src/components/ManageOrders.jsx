@@ -216,3 +216,5 @@ function ManageOrders() {
     </div>
   );
 }
+
+export default ManageOrders;
