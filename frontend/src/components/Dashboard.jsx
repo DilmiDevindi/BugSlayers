@@ -1,20 +1,18 @@
+import React from 'react';
 import { Bar, Doughnut } from 'react-chartjs-2';
-import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip, Legend, ArcElement } from 'chart.js';
+import {
+  Chart as ChartJS,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+  ArcElement,
+} from 'chart.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { FaBell, FaBars, FaEllipsisH } from 'react-icons/fa';
+import { FaBell, FaEllipsisH } from 'react-icons/fa';
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend, ArcElement);
-
-const sidebarItems = [
-  { name: 'Dashboard', icon: <FaBars />, active: true },
-  { name: 'Inventory', icon: <FaBars />, active: false },
-  { name: 'Analytics', icon: <FaBars />, active: false },
-  { name: 'Sales Orders', icon: <FaBars />, active: false },
-  { name: 'B2B ecommerce', icon: <FaBars />, active: false },
-  { name: 'Products', icon: <FaBars />, active: false },
-  { name: 'Customers', icon: <FaBars />, active: false },
-  { name: 'Browse Apps', icon: <FaBars />, active: false },
-];
 
 const kpiCards = [
   {
@@ -128,45 +126,9 @@ const revenueVsCostsSmallData = {
 
 function Dashboard() {
   return (
-    <div className="d-flex" style={{ minHeight: '100vh', backgroundColor: '#D2CBDA' }}>
-      {/* Sidebar */}
-      <nav
-        className="d-flex flex-column p-3"
-        style={{ width: '230px', backgroundColor: 'white', fontWeight: '600' }}
-      >
-        <h3 className="mb-4" style={{ fontWeight: '700' }}>
-          <span
-            style={{
-              backgroundColor: '#573e85',
-              color: 'white',
-              padding: '5px 10px',
-              borderRadius: '6px',
-              fontSize: '1.5rem',
-              marginRight: '8px',
-            }}
-          >
-            P
-          </span>
-          Propay
-        </h3>
-        {sidebarItems.map(({ name, icon, active }) => (
-          <div
-            key={name}
-            className={`d-flex align-items-center mb-3 p-2 rounded ${active ? 'bg-light' : ''}`}
-            style={{ cursor: 'pointer', color: active ? '#573e85' : '#555' }}
-          >
-            <span style={{ marginRight: '10px' }}>{icon}</span>
-            <span>{name}</span>
-          </div>
-        ))}
-        <div className="mt-auto pt-3" style={{ color: '#777' }}>
-          <FaBars style={{ marginRight: '6px' }} />
-          Settings
-        </div>
-      </nav>
-
-      {/* Main content */}
-      <main className="flex-grow-1 p-4" style={{ backgroundColor: '#fefefe' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: '#fefefe' }}>
+      {/* Main content only */}
+      <main className="p-4">
         {/* Header */}
         <div className="d-flex justify-content-between align-items-center mb-4">
           <div style={{ flex: 1 }}>
@@ -192,8 +154,8 @@ function Dashboard() {
         <h4>Morning, Dibbendo!</h4>
         <p className="text-muted mb-4">Here’s what’s happening with your store today.</p>
 
-        {/* KPIs */}
-        <div className="d-flex justify-content-between gap-4 mb-4">
+        {/* KPI Cards */}
+        <div className="d-flex justify-content-between gap-4 mb-4 flex-wrap">
           {kpiCards.map(({ title, value, trend, trendValue, trendUp }) => (
             <div
               key={title}
@@ -202,7 +164,7 @@ function Dashboard() {
             >
               <small className="text-muted">{title}</small>
               <h3 style={{ fontWeight: '700' }}>{value}</h3>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <div className="d-flex align-items-center gap-2">
                 <span style={{ color: trendUp ? '#00a86b' : '#de1a1a', fontWeight: '700' }}>
                   {trendUp ? '↗' : '↘'} {trend}
                 </span>
@@ -212,39 +174,24 @@ function Dashboard() {
           ))}
         </div>
 
-        {/* Graphs row */}
+        {/* Graphs */}
         <div className="d-flex gap-4 mb-4 flex-wrap">
-          {/* Revenue vs Costs big */}
           <div className="flex-grow-1 border rounded p-3" style={{ minWidth: '400px' }}>
             <h6>Revenue vs Costs</h6>
             <Bar
               data={revenueVsCostsData}
               options={{
-                plugins: {
-                  legend: { position: 'top' },
-                },
-                scales: {
-                  y: { beginAtZero: true, max: 15000 },
-                },
+                plugins: { legend: { position: 'top' } },
+                scales: { y: { beginAtZero: true, max: 15000 } },
               }}
             />
             <div className="d-flex justify-content-between mt-2 px-2 text-muted" style={{ fontSize: 12 }}>
-              <span>Jan 45%</span>
-              <span>Feb 32%</span>
-              <span>Mar 49%</span>
-              <span>Apr 47%</span>
-              <span>May 16%</span>
-              <span>Jun 35%</span>
-              <span>Jul 40%</span>
-              <span>Aug 32%</span>
-              <span>Sep 18%</span>
-              <span>Oct 47%</span>
-              <span>Nov 46%</span>
-              <span>Dec 3%</span>
+              {revenueVsCostsData.labels.map((label, idx) => (
+                <span key={idx}>{label} {Math.floor(Math.random() * 50)}%</span>
+              ))}
             </div>
           </div>
 
-          {/* Donut chart */}
           <div
             className="border rounded p-3 d-flex flex-column align-items-center justify-content-center"
             style={{ minWidth: '200px', maxWidth: '250px' }}
@@ -253,94 +200,50 @@ function Dashboard() {
             <Doughnut data={donutData} />
             <div className="d-flex gap-3 mt-2" style={{ fontSize: '14px' }}>
               <div>
-                <span
-                  style={{
-                    display: 'inline-block',
-                    width: '14px',
-                    height: '14px',
-                    backgroundColor: '#573e85',
-                    borderRadius: '3px',
-                    marginRight: '5px',
-                  }}
-                ></span>
+                <span style={{ display: 'inline-block', width: '14px', height: '14px', backgroundColor: '#573e85', borderRadius: '3px', marginRight: '5px' }}></span>
                 Today 274
               </div>
               <div>
-                <span
-                  style={{
-                    display: 'inline-block',
-                    width: '14px',
-                    height: '14px',
-                    backgroundColor: '#71c7ec',
-                    borderRadius: '3px',
-                    marginRight: '5px',
-                  }}
-                ></span>
+                <span style={{ display: 'inline-block', width: '14px', height: '14px', backgroundColor: '#71c7ec', borderRadius: '3px', marginRight: '5px' }}></span>
                 Max 2300
               </div>
             </div>
           </div>
         </div>
 
-        {/* Bottom row with table and small bar chart */}
+        {/* Table and Small Chart */}
         <div className="d-flex gap-4 flex-wrap">
-          {/* Top products table */}
-          <div
-            className="border rounded p-3 flex-grow-1"
-            style={{ minWidth: '450px', backgroundColor: 'white' }}
-          >
+          <div className="border rounded p-3 flex-grow-1" style={{ minWidth: '450px', backgroundColor: 'white' }}>
             <h6>Top Products</h6>
             <table className="table table-hover" style={{ fontSize: '14px' }}>
               <thead>
                 <tr>
-                  <th scope="col">
-                    <input type="checkbox" />
-                  </th>
-                  <th scope="col">Product name</th>
-                  <th scope="col">Supplier</th>
-                  <th scope="col">Stock</th>
-                  <th scope="col">Sales</th>
-                  <th scope="col">Batch tracked</th>
-                  <th scope="col">Action</th>
+                  <th><input type="checkbox" /></th>
+                  <th>Product name</th>
+                  <th>Supplier</th>
+                  <th>Stock</th>
+                  <th>Sales</th>
+                  <th>Batch tracked</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                {topProducts.map(({ name, supplier, stock, sales, batchTracked, icon }, idx) => (
+                {topProducts.map((item, idx) => (
                   <tr key={idx}>
-                    <td>
-                      <input type="checkbox" />
-                    </td>
-                    <td>
-                      <span
-                        style={{
-                          display: 'inline-block',
-                          width: '24px',
-                          marginRight: '8px',
-                          verticalAlign: 'middle',
-                        }}
-                      >
-                        {icon}
-                      </span>
-                      <strong>{name}</strong>
-                    </td>
-                    <td>{supplier}</td>
-                    <td>{stock}</td>
-                    <td>{sales}</td>
-                    <td>{batchTracked}</td>
-                    <td>
-                      <FaEllipsisH style={{ cursor: 'pointer' }} />
-                    </td>
+                    <td><input type="checkbox" /></td>
+                    <td><span style={{ marginRight: 8 }}>{item.icon}</span><strong>{item.name}</strong></td>
+                    <td>{item.supplier}</td>
+                    <td>{item.stock}</td>
+                    <td>{item.sales}</td>
+                    <td>{item.batchTracked}</td>
+                    <td><FaEllipsisH style={{ cursor: 'pointer' }} /></td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
 
-          {/* Revenue vs Costs small */}
-          <div
-            className="border rounded p-3"
-            style={{ minWidth: '300px', maxWidth: '350px', backgroundColor: 'white' }}
-          >
+          <div className="border rounded p-3" style={{ minWidth: '300px', maxWidth: '350px', backgroundColor: 'white' }}>
             <h6>Revenue vs Costs</h6>
             <Bar
               data={revenueVsCostsSmallData}
@@ -353,9 +256,7 @@ function Dashboard() {
                     },
                   },
                 },
-                scales: {
-                  y: { beginAtZero: true, max: 80 },
-                },
+                scales: { y: { beginAtZero: true, max: 80 } },
               }}
             />
           </div>
