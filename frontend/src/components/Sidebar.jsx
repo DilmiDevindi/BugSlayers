@@ -10,9 +10,11 @@ const Sidebar = () => {
   const [isCustomersOpen, setIsCustomersOpen] = useState(false); 
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
-  const [isSalesOpen, setIsSalesOpen]  = useState(false); 
+  const [isSalesOpen, setIsSalesOpen] = useState(false); 
   const [isInventoryReportOpen, setIsInventoryReportOpen] = useState(false);
   const [isPurchasesOpen, setIsPurchasesOpen] = useState(false); 
+  const [isOrdersOpen, setIsOrdersOpen] = useState(false); 
+  const [isReturnsOpen, setIsReturnsOpen] = useState(false);
 
   return (
     <div className="bg-dark text-white vh-100 p-3">
@@ -65,6 +67,45 @@ const Sidebar = () => {
               </li>
               <li className="nav-item mb-2">
                 <Link to="/dashboard/purchases/report" className="nav-link text-white">Generate Purchase Report</Link>
+              </li>
+            </ul>
+          )}
+        </li>
+
+        {/* Orders Dropdown - After Purchases */}
+        <li className="nav-item mb-3">
+          <button
+            className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start"
+            onClick={() => setIsOrdersOpen(!isOrdersOpen)}
+            style={{ cursor: 'pointer' }}>
+            <i className="bi bi-card-checklist me-2"></i> Orders
+            <i className={`bi ${isOrdersOpen ? 'bi-chevron-up' : 'bi-chevron-down'} ms-auto`}></i>
+          </button>
+          {isOrdersOpen && (
+            <ul className="nav flex-column ms-3">
+              <li className="nav-item mb-2">
+                <Link to="/dashboard/orders/add" className="nav-link text-white">Add Order</Link>
+              </li>
+              <li className="nav-item mb-2">
+                <Link to="/dashboard/orders/manage" className="nav-link text-white">Manage Orders</Link>
+              </li>
+            </ul>
+          )}
+        </li>
+
+        {/* Returns Dropdown - After Orders */}
+        <li className="nav-item mb-3">
+          <button
+            className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start"
+            onClick={() => setIsReturnsOpen(!isReturnsOpen)}
+            style={{ cursor: 'pointer' }}>
+            <i className="bi bi-arrow-return-left me-2"></i> Returns
+            <i className={`bi ${isReturnsOpen ? 'bi-chevron-up' : 'bi-chevron-down'} ms-auto`}></i>
+          </button>
+          {isReturnsOpen && (
+            <ul className="nav flex-column ms-3">
+              <li className="nav-item mb-2">
+                <Link to="/dashboard/returns/manage" className="nav-link text-white">Manage Returns</Link>
               </li>
             </ul>
           )}
