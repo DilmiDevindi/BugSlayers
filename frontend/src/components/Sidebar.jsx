@@ -99,7 +99,7 @@ const Sidebar = () => {
             className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start"
             onClick={() => setIsReturnsOpen(!isReturnsOpen)}
             style={{ cursor: 'pointer' }}>
-            <i className="bi bi-arrow-return-left me-2"></i> Returns
+            <i className="bi bi-arrow-return-left me-2"></i> Returns & Refunds
             <i className={`bi ${isReturnsOpen ? 'bi-chevron-up' : 'bi-chevron-down'} ms-auto`}></i>
           </button>
           {isReturnsOpen && (
