@@ -44,10 +44,10 @@ import InventorySummary from './components/InventorySummary';
 
 // Purchases
 import AddPurchase from "./components/AddPurchase";
-import ManagePurchase from "./components/ManagePurchase"; 
+import ManagePurchase from "./components/ManagePurchase";
 import PurchaseReport from "./components/PurchaseReports";
 
-// Orders (✅ NEWLY ADDED)
+// Orders
 import AddOrder from "./components/AddOrder";
 import ManageOrders from "./components/ManageOrders";
 import OrderReport from "./components/OrderReport";
@@ -104,7 +104,7 @@ function App() {
           <Route path="purchases/manage" element={<ManagePurchase />} />
           <Route path="purchases/report" element={<PurchaseReport />} />
 
-          {/* ✅ Orders */}
+          {/* Orders */}
           <Route path="orders/add" element={<AddOrder />} />
           <Route path="orders/manage" element={<ManageOrders />} />
           <Route path="orders/report" element={<OrderReport />} />
