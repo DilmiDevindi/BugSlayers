@@ -1,11 +1,11 @@
-const Order = require('../models/orderModel');
+const Order = require("../models/Order");
 
 exports.getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find().sort({ date: -1 });
     res.json(orders);
   } catch {
-    res.status(500).json({ error: 'Failed to fetch orders' });
+    res.status(500).json({ error: "Failed to fetch orders" });
   }
 };
 
@@ -16,7 +16,9 @@ exports.createOrder = async (req, res) => {
     await order.save();
     res.status(201).json(order);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to create order', details: err.message });
+    res
+      .status(500)
+      .json({ error: "Failed to create order", details: err.message });
   }
 };
 
@@ -26,20 +28,20 @@ exports.updateOrder = async (req, res) => {
       new: true,
       runValidators: true,
     });
-    if (!updated) return res.status(404).json({ error: 'Order not found' });
+    if (!updated) return res.status(404).json({ error: "Order not found" });
     res.json(updated);
   } catch (err) {
-    res.status(500).json({ error: 'Update failed', details: err.message });
+    res.status(500).json({ error: "Update failed", details: err.message });
   }
 };
 
 exports.deleteOrder = async (req, res) => {
   try {
     const removed = await Order.findByIdAndDelete(req.params.id);
-    if (!removed) return res.status(404).json({ error: 'Order not found' });
-    res.json({ message: 'Order deleted' });
+    if (!removed) return res.status(404).json({ error: "Order not found" });
+    res.json({ message: "Order deleted" });
   } catch {
-    res.status(500).json({ error: 'Delete failed' });
+    res.status(500).json({ error: "Delete failed" });
   }
 };
 
@@ -51,6 +53,8 @@ exports.getOrderReport = async (req, res) => {
     }).sort({ date: -1 });
     res.json(orders);
   } catch (err) {
-    res.status(500).json({ error: 'Report fetch failed', details: err.message });
+    res
+      .status(500)
+      .json({ error: "Report fetch failed", details: err.message });
   }
 };
