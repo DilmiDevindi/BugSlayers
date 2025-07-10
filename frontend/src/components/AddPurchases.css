@@ -21,3 +21,128 @@
     cursor: pointer;
   }
   
+  .add-purchase-container {
+  background: #f8f9fa;
+  max-width: 600px;
+  margin: 30px auto;
+  padding: 30px 25px;
+  border-radius: 10px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.add-purchase-form .form-control {
+  font-size: 16px;
+  padding: 10px 12px;
+}
+
+.add-purchase-form button {
+  font-size: 16px;
+  padding: 10px;
+}
+
+.add-purchase-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 30px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.add-purchase-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.add-purchase-form input,
+.add-purchase-form select {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  width: 100%;
+}
+
+.row-input-group {
+  display: flex;
+  gap: 10px;
+}
+
+.row-input-group select {
+  flex: 1;
+}
+
+.add-purchase-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 30px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.add-purchase-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.add-purchase-form input,
+.add-purchase-form select {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  width: 100%;
+}
+
+.row-input-group {
+  display: flex;
+  gap: 10px;
+}
+
+.row-input-group select {
+  flex: 1;
+}
+
+.add-purchase-container {
+  max-width: 600px;
+  margin: 30px auto;
+  padding: 20px;
+  background: #fefefe;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.add-purchase-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.add-purchase-form input,
+.add-purchase-form select,
+.add-purchase-form button {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.row-input-group {
+  display: flex;
+  gap: 10px;
+}
+
+.row-input-group select {
+  flex: 1;
+}

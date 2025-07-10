@@ -8,7 +8,9 @@ import "./Supplier.css";
 const AddSupplier = ({ onSupplierSelected }) => {
   const [existingSuppliers, setExistingSuppliers] = useState([]);
   const [isAddingNew, setIsAddingNew] = useState(false);
-  const [selectedSupplier, setSelectedSupplier] = useState("");
+  const [searchName, setSearchName] = useState("");
+  const [showForm, setShowForm] = useState(false);
+  const [showAddButton, setShowAddButton] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [supplier, setSupplier] = useState({
     date: new Date().toISOString().split("T")[0],
@@ -18,7 +20,7 @@ const AddSupplier = ({ onSupplierSelected }) => {
     fax: "",
     email: "",
     address: "",
-    supplyProducts: [], // will not be used anymore, but kept for backend compatibility
+    supplyProducts: [],
     paymentTerms: "",
   });
 
@@ -88,42 +90,22 @@ const AddSupplier = ({ onSupplierSelected }) => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!isAddingNew && !selectedSupplier) {
-      alert("Please select a supplier or choose to add a new one");
+  const handleSearchSupplier = async () => {
+    if (!searchName.trim()) {
+      alert("Please enter a supplier name to search");
       return;
     }
 
-    if (isAddingNew) {
-      // Removed product selection validation here because products are removed
-
-      let hasErrors = false;
-      Object.entries(supplier).forEach(([key, value]) => {
-        if (key !== "supplyProducts") {
-          const validated = validateFields(key, value);
-          if (errors[key]) hasErrors = true;
-        }
+    try {
+      const response = await axios.get("http://localhost:5000/api/suppliers/", {
+        params: { search: searchName }
       });
-
-      if (Object.values(errors).some((err) => err) || hasErrors) {
-        alert("Please fix the validation errors.");
-        return;
-      }
-
-      try {
-        const response = await axios.post(
-          "http://localhost:5000/api/suppliers/add",
-          supplier
-        );
-
-        if (response.data.message) {
-          alert(response.data.message);
-        } else {
-          alert("Supplier operation completed successfully");
-        }
-
+      
+      if (response.data.length > 0) {
+        alert("Supplier already exists!");
+        setShowAddButton(false);
+        setShowForm(false);
+        setIsAddingNew(false);
         setSupplier({
           date: new Date().toISOString().split("T")[0],
           supplierName: "",
@@ -132,43 +114,71 @@ const AddSupplier = ({ onSupplierSelected }) => {
           fax: "",
           email: "",
           address: "",
-          supplyProducts: [], // empty as products removed
+          supplyProducts: [],
           paymentTerms: "",
         });
-
-        setErrors({});
+      } else {
+        alert("No supplier found with this name. You can add a new supplier.");
+        setShowAddButton(true);
+        setShowForm(false);
         setIsAddingNew(false);
-        setSelectedSupplier("");
-        fetchExistingSuppliers();
-      } catch (error) {
-        console.error("Error adding supplier:", error);
-        if (error.response?.data?.message) {
-          alert(error.response.data.message);
-        } else {
-          alert("Failed to add supplier. Please try again.");
-        }
       }
-    } else {
-      // Using existing supplier
-      const selected = existingSuppliers.find(
-        (s) => s._id === selectedSupplier
-      );
-      if (selected) {
-        alert(`Selected supplier: ${selected.supplierName}`);
-        if (onSupplierSelected) {
-          onSupplierSelected(selected);
-        }
-      }
+    } catch (error) {
+      console.error("Error searching suppliers:", error);
+      alert("Error searching for supplier. Please try again.");
     }
   };
 
-  const handleSupplierSelection = (e) => {
-    const value = e.target.value;
-    setSelectedSupplier(value);
+  const handleAddNewSupplier = () => {
+    setIsAddingNew(true);
+    setShowForm(true);
+    setShowAddButton(false);
+    setSupplier({
+      date: new Date().toISOString().split("T")[0],
+      supplierName: searchName,
+      phone1: "",
+      phone2: "",
+      fax: "",
+      email: "",
+      address: "",
+      supplyProducts: [],
+      paymentTerms: "",
+    });
+  };
 
-    if (value === "add_new") {
-      setIsAddingNew(true);
-      setSelectedSupplier("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!isAddingNew) {
+      alert("Please search for a supplier or add a new one");
+      return;
+    }
+
+    let hasErrors = false;
+    Object.entries(supplier).forEach(([key, value]) => {
+      if (key !== "supplyProducts") {
+        const validated = validateFields(key, value);
+        if (errors[key]) hasErrors = true;
+      }
+    });
+
+    if (Object.values(errors).some((err) => err) || hasErrors) {
+      alert("Please fix the validation errors.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/suppliers/add",
+        supplier
+      );
+
+      if (response.data.message) {
+        alert(response.data.message);
+      } else {
+        alert("Supplier operation completed successfully");
+      }
+
       setSupplier({
         date: new Date().toISOString().split("T")[0],
         supplierName: "",
@@ -177,29 +187,27 @@ const AddSupplier = ({ onSupplierSelected }) => {
         fax: "",
         email: "",
         address: "",
-        supplyProducts: [], // empty
+        supplyProducts: [],
         paymentTerms: "",
       });
-    } else if (value) {
-      const selectedSupplierData = existingSuppliers.find(
-        (s) => s._id === value
-      );
-      if (selectedSupplierData) {
-        setIsAddingNew(true);
-        setSupplier({
-          date: new Date().toISOString().split("T")[0],
-          supplierName: selectedSupplierData.supplierName,
-          phone1: selectedSupplierData.phone1,
-          phone2: selectedSupplierData.phone2 || "",
-          fax: selectedSupplierData.fax || "",
-          email: selectedSupplierData.email || "",
-          address: selectedSupplierData.address || "",
-          supplyProducts: [], // start empty, no product selection
-          paymentTerms: selectedSupplierData.paymentTerms || "",
-        });
-      }
-    } else {
+
+      setErrors({});
       setIsAddingNew(false);
+      setShowForm(false);
+      setShowAddButton(false);
+      setSearchName("");
+      fetchExistingSuppliers();
+    } catch (error) {
+      console.error("Error adding supplier:", error);
+      if (error.response?.data?.message) {
+        alert(error.response.data.message);
+        if (error.response.data.message.includes("already exists")) {
+          setShowAddButton(false);
+          setShowForm(false);
+        }
+      } else {
+        alert("Failed to add supplier. Please try again.");
+      }
     }
   };
 
@@ -245,85 +253,126 @@ const AddSupplier = ({ onSupplierSelected }) => {
           gap: "25px",
         }}
       >
-        {/* Supplier Selection Dropdown */}
-        <div className="form-group-i">
-          <label
-            htmlFor="supplierSelect"
-            style={{
-              fontWeight: "600",
-              marginBottom: "8px",
-              fontSize: "1.1rem",
-              color: "#2c3e50",
-              display: "block",
-            }}
-          >
-            Select Supplier or Add New:
-          </label>
-          <select
-            id="supplierSelect"
-            className="form-control"
-            value={selectedSupplier}
-            onChange={handleSupplierSelection}
-            disabled={isLoading}
-            style={{
-              padding: "12px 16px",
-              fontSize: "1rem",
-              borderRadius: "8px",
-              border: "2px solid #ddd",
-              background: "white",
-              transition: "border-color 0.3s ease",
-              width: "100%",
-              outline: "none",
-            }}
-            onFocus={(e) => (e.target.style.borderColor = "#666")}
-            onBlur={(e) => (e.target.style.borderColor = "#ddd")}
-          >
-            <option value="">
-              {isLoading ? "Loading suppliers..." : "Choose a supplier..."}
-            </option>
-            {existingSuppliers.map((supplier) => (
-              <option key={supplier._id} value={supplier._id}>
-                {supplier.supplierName}
-              </option>
-            ))}
-            <option value="add_new">Add Completely New Supplier</option>
-          </select>
-        </div>
-
-        {/* Show selected supplier info */}
-        {selectedSupplier && !isAddingNew && (
-          <div className="form-group-i">
-            <div
+        {/* Supplier Search Input and Button */}
+        <div 
+          className="form-group-i" 
+          style={{ 
+            display: "flex", 
+            gap: "20px", 
+            alignItems: "flex-end",
+            justifyContent: "center",
+            marginBottom: "30px"
+          }}
+        >
+          <div style={{ flex: "0 1 600px" }}>
+            <label
+              htmlFor="searchName"
               style={{
-                background: "#f8f9fa",
-                border: "1px solid #dee2e6",
-                borderRadius: "10px",
-                padding: "20px",
-                borderLeft: "4px solid #6c757d",
+                fontWeight: "600",
+                marginBottom: "10px",
+                fontSize: "1.3rem",
+                color: "#2c3e50",
+                display: "block",
               }}
             >
-              <div
-                style={{
-                  fontSize: "1.1rem",
-                  marginBottom: "8px",
-                  fontWeight: "600",
-                }}
-              >
-                <strong>Selected Supplier:</strong>{" "}
-                {existingSuppliers.find((s) => s._id === selectedSupplier)
-                  ?.supplierName}
-              </div>
-              <div style={{ fontSize: "1rem", marginBottom: "8px" }}>
-                <strong>Contact:</strong>{" "}
-                {existingSuppliers.find((s) => s._id === selectedSupplier)
-                  ?.phone1}
-              </div>
-            </div>
+              Search Supplier Name:
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="searchName"
+              value={searchName}
+              onChange={(e) => setSearchName(e.target.value)}
+              placeholder="Enter supplier name"
+              style={{
+                padding: "20px 24px",
+                fontSize: "1.3rem",
+                borderRadius: "12px",
+                border: "2px solid #ddd",
+                background: "white",
+                transition: "border-color 0.3s ease",
+                width: "100%",
+                outline: "none",
+                height: "60px",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#666")}
+              onBlur={(e) => (e.target.style.borderColor = "#ddd")}
+            />
+          </div>
+          <button
+            type="button"
+            onClick={handleSearchSupplier}
+            className="btn btn-primary-i"
+            style={{
+              padding: "20px 40px",
+              fontSize: "1.3rem",
+              fontWeight: "600",
+              borderRadius: "12px",
+              border: "none",
+              background: "#2c3e50",
+              color: "white",
+              transition: "all 0.3s ease",
+              cursor: "pointer",
+              textTransform: "none",
+              height: "60px",
+            }}
+            onMouseOver={(e) => {
+              e.target.style.transform = "translateY(-2px)";
+              e.target.style.background = "#34495e";
+            }}
+            onMouseOut={(e) => {
+              e.target.style.transform = "translateY(0)";
+              e.target.style.background = "#2c3e50";
+            }}
+          >
+            Check
+          </button>
+        </div>
+
+        {/* Add New Supplier Button */}
+        {showAddButton && (
+          <div 
+            className="form-group-i"
+            style={{
+              display: "flex",
+              justifyContent: "center"
+            }}
+          >
+            <button
+              type="button"
+              onClick={handleAddNewSupplier}
+              className="btn btn-primary-i"
+              style={{
+                padding: "20px 40px",
+                fontSize: "1.3rem",
+                fontWeight: "600",
+                borderRadius: "12px",
+                border: "none",
+                background: "#2c3e50",
+                color: "white",
+                transition: "all 0.3s ease",
+                cursor: "pointer",
+                textTransform: "none",
+                width: "100%",
+                maxWidth: "400px",
+              }}
+              onMouseOver={(e) => {
+                e.target.style.transform = "translateY(-2px)";
+                e.target.style.background = "#34495e";
+              }}
+              onMouseOut={(e) => {
+                e.target.style.transform = "translateY(0)";
+                e.target.style.background = "#2c3e50";
+              }}
+            >
+              <FontAwesomeIcon icon={faSquarePlus} className="mr-2" />
+              Add New Supplier
+            </button>
           </div>
         )}
 
-        {/* Show form only when adding new supplier or adding products */}
-        {isAddingNew && (
+        {/* Show form only when adding new supplier */}
+        {showForm && isAddingNew && (
           <div
             style={{
               background: "white",
@@ -346,9 +395,7 @@ const AddSupplier = ({ onSupplierSelected }) => {
                   borderBottom: "2px solid #ecf0f1",
                 }}
               >
-                {selectedSupplier && selectedSupplier !== ""
-                  ? `Edit Supplier: ${supplier.supplierName}`
-                  : "Add New Supplier Details"}
+                Add New Supplier Details
               </h5>
             </div>
 
@@ -435,47 +482,24 @@ const AddSupplier = ({ onSupplierSelected }) => {
                     onChange={handleInputChange}
                     placeholder={field.label}
                     required={field.required || false}
-                    readOnly={
-                      selectedSupplier &&
-                      selectedSupplier !== "" &&
-                      field.key !== "supplierName"
-                    }
                     style={{
                       padding: "12px 16px",
                       fontSize: "1rem",
                       borderRadius: "8px",
                       border: "2px solid #ddd",
-                      background:
-                        selectedSupplier &&
-                        selectedSupplier !== "" &&
-                        field.key !== "supplierName"
-                          ? "#f8f9fa"
-                          : "white",
+                      background: "white",
                       transition: "border-color 0.3s ease",
                       width: "100%",
                       outline: "none",
-                      cursor:
-                        selectedSupplier &&
-                        selectedSupplier !== "" &&
-                        field.key !== "supplierName"
-                          ? "not-allowed"
-                          : "text",
                     }}
                     onFocus={(e) => {
-                      if (!e.target.readOnly) e.target.style.borderColor = "#666";
+                      e.target.style.borderColor = "#666";
                     }}
                     onBlur={(e) => {
-                      if (!e.target.readOnly) e.target.style.borderColor = "#ddd";
+                      e.target.style.borderColor = "#ddd";
                       if (field.key === "supplierName") handleSupplierNameBlur(e);
                     }}
                   />
-                  {selectedSupplier &&
-                    selectedSupplier !== "" &&
-                    field.key !== "supplierName" && (
-                      <small style={{ color: "#6c757d", fontSize: "0.85rem" }}>
-                        This field is pre-filled from existing supplier data
-                      </small>
-                    )}
                   {errors[field.key] && (
                     <div
                       style={{
@@ -513,29 +537,21 @@ const AddSupplier = ({ onSupplierSelected }) => {
                   value={supplier.paymentTerms}
                   onChange={handleInputChange}
                   required
-                  disabled={selectedSupplier && selectedSupplier !== ""}
                   style={{
                     padding: "12px 16px",
                     fontSize: "1rem",
                     borderRadius: "8px",
                     border: "2px solid #ddd",
-                    background:
-                      selectedSupplier && selectedSupplier !== ""
-                        ? "#f8f9fa"
-                        : "white",
+                    background: "white",
                     transition: "border-color 0.3s ease",
                     width: "100%",
                     outline: "none",
-                    cursor:
-                      selectedSupplier && selectedSupplier !== ""
-                        ? "not-allowed"
-                        : "pointer",
                   }}
                   onFocus={(e) => {
-                    if (!e.target.disabled) e.target.style.borderColor = "#666";
+                    e.target.style.borderColor = "#666";
                   }}
                   onBlur={(e) => {
-                    if (!e.target.disabled) e.target.style.borderColor = "#ddd";
+                    e.target.style.borderColor = "#ddd";
                   }}
                 >
                   <option value="" disabled>
@@ -544,11 +560,6 @@ const AddSupplier = ({ onSupplierSelected }) => {
                   <option value="Cash">Cash</option>
                   <option value="Card">Card</option>
                 </select>
-                {selectedSupplier && selectedSupplier !== "" && (
-                  <small style={{ color: "#6c757d", fontSize: "0.85rem" }}>
-                    Payment terms are pre-filled from existing supplier data
-                  </small>
-                )}
               </div>
             </div>
           </div>
@@ -562,46 +573,46 @@ const AddSupplier = ({ onSupplierSelected }) => {
             flexWrap: "wrap",
           }}
         >
-          <button
-            type="submit"
-            className="btn btn-primary-i"
-            style={{
-              flex: 1,
-              maxWidth: "300px",
-              padding: "16px 32px",
-              fontSize: "1.1rem",
-              fontWeight: "600",
-              borderRadius: "10px",
-              border: "none",
-              background: "#2c3e50",
-              color: "white",
-              transition: "all 0.3s ease",
-              cursor: "pointer",
-              textTransform: "none",
-            }}
-            onMouseOver={(e) => {
-              e.target.style.transform = "translateY(-2px)";
-              e.target.style.background = "#34495e";
-            }}
-            onMouseOut={(e) => {
-              e.target.style.transform = "translateY(0)";
-              e.target.style.background = "#2c3e50";
-            }}
-          >
-            {selectedSupplier && selectedSupplier !== ""
-              ? "Update Existing Supplier"
-              : isAddingNew
-              ? "Add New Supplier"
-              : "Select Supplier"}
-          </button>
+          {showForm && (
+            <button
+              type="submit"
+              className="btn btn-primary-i"
+              style={{
+                flex: 1,
+                maxWidth: "300px",
+                padding: "16px 32px",
+                fontSize: "1.1rem",
+                fontWeight: "600",
+                borderRadius: "10px",
+                border: "none",
+                background: "#2c3e50",
+                color: "white",
+                transition: "all 0.3s ease",
+                cursor: "pointer",
+                textTransform: "none",
+              }}
+              onMouseOver={(e) => {
+                e.target.style.transform = "translateY(-2px)";
+                e.target.style.background = "#34495e";
+              }}
+              onMouseOut={(e) => {
+                e.target.style.transform = "translateY(0)";
+                e.target.style.background = "#2c3e50";
+              }}
+            >
+              Add New Supplier
+            </button>
+          )}
 
-          {(isAddingNew || selectedSupplier) && (
+          {(isAddingNew || showForm || showAddButton) && (
             <button
               type="button"
               className="btn btn-secondary"
               onClick={() => {
                 setIsAddingNew(false);
-                setSelectedSupplier("");
+                setShowForm(false);
+                setShowAddButton(false);
+                setSearchName("");
                 setSupplier({
                   date: new Date().toISOString().split("T")[0],
                   supplierName: "",
