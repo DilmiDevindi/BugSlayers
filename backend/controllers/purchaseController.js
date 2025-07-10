@@ -3,11 +3,17 @@ const Purchase = require("../models/purchase");
 // Create a new purchase
 const createPurchase = async (req, res) => {
   try {
+    const { quantity, price } = req.body;
+    const totalPrice = quantity * price;
+
     const purchase = new Purchase({
       supplierName: req.body.supplierName,
       productName: req.body.productName,
-      quantity: req.body.quantity,
-      price: req.body.price,
+      category: req.body.category,
+      subcategory: req.body.subcategory,
+      quantity,
+      price,
+      totalPrice,  // save totalPrice
       date: req.body.date,
     });
 
@@ -15,6 +21,37 @@ const createPurchase = async (req, res) => {
     res.status(201).json(savedPurchase);
   } catch (error) {
     res.status(500).json({ message: "Error creating purchase", error: error.message });
+  }
+};
+
+// Update purchase (also recalc totalPrice)
+const updatePurchase = async (req, res) => {
+  try {
+    const { quantity, price } = req.body;
+    const totalPrice = quantity * price;
+
+    const purchase = await Purchase.findByIdAndUpdate(
+      req.params.id,
+      {
+        supplierName: req.body.supplierName,
+        productName: req.body.productName,
+        category: req.body.category,
+        subcategory: req.body.subcategory,
+        quantity,
+        price,
+        totalPrice,  // update totalPrice
+        date: req.body.date,
+      },
+      { new: true }
+    );
+
+    if (purchase) {
+      res.json(purchase);
+    } else {
+      res.status(404).json({ message: "Purchase not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Error updating purchase", error: error.message });
   }
 };
 
@@ -42,24 +79,6 @@ const getPurchaseById = async (req, res) => {
   }
 };
 
-// Update a purchase
-const updatePurchase = async (req, res) => {
-  try {
-    const purchase = await Purchase.findByIdAndUpdate(req
-      .params.id,
-      req.body,
-      { new: true }
-    );
-    if (purchase) {
-      res.json(purchase);
-    } else {
-      res.status(404).json({ message: "Purchase not found" });
-    }
-  }
-  catch (error) {
-    res.status(500).json({ message: "Error updating purchase", error: error.message });
-  }
-}
 
 // Delete a purchase
 const deletePurchase = async (req, res) => {
@@ -83,4 +102,6 @@ module.exports = {
   updatePurchase,
   deletePurchase
 };
+
+
 
