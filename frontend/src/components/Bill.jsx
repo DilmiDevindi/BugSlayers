@@ -169,7 +169,12 @@ function BillForm() {
     const printWindow = window.open('', '', 'height=700,width=900');
     printWindow.document.write('<html><head><title>Invoice</title>');
     printWindow.document.write(
-      `<style>@page { size: A4; margin: 10mm; } body { font-family: Arial; } .invoice-preview { font-size: 12pt; } .print-hide { display: none !important; }</style>`
+      `<style>
+      @page { size: A5 portrait; margin: 10mm; }
+      body { font-family: Arial; }
+      .invoice-preview { font-size: 11pt; max-width: 148mm; margin: auto; }
+      .print-hide { display: none !important; }
+    </style>`
     );
     printWindow.document.write('</head><body>');
     printWindow.document.write(printContents);
@@ -324,11 +329,11 @@ function BillForm() {
               <tr>
                 <th>Item</th>
                 <th>Qty</th>
-                <th>Selling</th>
+                <th>Price</th>
                 <th>Discount</th>
                 <th>Buying</th>
                 <th>Total</th>
-                <th>Profit</th>
+            
               </tr>
             </thead>
             <tbody>
@@ -340,7 +345,7 @@ function BillForm() {
                   <td>Rs. {item.discount}</td>
                   <td>Rs. {item.buyingPrice}</td>
                   <td>Rs. {calculateItemTotal(item)}</td>
-                  <td>Rs. {calculateItemProfit(item)}</td>
+                  
                 </tr>
               ))}
             </tbody>
@@ -358,9 +363,7 @@ function BillForm() {
           <p>
             <strong>Balance:</strong> Rs. {balance.toFixed(2)}
           </p>
-          <p>
-            <strong>Total Profit:</strong> Rs. {calculateTotalProfit()}
-          </p>
+          
           <p style={{ textAlign: 'center' }}>* {Math.floor(Math.random() * 999999).toString().padStart(6, '0')} *</p>
           <p style={{ fontSize: '12px', textAlign: 'center' }}>
             Thank you for choosing Sisira Furnitures!
