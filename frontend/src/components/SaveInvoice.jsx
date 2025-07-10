@@ -3,6 +3,8 @@ import axios from 'axios';
 import { FaTrash } from 'react-icons/fa';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileInvoice } from '@fortawesome/free-solid-svg-icons';
+import './SaveInvoice.css'; 
+
 
 function SaveInvoice() {
   const [invoices, setInvoices] = useState([]);
