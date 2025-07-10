@@ -1,157 +1,157 @@
-.inventory-summary-container {
-  width: 90%;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #f9f9f989;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  margin-top: 10px;
+.inventory-report-wrapper {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #2c3e50;
+  padding: 1rem 2rem;
+  max-width: 1200px;
+  margin: auto;
+  background-color: #f7f9fa;
 }
 
-.header {
+
+.report-header {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 1.5rem;
 }
 
-.title {
+.report-title {
   font-weight: 700;
-  color: #0d6efd; /* Bootstrap primary blue equivalent */
-  margin-bottom: 5px;
-}
-
-.subtitle {
-  font-weight: 400;
-  color: #555;
+  font-size: 1.6rem;
+  color: #2c3e50;
+  margin: 0;
 }
 
 .summary-cards {
   display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  margin-bottom: 40px;
+  gap: 1.1rem;
   justify-content: center;
+  margin-bottom: 1.1rem;
+  flex-wrap: wrap;
 }
 
 .summary-card {
-  background: #f8f9fa;
-  box-shadow: 0 2px 6px rgb(0 0 0 / 0.1);
+  flex: 1 1 180px;
+  display: flex;
+  justify-content: space-between;
+  background: white;
+  padding: 0.8rem 1.2rem;
   border-radius: 6px;
-  flex: 1 1 220px;
-  max-width: 270px;
-  height: 100px;
-  padding: 20px;
-  text-align: center;
+  box-shadow: 0 0 8px rgb(44 62 80 / 0.1);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #34495e;
+  line-height: 1.6;
 }
-
-.summary-card h6 {
-  margin-bottom: 10px;
+label {
+  font-size: 0.85rem;
   font-weight: 600;
 }
+#report-month {
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  border: 1.5px solid #34495e; /* dark blue-grey */
+  border-radius: 6px;
+  background-color: white;
+  color: #34495e;
+  outline: none;
+  transition: border-color 0.3s ease;
+  cursor: pointer;
+  width: 160px;
+}
 
-.summary-card .value {
-  font-size: 16px;
+#report-month:focus {
+  border-color: #27ae60; /* green highlight on focus */
+  box-shadow: 0 0 6px #27ae60a0;
+}
+
+
+.card-value {
+  color: #16a085;
   font-weight: 700;
+  min-width: 50px;
+  text-align: right;
 }
 
-.text-green {
-  color: #198754;
-}
-
-.text-blue {
-  color: #0d6efd;
-}
-
-.text-red {
-  color: #dc3545;
-}
-
-.text-orange {
-  color: #ffc107;
+.card-label {
+  flex-grow: 1;
+  margin-left: 1rem;
+  text-align: left;
 }
 
 .charts-row {
+  margin-bottom: 2rem;
+}
+
+.chart-container {
+  background: white;
+  padding: 0.7rem 1rem;
+  border-radius: 6px;
+  box-shadow: 0 0 8px rgb(44 62 80 / 0.1);
+  font-size: 0.85rem;
+  color: #34495e;
+}
+
+.chart-container h5 {
+  margin: 0 0 0.6rem 0;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #2c3e50;
+}
+
+.table-section {
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+}
+
+.inventory-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  color: #34495e;
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 0 8px rgb(44 62 80 / 0.1);
+}
+
+.inventory-table th,
+.inventory-table td {
+  border: 1px solid #dfe6e9;
+  padding: 8px 10px;
+  text-align: left;
+}
+
+.inventory-table th {
+  background-color: #34495e;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.inventory-table tbody tr:hover {
+  background-color: #ecf0f1;
+}
+
+.report-footer {
   display: flex;
-  flex-wrap: wrap;
-  gap: 30px;
-  margin-bottom: 50px;
-  justify-content: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding-bottom: 2rem;
 }
 
-.chart-container {
-  flex: 1 1 500px;
-  max-width: 600px;
+.csv-button,
+.pdf-button {
+  background-color: #16a085;
+  border: none;
+  color: white;
+  padding: 0.5rem 1.2rem;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
 }
 
-.chart-card {
-  background: #fff;
-  box-shadow: 0 2px 10px rgb(0 0 0 / 0.1);
-  border-radius: 8px;
-  padding: 50px;
+.csv-button:hover,
+.pdf-button:hover {
+  background-color: #117a63;
 }
 
-.trend-section {
-  margin-bottom: 50px;
-}
-
-.export-buttons {
-text-align: center;
-display: flex;
-gap: 20px;
-justify-content: center;
-flex-wrap: wrap;
-margin-bottom: 50px;
-max-width: 350px;
-}
-
-.btn {
-cursor: pointer;
-display: inline-flex;
-align-items: center;
-gap: 8px;
-padding: 10px 22px;
-border-radius: 6px;
-border: none;
-font-weight: 600;
-font-size: 1rem;
-transition: background-color 0.3s ease;
-color: white;
-text-decoration: none;
-user-select: none;
-}
-
-.btn-pdf {
-background-color: #dc3545;
-}
-
-.btn-pdf:hover {
-background-color: #bb2d3b;
-}
-
-.btn-csv {
-background-color: #0d6efd;
-}
-
-.btn-csv:hover {
-background-color: #0b5ed7;
-}
-
-.icon-pdf::before {
-content: "📄";
-}
-
-.icon-csv::before {
-content: "📊";
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-.summary-cards,
-.charts-row {
-flex-direction: column;
-align-items: center;
-}
-
-.chart-container {
-max-width: 100%;
-}
-}
