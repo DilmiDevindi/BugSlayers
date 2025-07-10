@@ -5,7 +5,7 @@ import "./App.css";
 // Auth
 import Login from "./components/Login";
 import Signup from "./components/Signup";
-import ForgotPassword from './components/ForgotPassword';
+import ForgotPassword from "./components/ForgotPassword";
 
 // Layout & Dashboard
 import Layout from "./components/Layout";
@@ -39,8 +39,8 @@ import Catalog from "./components/Catalog";
 import Bill from "./components/Bill";
 
 // Inventory Reports
-import LowStockReport from './components/LowStockReport';
-import InventorySummary from './components/InventorySummary';
+import LowStockReport from "./components/LowStockReport";
+import InventorySummary from "./components/InventorySummary";
 
 // Purchases
 import AddPurchase from "./components/AddPurchase";
@@ -53,40 +53,43 @@ import ManageOrders from "./components/ManageOrders";
 import OrderReport from "./components/OrderReport";
 
 // Invoices
-import SaveInvoice from './components/SaveInvoice';
+import SaveInvoice from "./components/SaveInvoice";
+
+// Returns (Add + Manage Combined)
+import ManageReturn from "./components/ManageReturn";
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* ✅ Public Routes */}
+        {/* Public Routes */}
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
 
-        {/* ✅ Protected Routes inside Layout */}
+        {/* Protected Routes inside Dashboard Layout */}
         <Route path="/dashboard" element={<Layout />}>
           <Route index element={<Dashboard />} />
 
-          {/* Supplier Management */}
+          {/* Suppliers */}
           <Route path="suppliers/add" element={<AddSupplier />} />
           <Route path="suppliers/manage" element={<ManageSuppliers />} />
           <Route path="suppliers/edit/:id" element={<EditSupplier />} />
 
-          {/* Inventory Management */}
+          {/* Inventory */}
           <Route path="inventory/add" element={<AddInventoryItem />} />
           <Route path="inventory/add1" element={<ManageInventories />} />
 
-          {/* Customer Management */}
+          {/* Customers */}
           <Route path="customers/add" element={<AddCustomer />} />
           <Route path="customers/manage" element={<ManageCustomer />} />
 
-          {/* Category Management */}
+          {/* Categories */}
           <Route path="category/add" element={<AddCategory />} />
           <Route path="subcategory/add" element={<AddSubcategory />} />
           <Route path="category/add1" element={<ManageCategories />} />
 
-          {/* Sales Management */}
+          {/* Sales */}
           <Route path="sales/add" element={<AddSalesRecord />} />
           <Route path="sales/manage" element={<ManageSales />} />
           <Route path="sales/report" element={<SalesReport />} />
@@ -111,6 +114,9 @@ function App() {
 
           {/* Invoices */}
           <Route path="invoices" element={<SaveInvoice />} />
+
+          {/* ✅ Returns (Combined Add + Manage) */}
+          <Route path="returns/manage" element={<ManageReturn />} />
         </Route>
       </Routes>
     </Router>
