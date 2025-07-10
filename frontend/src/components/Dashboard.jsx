@@ -10,39 +10,15 @@ import {
   ArcElement,
 } from 'chart.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { FaBell, FaEllipsisH } from 'react-icons/fa';
+import { FaBell } from 'react-icons/fa';
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend, ArcElement);
 
 const kpiCards = [
-  {
-    title: 'Gross Sales',
-    value: '$22,892',
-    trend: '26%',
-    trendValue: '+1.42k today',
-    trendUp: true,
-  },
-  {
-    title: 'Average Sales',
-    value: '$8,283',
-    trend: '23%',
-    trendValue: '+0.34k today',
-    trendUp: true,
-  },
-  {
-    title: 'New Sales',
-    value: '$1,853',
-    trend: '2.4%',
-    trendValue: '+0.45 today',
-    trendUp: false,
-  },
-  {
-    title: 'Gross Profits',
-    value: '$5,239',
-    trend: '14.4%',
-    trendValue: '+0.5k today',
-    trendUp: true,
-  },
+  { title: 'Gross Sales', value: '$22,892', trend: '26%', trendValue: '+1.42k today', trendUp: true },
+  { title: 'Average Sales', value: '$8,283', trend: '23%', trendValue: '+0.34k today', trendUp: true },
+  { title: 'New Sales', value: '$1,853', trend: '2.4%', trendValue: '+0.45 today', trendUp: false },
+  { title: 'Gross Profits', value: '$5,239', trend: '14.4%', trendValue: '+0.5k today', trendUp: true },
 ];
 
 const revenueVsCostsData = {
@@ -73,99 +49,32 @@ const donutData = {
   ],
 };
 
-const topProducts = [
-  {
-    name: 'Watch Nike Series 7',
-    supplier: 'Samuel Suárez',
-    stock: 775,
-    sales: 4858,
-    batchTracked: '343454',
-    icon: '⌚',
-  },
-  {
-    name: 'Iphone 15',
-    supplier: 'Donald Kim',
-    stock: 888,
-    sales: 1334,
-    batchTracked: '5098923',
-    icon: '📱',
-  },
-  {
-    name: 'Iphone 15 Plus',
-    supplier: 'Abdullah Khan',
-    stock: 466,
-    sales: 7127,
-    batchTracked: '3245672',
-    icon: '📱',
-  },
-  {
-    name: 'Watch Nike Series 9',
-    supplier: 'Maria Moore',
-    stock: 722,
-    sales: 2126,
-    batchTracked: '3256477',
-    icon: '⌚',
-  },
-];
-
-const revenueVsCostsSmallData = {
-  labels: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'],
-  datasets: [
-    {
-      label: 'Revenue',
-      data: [30, 60, 40, 35, 50, 45, 55, 38, 42, 48],
-      backgroundColor: '#573e85',
-    },
-    {
-      label: 'Costs',
-      data: [20, 40, 35, 28, 42, 40, 60, 32, 38, 44],
-      backgroundColor: '#71c7ec',
-    },
-  ],
-};
-
 function Dashboard() {
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#fefefe' }}>
-      {/* Main content only */}
-      <main className="p-4">
+    <div style={{ minHeight: '100vh', backgroundColor: '#f9f9f9', fontSize: '14px' }}>
+      <main className="p-3">
         {/* Header */}
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <div style={{ flex: 1 }}>
-            <input
-              type="search"
-              placeholder="Search..."
-              className="form-control"
-              style={{ maxWidth: '300px' }}
-            />
-          </div>
-          <div className="d-flex align-items-center gap-3" style={{ flexShrink: 0 }}>
-            <FaBell style={{ fontSize: '1.2rem', cursor: 'pointer' }} />
-            <img
-              src="https://randomuser.me/api/portraits/men/33.jpg"
-              alt="User"
-              style={{ width: '32px', height: '32px', borderRadius: '50%', cursor: 'pointer' }}
-            />
-            <span style={{ cursor: 'pointer', fontWeight: '600' }}>Dibbendo</span>
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <input type="search" placeholder="Search..." className="form-control" style={{ maxWidth: '240px', fontSize: '13px' }} />
+          <div className="d-flex align-items-center gap-2">
+            <FaBell style={{ fontSize: '16px', cursor: 'pointer' }} />
+            <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="User" style={{ width: '28px', height: '28px', borderRadius: '50%' }} />
+            <span style={{ fontWeight: '600', fontSize: '13px' }}>Dibbendo</span>
           </div>
         </div>
 
         {/* Greeting */}
-        <h4>Morning, Dibbendo!</h4>
-        <p className="text-muted mb-4">Here’s what’s happening with your store today.</p>
+        <h6 style={{ marginBottom: '4px' }}>Morning, Dibbendo!</h6>
+        <p className="text-muted mb-3" style={{ fontSize: '13px' }}>Here’s what’s happening with your store today.</p>
 
         {/* KPI Cards */}
-        <div className="d-flex justify-content-between gap-4 mb-4 flex-wrap">
+        <div className="d-flex justify-content-between gap-3 mb-3 flex-wrap">
           {kpiCards.map(({ title, value, trend, trendValue, trendUp }) => (
-            <div
-              key={title}
-              className="border rounded p-3"
-              style={{ flex: 1, minWidth: '160px', backgroundColor: '#fff' }}
-            >
+            <div key={title} className="border rounded p-2" style={{ flex: 1, minWidth: '150px', backgroundColor: '#fff' }}>
               <small className="text-muted">{title}</small>
-              <h3 style={{ fontWeight: '700' }}>{value}</h3>
-              <div className="d-flex align-items-center gap-2">
-                <span style={{ color: trendUp ? '#00a86b' : '#de1a1a', fontWeight: '700' }}>
+              <h5 className="mb-1" style={{ fontWeight: '700', fontSize: '16px' }}>{value}</h5>
+              <div className="d-flex align-items-center gap-1" style={{ fontSize: '12px' }}>
+                <span style={{ color: trendUp ? '#00a86b' : '#de1a1a', fontWeight: '600' }}>
                   {trendUp ? '↗' : '↘'} {trend}
                 </span>
                 <small className="text-muted">{trendValue}</small>
@@ -174,91 +83,58 @@ function Dashboard() {
           ))}
         </div>
 
-        {/* Graphs */}
-        <div className="d-flex gap-4 mb-4 flex-wrap">
-          <div className="flex-grow-1 border rounded p-3" style={{ minWidth: '400px' }}>
-            <h6>Revenue vs Costs</h6>
+        {/* Charts Row */}
+        <div className="d-flex gap-3 mb-3 flex-wrap">
+          {/* Bar Chart */}
+          <div className="border rounded p-2" style={{ flex: '1 1 62%', maxWidth: '62%', backgroundColor: '#fff' }}>
+            <h6 className="mb-2" style={{ fontSize: '13px' }}>Revenue vs Costs</h6>
             <Bar
               data={revenueVsCostsData}
               options={{
-                plugins: { legend: { position: 'top' } },
+                plugins: { legend: { display: false } },
                 scales: { y: { beginAtZero: true, max: 15000 } },
               }}
             />
-            <div className="d-flex justify-content-between mt-2 px-2 text-muted" style={{ fontSize: 12 }}>
-              {revenueVsCostsData.labels.map((label, idx) => (
-                <span key={idx}>{label} {Math.floor(Math.random() * 50)}%</span>
-              ))}
-            </div>
           </div>
 
-          <div
-            className="border rounded p-3 d-flex flex-column align-items-center justify-content-center"
-            style={{ minWidth: '200px', maxWidth: '250px' }}
-          >
-            <h6>Unit Solds</h6>
-            <Doughnut data={donutData} />
-            <div className="d-flex gap-3 mt-2" style={{ fontSize: '14px' }}>
+          {/* Half Donut Chart */}
+          <div className="border rounded p-2 d-flex flex-column align-items-center justify-content-center"
+            style={{ flex: '1 1 35%', maxWidth: '35%', backgroundColor: '#fff' }}>
+            <h6 className="mb-2" style={{ fontSize: '13px' }}>Unit Solds</h6>
+            <Doughnut
+              data={donutData}
+              options={{
+                rotation: -90,
+                circumference: 180,
+                plugins: {
+                  legend: { display: false },
+                },
+              }}
+            />
+            <div className="d-flex gap-2 mt-2" style={{ fontSize: '12px' }}>
               <div>
-                <span style={{ display: 'inline-block', width: '14px', height: '14px', backgroundColor: '#573e85', borderRadius: '3px', marginRight: '5px' }}></span>
+                <span style={{
+                  display: 'inline-block',
+                  width: '12px',
+                  height: '12px',
+                  backgroundColor: '#573e85',
+                  marginRight: '5px',
+                  borderRadius: '2px',
+                }}></span>
                 Today 274
               </div>
               <div>
-                <span style={{ display: 'inline-block', width: '14px', height: '14px', backgroundColor: '#71c7ec', borderRadius: '3px', marginRight: '5px' }}></span>
+                <span style={{
+                  display: 'inline-block',
+                  width: '12px',
+                  height: '12px',
+                  backgroundColor: '#71c7ec',
+                  marginRight: '5px',
+                  borderRadius: '2px',
+                }}></span>
                 Max 2300
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Table and Small Chart */}
-        <div className="d-flex gap-4 flex-wrap">
-          <div className="border rounded p-3 flex-grow-1" style={{ minWidth: '450px', backgroundColor: 'white' }}>
-            <h6>Top Products</h6>
-            <table className="table table-hover" style={{ fontSize: '14px' }}>
-              <thead>
-                <tr>
-                  <th><input type="checkbox" /></th>
-                  <th>Product name</th>
-                  <th>Supplier</th>
-                  <th>Stock</th>
-                  <th>Sales</th>
-                  <th>Batch tracked</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {topProducts.map((item, idx) => (
-                  <tr key={idx}>
-                    <td><input type="checkbox" /></td>
-                    <td><span style={{ marginRight: 8 }}>{item.icon}</span><strong>{item.name}</strong></td>
-                    <td>{item.supplier}</td>
-                    <td>{item.stock}</td>
-                    <td>{item.sales}</td>
-                    <td>{item.batchTracked}</td>
-                    <td><FaEllipsisH style={{ cursor: 'pointer' }} /></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="border rounded p-3" style={{ minWidth: '300px', maxWidth: '350px', backgroundColor: 'white' }}>
-            <h6>Revenue vs Costs</h6>
-            <Bar
-              data={revenueVsCostsSmallData}
-              options={{
-                plugins: {
-                  legend: { position: 'bottom' },
-                  tooltip: {
-                    callbacks: {
-                      label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y}k`,
-                    },
-                  },
-                },
-                scales: { y: { beginAtZero: true, max: 80 } },
-              }}
-            />
           </div>
         </div>
       </main>
