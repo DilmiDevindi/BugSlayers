@@ -4,15 +4,11 @@ exports.getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find().sort({ date: -1 });
     res.json(orders);
-<<<<<<< Updated upstream
-  } catch {
-    res.status(500).json({ error: "Failed to fetch orders" });
-=======
   } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch orders' });
->>>>>>> Stashed changes
+    res.status(500).json({ error: "Failed to fetch orders" });
   }
 };
+
 
 exports.createOrder = async (req, res) => {
   try {
@@ -36,7 +32,7 @@ exports.createOrder = async (req, res) => {
       .json({ error: "Failed to create order", details: err.message });
   }
 };
-<<<<<<< Updated upstream
+
 
 exports.updateOrder = async (req, res) => {
   try {
@@ -74,5 +70,4 @@ exports.getOrderReport = async (req, res) => {
       .json({ error: "Report fetch failed", details: err.message });
   }
 };
-=======
->>>>>>> Stashed changes
+
