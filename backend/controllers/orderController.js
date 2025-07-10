@@ -4,14 +4,29 @@ exports.getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find().sort({ date: -1 });
     res.json(orders);
+<<<<<<< Updated upstream
   } catch {
     res.status(500).json({ error: "Failed to fetch orders" });
+=======
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch orders' });
+>>>>>>> Stashed changes
   }
 };
 
 exports.createOrder = async (req, res) => {
   try {
     const { orderId, companyName, quantity, discount, date } = req.body;
+
+    if (!orderId || !companyName || !quantity || !discount || !date) {
+      return res.status(400).json({ error: 'Please fill all fields' });
+    }
+
+    const existingOrder = await Order.findOne({ orderId });
+    if (existingOrder) {
+      return res.status(400).json({ error: 'Order ID already exists' });
+    }
+
     const order = new Order({ orderId, companyName, quantity, discount, date });
     await order.save();
     res.status(201).json(order);
@@ -21,6 +36,7 @@ exports.createOrder = async (req, res) => {
       .json({ error: "Failed to create order", details: err.message });
   }
 };
+<<<<<<< Updated upstream
 
 exports.updateOrder = async (req, res) => {
   try {
@@ -58,3 +74,5 @@ exports.getOrderReport = async (req, res) => {
       .json({ error: "Report fetch failed", details: err.message });
   }
 };
+=======
+>>>>>>> Stashed changes

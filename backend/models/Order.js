@@ -5,7 +5,7 @@ const orderSchema = new mongoose.Schema({
   companyName: { type: String, required: true },
   quantity: { type: Number, required: true },
   discount: { type: Number, required: true },
-  date: { type: Date, required: true },
+  date: { type: Date, required: true }
 });
 
 module.exports = mongoose.model('Order', orderSchema);
