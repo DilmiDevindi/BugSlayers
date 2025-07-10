@@ -29,7 +29,7 @@ const purchaseRoutes = require('./routes/purchasesRoutes');
 const purchasereportRoutes = require('./routes/purchasereportRoutes');
 const billRoutes = require('./routes/billRoutes');
 const invoiceRoutes = require('./routes/invoiceRoutes');
-const orderRoutes = require('./routes/orderRoutes'); // ✅ Order routes
+const orderRoutes = require('./routes/OrderRoutes'); // ✅ Order routes
 
 // ✅ API route usage
 app.use('/api/suppliers', supplierRoutes);
@@ -45,7 +45,7 @@ app.use('/api/purchase', purchaseRoutes);
 app.use('/api/purchase-report', purchasereportRoutes);
 app.use('/api/bill', billRoutes);
 app.use('/api/invoices', invoiceRoutes);
-app.use('/api/orders', orderRoutes); // ✅ Correctly placed, not repeated
+app.use('/api/orders', orderRoutes); // ✅ Using OrderRoutes with correct casing
 
 // ✅ MongoDB connection
 mongoose.connect('mongodb://localhost:27017/mern-vite-app', {
