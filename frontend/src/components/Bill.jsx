@@ -357,7 +357,7 @@ function BillForm() {
             <strong>Amount:</strong> Rs. {calculateAmount()}
           </p>
           <p>
-            <strong>Cash Received:</strong> Rs. {cashReceived}
+            <strong>Cash Received:</strong> Rs. {parseFloat(cashReceived || 0).toFixed(2)}
           </p>
           <p>
             <strong>Balance:</strong> Rs. {balance.toFixed(2)}
