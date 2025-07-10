@@ -1,0 +1,169 @@
+/* Container styling */
+.container {
+  background: #f0f4f8; /* light blue-gray */
+  padding: 30px 20px;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgb(0 0 0 / 0.1);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Page heading */
+h2 {
+  color: #2c3e50; /* dark slate blue */
+  font-weight: 700;
+  text-shadow: 1px 1px 3px rgba(44, 62, 80, 0.2);
+  margin-bottom: 30px;
+}
+
+/* Table styles */
+.table {
+  background-color: #ffffff;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.1);
+  font-size: 0.95rem;
+  color: #34495e;
+  width: 100%;
+}
+
+.table thead {
+  background-color: #2980b9; /* nice blue */
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.table th,
+.table td {
+  vertical-align: middle !important;
+  text-align: center;
+  padding: 12px 15px;
+  border-color: #dfe6e9;
+}
+
+/* Table row hover */
+.table tbody tr:hover {
+  background-color: #d6eaf8;
+  cursor: pointer;
+}
+
+/* Buttons container spacing */
+.d-flex.gap-2 {
+  justify-content: center;
+}
+
+/* Buttons base styling */
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+  padding: 4px 10px;
+  width: 36px;
+  height: 32px;
+}
+
+/* Save button styling */
+.btn-success.btn-sm {
+  background-color: #000000;
+  border: 1.5px solid #000000;
+  color: #fff;
+}
+
+.btn-success.btn-sm:hover {
+  background-color: #333333;
+  border-color: #333333;
+}
+
+/* Cancel button styling */
+.btn-secondary.btn-sm {
+  background-color: #000000;
+  border: 1.5px solid #000000;
+  color: #fff;
+}
+
+.btn-secondary.btn-sm:hover {
+  background-color: #333333;
+  border-color: #333333;
+}
+
+/* Edit button styling */
+.btn-primary.btn-sm {
+  background-color: #000000;
+  border: 1.5px solid #000000;
+  color: #fff;
+}
+
+.btn-primary.btn-sm:hover {
+  background-color: #333333;
+  border-color: #333333;
+}
+
+/* Delete button styling (same size as edit) */
+.btn-danger.btn-sm {
+  background-color: #000000;
+  border: 1.5px solid #000000;
+  color: #fff;
+}
+
+.btn-danger.btn-sm:hover {
+  background-color: #333333;
+  border-color: #333333;
+}
+
+/* Inputs inside edit row */
+input.form-control {
+  font-size: 0.9rem;
+  padding: 6px 8px;
+  border: 1.5px solid #bdc3c7;
+  border-radius: 5px;
+  transition: border-color 0.25s ease;
+  text-align: center;
+}
+
+input.form-control:focus {
+  border-color: #2980b9;
+  outline: none;
+  box-shadow: 0 0 6px rgba(41, 128, 185, 0.4);
+}
+
+/* Error alert */
+.alert-danger {
+  background-color: #f8d7da;
+  color: #842029;
+  border-radius: 6px;
+  padding: 10px 15px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Download button container */
+.download-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
+}
+
+/* PDF Download button */
+.btn-pdf {
+  font-size: 0.9rem;
+  padding: 8px 20px;
+  width: auto;
+  height: 38px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  background-color: #c0392b;
+  border: none;
+  color: #fff;
+  gap: 8px;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-pdf:hover {
+  background-color: #e74c3c;
+}
