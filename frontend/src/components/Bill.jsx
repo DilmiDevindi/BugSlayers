@@ -333,7 +333,7 @@ function BillForm() {
                 <th>Discount</th>
                 <th>Buying</th>
                 <th>Total</th>
-                <th>Profit</th>
+                
               </tr>
             </thead>
             <tbody>
