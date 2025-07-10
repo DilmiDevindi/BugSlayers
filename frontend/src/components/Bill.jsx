@@ -169,7 +169,12 @@ function BillForm() {
     const printWindow = window.open('', '', 'height=700,width=900');
     printWindow.document.write('<html><head><title>Invoice</title>');
     printWindow.document.write(
-      `<style>@page { size: A4; margin: 10mm; } body { font-family: Arial; } .invoice-preview { font-size: 12pt; } .print-hide { display: none !important; }</style>`
+      `<style>
+      @page { size: A5 portrait; margin: 10mm; }
+      body { font-family: Arial; }
+      .invoice-preview { font-size: 11pt; max-width: 148mm; margin: auto; }
+      .print-hide { display: none !important; }
+    </style>`
     );
     printWindow.document.write('</head><body>');
     printWindow.document.write(printContents);
