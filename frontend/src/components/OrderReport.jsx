@@ -1,8 +1,8 @@
-
 import React, { useState } from 'react';
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import { useNavigate } from 'react-router-dom';
+import './OrderReport.css';
 
 const OrderReport = () => {
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ const OrderReport = () => {
     } catch (err) {
       setError(
         err.response?.data?.error ||
-          'Failed to fetch report. Please check server and date formats.'
+        'Failed to fetch report. Please check server and date formats.'
       );
       setOrders([]);
     }
@@ -48,7 +48,6 @@ const OrderReport = () => {
     const colWidth = [10, 40, 30, 30, 40];
     let y = 35;
 
-    // Header row
     const headers = ['#', 'Order ID', 'Quantity', 'Discount (%)', 'Date'];
     let x = 20;
     headers.forEach((header, i) => {
@@ -57,7 +56,6 @@ const OrderReport = () => {
     });
     y += 8;
 
-    // Rows
     orders.forEach((order, index) => {
       let x = 20;
       const row = [
@@ -89,11 +87,12 @@ const OrderReport = () => {
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h2>Order Report</h2>
         <button
-          className="btn btn-secondary btn-sm"
-          onClick={() => navigate('/dashboard/orders/manage')}
-        >
-          ⬅ Back to Manage Orders
-        </button>
+  className="btn-back"
+  onClick={() => navigate('/dashboard/orders/manage')}
+>
+  ⬅ Back to Manage Orders
+</button>
+
       </div>
 
       <div className="row mb-3 align-items-end">
@@ -115,30 +114,35 @@ const OrderReport = () => {
             onChange={(e) => setEndDate(e.target.value)}
           />
         </div>
-        <div className="col-md-6 d-flex gap-2">
-          <button className="btn btn-primary" onClick={fetchReport}>
-            View Report
-          </button>
-          <button
-            className="btn btn-success"
-            onClick={generatePDF}
-            disabled={orders.length === 0}
-          >
-            Download Report
-          </button>
-          <button
-            className="btn btn-warning"
-            onClick={clearReport}
-            disabled={orders.length === 0 && !startDate && !endDate}
-          >
-            Clear
-          </button>
-        </div>
       </div>
 
       {error && <p className="text-danger">{error}</p>}
 
-      {orders.length > 0 ? (
+      {orders.length === 0 && !error && (
+        <p className="no-data-message">No report data to display.</p>
+      )}
+
+      <div className="report-buttons">
+        <button className="btn btn-primary" onClick={fetchReport}>
+          View Report
+        </button>
+        <button
+          className="btn btn-success"
+          onClick={generatePDF}
+          disabled={orders.length === 0}
+        >
+          Download Report
+        </button>
+        <button
+          className="btn btn-warning"
+          onClick={clearReport}
+          disabled={orders.length === 0 && !startDate && !endDate}
+        >
+          Clear
+        </button>
+      </div>
+
+      {orders.length > 0 && (
         <table className="table table-bordered">
           <thead className="table-dark">
             <tr>
@@ -161,12 +165,9 @@ const OrderReport = () => {
             ))}
           </tbody>
         </table>
-      ) : (
-        <p>No report data to display.</p>
       )}
     </div>
   );
 };
-
 
 export default OrderReport;
