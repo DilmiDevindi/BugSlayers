@@ -12,6 +12,12 @@
   padding: 10px 15px;
 }
 
+/* Adjust heading */
+.sidebar h6.custom-heading {
+  font-size: 14px;
+  margin-bottom: 20px;
+  text-align: center;
+}
 
 .sidebar a {
   color: #fff;
