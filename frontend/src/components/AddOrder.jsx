@@ -11,7 +11,6 @@ const AddOrder = () => {
     category: '',
     subcategory: '',
     quantity: '',
-    discount: '',
     date: '',
     status: 'Pending',
   });
@@ -74,10 +73,10 @@ const AddOrder = () => {
     e.preventDefault();
     const {
       orderId, companyName, productName, category,
-      subcategory, quantity, discount, date, status,
+      subcategory, quantity, date, status,
     } = form;
 
-    if (!orderId || !companyName || !productName || !category || !subcategory || !quantity || !discount || !date || !status) {
+    if (!orderId || !companyName || !productName || !category || !subcategory || !quantity || !date || !status) {
       setMessage('Please fill all fields.');
       return;
     }
@@ -90,7 +89,6 @@ const AddOrder = () => {
         category,
         subcategory,
         quantity: Number(quantity),
-        discount: Number(discount),
         date,
         status,
       });
@@ -104,7 +102,6 @@ const AddOrder = () => {
         category: '',
         subcategory: '',
         quantity: '',
-        discount: '',
         date: '',
         status: 'Pending',
       });
@@ -145,7 +142,6 @@ const AddOrder = () => {
         </div>
 
         <input type="number" className="form-control mb-3" name="quantity" placeholder="Quantity" value={form.quantity} onChange={handleChange} min={1} required />
-        <input type="number" className="form-control mb-3" name="discount" placeholder="Discount (%)" value={form.discount} onChange={handleChange} min={0} required />
         <input type="date" className="form-control mb-3" name="date" value={form.date} onChange={handleChange} required />
 
         <select className="form-control mb-4" name="status" value={form.status} onChange={handleChange} required>
