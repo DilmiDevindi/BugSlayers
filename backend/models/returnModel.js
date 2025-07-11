@@ -1,4 +1,3 @@
-// ✅ RETURN MODEL - backend/models/returnModel.js
 const mongoose = require("mongoose");
 
 const ReturnSchema = new mongoose.Schema(
@@ -13,14 +12,13 @@ const ReturnSchema = new mongoose.Schema(
     status: {
       type: String,
       required: true,
-      enum: ["Pending", "Returned", "Cancel"], // ✅ match frontend dropdown
+      enum: ["Pending", "Returned", "Cancel"],
     },
     note: { type: String, default: "", trim: true },
   },
   { timestamps: true }
 );
 
-// Middleware to handle duplicate returnId error
 ReturnSchema.post("save", function (error, doc, next) {
   if (error.name === "MongoServerError" && error.code === 11000) {
     next(new Error("Return ID already exists. Please use a unique return ID."));
