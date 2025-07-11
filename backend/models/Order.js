@@ -7,7 +7,6 @@ const orderSchema = new mongoose.Schema({
   category: { type: String, required: true },
   subcategory: { type: String, required: true },
   quantity: { type: Number, required: true },
-  discount: { type: Number, required: true },
   date: { type: Date, required: true },
   status: {
     type: String,
