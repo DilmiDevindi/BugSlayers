@@ -7,7 +7,8 @@ const purchaseSchema = new mongoose.Schema({
   subcategory: { type: String, required: true },
   quantity: { type: Number, required: true },
   price: { type: Number, required: true },
-  totalPrice: { type: Number, required: true },  // NEW field
+  discount: { type: Number, default: 0 },
+  totalPrice: { type: Number, required: true },
   date: { type: Date, required: true },
 });
 
