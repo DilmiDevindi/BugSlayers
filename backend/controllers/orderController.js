@@ -20,7 +20,6 @@ exports.createOrder = async (req, res) => {
       category,
       subcategory,
       quantity,
-      discount,
       date,
       status
     } = req.body;
@@ -33,7 +32,6 @@ exports.createOrder = async (req, res) => {
       !category ||
       !subcategory ||
       !quantity ||
-      !discount ||
       !date ||
       !status
     ) {
@@ -53,7 +51,6 @@ exports.createOrder = async (req, res) => {
       category,
       subcategory,
       quantity,
-      discount,
       date,
       status
     });
@@ -77,7 +74,6 @@ exports.updateOrder = async (req, res) => {
       category,
       subcategory,
       quantity,
-      discount,
       date,
       status
     } = req.body;
@@ -91,7 +87,6 @@ exports.updateOrder = async (req, res) => {
         category,
         subcategory,
         quantity,
-        discount,
         date,
         status
       },
