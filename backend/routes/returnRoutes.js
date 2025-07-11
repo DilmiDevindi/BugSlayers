@@ -3,13 +3,13 @@ const router = express.Router();
 const {
   createReturn,
   updateReturn,
-  getReturns,
+  getAllReturns,
   deleteReturn,
 } = require("../controllers/returnController");
 
+router.get("/", getAllReturns);
 router.post("/", createReturn);
 router.put("/:id", updateReturn);
-router.get("/", getReturns);
 router.delete("/:id", deleteReturn);
 
 module.exports = router;

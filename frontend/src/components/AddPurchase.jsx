@@ -12,48 +12,77 @@ const AddPurchase = () => {
     subcategory: "",
     quantity: "",
     price: "",
+    discountValue: "",
+    discountType: "%", // % or Rs
     date: "",
   });
+
   const [suppliers, setSuppliers] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [subcategories, setSubcategories] = useState([]);
 
-  // Fetch suppliers on mount
   useEffect(() => {
     axios.get("/api/suppliers")
       .then(res => setSuppliers(res.data))
       .catch(err => console.error("Error fetching suppliers:", err));
   }, []);
 
-  // Fetch categories on mount
   useEffect(() => {
     axios.get("/api/category")
       .then(res => setCategories(res.data))
       .catch(err => console.error("Error fetching categories:", err));
   }, []);
 
-  // Update purchase state on form input change
+  useEffect(() => {
+    if (purchase.category) {
+      axios.get(`/api/subcategories/by-category/${purchase.category}`)
+        .then(res => setSubcategories(res.data))
+        .catch(err => console.error("Error fetching subcategories:", err));
+    } else {
+      setSubcategories([]);
+    }
+  }, [purchase.category]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    if (name === "discountValue" && isNaN(value)) return;
+
     setPurchase(prev => ({
       ...prev,
       [name]: value,
-      // Reset subcategory if category changed (optional)
       ...(name === "category" && { subcategory: "" })
     }));
   };
 
-  // Submit purchase form
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!purchase.supplierName || !purchase.productName || !purchase.category || !purchase.subcategory
-        || !purchase.quantity || !purchase.price || !purchase.date) {
+    const {
+      supplierName, productName, category, subcategory,
+      quantity, price, discountValue, discountType, date
+    } = purchase;
+
+    if (!supplierName || !productName || !category || !subcategory ||
+        !quantity || !price || !date) {
       alert("Please fill all required fields");
       return;
     }
 
     try {
-      await axios.post("/api/purchase", purchase);
+      await axios.post("/api/purchase", {
+        supplierName,
+        productName,
+        category,
+        subcategory,
+        quantity: Number(quantity),
+        price: Number(price),
+        discount: {
+          value: discountValue ? Number(discountValue) : 0,
+          type: discountType
+        },
+        date
+      });
       alert("Purchase added successfully!");
       setPurchase({
         supplierName: "",
@@ -62,6 +91,8 @@ const AddPurchase = () => {
         subcategory: "",
         quantity: "",
         price: "",
+        discountValue: "",
+        discountType: "%",
         date: "",
       });
     } catch (error) {
@@ -77,7 +108,6 @@ const AddPurchase = () => {
       </div>
 
       <form onSubmit={handleSubmit} className="add-purchase-form">
-
         <select
           name="supplierName"
           value={purchase.supplierName}
@@ -99,7 +129,6 @@ const AddPurchase = () => {
           required
         />
 
-        {/* Category and Subcategory use the same categories list */}
         <div className="row-input-group">
           <select
             name="category"
@@ -120,8 +149,8 @@ const AddPurchase = () => {
             required
           >
             <option value="">Select Subcategory</option>
-            {categories.map(c => (
-              <option key={c._id} value={c._id}>{c.categoryName}</option>
+            {subcategories.map(s => (
+              <option key={s._id} value={s._id}>{s.subcategoryName}</option>
             ))}
           </select>
         </div>
@@ -146,6 +175,27 @@ const AddPurchase = () => {
           min="0"
           step="0.01"
         />
+
+        <div className="row-input-group">
+          <input
+            type="number"
+            name="discountValue"
+            value={purchase.discountValue}
+            onChange={handleChange}
+            placeholder="Discount"
+            min="0"
+            step="1"
+          />
+
+          <select
+            name="discountType"
+            value={purchase.discountType}
+            onChange={handleChange}
+          >
+            <option value="%">%</option>
+            <option value="Rs">Rs</option>
+          </select>
+        </div>
 
         <input
           type="date"

@@ -22,7 +22,6 @@ function ManageOrders() {
     category: "",
     subcategory: "",
     quantity: "",
-    discount: "",
     date: "",
     status: "Pending",
   });
@@ -66,7 +65,6 @@ function ManageOrders() {
       category: order.category,
       subcategory: order.subcategory,
       quantity: order.quantity,
-      discount: order.discount,
       date: order.date?.slice(0, 10),
       status: order.status || "Pending",
     });
@@ -87,7 +85,6 @@ function ManageOrders() {
       const res = await axios.put(`${BASE_URL}/api/orders/${editId}`, {
         ...editForm,
         quantity: Number(editForm.quantity),
-        discount: Number(editForm.discount),
       });
 
       setOrders((prevOrders) =>
@@ -127,7 +124,6 @@ function ManageOrders() {
                   <th>Category</th>
                   <th>Subcategory</th>
                   <th>Quantity</th>
-                  <th>Discount (%)</th>
                   <th>Date</th>
                   <th>Status</th>
                   <th>Actions</th>
@@ -189,17 +185,6 @@ function ManageOrders() {
                       </td>
                       <td>
                         <input
-                          type="number"
-                          name="discount"
-                          value={editForm.discount}
-                          onChange={handleEditChange}
-                          className="form-control"
-                          min={0}
-                          max={100}
-                        />
-                      </td>
-                      <td>
-                        <input
                           type="date"
                           name="date"
                           value={editForm.date}
@@ -246,7 +231,6 @@ function ManageOrders() {
                       <td>{order.category}</td>
                       <td>{order.subcategory}</td>
                       <td>{order.quantity}</td>
-                      <td>{order.discount}</td>
                       <td>{order.date?.slice(0, 10)}</td>
                       <td>{order.status}</td>
                       <td>

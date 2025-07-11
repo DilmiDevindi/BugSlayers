@@ -21,13 +21,14 @@ const Sidebar = () => {
       <h6 className='custom-heading'>New Sisira Furniture</h6>
       <ul className="nav flex-column">
 
+        {/* Dashboard */}
         <li className="nav-item mb-3">
           <Link to="/dashboard" className="nav-link text-white d-flex align-items-center">
             <i className="bi bi-speedometer2 me-2"></i> Dashboard
           </Link>
         </li>
 
-        {/* Suppliers Dropdown */}
+        {/* Suppliers */}
         <li className="nav-item mb-3">
           <button 
             className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
@@ -48,7 +49,7 @@ const Sidebar = () => {
           )}
         </li>
 
-        {/* Purchases Dropdown */}
+        {/* Purchases & Reports */}
         <li className="nav-item mb-3">
           <button 
             className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
@@ -72,7 +73,7 @@ const Sidebar = () => {
           )}
         </li>
 
-        {/* Orders Dropdown - After Purchases */}
+        {/* Orders */}
         <li className="nav-item mb-3">
           <button
             className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start"
@@ -93,7 +94,7 @@ const Sidebar = () => {
           )}
         </li>
 
-        {/* Returns Dropdown - After Orders */}
+        {/* Returns & Refunds */}
         <li className="nav-item mb-3">
           <button
             className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start"
@@ -107,12 +108,14 @@ const Sidebar = () => {
               <li className="nav-item mb-2">
                 <Link to="/dashboard/returns/manage" className="nav-link text-white">Manage Returns</Link>
               </li>
+              <li className="nav-item mb-2">
+                <Link to="/dashboard/refunds/manage" className="nav-link text-white">Manage Refunds</Link>
+              </li>
             </ul>
           )}
         </li>
-        
 
-        {/* Inventory Dropdown */}
+        {/* Inventory */}
         <li className="nav-item mb-3">
           <button 
             className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
@@ -133,7 +136,7 @@ const Sidebar = () => {
           )}
         </li>
 
-        {/* Category Dropdown */}
+        {/* Category */}
         <li className="nav-item mb-3">
           <button 
             className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
@@ -157,7 +160,7 @@ const Sidebar = () => {
           )}
         </li>
 
-        {/* Customers Dropdown */}
+        {/* Customers */}
         <li className="nav-item mb-3">
           <button 
             className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
@@ -178,7 +181,7 @@ const Sidebar = () => {
           )}
         </li>
 
-        {/* Sales Dropdown */}
+        {/* Sales & Reports */}
         <li className="nav-item mb-3">
           <button 
             className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
@@ -202,7 +205,7 @@ const Sidebar = () => {
           )}
         </li>
 
-        {/* Catalog Dropdown */}
+        {/* Catalog */}
         <li className="nav-item mb-3">
           <button 
             className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
@@ -227,7 +230,7 @@ const Sidebar = () => {
           </Link>
         </li>
 
-        {/* Inventory Reports Dropdown */}
+
         <li className="nav-item mb-3">
           <button 
             className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 

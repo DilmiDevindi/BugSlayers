@@ -45,10 +45,10 @@ const OrderReport = () => {
     doc.setFontSize(11);
     doc.text(`From: ${startDate} To: ${endDate}`, 20, 25);
 
-    const colWidth = [10, 40, 30, 30, 40];
+    const colWidth = [10, 40, 30, 40];
     let y = 35;
 
-    const headers = ['#', 'Order ID', 'Quantity', 'Discount (%)', 'Date'];
+    const headers = ['#', 'Order ID', 'Quantity', 'Date'];
     let x = 20;
     headers.forEach((header, i) => {
       doc.text(header, x, y);
@@ -62,7 +62,6 @@ const OrderReport = () => {
         (index + 1).toString(),
         order.orderId,
         order.quantity.toString(),
-        order.discount.toString(),
         new Date(order.date).toLocaleDateString(),
       ];
       row.forEach((text, i) => {
@@ -86,13 +85,9 @@ const OrderReport = () => {
     <div className="container mt-4">
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h2>Order Report</h2>
-        <button
-  className="btn-back"
-  onClick={() => navigate('/dashboard/orders/manage')}
->
-  ⬅ Back to Manage Orders
-</button>
-
+        <button className="btn-back" onClick={() => navigate('/dashboard/orders/manage')}>
+          ⬅ Back to Manage Orders
+        </button>
       </div>
 
       <div className="row mb-3 align-items-end">
@@ -149,7 +144,6 @@ const OrderReport = () => {
               <th>#</th>
               <th>Order ID</th>
               <th>Quantity</th>
-              <th>Discount (%)</th>
               <th>Date</th>
             </tr>
           </thead>
@@ -159,7 +153,6 @@ const OrderReport = () => {
                 <td>{idx + 1}</td>
                 <td>{order.orderId}</td>
                 <td>{order.quantity}</td>
-                <td>{order.discount}</td>
                 <td>{new Date(order.date).toLocaleDateString()}</td>
               </tr>
             ))}
