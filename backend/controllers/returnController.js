@@ -1,5 +1,5 @@
-
 const Return = require("../models/returnModel");
+const Refund = require("../models/refundModel");
 
 exports.getAllReturns = async (req, res) => {
   try {
@@ -104,14 +104,17 @@ exports.updateReturn = async (req, res) => {
 
 exports.deleteReturn = async (req, res) => {
   try {
-    const refund = await Refund.findOne({ returnId: (await Return.findById(req.params.id))?.returnId });
+    const returnDoc = await Return.findById(req.params.id);
+    if (!returnDoc) {
+      return res.status(404).json({ message: "Return not found" });
+    }
+
+    const refund = await Refund.findOne({ returnId: returnDoc.returnId });
     if (refund) {
       return res.status(400).json({ message: "Cannot delete return; it is referenced in a refund" });
     }
-    const deleted = await Return.findByIdAndDelete(req.params.id);
-    if (!deleted) {
-      return res.status(404).json({ message: "Return not found" });
-    }
+
+    await Return.findByIdAndDelete(req.params.id);
     res.status(200).json({ message: "Return deleted successfully" });
   } catch (err) {
     console.error("Delete Error:", err);
