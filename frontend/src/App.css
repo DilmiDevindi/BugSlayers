@@ -25,6 +25,12 @@
   padding: 8px 10px;
 }
 
+/* Dropdown button alignment */
+.sidebar button.nav-link {
+  font-size: 13px;
+  padding: 8px 10px;
+}
+
 
 .sidebar a {
   color: #fff;
