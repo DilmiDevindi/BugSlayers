@@ -1,0 +1,207 @@
+/* Container */
+.container-i.form-container-i {
+  width: 60vw; /* Reduced from 80vw */
+  min-height: 100vh;
+  background: white;
+  padding: 0;
+  margin: 20px auto; /* Center horizontally with vertical spacing */
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Header */
+.container-i .text-center {
+  font-size: 2rem; /* Slightly reduced */
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #2c3e50;
+  letter-spacing: -0.5px;
+  padding: 20px 0;
+  text-align: center;
+}
+
+/* Main Form */
+form {
+  flex: 1;
+  background: #fafafa;
+  padding: 20px;
+  margin: 0 20px 20px 20px;
+  border-radius: 12px;
+  border: 1px solid #e8e8e8;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+/* Form Group - Supplier Search Input and Button */
+.form-group-i {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.form-group-i label {
+  font-weight: 600;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+  color: #2c3e50;
+  display: block;
+}
+
+.form-control {
+  padding: 14px 18px;
+  font-size: 1.1rem;
+  border-radius: 10px;
+  border: 2px solid #ddd;
+  background: white;
+  transition: border-color 0.3s ease;
+  width: 100%;
+  max-width: 400px;
+  outline: none;
+  height: 50px;
+}
+
+.form-control:focus {
+  border-color: #666;
+}
+
+.btn.btn-primary-i {
+  padding: 14px 28px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 10px;
+  border: none;
+  background: #2c3e50;
+  color: white;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  height: 50px;
+}
+
+.btn.btn-primary-i:hover {
+  transform: translateY(-2px);
+  background: #34495e;
+}
+
+/* Add Button Container */
+.add-button-container {
+  display: flex;
+  justify-content: center;
+}
+
+/* Add New Supplier Form Section */
+.add-supplier-form {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+  display: grid;
+  gap: 20px;
+}
+
+/* Sub-Header */
+.add-supplier-form h5 {
+  margin-bottom: 20px;
+  color: #2c3e50;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: center;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #ecf0f1;
+}
+
+/* Grid layout for form fields */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 10px;
+}
+
+.form-group-i label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #2c3e50;
+  font-size: 1rem;
+  display: block;
+}
+
+.form-group-i input,
+.form-group-i select {
+  padding: 10px 14px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 2px solid #ddd;
+  background: white;
+  transition: border-color 0.3s ease;
+  width: 100%;
+  outline: none;
+}
+
+.form-group-i input:focus,
+.form-group-i select:focus {
+  border-color: #666;
+}
+
+/* Validation error messages */
+.form-group-i .error-message {
+  margin-top: 8px;
+  padding: 8px;
+  border-radius: 6px;
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  color: #721c24;
+  font-size: 0.9rem;
+}
+
+/* Buttons */
+.action-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn.btn-secondary {
+  flex: 1;
+  max-width: 180px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 10px;
+  border: 2px solid #6c757d;
+  background: white;
+  color: #6c757d;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.btn.btn-secondary:hover {
+  transform: translateY(-2px);
+  background: #6c757d;
+  color: white;
+}
+
+/* Add Supplier Submit Button */
+.btn.btn-primary-i.submit-btn {
+  flex: 1;
+  max-width: 250px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 10px;
+  border: none;
+  background: #2c3e50;
+  color: white;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.btn.btn-primary-i.submit-btn:hover {
+  transform: translateY(-2px);
+  background: #34495e;
+}

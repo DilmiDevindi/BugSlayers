@@ -98,7 +98,18 @@ const ManageSuppliers = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // ✅ Fax number validation
+    if (name === "fax") {
+      let cleaned = value.replace(/\D/g, "");
+      if (cleaned.length > 10) {
+        alert("Fax number must not exceed 10 digits");
+        cleaned = cleaned.slice(0, 10);
+      }
+      setFormData((prev) => ({ ...prev, [name]: cleaned }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   return (
@@ -176,7 +187,6 @@ const ManageSuppliers = () => {
               <FontAwesomeIcon icon={faEditIcon} /> Edit Supplier
             </h4>
 
-            {/* Two-column layout */}
             <div className="grid grid-cols-2 gap-6">
               {Object.entries(formData).map(([key, value]) => (
                 <div key={key} className="flex flex-col">
@@ -195,7 +205,6 @@ const ManageSuppliers = () => {
               ))}
             </div>
 
-            {/* Action buttons */}
             <div className="flex justify-end gap-3 mt-6">
               <button
                 type="submit"

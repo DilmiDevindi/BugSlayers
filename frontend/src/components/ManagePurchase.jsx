@@ -12,7 +12,6 @@ const ManagePurchases = () => {
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
 
-  // Fetch all purchases
   const fetchPurchases = async () => {
     try {
       const response = await axios.get("/api/purchase");
@@ -22,7 +21,6 @@ const ManagePurchases = () => {
     }
   };
 
-  // Fetch categories on mount
   useEffect(() => {
     fetchPurchases();
 
@@ -37,14 +35,11 @@ const ManagePurchases = () => {
     fetchCategories();
   }, []);
 
-  // Fetch subcategories when editingPurchase.category changes
   useEffect(() => {
     const fetchSubcategories = async () => {
       if (editingPurchase && editingPurchase.category) {
         try {
-          console.log("Fetching subcategories for category:", editingPurchase.category);
           const res = await axios.get(`/api/subcategories/by-category/${editingPurchase.category}`);
-          console.log("Subcategories fetched:", res.data);
           setSubcategories(res.data || []);
         } catch (error) {
           console.error("Error fetching subcategories:", error);
@@ -68,21 +63,22 @@ const ManagePurchases = () => {
   };
 
   const handleEditClick = (purchase) => {
-    // Format date to YYYY-MM-DD
     const dateStr = purchase.date ? purchase.date.slice(0, 10) : "";
     setEditingPurchase({
       ...purchase,
       date: dateStr,
+      discount: purchase.discount ?? "",
+      discountType: purchase.discountType || "%"
     });
   };
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
-    // Reset subcategory when category changes
+
     setEditingPurchase((prev) => ({
       ...prev,
       [name]: value,
-      ...(name === "category" ? { subcategory: "" } : {}),
+      ...(name === "category" ? { subcategory: "" } : {})
     }));
   };
 
@@ -95,25 +91,23 @@ const ManagePurchases = () => {
       subcategory,
       quantity,
       price,
+      discount,
+      discountType,
       date,
       _id,
     } = editingPurchase;
 
-    if (
-      !supplierName ||
-      !productName ||
-      !category ||
-      !subcategory ||
-      !quantity ||
-      !price ||
-      !date
-    ) {
-      alert("Please fill in all fields.");
+    if (!supplierName || !productName || !category || !subcategory || !quantity || !price || !date) {
+      alert("Please fill in all required fields.");
       return;
     }
 
     try {
-      await axios.put(`/api/purchase/${_id}`, editingPurchase);
+      await axios.put(`/api/purchase/${_id}`, {
+        ...editingPurchase,
+        discount: discount ? Number(discount) : 0,
+        discountType
+      });
       setEditingPurchase(null);
       fetchPurchases();
     } catch (error) {
@@ -122,19 +116,16 @@ const ManagePurchases = () => {
     }
   };
 
-  // Helper to get category name by id
   const getCategoryName = (id) => {
     const cat = categories.find((c) => c._id === id);
     return cat ? cat.categoryName : id;
   };
 
-  // Helper to get subcategory name by id from current subcategories list
   const getSubcategoryName = (id) => {
     const sub = subcategories.find((s) => s._id === id);
     return sub ? sub.subcategoryName : id;
   };
 
-  // Filter purchases by search text and date
   const filteredPurchases = purchases.filter((purchase) => {
     const searchLower = searchTerm.toLowerCase();
     const matchText =
@@ -154,7 +145,6 @@ const ManagePurchases = () => {
         <FontAwesomeIcon icon={faClipboardList} className="ms-icon" /> Manage Purchases Records
       </h2>
 
-      {/* Search Inputs */}
       <div className="mb-3">
         <input
           type="text"
@@ -176,49 +166,65 @@ const ManagePurchases = () => {
       <table className="purchases-table table table-striped table-bordered text-center">
         <thead>
           <tr>
-            <th style={{ width: "10%" }}>Supplier</th>
-            <th style={{ width: "10%" }}>Product</th>
-            <th style={{ width: "10%" }}>Category</th>
-            <th style={{ width: "10%" }}>Subcategory</th>
-            <th style={{ width: "7%" }}>Quantity</th>
-            <th style={{ width: "8%" }}>Price (Rs.)</th>
-            <th style={{ width: "10%" }}>Total Purchase (Rs.)</th>
-            <th style={{ width: "10%" }}>Date</th>
-            <th style={{ width: "15%" }}>Actions</th>
+            <th>Supplier</th>
+            <th>Product</th>
+            <th>Category</th>
+            <th>Subcategory</th>
+            <th>Quantity</th>
+            <th>Price (Rs.)</th>
+            <th>Discount</th>
+            <th>Total Purchase (Rs.)</th>
+            <th>Date</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {filteredPurchases.map((purchase) => (
-            <tr key={purchase._id}>
-              <td>{purchase.supplierName}</td>
-              <td>{purchase.productName}</td>
-              <td>{getCategoryName(purchase.category)}</td>
-              <td>{getSubcategoryName(purchase.subcategory)}</td>
-              <td>{purchase.quantity}</td>
-              <td>{purchase.price.toFixed(2)}</td>
-              <td>{(purchase.quantity * purchase.price).toFixed(2)}</td>
-              <td>{new Date(purchase.date).toLocaleDateString()}</td>
-              <td>
-                <div className="d-flex gap-2 justify-content-center">
-                  <button
-                    className="btn btn-sm btn-outline-primary"
-                    onClick={() => handleEditClick(purchase)}
-                  >
-                    <FontAwesomeIcon icon={faEdit} /> Edit
-                  </button>
-                  <button
-                    className="btn btn-sm btn-outline-danger"
-                    onClick={() => handleDelete(purchase._id)}
-                  >
-                    <FontAwesomeIcon icon={faTrash} /> Delete
-                  </button>
-                </div>
-              </td>
-            </tr>
-          ))}
+          {filteredPurchases.map((purchase) => {
+            const qty = Number(purchase.quantity) || 0;
+            const price = Number(purchase.price) || 0;
+            const discount = Number(purchase.discount) || 0;
+            const isPercentage = purchase.discountType === "%";
+
+            const discountAmount = isPercentage ? (price * qty * discount) / 100 : discount;
+            const total = price * qty - discountAmount;
+
+            return (
+              <tr key={purchase._id}>
+                <td>{purchase.supplierName}</td>
+                <td>{purchase.productName}</td>
+                <td>{getCategoryName(purchase.category)}</td>
+                <td>{getSubcategoryName(purchase.subcategory)}</td>
+                <td>{qty}</td>
+                <td>{price.toFixed(2)}</td>
+                <td>
+                  {discount > 0
+                    ? `${discount}${purchase.discountType || ""}`
+                    : "-"}
+                </td>
+                <td>{total.toFixed(2)}</td>
+                <td>{new Date(purchase.date).toLocaleDateString()}</td>
+                <td>
+                  <div className="d-flex gap-2 justify-content-center">
+                    <button
+                      className="btn btn-sm btn-outline-primary"
+                      onClick={() => handleEditClick(purchase)}
+                    >
+                      <FontAwesomeIcon icon={faEdit} /> Edit
+                    </button>
+                    <button
+                      className="btn btn-sm btn-outline-danger"
+                      onClick={() => handleDelete(purchase._id)}
+                    >
+                      <FontAwesomeIcon icon={faTrash} /> Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            );
+          })}
           {filteredPurchases.length === 0 && (
             <tr>
-              <td colSpan="9" className="text-center">
+              <td colSpan="10" className="text-center">
                 No purchases found.
               </td>
             </tr>
@@ -226,7 +232,6 @@ const ManagePurchases = () => {
         </tbody>
       </table>
 
-      {/* Edit Form */}
       {editingPurchase && (
         <div className="edit-form-container mt-4">
           <form onSubmit={handleEditSubmit} className="form">
@@ -235,41 +240,35 @@ const ManagePurchases = () => {
             </h4>
 
             <div className="grid grid-cols-2 gap-6">
-              {/* Supplier */}
               <div className="flex flex-col">
-                <label className="text-sm font-medium mb-1">Supplier Name</label>
+                <label>Supplier Name</label>
                 <input
                   type="text"
                   name="supplierName"
                   value={editingPurchase.supplierName}
                   onChange={handleEditChange}
                   required
-                  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
-              {/* Product */}
               <div className="flex flex-col">
-                <label className="text-sm font-medium mb-1">Product Name</label>
+                <label>Product Name</label>
                 <input
                   type="text"
                   name="productName"
                   value={editingPurchase.productName}
                   onChange={handleEditChange}
                   required
-                  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
-              {/* Category */}
               <div className="flex flex-col">
-                <label className="text-sm font-medium mb-1">Category</label>
+                <label>Category</label>
                 <select
                   name="category"
                   value={editingPurchase.category}
                   onChange={handleEditChange}
                   required
-                  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Select Category</option>
                   {categories.map((cat) => (
@@ -280,16 +279,13 @@ const ManagePurchases = () => {
                 </select>
               </div>
 
-              {/* Subcategory */}
               <div className="flex flex-col">
-                <label className="text-sm font-medium mb-1">Subcategory</label>
+                <label>Subcategory</label>
                 <select
                   name="subcategory"
                   value={editingPurchase.subcategory}
                   onChange={handleEditChange}
                   required
-                  disabled={!editingPurchase.category} // Keep disabled if no category selected
-                  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Select Subcategory</option>
                   {subcategories.map((sub) => (
@@ -300,61 +296,64 @@ const ManagePurchases = () => {
                 </select>
               </div>
 
-              {/* Quantity */}
               <div className="flex flex-col">
-                <label className="text-sm font-medium mb-1">Quantity</label>
+                <label>Quantity</label>
                 <input
                   type="number"
                   name="quantity"
                   value={editingPurchase.quantity}
                   onChange={handleEditChange}
                   required
-                  min="1"
-                  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
-              {/* Price */}
               <div className="flex flex-col">
-                <label className="text-sm font-medium mb-1">Price (Rs.)</label>
+                <label>Price (Rs.)</label>
                 <input
                   type="number"
                   name="price"
                   value={editingPurchase.price}
                   onChange={handleEditChange}
                   required
-                  min="0"
-                  step="0.01"
-                  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
-              {/* Date */}
               <div className="flex flex-col">
-                <label className="text-sm font-medium mb-1">Date</label>
+                <label>Discount</label>
+                <input
+                  type="number"
+                  name="discount"
+                  value={editingPurchase.discount}
+                  onChange={handleEditChange}
+                  min="0"
+                />
+                <select
+                  name="discountType"
+                  value={editingPurchase.discountType}
+                  onChange={handleEditChange}
+                >
+                  <option value="%">%</option>
+                  <option value="Rs">Rs</option>
+                </select>
+              </div>
+
+              <div className="flex flex-col">
+                <label>Date</label>
                 <input
                   type="date"
                   name="date"
                   value={editingPurchase.date}
                   onChange={handleEditChange}
                   required
-                  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
             </div>
 
             <div className="flex justify-end gap-3 mt-6">
-              <button
-                type="submit"
-                className="btnUpdate px-5 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700"
-              >
+              <button type="submit" className="btnUpdate">
                 Update
               </button>
-              <button
-                type="button"
-                onClick={() => setEditingPurchase(null)}
-                className="btnClose px-5 py-2 rounded-md bg-gray-300 text-gray-800 hover:bg-gray-400"
-              >
+              <button type="button" onClick={() => setEditingPurchase(null)} className="btnClose">
                 Cancel
               </button>
             </div>

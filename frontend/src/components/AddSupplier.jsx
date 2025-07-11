@@ -3,7 +3,7 @@ import { faSquarePlus } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
-import "./Supplier.css";
+import "./AddSupplier.css";
 
 const AddSupplier = ({ onSupplierSelected }) => {
   const [existingSuppliers, setExistingSuppliers] = useState([]);
@@ -26,7 +26,6 @@ const AddSupplier = ({ onSupplierSelected }) => {
 
   const [errors, setErrors] = useState({});
 
-  // Fetch existing suppliers on component mount
   useEffect(() => {
     fetchExistingSuppliers();
   }, []);
@@ -50,15 +49,24 @@ const AddSupplier = ({ onSupplierSelected }) => {
   const validateFields = (name, value) => {
     let error = "";
 
-    if (name === "phone1" || name === "phone2") {
+    // Clean non-digits from phone and fax fields and limit length to 10
+    if (["phone1", "phone2", "fax"].includes(name)) {
+      // Remove non-digit chars
       value = value.replace(/\D/g, "");
+
+      // Limit to 10 digits max with alert
       if (value.length > 10) {
-        alert("Contact number must not exceed 10 digits");
+        alert(`${name === "fax" ? "Fax" : "Phone"} number must not exceed 10 digits`);
         value = value.slice(0, 10);
       }
-      if (!validatePhoneNumber(value)) {
-        error = "Contact number must be exactly 10 digits and numeric";
-      } else if (name === "phone2" && value === supplier.phone1) {
+
+      // Validate exactly 10 digits only
+      if (value && !validatePhoneNumber(value)) {
+        error = "Must be exactly 10 digits and numeric";
+      }
+
+      // Check phone1 and phone2 not same
+      if (name === "phone2" && value === supplier.phone1) {
         error = "Primary and Secondary Contact Numbers must not be the same";
       }
     }
@@ -73,6 +81,10 @@ const AddSupplier = ({ onSupplierSelected }) => {
       error = "Address cannot be empty";
     }
 
+    if (name === "supplierName" && !value.trim()) {
+      error = "Supplier Name cannot be empty";
+    }
+
     setErrors((prev) => ({ ...prev, [name]: error }));
     return value;
   };
@@ -80,14 +92,12 @@ const AddSupplier = ({ onSupplierSelected }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     const validatedValue = validateFields(name, value);
-    setSupplier({ ...supplier, [name]: validatedValue });
+    setSupplier((prev) => ({ ...prev, [name]: validatedValue }));
   };
 
   const handleSupplierNameBlur = (e) => {
     const value = e.target.value;
-    if (value) {
-      validateFields("supplierName", value);
-    }
+    if (value) validateFields("supplierName", value);
   };
 
   const handleSearchSupplier = async () => {
@@ -98,9 +108,9 @@ const AddSupplier = ({ onSupplierSelected }) => {
 
     try {
       const response = await axios.get("http://localhost:5000/api/suppliers/", {
-        params: { search: searchName }
+        params: { search: searchName },
       });
-      
+
       if (response.data.length > 0) {
         alert("Supplier already exists!");
         setShowAddButton(false);
@@ -154,10 +164,13 @@ const AddSupplier = ({ onSupplierSelected }) => {
       return;
     }
 
+    // Validate all fields again before submit
     let hasErrors = false;
+    const validatedSupplier = {};
     Object.entries(supplier).forEach(([key, value]) => {
       if (key !== "supplyProducts") {
-        const validated = validateFields(key, value);
+        const validatedValue = validateFields(key, value);
+        validatedSupplier[key] = validatedValue;
         if (errors[key]) hasErrors = true;
       }
     });
@@ -173,11 +186,7 @@ const AddSupplier = ({ onSupplierSelected }) => {
         supplier
       );
 
-      if (response.data.message) {
-        alert(response.data.message);
-      } else {
-        alert("Supplier operation completed successfully");
-      }
+      alert(response.data.message || "Supplier added successfully");
 
       setSupplier({
         date: new Date().toISOString().split("T")[0],
@@ -212,71 +221,13 @@ const AddSupplier = ({ onSupplierSelected }) => {
   };
 
   return (
-    <div
-      className="container-i form-container-i"
-      style={{
-        width: "80vw",
-        minHeight: "100vh",
-        background: "white",
-        padding: "0",
-        margin: "0",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      <div
-        className="text-center"
-        style={{
-          fontSize: "2.2rem",
-          fontWeight: "600",
-          marginBottom: "30px",
-          color: "#2c3e50",
-          letterSpacing: "-0.5px",
-          padding: "20px 0",
-        }}
-      >
-        Supplier Management System
-      </div>
+    <div className="container-i form-container-i">
+      <div className="text-center">Supplier Management System</div>
 
-      <form
-        onSubmit={handleSubmit}
-        autoComplete="off"
-        style={{
-          flex: 1,
-          background: "#fafafa",
-          padding: "30px",
-          margin: "0 20px 20px 20px",
-          borderRadius: "12px",
-          border: "1px solid #e8e8e8",
-          display: "grid",
-          gridTemplateColumns: "1fr",
-          gap: "25px",
-        }}
-      >
-        {/* Supplier Search Input and Button */}
-        <div 
-          className="form-group-i" 
-          style={{ 
-            display: "flex", 
-            gap: "20px", 
-            alignItems: "flex-end",
-            justifyContent: "center",
-            marginBottom: "30px"
-          }}
-        >
-          <div style={{ flex: "0 1 600px" }}>
-            <label
-              htmlFor="searchName"
-              style={{
-                fontWeight: "600",
-                marginBottom: "10px",
-                fontSize: "1.3rem",
-                color: "#2c3e50",
-                display: "block",
-              }}
-            >
-              Search Supplier Name:
-            </label>
+      <form onSubmit={handleSubmit} autoComplete="off">
+        <div className="form-group-i">
+          <label htmlFor="searchName">Search Supplier Name:</label>
+          <div style={{ display: "flex", gap: "10px", flex: "1" }}>
             <input
               type="text"
               className="form-control"
@@ -284,86 +235,23 @@ const AddSupplier = ({ onSupplierSelected }) => {
               value={searchName}
               onChange={(e) => setSearchName(e.target.value)}
               placeholder="Enter supplier name"
-              style={{
-                padding: "20px 24px",
-                fontSize: "1.3rem",
-                borderRadius: "12px",
-                border: "2px solid #ddd",
-                background: "white",
-                transition: "border-color 0.3s ease",
-                width: "100%",
-                outline: "none",
-                height: "60px",
-              }}
-              onFocus={(e) => (e.target.style.borderColor = "#666")}
-              onBlur={(e) => (e.target.style.borderColor = "#ddd")}
             />
+            <button
+              type="button"
+              onClick={handleSearchSupplier}
+              className="btn btn-primary-i"
+            >
+              Check
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={handleSearchSupplier}
-            className="btn btn-primary-i"
-            style={{
-              padding: "20px 40px",
-              fontSize: "1.3rem",
-              fontWeight: "600",
-              borderRadius: "12px",
-              border: "none",
-              background: "#2c3e50",
-              color: "white",
-              transition: "all 0.3s ease",
-              cursor: "pointer",
-              textTransform: "none",
-              height: "60px",
-            }}
-            onMouseOver={(e) => {
-              e.target.style.transform = "translateY(-2px)";
-              e.target.style.background = "#34495e";
-            }}
-            onMouseOut={(e) => {
-              e.target.style.transform = "translateY(0)";
-              e.target.style.background = "#2c3e50";
-            }}
-          >
-            Check
-          </button>
         </div>
 
-        {/* Add New Supplier Button */}
         {showAddButton && (
-          <div 
-            className="form-group-i"
-            style={{
-              display: "flex",
-              justifyContent: "center"
-            }}
-          >
+          <div className="form-group-i add-button-container">
             <button
               type="button"
               onClick={handleAddNewSupplier}
               className="btn btn-primary-i"
-              style={{
-                padding: "20px 40px",
-                fontSize: "1.3rem",
-                fontWeight: "600",
-                borderRadius: "12px",
-                border: "none",
-                background: "#2c3e50",
-                color: "white",
-                transition: "all 0.3s ease",
-                cursor: "pointer",
-                textTransform: "none",
-                width: "100%",
-                maxWidth: "400px",
-              }}
-              onMouseOver={(e) => {
-                e.target.style.transform = "translateY(-2px)";
-                e.target.style.background = "#34495e";
-              }}
-              onMouseOut={(e) => {
-                e.target.style.transform = "translateY(0)";
-                e.target.style.background = "#2c3e50";
-              }}
             >
               <FontAwesomeIcon icon={faSquarePlus} className="mr-2" />
               Add New Supplier
@@ -371,55 +259,15 @@ const AddSupplier = ({ onSupplierSelected }) => {
           </div>
         )}
 
-        {/* Show form only when adding new supplier */}
         {showForm && isAddingNew && (
-          <div
-            style={{
-              background: "white",
-              padding: "25px",
-              borderRadius: "10px",
-              border: "1px solid #e0e0e0",
-              display: "grid",
-              gap: "20px",
-            }}
-          >
+          <div className="add-supplier-form">
             <div className="form-group-i">
-              <h5
-                style={{
-                  marginBottom: "20px",
-                  color: "#2c3e50",
-                  fontSize: "1.3rem",
-                  fontWeight: "600",
-                  textAlign: "center",
-                  paddingBottom: "10px",
-                  borderBottom: "2px solid #ecf0f1",
-                }}
-              >
-                Add New Supplier Details
-              </h5>
+              <h5>Add New Supplier Details</h5>
             </div>
 
-            {/* Grid Layout for Form Fields */}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-                gap: "1px",
-              }}
-            >
-              {/* Date Field */}
+            <div className="form-grid">
               <div className="form-group-i">
-                <label
-                  style={{
-                    fontWeight: "600",
-                    marginBottom: "8px",
-                    color: "#2c3e50",
-                    fontSize: "1rem",
-                    display: "block",
-                  }}
-                >
-                  Date:
-                </label>
+                <label>Date:</label>
                 <input
                   type="date"
                   className="form-control"
@@ -427,53 +275,19 @@ const AddSupplier = ({ onSupplierSelected }) => {
                   value={supplier.date}
                   onChange={handleInputChange}
                   required
-                  style={{
-                    padding: "12px 16px",
-                    fontSize: "1rem",
-                    borderRadius: "8px",
-                    border: "2px solid #ddd",
-                    background: "white",
-                    transition: "border-color 0.3s ease",
-                    width: "100%",
-                    outline: "none",
-                  }}
-                  onFocus={(e) => (e.target.style.borderColor = "#666")}
-                  onBlur={(e) => (e.target.style.borderColor = "#ddd")}
                 />
               </div>
 
-              {/* Dynamic Form Fields */}
               {[
-                {
-                  label: "Supplier Name",
-                  key: "supplierName",
-                  required: true,
-                },
-                {
-                  label: "Contact Number (Primary)",
-                  key: "phone1",
-                  required: true,
-                },
-                {
-                  label: "Contact Number (Secondary)",
-                  key: "phone2",
-                },
+                { label: "Supplier Name", key: "supplierName", required: true },
+                { label: "Contact Number (Primary)", key: "phone1", required: true },
+                { label: "Contact Number (Secondary)", key: "phone2" },
                 { label: "Fax Number", key: "fax" },
                 { label: "Email Address", key: "email" },
                 { label: "Address", key: "address" },
               ].map((field) => (
                 <div key={field.key} className="form-group-i">
-                  <label
-                    style={{
-                      fontWeight: "600",
-                      marginBottom: "8px",
-                      color: "#2c3e50",
-                      fontSize: "1rem",
-                      display: "block",
-                    }}
-                  >
-                    {field.label}:
-                  </label>
+                  <label>{field.label}:</label>
                   <input
                     type="text"
                     className="form-control"
@@ -482,77 +296,24 @@ const AddSupplier = ({ onSupplierSelected }) => {
                     onChange={handleInputChange}
                     placeholder={field.label}
                     required={field.required || false}
-                    style={{
-                      padding: "12px 16px",
-                      fontSize: "1rem",
-                      borderRadius: "8px",
-                      border: "2px solid #ddd",
-                      background: "white",
-                      transition: "border-color 0.3s ease",
-                      width: "100%",
-                      outline: "none",
-                    }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = "#666";
-                    }}
                     onBlur={(e) => {
-                      e.target.style.borderColor = "#ddd";
                       if (field.key === "supplierName") handleSupplierNameBlur(e);
                     }}
                   />
                   {errors[field.key] && (
-                    <div
-                      style={{
-                        marginTop: "8px",
-                        padding: "10px",
-                        borderRadius: "6px",
-                        background: "#f8d7da",
-                        border: "1px solid #f5c6cb",
-                        color: "#721c24",
-                        fontSize: "0.9rem",
-                      }}
-                    >
-                      {errors[field.key]}
-                    </div>
+                    <div className="error-message">{errors[field.key]}</div>
                   )}
                 </div>
               ))}
 
-              {/* Payment Terms Field */}
               <div className="form-group-i">
-                <label
-                  style={{
-                    fontWeight: "600",
-                    marginBottom: "8px",
-                    color: "#2c3e50",
-                    fontSize: "1rem",
-                    display: "block",
-                  }}
-                >
-                  Payment Terms:
-                </label>
+                <label>Payment Terms:</label>
                 <select
                   className="form-control"
                   name="paymentTerms"
                   value={supplier.paymentTerms}
                   onChange={handleInputChange}
                   required
-                  style={{
-                    padding: "12px 16px",
-                    fontSize: "1rem",
-                    borderRadius: "8px",
-                    border: "2px solid #ddd",
-                    background: "white",
-                    transition: "border-color 0.3s ease",
-                    width: "100%",
-                    outline: "none",
-                  }}
-                  onFocus={(e) => {
-                    e.target.style.borderColor = "#666";
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.borderColor = "#ddd";
-                  }}
                 >
                   <option value="" disabled>
                     Select a payment method
@@ -565,45 +326,12 @@ const AddSupplier = ({ onSupplierSelected }) => {
           </div>
         )}
 
-        <div
-          style={{
-            display: "flex",
-            gap: "15px",
-            justifyContent: "center",
-            flexWrap: "wrap",
-          }}
-        >
+        <div className="action-buttons">
           {showForm && (
-            <button
-              type="submit"
-              className="btn btn-primary-i"
-              style={{
-                flex: 1,
-                maxWidth: "300px",
-                padding: "16px 32px",
-                fontSize: "1.1rem",
-                fontWeight: "600",
-                borderRadius: "10px",
-                border: "none",
-                background: "#2c3e50",
-                color: "white",
-                transition: "all 0.3s ease",
-                cursor: "pointer",
-                textTransform: "none",
-              }}
-              onMouseOver={(e) => {
-                e.target.style.transform = "translateY(-2px)";
-                e.target.style.background = "#34495e";
-              }}
-              onMouseOut={(e) => {
-                e.target.style.transform = "translateY(0)";
-                e.target.style.background = "#2c3e50";
-              }}
-            >
+            <button type="submit" className="btn btn-primary-i submit-btn">
               Add New Supplier
             </button>
           )}
-
           {(isAddingNew || showForm || showAddButton) && (
             <button
               type="button"
@@ -625,30 +353,6 @@ const AddSupplier = ({ onSupplierSelected }) => {
                   paymentTerms: "",
                 });
                 setErrors({});
-              }}
-              style={{
-                flex: 1,
-                maxWidth: "200px",
-                padding: "16px 32px",
-                fontSize: "1.1rem",
-                fontWeight: "600",
-                borderRadius: "10px",
-                border: "2px solid #6c757d",
-                background: "white",
-                color: "#6c757d",
-                transition: "all 0.3s ease",
-                cursor: "pointer",
-                textTransform: "none",
-              }}
-              onMouseOver={(e) => {
-                e.target.style.transform = "translateY(-2px)";
-                e.target.style.background = "#6c757d";
-                e.target.style.color = "white";
-              }}
-              onMouseOut={(e) => {
-                e.target.style.transform = "translateY(0)";
-                e.target.style.background = "white";
-                e.target.style.color = "#6c757d";
               }}
             >
               Cancel
