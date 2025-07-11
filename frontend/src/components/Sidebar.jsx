@@ -230,7 +230,7 @@ const Sidebar = () => {
           </Link>
         </li>
 
-        {/* Inventory Reports */}
+
         <li className="nav-item mb-3">
           <button 
             className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
@@ -241,6 +241,9 @@ const Sidebar = () => {
           </button>
           {isInventoryReportOpen && (
             <ul className="nav flex-column ms-3">
+              <li className="nav-item mb-2">
+                <Link to="/dashboard/inventory/reports/low-stock" className="nav-link text-white">Low Stock Report</Link>
+              </li>
               <li className="nav-item mb-2">
                 <Link to="/dashboard/inventory/reports/summary" className="nav-link text-white">Inventory Summary</Link>
               </li>
