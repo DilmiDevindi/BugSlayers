@@ -2,11 +2,9 @@ const express = require('express');
 const router = express.Router();
 const Purchase = require('../models/purchase');
 
-// Generate purchase report by date range
 router.get('/purchase-report', async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
-
     if (!startDate || !endDate) {
       return res.status(400).json({ message: 'Start and end dates are required' });
     }
@@ -24,7 +22,8 @@ router.get('/purchase-report', async (req, res) => {
         $group: {
           _id: '$productName',
           totalQuantity: { $sum: '$quantity' },
-          totalSpent: { $sum: '$price' }
+          totalSpent: { $sum: '$totalPrice' },
+          avgDiscount: { $avg: '$discount' },
         }
       }
     ]);
