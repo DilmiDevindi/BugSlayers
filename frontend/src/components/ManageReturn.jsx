@@ -2,41 +2,31 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaEdit, FaTrash } from "react-icons/fa";
 
-const ManageRefunds = () => {
-  const [refunds, setRefunds] = useState([]);
+const ManageReturn = () => {
   const [returns, setReturns] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
   const [form, setForm] = useState({
     returnId: "",
     companyName: "",
-    returnDate: "",
-    refundDate: "",
-    status: "Not Refund",
+    date: "",
+    product: "",
+    quantity: "",
+    productPrice: "",
+    status: "",
+    note: "",
   });
   const [editingId, setEditingId] = useState(null);
   const [message, setMessage] = useState("");
 
   const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
-  // Fetch all refunds
-  const fetchRefunds = async () => {
-    try {
-      const res = await axios.get(`${BASE_URL}/api/refunds`);
-      setRefunds(res.data);
-    } catch (err) {
-      console.error("Failed to fetch refunds:", err);
-      setMessage("Failed to fetch refunds.");
-    }
-  };
-
-  // Fetch returns for dropdown
+  // Fetch all returns
   const fetchReturns = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/api/returns`);
       setReturns(res.data);
     } catch (err) {
       console.error("Failed to fetch returns:", err);
-      setMessage("Failed to fetch returns.");
     }
   };
 
@@ -47,19 +37,20 @@ const ManageRefunds = () => {
       setSuppliers(res.data);
     } catch (err) {
       console.error("Failed to fetch suppliers:", err);
-      setMessage("Failed to fetch suppliers.");
     }
   };
 
-  // Generate next Refund ID like REF-001, REF-002, ...
-  const generateNextRefundId = () => {
+  // Generate next Return ID like RET-001, RET-002, ...
+  const generateNextReturnId = () => {
     if (editingId) {
+      // If editing, keep existing returnId
       return form.returnId;
     }
 
-    if (refunds.length === 0) return "REF-001";
+    if (returns.length === 0) return "RET-001";
 
-    const numbers = refunds.map((r) => {
+    // Extract numbers from all returnIds, get max number
+    const numbers = returns.map((r) => {
       const parts = r.returnId?.split("-");
       return parts && parts.length === 2 ? parseInt(parts[1], 10) : 0;
     });
@@ -67,180 +58,120 @@ const ManageRefunds = () => {
     const maxNumber = Math.max(...numbers);
     const nextNumber = maxNumber + 1;
 
-    return `REF-${nextNumber.toString().padStart(3, "0")}`;
+    return `RET-${nextNumber.toString().padStart(3, "0")}`;
   };
 
-  // Set returnId automatically when refunds list or editingId changes
-  useEffect(() => {
+  // Set returnId automatically when returns list or editingId changes
+  React.useEffect(() => {
     if (!editingId) {
-      setForm((prev) => ({ ...prev, returnId: generateNextRefundId() }));
+      setForm((prev) => ({ ...prev, returnId: generateNextReturnId() }));
     }
-  }, [refunds, editingId]);
+  }, [returns, editingId]); // run when returns or editingId changes
 
-  // Initial fetch
   useEffect(() => {
-    fetchRefunds();
     fetchReturns();
     fetchSuppliers();
   }, []);
 
-  // When returnId changes, auto-fill companyName and returnDate from returns list
-  useEffect(() => {
-    if (!form.returnId) {
-      setForm((prev) => ({
-        ...prev,
-        companyName: "",
-        returnDate: "",
-        refundDate: form.status === "Refund" ? form.refundDate : "",
-      }));
-      return;
-    }
-
-    const selectedReturn = returns.find((r) => r.returnId === form.returnId);
-    if (selectedReturn) {
-      setForm((prev) => ({
-        ...prev,
-        companyName: selectedReturn.companyName,
-        returnDate: selectedReturn.date ? selectedReturn.date.split("T")[0] : "",
-        // refundDate remains as is
-      }));
-    }
-  }, [form.returnId, returns]);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    // For status, update refundDate accordingly
-    if (name === "status") {
-      if (value === "Refund") {
-        setForm((prev) => ({
-          ...prev,
-          status: value,
-          refundDate: new Date().toISOString().split("T")[0],
-        }));
-      } else {
-        setForm((prev) => ({
-          ...prev,
-          status: value,
-          refundDate: "",
-        }));
-      }
-      return;
+    if ((name === "productPrice" || name === "quantity") && value !== "") {
+      if (!/^\d*\.?\d*$/.test(value)) return;
     }
-
-    // For returnId change, just update the returnId (the useEffect will handle autofill)
-    if (name === "returnId") {
-      setForm((prev) => ({ ...prev, returnId: value }));
-      return;
-    }
-
-    // Prevent user editing companyName manually (optional: make supplier readonly or dropdown disabled)
-    if (name === "companyName") {
-      setForm((prev) => ({ ...prev, companyName: value }));
-      return;
-    }
-
-    // Otherwise update normally
     setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const calculateTotal = (price, qty) => {
+    const p = parseFloat(price);
+    const q = parseFloat(qty);
+    if (isNaN(p) || isNaN(q)) return 0;
+    return p * q;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage("");
 
-    // Validate required fields
-    if (!form.returnId || !form.companyName || !form.returnDate || !form.status) {
+    if (
+      !form.returnId.trim() ||
+      !form.companyName ||
+      !form.date ||
+      !form.product ||
+      !form.quantity ||
+      !form.productPrice ||
+      !form.status
+    ) {
       setMessage("Please fill all required fields.");
-      return;
-    }
-
-    // Validate returnId exists in returns
-    const returnExists = returns.find((r) => r.returnId === form.returnId);
-    if (!returnExists) {
-      setMessage("Selected return ID does not exist.");
-      return;
-    }
-
-    // Validate companyName matches return
-    if (returnExists.companyName !== form.companyName) {
-      setMessage("Supplier does not match the return's supplier.");
-      return;
-    }
-
-    // Check for duplicate returnId
-    if (!editingId && refunds.some((r) => r.returnId === form.returnId)) {
-      setMessage("This return ID is already used in a refund.");
-      return;
-    }
-
-    // Validate dates
-    if (isNaN(new Date(form.returnDate).getTime())) {
-      setMessage("Invalid return date.");
-      return;
-    }
-    if (form.status === "Refund" && (!form.refundDate || isNaN(new Date(form.refundDate).getTime()))) {
-      setMessage("Invalid refund date.");
       return;
     }
 
     try {
       const payload = {
         ...form,
-        returnDate: new Date(form.returnDate).toISOString(),
-        refundDate: form.status === "Refund" ? new Date(form.refundDate).toISOString() : null,
+        quantity: Number(form.quantity),
+        productPrice: Number(form.productPrice),
+        totalReturnPrice: calculateTotal(form.productPrice, form.quantity),
       };
 
       if (editingId) {
-        await axios.put(`${BASE_URL}/api/refunds/${editingId}`, payload);
-        setMessage("Refund updated successfully.");
+        await axios.put(`${BASE_URL}/api/returns/${editingId}`, payload);
+        setMessage("Return updated successfully.");
         setEditingId(null);
       } else {
-        await axios.post(`${BASE_URL}/api/refunds`, payload);
-        setMessage("Refund added successfully.");
+        await axios.post(`${BASE_URL}/api/returns`, payload);
+        setMessage("Return added successfully.");
       }
 
       setForm({
-        returnId: generateNextRefundId(),
+        returnId: generateNextReturnId(),
         companyName: "",
-        returnDate: "",
-        refundDate: "",
-        status: "Not Refund",
+        date: "",
+        product: "",
+        quantity: "",
+        productPrice: "",
+        status: "",
+        note: "",
       });
 
-      fetchRefunds();
+      fetchReturns();
     } catch (err) {
-      setMessage(err.response?.data?.message || "Failed to save refund.");
-      console.error("Save refund error:", err.response?.data);
+      if (err.response && err.response.status === 400) {
+        setMessage(err.response.data.message);
+      } else {
+        setMessage("Failed to save return.");
+      }
+      console.error("Save error:", err);
     }
   };
 
-  const handleEdit = (refund) => {
-    setEditingId(refund._id);
+  const handleEdit = (ret) => {
+    setEditingId(ret._id);
     setForm({
-      returnId: refund.returnId,
-      companyName: refund.companyName,
-      returnDate: refund.returnDate ? refund.returnDate.split("T")[0] : "",
-      refundDate: refund.refundDate ? refund.refundDate.split("T")[0] : "",
-      status: refund.status,
+      returnId: ret.returnId,
+      companyName: ret.companyName,
+      date: ret.date ? ret.date.split("T")[0] : "",
+      product: ret.product,
+      quantity: ret.quantity?.toString() || "",
+      productPrice: ret.productPrice?.toString() || "",
+      status: ret.status,
+      note: ret.note || "",
     });
-    setMessage("");
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this refund?")) return;
+    if (!window.confirm("Are you sure you want to delete this return?")) return;
     try {
-      await axios.delete(`${BASE_URL}/api/refunds/${id}`);
-      setMessage("Refund deleted.");
-      fetchRefunds();
+      await axios.delete(`${BASE_URL}/api/returns/${id}`);
+      setMessage("Return deleted.");
+      fetchReturns();
     } catch (err) {
-      setMessage("Failed to delete refund.");
-      console.error("Delete refund error:", err);
+      setMessage("Failed to delete return.");
+      console.error("Delete error:", err);
     }
   };
 
   return (
     <div className="container1">
-      <h4 className="manage-title">Manage Refunds</h4>
+      <h4 className="manage-title">Manage Returns</h4>
 
       {message && (
         <div className="alert alert-info" style={{ marginBottom: "20px" }}>
@@ -250,27 +181,24 @@ const ManageRefunds = () => {
 
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-2 gap-6">
+          {/* Return ID */}
           <div className="flex flex-col">
             <label htmlFor="returnId" className="text-sm font-medium mb-1">
               Return ID
             </label>
-            <select
+            <input
+              type="text"
               id="returnId"
               name="returnId"
               value={form.returnId}
               onChange={handleChange}
               required
-              className="border border-gray-300 rounded-md px-3 py-2"
-            >
-              <option value="">-- Select Return ID --</option>
-              {returns.map((ret) => (
-                <option key={ret._id} value={ret.returnId}>
-                  {ret.returnId}
-                </option>
-              ))}
-            </select>
+              className="border border-gray-300 rounded-md px-3 py-2 bg-gray-100 cursor-not-allowed"
+              disabled={true} // always disabled, auto-generated
+            />
           </div>
 
+          {/* Supplier */}
           <div className="flex flex-col">
             <label htmlFor="companyName" className="text-sm font-medium mb-1">
               Supplier
@@ -292,21 +220,75 @@ const ManageRefunds = () => {
             </select>
           </div>
 
+          {/* Date */}
           <div className="flex flex-col">
-            <label htmlFor="returnDate" className="text-sm font-medium mb-1">
-              Return Date
+            <label htmlFor="date" className="text-sm font-medium mb-1">
+              Date
             </label>
             <input
               type="date"
-              id="returnDate"
-              name="returnDate"
-              value={form.returnDate}
+              id="date"
+              name="date"
+              value={form.date}
               onChange={handleChange}
               required
               className="border border-gray-300 rounded-md px-3 py-2"
             />
           </div>
 
+          {/* Quantity */}
+          <div className="flex flex-col">
+            <label htmlFor="quantity" className="text-sm font-medium mb-1">
+              Quantity
+            </label>
+            <input
+              type="number"
+              id="quantity"
+              name="quantity"
+              value={form.quantity}
+              onChange={handleChange}
+              min={1}
+              required
+              className="border border-gray-300 rounded-md px-3 py-2"
+              placeholder="Quantity"
+            />
+          </div>
+
+          {/* Product */}
+          <div className="flex flex-col">
+            <label htmlFor="product" className="text-sm font-medium mb-1">
+              Product
+            </label>
+            <input
+              type="text"
+              id="product"
+              name="product"
+              value={form.product}
+              onChange={handleChange}
+              required
+              className="border border-gray-300 rounded-md px-3 py-2"
+              placeholder="Product"
+            />
+          </div>
+
+          {/* Product Price */}
+          <div className="flex flex-col">
+            <label htmlFor="productPrice" className="text-sm font-medium mb-1">
+              Product Price (Rs.)
+            </label>
+            <input
+              type="text"
+              id="productPrice"
+              name="productPrice"
+              value={form.productPrice}
+              onChange={handleChange}
+              required
+              className="border border-gray-300 rounded-md px-3 py-2"
+              placeholder="Product Price"
+            />
+          </div>
+
+          {/* Status */}
           <div className="flex flex-col">
             <label htmlFor="status" className="text-sm font-medium mb-1">
               Status
@@ -320,27 +302,27 @@ const ManageRefunds = () => {
               className="border border-gray-300 rounded-md px-3 py-2"
             >
               <option value="">-- Select Status --</option>
-              <option value="Refund">Refund</option>
-              <option value="Not Refund">Not Refund</option>
+              <option value="Pending">Pending</option>
+              <option value="Returned">Returned</option>
+              <option value="Cancel">Cancel</option>
             </select>
           </div>
 
-          {form.status === "Refund" && (
-            <div className="flex flex-col">
-              <label htmlFor="refundDate" className="text-sm font-medium mb-1">
-                Refund Date
-              </label>
-              <input
-                type="date"
-                id="refundDate"
-                name="refundDate"
-                value={form.refundDate}
-                onChange={handleChange}
-                required
-                className="border border-gray-300 rounded-md px-3 py-2"
-              />
-            </div>
-          )}
+          {/* Note */}
+          <div className="flex flex-col col-span-2">
+            <label htmlFor="note" className="text-sm font-medium mb-1">
+              Note
+            </label>
+            <textarea
+              id="note"
+              name="note"
+              value={form.note}
+              onChange={handleChange}
+              rows="3"
+              placeholder="Enter return note (optional)"
+              className="border border-gray-300 rounded-md px-3 py-2"
+            />
+          </div>
         </div>
 
         <div className="flex justify-end gap-3 mt-6">
@@ -348,7 +330,7 @@ const ManageRefunds = () => {
             type="submit"
             className="btnUpdate px-5 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700"
           >
-            {editingId ? "Update Refund" : "Add Refund"}
+            {editingId ? "Update Return" : "Add Return"}
           </button>
           {editingId && (
             <button
@@ -357,11 +339,14 @@ const ManageRefunds = () => {
               onClick={() => {
                 setEditingId(null);
                 setForm({
-                  returnId: generateNextRefundId(),
+                  returnId: generateNextReturnId(),
                   companyName: "",
-                  returnDate: "",
-                  refundDate: "",
-                  status: "Not Refund",
+                  date: "",
+                  product: "",
+                  quantity: "",
+                  productPrice: "",
+                  status: "",
+                  note: "",
                 });
                 setMessage("");
               }}
@@ -372,41 +357,46 @@ const ManageRefunds = () => {
         </div>
       </form>
 
+      {/* Returns Table */}
       <table className="table table-striped mt-6">
         <thead>
           <tr>
             <th>Return ID</th>
             <th>Supplier</th>
-            <th>Return Date</th>
+            <th>Date</th>
+            <th>Quantity</th>
+            <th>Product</th>
+            <th>Product Price (Rs.)</th>
+            <th>Total Return Price (Rs.)</th>
             <th>Status</th>
-            <th>Refund Date</th>
+            <th>Note</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {refunds.length > 0 ? (
-            refunds.map((refund) => (
-              <tr key={refund._id}>
-                <td>{refund.returnId}</td>
-                <td>{refund.companyName}</td>
-                <td>{new Date(refund.returnDate).toLocaleDateString()}</td>
-                <td>{refund.status}</td>
-                <td>
-                  {refund.status === "Refund" && refund.refundDate
-                    ? new Date(refund.refundDate).toLocaleDateString()
-                    : "-"}
-                </td>
+          {returns.length > 0 ? (
+            returns.map((ret) => (
+              <tr key={ret._id}>
+                <td>{ret.returnId}</td>
+                <td>{ret.companyName}</td>
+                <td>{new Date(ret.date).toLocaleDateString()}</td>
+                <td>{ret.quantity}</td>
+                <td>{ret.product}</td>
+                <td>{ret.productPrice?.toFixed(2)}</td>
+                <td>{ret.totalReturnPrice?.toFixed(2)}</td>
+                <td>{ret.status}</td>
+                <td>{ret.note || "-"}</td>
                 <td>
                   <button
                     className="btn1 me-2"
-                    onClick={() => handleEdit(refund)}
+                    onClick={() => handleEdit(ret)}
                     title="Edit"
                   >
                     <FaEdit />
                   </button>
                   <button
                     className="btn2"
-                    onClick={() => handleDelete(refund._id)}
+                    onClick={() => handleDelete(ret._id)}
                     title="Delete"
                   >
                     <FaTrash />
@@ -416,8 +406,8 @@ const ManageRefunds = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="6" className="text-center text-danger">
-                No refund records found.
+              <td colSpan="10" className="text-center text-danger">
+                No return records found.
               </td>
             </tr>
           )}
@@ -427,4 +417,4 @@ const ManageRefunds = () => {
   );
 };
 
-export default ManageRefunds;
+export default ManageReturn; 
