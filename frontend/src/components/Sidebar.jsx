@@ -17,7 +17,7 @@ const Sidebar = () => {
   const [isReturnsOpen, setIsReturnsOpen] = useState(false);
 
   return (
-    <div className="bg-dark text-white vh-100 p-3">
+    <div className="sidebar">
       <h6 className='custom-heading'>New Sisira Furniture</h6>
       <ul className="nav flex-column">
 
