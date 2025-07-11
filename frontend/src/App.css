@@ -19,6 +19,13 @@
   text-align: center;
 }
 
+/* Sidebar links */
+.sidebar .nav-link {
+  font-size: 13px;
+  padding: 8px 10px;
+}
+
+
 .sidebar a {
   color: #fff;
   display: block;
