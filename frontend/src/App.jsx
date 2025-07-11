@@ -55,8 +55,11 @@ import OrderReport from "./components/OrderReport";
 // Invoices
 import SaveInvoice from "./components/SaveInvoice";
 
-// Returns (Add + Manage Combined)
+// Returns
 import ManageReturn from "./components/ManageReturn";
+
+// ✅ Refunds (new)
+import ManageRefunds from "./components/ManageRefunds";
 
 function App() {
   return (
@@ -115,8 +118,11 @@ function App() {
           {/* Invoices */}
           <Route path="invoices" element={<SaveInvoice />} />
 
-          {/* ✅ Returns (Combined Add + Manage) */}
+          {/* Returns */}
           <Route path="returns/manage" element={<ManageReturn />} />
+
+          {/* ✅ Refunds */}
+          <Route path="refunds/manage" element={<ManageRefunds />} />
         </Route>
       </Routes>
     </Router>
