@@ -1,12 +1,52 @@
+/* Smaller sidebar container */
+.bg-dark {
+  width: 180px;          /* Adjust width as needed */
+  padding: 10px;
+  font-size: 13px;
+}
+
+/* Reduce heading font size */
+.custom-heading {
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Sidebar link style */
+.nav-link {
+  font-size: 12.5px;
+  padding: 6px 10px;
+  transition: background-color 0.3s;
+}
+
+/* Margin between nav-items */
+.nav-item {
+  margin-bottom: 6px !important;
+}
+
+/* Dropdown sub-item style */
+.nav .nav .nav-link {
+  padding-left: 20px;
+  font-size: 12px;
+}
+
+/* Icon spacing */
+.nav-link i {
+  font-size: 14px;
+  margin-right: 6px;
+}
+
 /* Sidebar Styling */
 .sidebar {
-  height: 100vh; /* Full height */
+  height: 80vh; /* Full height */
   position: fixed;
   background-color: #343a40;
   width: 200px; /* Fixed sidebar width */
   top: 0;
   left: 0;
   z-index: 1000; /* Keeps sidebar on top */
+  font-size: 8px;
 }
 
 
@@ -26,8 +66,8 @@
 
 /*sidebar */
 .custom-heading {
-  margin-top: 12px;
-  margin-bottom: 20px;
+  margin-top: 8px;
+  margin-bottom: 8px;
 }
 
 /* Navbar */
