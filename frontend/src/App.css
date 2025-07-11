@@ -1,40 +1,55 @@
-/* Sidebar container */
+/* Sidebar layout */
+.layout-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar styling */
 .sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 200px;
-  height: 100vh; /* Full height */
   background-color: #343a40;
   color: white;
-  overflow-y: auto; /* Allow scrolling */
-  z-index: 1000;
+  width: 200px;
+  overflow-y: auto;
   padding: 10px 15px;
 }
 
-/* Adjust heading */
-.sidebar h6.custom-heading {
+/* Heading */
+.sidebar .custom-heading {
   font-size: 14px;
   margin-bottom: 20px;
   text-align: center;
 }
 
-/* Sidebar links */
+/* All links inside sidebar */
 .sidebar .nav-link {
   font-size: 13px;
-  padding: 8px 10px;
+  padding: 6px 10px;
+  color: white;
 }
 
-/* Dropdown button alignment */
+/* Button dropdowns */
 .sidebar button.nav-link {
   font-size: 13px;
-  padding: 8px 10px;
+  padding: 6px 10px;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: start;
+  color: white;
 }
 
-/* Indented dropdown items */
+/* Inner dropdown items */
 .sidebar .nav .nav-item .nav-link {
   font-size: 12px;
   padding: 6px 15px;
+}
+
+/* Main content area */
+.main-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background-color: #f8f9fa;
 }
 
 
