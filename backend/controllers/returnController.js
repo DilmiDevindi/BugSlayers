@@ -1,66 +1,120 @@
-const Return = require("../models/Return");
+
+const Return = require("../models/returnModel");
+
+exports.getAllReturns = async (req, res) => {
+  try {
+    const returns = await Return.find().sort({ date: -1 });
+    res.status(200).json(returns);
+  } catch (err) {
+    console.error("Get Returns Error:", err);
+    res.status(500).json({ message: "Failed to fetch returns", error: err.message });
+  }
+};
 
 exports.createReturn = async (req, res) => {
   try {
-    const { returnId, productPrice, quantity } = req.body;
-    if (!returnId) return res.status(400).json({ message: "Return ID is required" });
+    const { returnId, companyName, date, product, quantity, productPrice, status, note } = req.body;
+
+    if (!returnId || !companyName || !date || !product || !quantity || !productPrice || !status) {
+      return res.status(400).json({ message: "All required fields must be provided" });
+    }
+
+    if (isNaN(quantity) || quantity < 1) {
+      return res.status(400).json({ message: "Quantity must be a positive number" });
+    }
+    if (isNaN(productPrice) || productPrice < 0) {
+      return res.status(400).json({ message: "Product price cannot be negative" });
+    }
 
     const existing = await Return.findOne({ returnId });
-    if (existing) return res.status(400).json({ message: "Return ID already exists" });
+    if (existing) {
+      return res.status(400).json({ message: "Return ID already exists" });
+    }
 
     const totalReturnPrice = Number(productPrice) * Number(quantity);
 
     const newReturn = new Return({
-      ...req.body,
-      productPrice: Number(productPrice),
+      returnId,
+      companyName,
+      date,
+      product,
       quantity: Number(quantity),
+      productPrice: Number(productPrice),
       totalReturnPrice,
+      status,
+      note,
     });
 
     const saved = await newReturn.save();
-    res.status(201).json(saved);
+    res.status(201).json({ message: "Return created successfully", return: saved });
   } catch (err) {
     console.error("Create Error:", err);
-    res.status(500).json({ message: "Failed to save return" });
+    res.status(500).json({ message: "Failed to save return", error: err.message });
   }
 };
 
 exports.updateReturn = async (req, res) => {
   try {
-    const { productPrice, quantity } = req.body;
+    const { returnId, companyName, date, product, quantity, productPrice, status, note } = req.body;
+
+    if (!returnId || !companyName || !date || !product || !quantity || !productPrice || !status) {
+      return res.status(400).json({ message: "All required fields must be provided" });
+    }
+
+    if (isNaN(quantity) || quantity < 1) {
+      return res.status(400).json({ message: "Quantity must be a positive number" });
+    }
+    if (isNaN(productPrice) || productPrice < 0) {
+      return res.status(400).json({ message: "Product price cannot be negative" });
+    }
+
+    const existing = await Return.findOne({ returnId, _id: { $ne: req.params.id } });
+    if (existing) {
+      return res.status(400).json({ message: "Return ID already exists" });
+    }
+
     const totalReturnPrice = Number(productPrice) * Number(quantity);
 
     const updated = await Return.findByIdAndUpdate(
       req.params.id,
       {
-        ...req.body,
-        productPrice: Number(productPrice),
+        returnId,
+        companyName,
+        date,
+        product,
         quantity: Number(quantity),
+        productPrice: Number(productPrice),
         totalReturnPrice,
+        status,
+        note,
       },
-      { new: true }
+      { new: true, runValidators: true }
     );
-    res.status(200).json(updated);
-  } catch (err) {
-    res.status(500).json({ message: "Failed to update return" });
-  }
-};
 
-exports.getReturns = async (req, res) => {
-  try {
-    const returns = await Return.find();
-    res.status(200).json(returns);
+    if (!updated) {
+      return res.status(404).json({ message: "Return not found" });
+    }
+
+    res.status(200).json({ message: "Return updated successfully", return: updated });
   } catch (err) {
-    console.error("Get Returns Error:", err);
-    res.status(500).json({ message: "Failed to fetch returns" });
+    console.error("Update Error:", err);
+    res.status(500).json({ message: "Failed to update return", error: err.message });
   }
 };
 
 exports.deleteReturn = async (req, res) => {
   try {
-    await Return.findByIdAndDelete(req.params.id);
-    res.status(200).json({ message: "Return deleted" });
+    const refund = await Refund.findOne({ returnId: (await Return.findById(req.params.id))?.returnId });
+    if (refund) {
+      return res.status(400).json({ message: "Cannot delete return; it is referenced in a refund" });
+    }
+    const deleted = await Return.findByIdAndDelete(req.params.id);
+    if (!deleted) {
+      return res.status(404).json({ message: "Return not found" });
+    }
+    res.status(200).json({ message: "Return deleted successfully" });
   } catch (err) {
-    res.status(500).json({ message: "Failed to delete return" });
+    console.error("Delete Error:", err);
+    res.status(500).json({ message: "Failed to delete return", error: err.message });
   }
 };
