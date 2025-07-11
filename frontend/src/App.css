@@ -1,12 +1,15 @@
-/* Sidebar Styling */
+/* Sidebar container */
 .sidebar {
-  height: 100vh; /* Full height */
   position: fixed;
-  background-color: #343a40;
-  width: 200px; /* Fixed sidebar width */
   top: 0;
   left: 0;
-  z-index: 1000; /* Keeps sidebar on top */
+  width: 200px;
+  height: 100vh; /* Full height */
+  background-color: #343a40;
+  color: white;
+  overflow-y: auto; /* Allow scrolling */
+  z-index: 1000;
+  padding: 10px 15px;
 }
 
 
