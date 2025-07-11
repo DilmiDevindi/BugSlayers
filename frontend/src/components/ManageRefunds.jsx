@@ -77,47 +77,70 @@ const ManageRefunds = () => {
     }
   }, [refunds, editingId]);
 
+  // Initial fetch
   useEffect(() => {
     fetchRefunds();
     fetchReturns();
     fetchSuppliers();
   }, []);
 
+  // When returnId changes, auto-fill companyName and returnDate from returns list
+  useEffect(() => {
+    if (!form.returnId) {
+      setForm((prev) => ({
+        ...prev,
+        companyName: "",
+        returnDate: "",
+        refundDate: form.status === "Refund" ? form.refundDate : "",
+      }));
+      return;
+    }
+
+    const selectedReturn = returns.find((r) => r.returnId === form.returnId);
+    if (selectedReturn) {
+      setForm((prev) => ({
+        ...prev,
+        companyName: selectedReturn.companyName,
+        returnDate: selectedReturn.date ? selectedReturn.date.split("T")[0] : "",
+        // refundDate remains as is
+      }));
+    }
+  }, [form.returnId, returns]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === "returnId") {
-      const selectedReturn = returns.find((r) => r.returnId === value);
-      if (selectedReturn) {
-        setForm({
-          ...form,
-          returnId: selectedReturn.returnId,
-          companyName: selectedReturn.companyName,
-          returnDate: selectedReturn.date ? selectedReturn.date.split("T")[0] : "",
-          refundDate: form.refundDate,
-          status: form.status,
-        });
-        return;
-      }
-    }
-
+    // For status, update refundDate accordingly
     if (name === "status") {
       if (value === "Refund") {
-        setForm({
-          ...form,
+        setForm((prev) => ({
+          ...prev,
           status: value,
           refundDate: new Date().toISOString().split("T")[0],
-        });
+        }));
       } else {
-        setForm({
-          ...form,
+        setForm((prev) => ({
+          ...prev,
           status: value,
           refundDate: "",
-        });
+        }));
       }
       return;
     }
 
+    // For returnId change, just update the returnId (the useEffect will handle autofill)
+    if (name === "returnId") {
+      setForm((prev) => ({ ...prev, returnId: value }));
+      return;
+    }
+
+    // Prevent user editing companyName manually (optional: make supplier readonly or dropdown disabled)
+    if (name === "companyName") {
+      setForm((prev) => ({ ...prev, companyName: value }));
+      return;
+    }
+
+    // Otherwise update normally
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -167,8 +190,6 @@ const ManageRefunds = () => {
         refundDate: form.status === "Refund" ? new Date(form.refundDate).toISOString() : null,
       };
 
-      console.log("Submitting refund:", payload);
-
       if (editingId) {
         await axios.put(`${BASE_URL}/api/refunds/${editingId}`, payload);
         setMessage("Refund updated successfully.");
@@ -188,8 +209,8 @@ const ManageRefunds = () => {
 
       fetchRefunds();
     } catch (err) {
-      console.error("Save refund error:", err.response?.data);
       setMessage(err.response?.data?.message || "Failed to save refund.");
+      console.error("Save refund error:", err.response?.data);
     }
   };
 
