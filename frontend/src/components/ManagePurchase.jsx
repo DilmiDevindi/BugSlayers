@@ -32,24 +32,33 @@ const ManagePurchases = () => {
         console.error("Error fetching categories:", error);
       }
     };
+
+    const fetchSubcategories = async () => {
+      try {
+        const res = await axios.get("/api/subcategories");
+        setSubcategories(res.data);
+      } catch (error) {
+        console.error("Error fetching subcategories:", error);
+      }
+    };
+
     fetchCategories();
+    fetchSubcategories();
   }, []);
 
   useEffect(() => {
-    const fetchSubcategories = async () => {
-      if (editingPurchase && editingPurchase.category) {
+    if (editingPurchase && editingPurchase.category) {
+      const fetchSubsForCategory = async () => {
         try {
           const res = await axios.get(`/api/subcategories/by-category/${editingPurchase.category}`);
-          setSubcategories(res.data || []);
+          setSubcategories(res.data);
         } catch (error) {
           console.error("Error fetching subcategories:", error);
           setSubcategories([]);
         }
-      } else {
-        setSubcategories([]);
-      }
-    };
-    fetchSubcategories();
+      };
+      fetchSubsForCategory();
+    }
   }, [editingPurchase?.category]);
 
   const handleDelete = async (id) => {
@@ -67,18 +76,17 @@ const ManagePurchases = () => {
     setEditingPurchase({
       ...purchase,
       date: dateStr,
-      discount: purchase.discount ?? "",
-      discountType: purchase.discountType || "%"
+      discount: purchase.discount ?? 0,
+      discountType: "%", // Always use percentage
     });
   };
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
-
     setEditingPurchase((prev) => ({
       ...prev,
       [name]: value,
-      ...(name === "category" ? { subcategory: "" } : {})
+      ...(name === "category" ? { subcategory: "" } : {}),
     }));
   };
 
@@ -92,7 +100,6 @@ const ManagePurchases = () => {
       quantity,
       price,
       discount,
-      discountType,
       date,
       _id,
     } = editingPurchase;
@@ -102,11 +109,21 @@ const ManagePurchases = () => {
       return;
     }
 
+    const discountValue = Number(discount) || 0;
+    const qty = Number(quantity);
+    const unitPrice = Number(price);
+    const subtotal = qty * unitPrice;
+
+    if (discountValue > 100) {
+      alert("Discount percentage cannot be more than 100%");
+      return;
+    }
+
     try {
       await axios.put(`/api/purchase/${_id}`, {
         ...editingPurchase,
-        discount: discount ? Number(discount) : 0,
-        discountType
+        discount: discountValue,
+        discountType: "%",
       });
       setEditingPurchase(null);
       fetchPurchases();
@@ -124,6 +141,16 @@ const ManagePurchases = () => {
   const getSubcategoryName = (id) => {
     const sub = subcategories.find((s) => s._id === id);
     return sub ? sub.subcategoryName : id;
+  };
+
+  const calculateTotal = (purchase) => {
+    const qty = Number(purchase.quantity) || 0;
+    const price = Number(purchase.price) || 0;
+    const discount = Number(purchase.discount) || 0;
+    const subtotal = qty * price;
+    const discountAmount = (subtotal * discount) / 100;
+    const total = subtotal - discountAmount;
+    return Math.max(0, total);
   };
 
   const filteredPurchases = purchases.filter((purchase) => {
@@ -166,41 +193,34 @@ const ManagePurchases = () => {
       <table className="purchases-table table table-striped table-bordered text-center">
         <thead>
           <tr>
+            <th>Purchase ID</th>
             <th>Supplier</th>
             <th>Product</th>
             <th>Category</th>
             <th>Subcategory</th>
             <th>Quantity</th>
             <th>Price (Rs.)</th>
-            <th>Discount</th>
+            <th>Discount (%)</th>
             <th>Total Purchase (Rs.)</th>
             <th>Date</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {filteredPurchases.map((purchase) => {
-            const qty = Number(purchase.quantity) || 0;
-            const price = Number(purchase.price) || 0;
+          {filteredPurchases.map((purchase, index) => {
+            const total = calculateTotal(purchase);
             const discount = Number(purchase.discount) || 0;
-            const isPercentage = purchase.discountType === "%";
-
-            const discountAmount = isPercentage ? (price * qty * discount) / 100 : discount;
-            const total = price * qty - discountAmount;
 
             return (
               <tr key={purchase._id}>
+                <td>{purchase.purchaseId || `PUR-${String(index + 1).padStart(3, "0")}`}</td>
                 <td>{purchase.supplierName}</td>
                 <td>{purchase.productName}</td>
                 <td>{getCategoryName(purchase.category)}</td>
                 <td>{getSubcategoryName(purchase.subcategory)}</td>
-                <td>{qty}</td>
-                <td>{price.toFixed(2)}</td>
-                <td>
-                  {discount > 0
-                    ? `${discount}${purchase.discountType || ""}`
-                    : "-"}
-                </td>
+                <td>{purchase.quantity}</td>
+                <td>{Number(purchase.price).toFixed(2)}</td>
+                <td>{discount > 0 ? `${discount}%` : "-"}</td>
                 <td>{total.toFixed(2)}</td>
                 <td>{new Date(purchase.date).toLocaleDateString()}</td>
                 <td>
@@ -224,7 +244,7 @@ const ManagePurchases = () => {
           })}
           {filteredPurchases.length === 0 && (
             <tr>
-              <td colSpan="10" className="text-center">
+              <td colSpan="11" className="text-center">
                 No purchases found.
               </td>
             </tr>
@@ -304,37 +324,35 @@ const ManagePurchases = () => {
                   value={editingPurchase.quantity}
                   onChange={handleEditChange}
                   required
+                  min="1"
                 />
               </div>
 
               <div className="flex flex-col">
-                <label>Price (Rs.)</label>
+                <label>Product Price (Rs.)</label>
                 <input
                   type="number"
                   name="price"
                   value={editingPurchase.price}
                   onChange={handleEditChange}
                   required
+                  min="0"
+                  step="0.01"
                 />
               </div>
 
               <div className="flex flex-col">
-                <label>Discount</label>
+                <label>Discount (%)</label>
                 <input
                   type="number"
                   name="discount"
                   value={editingPurchase.discount}
                   onChange={handleEditChange}
                   min="0"
+                  step="0.01"
+                  max="100"
+                  placeholder="Discount (%)"
                 />
-                <select
-                  name="discountType"
-                  value={editingPurchase.discountType}
-                  onChange={handleEditChange}
-                >
-                  <option value="%">%</option>
-                  <option value="Rs">Rs</option>
-                </select>
               </div>
 
               <div className="flex flex-col">
@@ -349,11 +367,39 @@ const ManagePurchases = () => {
               </div>
             </div>
 
+            {/* Total Preview */}
+            <div className="total-preview" style={{
+              backgroundColor: '#f8f9fa',
+              padding: '15px',
+              borderRadius: '5px',
+              marginTop: '15px',
+              border: '1px solid #dee2e6'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
+                <span>Subtotal ({editingPurchase.quantity} × Rs.{editingPurchase.price}):</span>
+                <span>Rs. {((Number(editingPurchase.quantity) || 0) * (Number(editingPurchase.price) || 0)).toFixed(2)}</span>
+              </div>
+              {editingPurchase.discount && Number(editingPurchase.discount) > 0 && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px', color: '#dc3545' }}>
+                  <span>Discount ({editingPurchase.discount}%):</span>
+                  <span>- Rs. {(((Number(editingPurchase.quantity) || 0) * (Number(editingPurchase.price) || 0) * (Number(editingPurchase.discount) || 0)) / 100).toFixed(2)}</span>
+                </div>
+              )}
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', fontSize: '16px', borderTop: '1px solid #dee2e6', paddingTop: '5px' }}>
+                <span>Total Purchase:</span>
+                <span>Rs. {calculateTotal(editingPurchase).toFixed(2)}</span>
+              </div>
+            </div>
+
             <div className="flex justify-end gap-3 mt-6">
               <button type="submit" className="btnUpdate">
                 Update
               </button>
-              <button type="button" onClick={() => setEditingPurchase(null)} className="btnClose">
+              <button
+                type="button"
+                onClick={() => setEditingPurchase(null)}
+                className="btnClose"
+              >
                 Cancel
               </button>
             </div>
