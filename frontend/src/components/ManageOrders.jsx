@@ -14,12 +14,14 @@ import "./ManageOrders.css";
 function ManageOrders() {
   const [orders, setOrders] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [subcategories, setSubcategories] = useState([]); // All subcategories globally
+  const [subcategories, setSubcategories] = useState([]);
+  const [editSubcategories, setEditSubcategories] = useState([]);
+  const [suppliers, setSuppliers] = useState([]); // New: suppliers list
   const [loading, setLoading] = useState(true);
   const [editId, setEditId] = useState(null);
   const [editForm, setEditForm] = useState({
     orderId: "",
-    companyName: "",
+    companyName: "",  // This will now be selected supplier's companyName
     productName: "",
     category: "",
     subcategory: "",
@@ -32,7 +34,6 @@ function ManageOrders() {
   const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
   const navigate = useNavigate();
 
-  // Fetch orders, categories, and ALL subcategories on load
   useEffect(() => {
     fetchInitialData();
   }, []);
@@ -40,41 +41,52 @@ function ManageOrders() {
   const fetchInitialData = async () => {
     setLoading(true);
     try {
-      const [ordersRes, categoriesRes, subcategoriesRes] = await Promise.all([
-        axios.get(`${BASE_URL}/api/orders`),
-        axios.get(`${BASE_URL}/api/category`),
-        axios.get(`${BASE_URL}/api/subcategories`), // <-- fetch ALL subcategories here
-      ]);
+      const [ordersRes, categoriesRes, subcategoriesRes, suppliersRes] =
+        await Promise.all([
+          axios.get(`${BASE_URL}/api/orders`),
+          axios.get(`${BASE_URL}/api/category`),
+          axios.get(`${BASE_URL}/api/subcategories`),
+          axios.get(`${BASE_URL}/api/suppliers`), // Fetch suppliers
+        ]);
+
       setOrders(ordersRes.data);
       setCategories(categoriesRes.data);
       setSubcategories(subcategoriesRes.data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
+      setSuppliers(suppliersRes.data); // Set suppliers here
+    } catch (err) {
+      console.error("Fetch error:", err);
     } finally {
       setLoading(false);
     }
   };
 
-  // Helpers to get names from IDs, fallback to '-' if not found
-  const getCategoryName = (id) => {
-    const cat = categories.find((c) => c._id === id);
-    return cat ? cat.categoryName : "-";
+  const getCategoryName = (cat) => {
+    if (!cat) return "-";
+    if (typeof cat === "string") {
+      const found = categories.find((c) => c._id === cat);
+      return found ? found.categoryName : "-";
+    }
+    return cat.categoryName || "-";
   };
 
-  const getSubcategoryName = (id) => {
-    const sub = subcategories.find((s) => s._id === id);
-    return sub ? sub.subcategoryName : "-";
+  const getSubcategoryName = (subcat) => {
+    if (!subcat) return "-";
+    if (typeof subcat === "string") {
+      const found = subcategories.find((s) => s._id === subcat);
+      return found ? found.subcategoryName : "-";
+    }
+    return subcat.subcategoryName || "-";
   };
 
-  // When editing, fetch only subcategories of selected category for dropdown
   const fetchSubcategoriesByCategory = async (categoryId) => {
     try {
       const res = await axios.get(
         `${BASE_URL}/api/subcategories/by-category/${categoryId}`
       );
-      setSubcategories(res.data);
+      setEditSubcategories(res.data);
     } catch (err) {
-      console.error("Failed to fetch subcategories:", err);
+      console.error("Fetch edit subcategories failed:", err);
+      setEditSubcategories([]);
     }
   };
 
@@ -83,7 +95,7 @@ function ManageOrders() {
       try {
         await axios.delete(`${BASE_URL}/api/orders/${id}`);
         setOrders((prev) => prev.filter((o) => o._id !== id));
-      } catch (error) {
+      } catch {
         alert("Delete failed.");
       }
     }
@@ -93,17 +105,16 @@ function ManageOrders() {
     setEditId(order._id);
     setEditForm({
       orderId: order.orderId,
-      companyName: order.companyName,
+      companyName: order.companyName, // will match supplier name in dropdown
       productName: order.productName,
-      category: order.category,
-      subcategory: order.subcategory,
+      category: order.category?._id || order.category || "",
+      subcategory: order.subcategory?._id || order.subcategory || "",
       quantity: order.quantity,
-      date: order.date?.slice(0, 10),
+      date: order.date?.slice(0, 10) || "",
       status: order.status || "Pending",
     });
 
-    // Fetch only relevant subcategories for selected category during edit
-    fetchSubcategoriesByCategory(order.category);
+    fetchSubcategoriesByCategory(order.category?._id || order.category);
 
     setSuccessMsg("");
   };
@@ -114,10 +125,9 @@ function ManageOrders() {
     setEditForm((prev) => ({
       ...prev,
       [name]: value,
-      ...(name === "category" && { subcategory: "" }),
+      ...(name === "category" ? { subcategory: "" } : {}),
     }));
 
-    // On category change in edit, load subcategories for that category only
     if (name === "category") {
       fetchSubcategoriesByCategory(value);
     }
@@ -134,7 +144,6 @@ function ManageOrders() {
       setOrders((prevOrders) =>
         prevOrders.map((order) => (order._id === editId ? res.data : order))
       );
-
       setEditId(null);
       setSuccessMsg("Order updated successfully!");
       setTimeout(() => setSuccessMsg(""), 3000);
@@ -184,12 +193,21 @@ function ManageOrders() {
                         />
                       </td>
                       <td>
-                        <input
+                        {/* Supplier select dropdown */}
+                        <select
                           name="companyName"
                           value={editForm.companyName}
                           onChange={handleEditChange}
                           className="form-control"
-                        />
+                          required
+                        >
+                          <option value="">Select Supplier</option>
+                          {suppliers.map((sup) => (
+                            <option key={sup._id} value={sup.companyName || sup.supplierName}>
+                              {sup.companyName || sup.supplierName}
+                            </option>
+                          ))}
+                        </select>
                       </td>
                       <td>
                         <input
@@ -224,7 +242,7 @@ function ManageOrders() {
                           required
                         >
                           <option value="">Select Subcategory</option>
-                          {subcategories.map((s) => (
+                          {editSubcategories.map((s) => (
                             <option key={s._id} value={s._id}>
                               {s.subcategoryName}
                             </option>
@@ -238,7 +256,7 @@ function ManageOrders() {
                           value={editForm.quantity}
                           onChange={handleEditChange}
                           className="form-control"
-                          min={0}
+                          min={1}
                         />
                       </td>
                       <td>
