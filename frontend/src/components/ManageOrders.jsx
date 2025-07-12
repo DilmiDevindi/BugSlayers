@@ -13,6 +13,8 @@ import "./ManageOrders.css";
 
 function ManageOrders() {
   const [orders, setOrders] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [subcategories, setSubcategories] = useState([]); // All subcategories globally
   const [loading, setLoading] = useState(true);
   const [editId, setEditId] = useState(null);
   const [editForm, setEditForm] = useState({
@@ -30,18 +32,49 @@ function ManageOrders() {
   const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
   const navigate = useNavigate();
 
+  // Fetch orders, categories, and ALL subcategories on load
   useEffect(() => {
-    fetchOrders();
+    fetchInitialData();
   }, []);
 
-  const fetchOrders = async () => {
+  const fetchInitialData = async () => {
+    setLoading(true);
     try {
-      const res = await axios.get(`${BASE_URL}/api/orders`);
-      setOrders(res.data);
+      const [ordersRes, categoriesRes, subcategoriesRes] = await Promise.all([
+        axios.get(`${BASE_URL}/api/orders`),
+        axios.get(`${BASE_URL}/api/category`),
+        axios.get(`${BASE_URL}/api/subcategories`), // <-- fetch ALL subcategories here
+      ]);
+      setOrders(ordersRes.data);
+      setCategories(categoriesRes.data);
+      setSubcategories(subcategoriesRes.data);
     } catch (error) {
-      console.error("Error fetching orders:", error);
+      console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Helpers to get names from IDs, fallback to '-' if not found
+  const getCategoryName = (id) => {
+    const cat = categories.find((c) => c._id === id);
+    return cat ? cat.categoryName : "-";
+  };
+
+  const getSubcategoryName = (id) => {
+    const sub = subcategories.find((s) => s._id === id);
+    return sub ? sub.subcategoryName : "-";
+  };
+
+  // When editing, fetch only subcategories of selected category for dropdown
+  const fetchSubcategoriesByCategory = async (categoryId) => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}/api/subcategories/by-category/${categoryId}`
+      );
+      setSubcategories(res.data);
+    } catch (err) {
+      console.error("Failed to fetch subcategories:", err);
     }
   };
 
@@ -68,15 +101,26 @@ function ManageOrders() {
       date: order.date?.slice(0, 10),
       status: order.status || "Pending",
     });
+
+    // Fetch only relevant subcategories for selected category during edit
+    fetchSubcategoriesByCategory(order.category);
+
     setSuccessMsg("");
   };
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
+
     setEditForm((prev) => ({
       ...prev,
       [name]: value,
+      ...(name === "category" && { subcategory: "" }),
     }));
+
+    // On category change in edit, load subcategories for that category only
+    if (name === "category") {
+      fetchSubcategoriesByCategory(value);
+    }
   };
 
   const handleEditSubmit = async (e) => {
@@ -88,9 +132,7 @@ function ManageOrders() {
       });
 
       setOrders((prevOrders) =>
-        prevOrders.map((order) =>
-          order._id === editId ? res.data : order
-        )
+        prevOrders.map((order) => (order._id === editId ? res.data : order))
       );
 
       setEditId(null);
@@ -158,20 +200,36 @@ function ManageOrders() {
                         />
                       </td>
                       <td>
-                        <input
+                        <select
                           name="category"
                           value={editForm.category}
                           onChange={handleEditChange}
                           className="form-control"
-                        />
+                          required
+                        >
+                          <option value="">Select Category</option>
+                          {categories.map((c) => (
+                            <option key={c._id} value={c._id}>
+                              {c.categoryName}
+                            </option>
+                          ))}
+                        </select>
                       </td>
                       <td>
-                        <input
+                        <select
                           name="subcategory"
                           value={editForm.subcategory}
                           onChange={handleEditChange}
                           className="form-control"
-                        />
+                          required
+                        >
+                          <option value="">Select Subcategory</option>
+                          {subcategories.map((s) => (
+                            <option key={s._id} value={s._id}>
+                              {s.subcategoryName}
+                            </option>
+                          ))}
+                        </select>
                       </td>
                       <td>
                         <input
@@ -228,8 +286,8 @@ function ManageOrders() {
                       <td>{order.orderId}</td>
                       <td>{order.companyName}</td>
                       <td>{order.productName}</td>
-                      <td>{order.category}</td>
-                      <td>{order.subcategory}</td>
+                      <td>{getCategoryName(order.category)}</td>
+                      <td>{getSubcategoryName(order.subcategory)}</td>
                       <td>{order.quantity}</td>
                       <td>{order.date?.slice(0, 10)}</td>
                       <td>{order.status}</td>
