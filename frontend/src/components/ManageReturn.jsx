@@ -14,7 +14,7 @@ const ManageReturn = () => {
 
   const [form, setForm] = useState({
     returnId: "",
-    companyName: "",
+    supplierName: "", // changed to supplierName
     date: "",
     category: "",
     subcategory: "",
@@ -106,7 +106,7 @@ const ManageReturn = () => {
     e.preventDefault();
     const requiredFields = [
       "returnId",
-      "companyName",
+      "supplierName", // changed here
       "date",
       "category",
       "subcategory",
@@ -141,7 +141,7 @@ const ManageReturn = () => {
 
       setForm({
         returnId: generateNextReturnId(),
-        companyName: "",
+        supplierName: "",
         date: "",
         category: "",
         subcategory: "",
@@ -163,7 +163,7 @@ const ManageReturn = () => {
     setEditingId(ret._id);
     setForm({
       returnId: ret.returnId,
-      companyName: ret.companyName,
+      supplierName: ret.supplierName || "", // changed here
       date: ret.date?.split("T")[0] || "",
       category: ret.category,
       subcategory: ret.subcategory,
@@ -214,8 +214,8 @@ const ManageReturn = () => {
           <div className="flex flex-col">
             <label>Supplier</label>
             <select
-              name="companyName"
-              value={form.companyName}
+              name="supplierName"
+              value={form.supplierName}
               onChange={handleChange}
               required
               className="border border-gray-300 px-3 py-2 rounded-md"
@@ -369,7 +369,7 @@ const ManageReturn = () => {
                 setEditingId(null);
                 setForm({
                   returnId: generateNextReturnId(),
-                  companyName: "",
+                  supplierName: "",
                   date: "",
                   category: "",
                   subcategory: "",
@@ -410,7 +410,7 @@ const ManageReturn = () => {
             returns.map((ret) => (
               <tr key={ret._id}>
                 <td>{ret.returnId}</td>
-                <td>{ret.companyName}</td>
+                <td>{ret.supplierName}</td>
                 <td>{new Date(ret.date).toLocaleDateString()}</td>
                 <td>{ret.category}</td>
                 <td>{ret.subcategory}</td>
