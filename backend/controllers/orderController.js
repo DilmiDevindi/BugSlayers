@@ -1,20 +1,19 @@
-const Order = require("../models/Order");
+const Order = require('../models/orderModel');
 
-// Get all orders, with populated category and subcategory names
+// Get all orders (with populated category and subcategory)
 exports.getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find()
-      .populate("category", "categoryName")
-      .populate("subcategory", "subcategoryName")
+      .populate('category', 'categoryName')
+      .populate('subcategory', 'subcategoryName')
       .sort({ date: -1 });
-
     res.json(orders);
   } catch (err) {
-    res.status(500).json({ error: "Failed to fetch orders" });
+    res.status(500).json({ error: 'Failed to fetch orders' });
   }
 };
 
-// Create a new order
+// Create new order
 exports.createOrder = async (req, res) => {
   try {
     const {
@@ -38,12 +37,13 @@ exports.createOrder = async (req, res) => {
       !date ||
       !status
     ) {
-      return res.status(400).json({ error: "Please fill all fields" });
+      return res.status(400).json({ error: 'Please fill all fields' });
     }
 
+    // Check duplicate orderId
     const existingOrder = await Order.findOne({ orderId });
     if (existingOrder) {
-      return res.status(400).json({ error: "Order ID already exists" });
+      return res.status(400).json({ error: 'Order ID already exists' });
     }
 
     const order = new Order({
@@ -58,19 +58,18 @@ exports.createOrder = async (req, res) => {
     });
 
     await order.save();
-    // Populate category and subcategory before sending response
-    await order.populate("category", "categoryName");
-    await order.populate("subcategory", "subcategoryName");
+
+    // Populate fields for response
+    await order.populate('category', 'categoryName');
+    await order.populate('subcategory', 'subcategoryName');
 
     res.status(201).json(order);
   } catch (err) {
-    res
-      .status(500)
-      .json({ error: "Failed to create order", details: err.message });
+    res.status(500).json({ error: 'Failed to create order', details: err.message });
   }
 };
 
-// Update an existing order by ID
+// Update order by ID
 exports.updateOrder = async (req, res) => {
   try {
     const {
@@ -98,16 +97,16 @@ exports.updateOrder = async (req, res) => {
       },
       { new: true, runValidators: true }
     )
-      .populate("category", "categoryName")
-      .populate("subcategory", "subcategoryName");
+      .populate('category', 'categoryName')
+      .populate('subcategory', 'subcategoryName');
 
     if (!updatedOrder) {
-      return res.status(404).json({ error: "Order not found" });
+      return res.status(404).json({ error: 'Order not found' });
     }
 
     res.json(updatedOrder);
   } catch (err) {
-    res.status(500).json({ error: "Update failed", details: err.message });
+    res.status(500).json({ error: 'Update failed', details: err.message });
   }
 };
 
@@ -116,32 +115,10 @@ exports.deleteOrder = async (req, res) => {
   try {
     const deletedOrder = await Order.findByIdAndDelete(req.params.id);
     if (!deletedOrder) {
-      return res.status(404).json({ error: "Order not found" });
+      return res.status(404).json({ error: 'Order not found' });
     }
-
-    res.json({ message: "Order deleted successfully" });
+    res.json({ message: 'Order deleted successfully' });
   } catch (err) {
-    res.status(500).json({ error: "Delete failed", details: err.message });
-  }
-};
-
-// Get orders filtered by date range for report, with populated category & subcategory
-exports.getOrderReport = async (req, res) => {
-  const { startDate, endDate } = req.query;
-
-  try {
-    const orders = await Order.find({
-      date: {
-        $gte: new Date(startDate),
-        $lte: new Date(endDate),
-      },
-    })
-      .populate("category", "categoryName")
-      .populate("subcategory", "subcategoryName")
-      .sort({ date: -1 });
-
-    res.json(orders);
-  } catch (err) {
-    res.status(500).json({ error: "Report fetch failed", details: err.message });
+    res.status(500).json({ error: 'Delete failed', details: err.message });
   }
 };
