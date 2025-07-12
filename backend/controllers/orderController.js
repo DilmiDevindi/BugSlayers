@@ -1,16 +1,20 @@
 const Order = require("../models/Order");
 
-// @desc Get all orders
+// Get all orders, with populated category and subcategory names
 exports.getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find().sort({ date: -1 });
+    const orders = await Order.find()
+      .populate("category", "categoryName")
+      .populate("subcategory", "subcategoryName")
+      .sort({ date: -1 });
+
     res.json(orders);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch orders" });
   }
 };
 
-// @desc Create a new order
+// Create a new order
 exports.createOrder = async (req, res) => {
   try {
     const {
@@ -21,10 +25,9 @@ exports.createOrder = async (req, res) => {
       subcategory,
       quantity,
       date,
-      status
+      status,
     } = req.body;
 
-    // Validation
     if (
       !orderId ||
       !companyName ||
@@ -38,7 +41,6 @@ exports.createOrder = async (req, res) => {
       return res.status(400).json({ error: "Please fill all fields" });
     }
 
-    // Check for duplicate Order ID
     const existingOrder = await Order.findOne({ orderId });
     if (existingOrder) {
       return res.status(400).json({ error: "Order ID already exists" });
@@ -52,10 +54,14 @@ exports.createOrder = async (req, res) => {
       subcategory,
       quantity,
       date,
-      status
+      status,
     });
 
     await order.save();
+    // Populate category and subcategory before sending response
+    await order.populate("category", "categoryName");
+    await order.populate("subcategory", "subcategoryName");
+
     res.status(201).json(order);
   } catch (err) {
     res
@@ -64,7 +70,7 @@ exports.createOrder = async (req, res) => {
   }
 };
 
-// @desc Update an existing order
+// Update an existing order by ID
 exports.updateOrder = async (req, res) => {
   try {
     const {
@@ -75,7 +81,7 @@ exports.updateOrder = async (req, res) => {
       subcategory,
       quantity,
       date,
-      status
+      status,
     } = req.body;
 
     const updatedOrder = await Order.findByIdAndUpdate(
@@ -88,10 +94,12 @@ exports.updateOrder = async (req, res) => {
         subcategory,
         quantity,
         date,
-        status
+        status,
       },
       { new: true, runValidators: true }
-    );
+    )
+      .populate("category", "categoryName")
+      .populate("subcategory", "subcategoryName");
 
     if (!updatedOrder) {
       return res.status(404).json({ error: "Order not found" });
@@ -103,7 +111,7 @@ exports.updateOrder = async (req, res) => {
   }
 };
 
-// @desc Delete an order
+// Delete order by ID
 exports.deleteOrder = async (req, res) => {
   try {
     const deletedOrder = await Order.findByIdAndDelete(req.params.id);
@@ -117,7 +125,7 @@ exports.deleteOrder = async (req, res) => {
   }
 };
 
-// @desc Get orders by date range for report
+// Get orders filtered by date range for report, with populated category & subcategory
 exports.getOrderReport = async (req, res) => {
   const { startDate, endDate } = req.query;
 
@@ -127,7 +135,10 @@ exports.getOrderReport = async (req, res) => {
         $gte: new Date(startDate),
         $lte: new Date(endDate),
       },
-    }).sort({ date: -1 });
+    })
+      .populate("category", "categoryName")
+      .populate("subcategory", "subcategoryName")
+      .sort({ date: -1 });
 
     res.json(orders);
   } catch (err) {
