@@ -1,20 +1,18 @@
-// ✅ AddPurchase.jsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSquarePlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSquarePlus } from "@fortawesome/free-solid-svg-icons";
 import "./AddPurchases.css";
 
 const AddPurchase = () => {
   const [purchase, setPurchase] = useState({
-    supplierName: "",
-    productName: "",
+    supplier: "",
+    product: "",
     category: "",
     subcategory: "",
     quantity: "",
     price: "",
     discount: "",
-    discountType: "%", // always '%'
     date: "",
   });
 
@@ -22,21 +20,28 @@ const AddPurchase = () => {
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
 
+  const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+
+  // Fetch suppliers & categories on mount
   useEffect(() => {
-    axios.get("/api/suppliers")
+    axios.get(`${BASE_URL}/api/suppliers`)
       .then(res => setSuppliers(res.data))
       .catch(err => console.error("Error fetching suppliers:", err));
 
-    axios.get("/api/category")
+    axios.get(`${BASE_URL}/api/category`)
       .then(res => setCategories(res.data))
       .catch(err => console.error("Error fetching categories:", err));
   }, []);
 
+  // Fetch subcategories when category changes
   useEffect(() => {
     if (purchase.category) {
-      axios.get(`/api/subcategories/by-category/${purchase.category}`)
+      axios.get(`${BASE_URL}/api/subcategories/by-category/${purchase.category}`)
         .then(res => setSubcategories(res.data))
-        .catch(err => console.error("Error fetching subcategories:", err));
+        .catch(err => {
+          console.error("Error fetching subcategories:", err);
+          setSubcategories([]);
+        });
     } else {
       setSubcategories([]);
     }
@@ -47,61 +52,70 @@ const AddPurchase = () => {
     setPurchase(prev => ({
       ...prev,
       [name]: value,
-      ...(name === "category" && { subcategory: "" })
+      ...(name === "category" && { subcategory: "" }),
     }));
   };
 
-  const calculateDiscountedTotal = () => {
+  const calculateTotal = () => {
     const qty = Number(purchase.quantity);
     const unitPrice = Number(purchase.price);
-    const discount = Number(purchase.discount);
-    let subtotal = qty * unitPrice;
-    let discountAmount = (subtotal * discount) / 100; // always %
+    const discountPercent = Number(purchase.discount) || 0;
+
+    if (isNaN(qty) || isNaN(unitPrice)) return 0;
+
+    const subtotal = qty * unitPrice;
+    const discountAmount = (subtotal * discountPercent) / 100;
+
     return subtotal - discountAmount;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const {
-      supplierName, productName, category, subcategory,
-      quantity, price, discount, date
+      supplier,
+      product,
+      category,
+      subcategory,
+      quantity,
+      price,
+      discount,
+      date,
     } = purchase;
 
-    if (!supplierName || !productName || !category || !subcategory || !quantity || !price || !date) {
+    if (!supplier || !product || !category || !subcategory || !quantity || !price || !date) {
       alert("Please fill all required fields");
       return;
     }
 
-    const totalPrice = calculateDiscountedTotal();
+    const total = calculateTotal();
 
     try {
-      await axios.post("/api/purchase", {
-        supplierName,
-        productName,
+      await axios.post(`${BASE_URL}/api/purchase`, {
+        supplier,
+        product,
         category,
         subcategory,
         quantity: Number(quantity),
         price: Number(price),
-        discount: discount ? Number(discount) : 0,
-        discountType: "%", // fixed to %
-        totalPrice,
-        date
+        discount: discount ? `${discount}%` : "0%",
+        total,
+        date,
       });
 
       alert("Purchase added successfully!");
       setPurchase({
-        supplierName: "",
-        productName: "",
+        supplier: "",
+        product: "",
         category: "",
         subcategory: "",
         quantity: "",
         price: "",
         discount: "",
-        discountType: "%", // reset to default
         date: "",
       });
     } catch (error) {
-      console.error("Error adding purchase:", error);
+      console.error("Error adding purchase:", error.response?.data || error.message);
       alert("Failed to add purchase. Please try again.");
     }
   };
@@ -113,14 +127,21 @@ const AddPurchase = () => {
       </div>
 
       <form onSubmit={handleSubmit} className="add-purchase-form">
-        <select name="supplierName" value={purchase.supplierName} onChange={handleChange} required>
+        <select name="supplier" value={purchase.supplier} onChange={handleChange} required>
           <option value="">Select Supplier</option>
           {suppliers.map(s => (
             <option key={s._id} value={s.supplierName}>{s.supplierName}</option>
           ))}
         </select>
 
-        <input type="text" name="productName" value={purchase.productName} onChange={handleChange} placeholder="Product Name" required />
+        <input
+          type="text"
+          name="product"
+          value={purchase.product}
+          onChange={handleChange}
+          placeholder="Product Name"
+          required
+        />
 
         <div className="row-input-group">
           <select name="category" value={purchase.category} onChange={handleChange} required>
@@ -138,23 +159,45 @@ const AddPurchase = () => {
           </select>
         </div>
 
-        <input type="number" name="quantity" value={purchase.quantity} onChange={handleChange} placeholder="Quantity" required min="1" />
-        <input type="number" name="price" value={purchase.price} onChange={handleChange} placeholder="Unit Price (Rs.)" required min="0" step="0.01" />
+        <input
+          type="number"
+          name="quantity"
+          value={purchase.quantity}
+          onChange={handleChange}
+          placeholder="Quantity"
+          required
+          min="1"
+        />
 
-        <div className="row-input-group">
-          <input
-            type="number"
-            name="discount"
-            value={purchase.discount}
-            onChange={handleChange}
-            placeholder="Discount (%)"
-            min="0"
-            step="0.01"
-            max="100"
-          />
-        </div>
+        <input
+          type="number"
+          name="price"
+          value={purchase.price}
+          onChange={handleChange}
+          placeholder="Unit Price (Rs.)"
+          required
+          min="0"
+          step="0.01"
+        />
 
-        <input type="date" name="date" value={purchase.date} onChange={handleChange} required />
+        <input
+          type="number"
+          name="discount"
+          value={purchase.discount}
+          onChange={handleChange}
+          placeholder="Discount (%)"
+          min="0"
+          max="100"
+          step="0.01"
+        />
+
+        <input
+          type="date"
+          name="date"
+          value={purchase.date}
+          onChange={handleChange}
+          required
+        />
 
         <button type="submit" className="btn btn-primary">
           Add New Record
