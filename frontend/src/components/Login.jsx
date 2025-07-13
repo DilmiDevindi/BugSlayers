@@ -8,27 +8,30 @@ import backgroundImage from '../assets/furniture.png';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setErrorMsg(''); // Clear previous errors
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
     if (!emailRegex.test(email)) {
-      alert('Please enter a valid email address');
+      setErrorMsg('Please enter a valid email address.');
       return;
     }
 
     try {
       const response = await axios.post('/api/auth/login', { email, password });
+
       if (response.data.success) {
+        localStorage.setItem('token', response.data.token); // ✅ Save token
         navigate('/dashboard');
       } else {
-        alert(response.data.message);
+        setErrorMsg(response.data.message || 'Invalid credentials.');
       }
     } catch (error) {
-      alert('Login failed: ' + error);
+      setErrorMsg('Login failed. Please try again.');
     }
   };
 
@@ -38,10 +41,14 @@ const Login = () => {
         <div className="info-container">
           <img src={myImage} alt="Furniture" className="login-image" />
           <h2>Welcome To</h2>
-          <p className='logpara'>Manage your furniture business with ease and efficiency, streamline operations.</p>
+          <p className="logpara">
+            Manage your furniture business with ease and efficiency. Streamline your operations.
+          </p>
         </div>
+
         <div className="login-container">
           <h2>Login</h2>
+          {errorMsg && <div className="error-msg">{errorMsg}</div>} {/* ✅ Error message */}
           <form onSubmit={handleLogin}>
             <div className="mb-3">
               <label htmlFor="email" className="form-label">Email</label>
@@ -67,7 +74,7 @@ const Login = () => {
             </div>
             <button type="submit" className="btn">Login</button>
           </form>
-          <p className='para'>
+          <p className="para">
             Don&apos;t have an account? <Link to="/signup">Sign up</Link>
           </p>
         </div>

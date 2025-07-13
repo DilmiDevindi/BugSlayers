@@ -1,65 +1,45 @@
 // routes/auth.js
 const express = require('express');
-const crypto = require('crypto');
-const nodemailer = require('nodemailer');
-const bcrypt = require('bcryptjs');
-const User = require('../models/User');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();          // ⬅️ loads .env
 const router = express.Router();
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: 'your-email@gmail.com',
-    pass: 'your-app-password',
-  },
-});
+// --- Login (only one admin) ---------------------------------
+router.post('/login', (req, res) => {
+  const { email, password } = req.body;
 
-// Forgot password
-router.post('/forgot-password', async (req, res) => {
-  const { email } = req.body;
-  try {
-    const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ success: false, message: 'User not found' });
+  // credentials stored in .env
+  const adminEmail = process.env.ADMIN_EMAIL;
+  const adminPassword = process.env.ADMIN_PASSWORD;
 
-    const token = crypto.randomBytes(32).toString('hex');
-    user.resetPasswordToken = token;
-    user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
-    await user.save();
-
-    const resetLink = `http://localhost:3000/reset-password?token=${token}`;
-    await transporter.sendMail({
-      from: 'your-email@gmail.com',
-      to: user.email,
-      subject: 'Password Reset',
-      text: `Click here to reset your password: ${resetLink}`,
+  // simple check (no DB needed)
+  if (email === adminEmail && password === adminPassword) {
+    // create a JWT valid for 1 hour
+    const token = jwt.sign({ email }, process.env.JWT_SECRET, {
+      expiresIn: '1h',
     });
-
-    res.json({ success: true, message: 'Reset link sent' });
-  } catch (error) {
-    res.status(500).json({ success: false, message: 'Server error' });
+    return res.json({ success: true, token, message: 'Login successful' });
   }
+
+  return res.json({ success: false, message: 'Invalid admin credentials' });
 });
 
-// Reset password
-router.post('/reset-password', async (req, res) => {
-  const { token, newPassword } = req.body;
+// --- Middleware to protect routes ----------------------------
+function verifyToken(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ message: 'No token provided' });
+  }
+
+  const token = authHeader.split(' ')[1];
   try {
-    const user = await User.findOne({
-      resetPasswordToken: token,
-      resetPasswordExpires: { $gt: Date.now() },
-    });
-
-    if (!user) return res.status(400).json({ success: false, message: 'Invalid or expired token' });
-
-    user.password = await bcrypt.hash(newPassword, 10);
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpires = undefined;
-    await user.save();
-
-    res.json({ success: true, message: 'Password has been reset' });
-  } catch (error) {
-    res.status(500).json({ success: false, message: 'Server error' });
+    req.user = jwt.verify(token, process.env.JWT_SECRET); // decode & attach
+    next();                                               // go to controller
+  } catch (err) {
+    return res.status(401).json({ message: 'Invalid or expired token' });
   }
-});
+}
 
-module.exports = router;
+// export both router *and* the middleware
+module.exports = { authRouter: router, verifyToken };
+
