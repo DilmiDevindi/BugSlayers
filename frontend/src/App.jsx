@@ -66,7 +66,7 @@ function App() {
     <Router>
       <Routes>
         {/* Public Routes */}
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Login />} />npm install dotenv
         <Route path="/signup" element={<Signup />} />
         
 
