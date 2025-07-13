@@ -1,3 +1,4 @@
+// ✅ AddPurchase.jsx (updated with Selling Price field)
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,6 +13,7 @@ const AddPurchase = () => {
     subcategory: "",
     quantity: "",
     price: "",
+    sellingPrice: "",
     discount: "",
     date: "",
   });
@@ -22,7 +24,6 @@ const AddPurchase = () => {
 
   const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
-  // Fetch suppliers & categories on mount
   useEffect(() => {
     axios.get(`${BASE_URL}/api/suppliers`)
       .then(res => setSuppliers(res.data))
@@ -33,7 +34,6 @@ const AddPurchase = () => {
       .catch(err => console.error("Error fetching categories:", err));
   }, []);
 
-  // Fetch subcategories when category changes
   useEffect(() => {
     if (purchase.category) {
       axios.get(`${BASE_URL}/api/subcategories/by-category/${purchase.category}`)
@@ -79,11 +79,12 @@ const AddPurchase = () => {
       subcategory,
       quantity,
       price,
+      sellingPrice,
       discount,
       date,
     } = purchase;
 
-    if (!supplier || !product || !category || !subcategory || !quantity || !price || !date) {
+    if (!supplier || !product || !category || !subcategory || !quantity || !price || !sellingPrice || !date) {
       alert("Please fill all required fields");
       return;
     }
@@ -98,6 +99,7 @@ const AddPurchase = () => {
         subcategory,
         quantity: Number(quantity),
         price: Number(price),
+        sellingPrice: Number(sellingPrice),
         discount: discount ? `${discount}%` : "0%",
         total,
         date,
@@ -111,6 +113,7 @@ const AddPurchase = () => {
         subcategory: "",
         quantity: "",
         price: "",
+        sellingPrice: "",
         discount: "",
         date: "",
       });
@@ -175,6 +178,17 @@ const AddPurchase = () => {
           value={purchase.price}
           onChange={handleChange}
           placeholder="Unit Price (Rs.)"
+          required
+          min="0"
+          step="0.01"
+        />
+
+        <input
+          type="number"
+          name="sellingPrice"
+          value={purchase.sellingPrice}
+          onChange={handleChange}
+          placeholder="Selling Price (Rs.)"
           required
           min="0"
           step="0.01"
