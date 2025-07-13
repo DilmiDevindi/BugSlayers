@@ -5,5 +5,3 @@ const { getSalesReport } = require('../controllers/reportController'); // adjust
 router.get('/sales-report', getSalesReport);
 
 module.exports = router;
-
-

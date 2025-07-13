@@ -61,10 +61,16 @@ const addInventoryItem = async (req, res) => {
       buyingPrice,
       sellingPrice,
       dateAdded,
-      availableForOffer
+      availableForOffer,
+      ProductStatus
     } = req.body;
 
+    console.log('Received data:', req.body);
+
     const image = req.file ? req.file.filename : null;
+
+    console.log('Uploaded image:', image);
+    console.log('req.file.filename:', req.file.filename);
 
     // Validate inputs
     if (!productName || !category || !subcategory || !quantity || !buyingPrice || !sellingPrice || !dateAdded) {
@@ -94,6 +100,7 @@ const addInventoryItem = async (req, res) => {
     // Generate code
     const code = await generateItemCode();
 
+
     // Create item
     const newItem = new InventoryItem({
       code,
@@ -106,7 +113,10 @@ const addInventoryItem = async (req, res) => {
       dateAdded,
       image,
       availableForOffer: availableForOffer || 'no',
+      ProductStatus, // Default to 0 if not provided
     });
+
+    console.log('New item data:', newItem);
 
     const savedItem = await newItem.save();
 

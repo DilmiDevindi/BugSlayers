@@ -18,6 +18,7 @@ const inventoryItemSchema = new mongoose.Schema({
   sellingPrice: Number,
   dateAdded: String,
   image: String,
+  ProductStatus: String,
   availableForOffer: {
     type: String,
     enum: ['yes', 'no'],

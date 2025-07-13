@@ -2,45 +2,40 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const AddOrder = () => {
-  // State for suppliers, categories, subcategories, and form fields
   const [suppliers, setSuppliers] = useState([]);
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const [form, setForm] = useState({
     orderId: '',
     companyName: '',
     productName: '',
-    category: '',       // stores category _id
-    subcategory: '',    // stores subcategory _id
+    category: '',
+    subcategory: '',
     quantity: '',
     date: '',
     status: 'Pending',
   });
 
-  const [message, setMessage] = useState('');
-
-  // Backend base URL - set this in your Vite env or fallback to localhost
   const BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
 
-  // On mount: generate initial orderId, fetch suppliers and categories
   useEffect(() => {
     generateOrderId();
     fetchSuppliers();
     fetchCategories();
   }, []);
 
-  // When category changes, fetch corresponding subcategories
   useEffect(() => {
     if (form.category) {
       fetchSubcategories(form.category);
     } else {
       setSubcategories([]);
-      setForm(prev => ({ ...prev, subcategory: '' })); // clear subcategory
+      setForm(prev => ({ ...prev, subcategory: '' }));
     }
   }, [form.category]);
 
-  // Generate next orderId based on existing orders
   const generateOrderId = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/api/orders`);
@@ -62,7 +57,6 @@ const AddOrder = () => {
     }
   };
 
-  // Fetch supplier list from backend
   const fetchSuppliers = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/api/suppliers`);
@@ -72,7 +66,6 @@ const AddOrder = () => {
     }
   };
 
-  // Fetch categories
   const fetchCategories = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/api/category`);
@@ -82,7 +75,6 @@ const AddOrder = () => {
     }
   };
 
-  // Fetch subcategories for given categoryId
   const fetchSubcategories = async (categoryId) => {
     try {
       const res = await axios.get(`${BASE_URL}/api/subcategories/by-category/${categoryId}`);
@@ -92,19 +84,19 @@ const AddOrder = () => {
     }
   };
 
-  // Update form state on input/select change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm(prev => ({
       ...prev,
       [name]: value,
-      ...(name === 'category' && { subcategory: '' }), // reset subcategory if category changes
+      ...(name === 'category' && { subcategory: '' }),
     }));
   };
 
-  // Submit new order to backend
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    setLoading(true);
 
     const {
       orderId, companyName, productName, category,
@@ -112,7 +104,8 @@ const AddOrder = () => {
     } = form;
 
     if (!orderId || !companyName || !productName || !category || !subcategory || !quantity || !date || !status) {
-      setMessage('⚠️ Please fill all fields.');
+      setError('⚠️ Please fill all fields.');
+      setLoading(false);
       return;
     }
 
@@ -128,12 +121,11 @@ const AddOrder = () => {
         status,
       });
 
-      setMessage('✅ Order added successfully!');
+      alert('Order added successfully!');
 
-      // Regenerate new orderId and reset form
       generateOrderId();
-      setForm(prev => ({
-        ...prev,
+      setForm({
+        orderId: form.orderId,
         companyName: '',
         productName: '',
         category: '',
@@ -141,10 +133,12 @@ const AddOrder = () => {
         quantity: '',
         date: '',
         status: 'Pending',
-      }));
+      });
     } catch (err) {
       console.error(err.response?.data || err.message);
-      setMessage('❌ Failed to add order. Check console for details.');
+      setError('❌ Failed to add order. Check console for details.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -152,11 +146,9 @@ const AddOrder = () => {
     <div className="container mt-5" style={{ maxWidth: 700, padding: 32, background: '#fff', borderRadius: 12 }}>
       <h2 className="mb-4 text-center">Add Order</h2>
 
-      {message && <div className="alert alert-info text-center">{message}</div>}
+      {error && <div className="alert alert-danger" role="alert">{error}</div>}
 
       <form onSubmit={handleSubmit}>
-
-        {/* Order ID (read-only) */}
         <input
           className="form-control mb-3"
           name="orderId"
@@ -165,7 +157,6 @@ const AddOrder = () => {
           aria-label="Order ID"
         />
 
-        {/* Supplier selection */}
         <select
           className="form-control mb-3"
           name="companyName"
@@ -180,7 +171,6 @@ const AddOrder = () => {
           ))}
         </select>
 
-        {/* Product name */}
         <input
           className="form-control mb-3"
           name="productName"
@@ -191,7 +181,6 @@ const AddOrder = () => {
           aria-label="Product Name"
         />
 
-        {/* Category and Subcategory */}
         <div className="d-flex gap-3 mb-3">
           <select
             className="form-control w-50"
@@ -222,7 +211,6 @@ const AddOrder = () => {
           </select>
         </div>
 
-        {/* Quantity */}
         <input
           type="number"
           className="form-control mb-3"
@@ -235,7 +223,6 @@ const AddOrder = () => {
           aria-label="Quantity"
         />
 
-        {/* Date */}
         <input
           type="date"
           className="form-control mb-3"
@@ -246,7 +233,6 @@ const AddOrder = () => {
           aria-label="Date"
         />
 
-        {/* Status */}
         <select
           className="form-control mb-4"
           name="status"
@@ -260,8 +246,8 @@ const AddOrder = () => {
           <option value="Cancel">Cancel</option>
         </select>
 
-        <button className="btn btn-primary w-100" type="submit">
-          Add Order
+        <button className="btn btn-primary w-100" type="submit" disabled={loading}>
+          {loading ? 'Adding...' : 'Add Order'}
         </button>
       </form>
     </div>
