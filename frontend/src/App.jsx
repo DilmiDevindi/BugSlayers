@@ -5,7 +5,7 @@ import "./App.css";
 // Auth
 import Login from "./components/Login";
 import Signup from "./components/Signup";
-import ForgotPassword from "./components/ForgotPassword";
+
 
 // Layout & Dashboard
 import Layout from "./components/Layout";
