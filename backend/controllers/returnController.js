@@ -1,7 +1,7 @@
 const Return = require("../models/returnModel");
 const Refund = require("../models/refundModel");
-const Category = require("../models/categoryModel"); // Assuming this exists
-const Subcategory = require("../models/subcategoryModel"); // Assuming this exists
+const Category = require("../models/Category"); // Assuming this exists
+const Subcategory = require("../models/Subcategory"); // Assuming this exists
 
 exports.getAllReturns = async (req, res) => {
   try {
