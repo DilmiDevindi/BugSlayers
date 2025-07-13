@@ -136,14 +136,7 @@
   }
   
   
-  /*ManageInventories Styles*/
-  .inventory-container {
-    background-color: #f8f9fa;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    width: 80%;
-  }
+  
   
   .inventory-title {
     font-size: 16px;
@@ -250,3 +243,20 @@
     color: #666;
     padding: 20px;
   }
+
+
+  .form-check-inline {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 1rem;      /* spacing between inline items */
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+}
+
+.form-check-inline input[type="checkbox"],
+.form-check-inline input[type="radio"] {
+  margin-top: 0;
+  margin-right: 0.3rem;    /* space between input and label text */
+  cursor: pointer;
+}

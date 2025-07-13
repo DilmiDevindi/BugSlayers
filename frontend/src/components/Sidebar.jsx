@@ -21,14 +21,13 @@ const Sidebar = () => {
       <h6 className='custom-heading'>New Sisira Furniture</h6>
       <ul className="nav flex-column">
 
-        {/* Dashboard */}
         <li className="nav-item mb-3">
           <Link to="/dashboard" className="nav-link text-white d-flex align-items-center">
             <i className="bi bi-speedometer2 me-2"></i> Dashboard
           </Link>
         </li>
 
-        {/* Suppliers */}
+        {/* Suppliers Dropdown */}
         <li className="nav-item mb-3">
           <button 
             className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
@@ -49,9 +48,7 @@ const Sidebar = () => {
           )}
         </li>
 
-
-        {/* Purchases & Reports */}
-
+        {/* Purchases Dropdown */}
         <li className="nav-item mb-3">
           <button 
             className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
@@ -75,7 +72,7 @@ const Sidebar = () => {
           )}
         </li>
 
-        {/* Orders */}
+        {/* Orders Dropdown - After Purchases */}
         <li className="nav-item mb-3">
           <button
             className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start"
@@ -96,9 +93,7 @@ const Sidebar = () => {
           )}
         </li>
 
-
-        {/* Returns & Refunds */}
-
+        {/* Returns Dropdown - After Orders */}
         <li className="nav-item mb-3">
           <button
             className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start"
@@ -112,16 +107,12 @@ const Sidebar = () => {
               <li className="nav-item mb-2">
                 <Link to="/dashboard/returns/manage" className="nav-link text-white">Manage Returns</Link>
               </li>
-
-              <li className="nav-item mb-2">
-                <Link to="/dashboard/refunds/manage" className="nav-link text-white">Manage Refunds</Link>
-              </li>
-
             </ul>
           )}
         </li>
+        
 
-        {/* Inventory */}
+        {/* Inventory Dropdown */}
         <li className="nav-item mb-3">
           <button 
             className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
@@ -142,7 +133,7 @@ const Sidebar = () => {
           )}
         </li>
 
-        {/* Category */}
+        {/* Category Dropdown */}
         <li className="nav-item mb-3">
           <button 
             className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
@@ -166,7 +157,7 @@ const Sidebar = () => {
           )}
         </li>
 
-        {/* Customers */}
+        {/* Customers Dropdown */}
         <li className="nav-item mb-3">
           <button 
             className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
@@ -187,9 +178,7 @@ const Sidebar = () => {
           )}
         </li>
 
-
-        {/* Sales & Reports */}
-
+        {/* Sales Dropdown */}
         <li className="nav-item mb-3">
           <button 
             className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
@@ -211,7 +200,7 @@ const Sidebar = () => {
           )}
         </li>
 
-        {/* Catalog */}
+        {/* Catalog Dropdown */}
         <li className="nav-item mb-3">
           <button 
             className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
@@ -229,16 +218,14 @@ const Sidebar = () => {
           )}
         </li>
 
-        {/* Bill */}
+        {/* Bill Page */}
         <li className="nav-item mb-3">
           <Link to="/dashboard/bill" className="nav-link text-white d-flex align-items-center">
             <i className="bi bi-calculator me-2"></i> Bill
           </Link>
         </li>
 
-
-        {/* Inventory Summary Report Only (Low Stock Removed) */}
-
+        {/* Inventory Reports Dropdown */}
         <li className="nav-item mb-3">
           <button 
             className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
@@ -249,6 +236,7 @@ const Sidebar = () => {
           </button>
           {isInventoryReportOpen && (
             <ul className="nav flex-column ms-3">
+              {/* Removed Low Stock Report */}
               <li className="nav-item mb-2">
                 <Link to="/dashboard/inventory/reports/summary" className="nav-link text-white">Inventory Summary</Link>
               </li>
