@@ -1,24 +1,14 @@
-const Purchase = require("../models/purchase");
+const Purchase = require('../models/purchase');
 
-// Get purchases by date range (or all if no dates provided)
 exports.getPurchases = async (req, res) => {
   try {
-    const { startDate, endDate } = req.query;
-
-    let filter = {};
-    if (startDate && endDate) {
-      const start = new Date(startDate);
-      const end = new Date(endDate);
-      end.setHours(23, 59, 59, 999);
-      filter.date = { $gte: start, $lte: end };
-    }
-
-    const purchases = await Purchase.find(filter).sort({ date: 1 });
-
+    const purchases = await Purchase.find()
+      .populate('category', 'categoryName')
+      .populate('subcategory', 'subcategoryName')
+      .sort({ date: -1 });
     res.json(purchases);
-  } catch (error) {
-    console.error("Error fetching purchases:", error);
-    res.status(500).json({ message: "Failed to fetch purchases" });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch purchases' });
   }
 };
 
@@ -31,13 +21,14 @@ exports.createPurchase = async (req, res) => {
       subcategory,
       quantity,
       price,
+      sellingPrice,
       discount,
       total,
       date,
     } = req.body;
 
-    if (!supplier || !product || !category || !subcategory || !quantity || !price || !date) {
-      return res.status(400).json({ message: "All required fields must be filled" });
+    if (!supplier || !product || !category || !subcategory || !quantity || !price || !sellingPrice || !date) {
+      return res.status(400).json({ error: 'All fields are required' });
     }
 
     const newPurchase = new Purchase({
@@ -45,18 +36,20 @@ exports.createPurchase = async (req, res) => {
       product,
       category,
       subcategory,
-      quantity: Number(quantity),
-      price: Number(price),
-      discount: discount || "0%",
-      total: total || Number(quantity) * Number(price),
-      date: new Date(date),
+      quantity,
+      price,
+      sellingPrice,
+      discount,
+      total,
+      date,
     });
 
     await newPurchase.save();
+    await newPurchase.populate('category', 'categoryName');
+    await newPurchase.populate('subcategory', 'subcategoryName');
     res.status(201).json(newPurchase);
-  } catch (error) {
-    console.error("Create Purchase Error:", error);
-    res.status(500).json({ message: "Failed to create purchase", error: error.message });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to create purchase', details: err.message });
   }
 };
 
@@ -69,42 +62,45 @@ exports.updatePurchase = async (req, res) => {
       subcategory,
       quantity,
       price,
+      sellingPrice,
       discount,
       total,
       date,
     } = req.body;
 
-    const updateData = {
-      supplier,
-      product,
-      category,
-      subcategory,
-      quantity: Number(quantity),
-      price: Number(price),
-      discount: discount || "0%",
-      total: total || Number(quantity) * Number(price),
-      date: new Date(date),
-    };
+    const updated = await Purchase.findByIdAndUpdate(
+      req.params.id,
+      {
+        supplier,
+        product,
+        category,
+        subcategory,
+        quantity,
+        price,
+        sellingPrice,
+        discount,
+        total,
+        date,
+      },
+      { new: true, runValidators: true }
+    )
+      .populate('category', 'categoryName')
+      .populate('subcategory', 'subcategoryName');
 
-    const updated = await Purchase.findByIdAndUpdate(req.params.id, updateData, {
-      new: true,
-    });
-
-    if (!updated) return res.status(404).json({ message: "Purchase not found" });
+    if (!updated) return res.status(404).json({ error: 'Purchase not found' });
     res.json(updated);
-  } catch (error) {
-    console.error("Update Purchase Error:", error);
-    res.status(500).json({ message: "Failed to update purchase", error: error.message });
+  } catch (err) {
+    res.status(500).json({ error: 'Update failed', details: err.message });
   }
 };
 
 exports.deletePurchase = async (req, res) => {
   try {
     const deleted = await Purchase.findByIdAndDelete(req.params.id);
-    if (!deleted) return res.status(404).json({ message: "Purchase not found" });
-    res.json({ message: "Purchase deleted successfully" });
-  } catch (error) {
-    console.error("Delete Purchase Error:", error);
-    res.status(500).json({ message: "Failed to delete purchase", error: error.message });
+    if (!deleted) return res.status(404).json({ error: 'Purchase not found' });
+    res.json({ message: 'Purchase deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ error: 'Delete failed', details: err.message });
   }
 };
+
