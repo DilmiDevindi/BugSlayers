@@ -17,7 +17,7 @@ const Sidebar = () => {
   const [isReturnsOpen, setIsReturnsOpen] = useState(false);
 
   return (
-    <div className="bg-dark text-white vh-100 p-3">
+    <div className="sidebar">
       <h6 className='custom-heading'>New Sisira Furniture</h6>
       <ul className="nav flex-column">
 
@@ -49,7 +49,9 @@ const Sidebar = () => {
           )}
         </li>
 
+
         {/* Purchases & Reports */}
+
         <li className="nav-item mb-3">
           <button 
             className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
@@ -94,7 +96,9 @@ const Sidebar = () => {
           )}
         </li>
 
+
         {/* Returns & Refunds */}
+
         <li className="nav-item mb-3">
           <button
             className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start"
@@ -108,9 +112,11 @@ const Sidebar = () => {
               <li className="nav-item mb-2">
                 <Link to="/dashboard/returns/manage" className="nav-link text-white">Manage Returns</Link>
               </li>
+
               <li className="nav-item mb-2">
                 <Link to="/dashboard/refunds/manage" className="nav-link text-white">Manage Refunds</Link>
               </li>
+
             </ul>
           )}
         </li>
@@ -181,7 +187,9 @@ const Sidebar = () => {
           )}
         </li>
 
+
         {/* Sales & Reports */}
+
         <li className="nav-item mb-3">
           <button 
             className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
@@ -223,13 +231,15 @@ const Sidebar = () => {
           )}
         </li>
 
-        {/* Bill Page */}
+        {/* Bill */}
         <li className="nav-item mb-3">
           <Link to="/dashboard/bill" className="nav-link text-white d-flex align-items-center">
             <i className="bi bi-calculator me-2"></i> Bill
           </Link>
         </li>
 
+
+        {/* Inventory Summary Report Only (Low Stock Removed) */}
 
         <li className="nav-item mb-3">
           <button 
@@ -241,9 +251,6 @@ const Sidebar = () => {
           </button>
           {isInventoryReportOpen && (
             <ul className="nav flex-column ms-3">
-              <li className="nav-item mb-2">
-                <Link to="/dashboard/inventory/reports/low-stock" className="nav-link text-white">Low Stock Report</Link>
-              </li>
               <li className="nav-item mb-2">
                 <Link to="/dashboard/inventory/reports/summary" className="nav-link text-white">Inventory Summary</Link>
               </li>
