@@ -1,18 +1,18 @@
 // controllers/invoiceController.js
 const Invoice = require('../models/invoice');
 
-// Generate a numeric invoice ID
-const generateInvoiceId = async () => {
-  return Date.now().toString();
-};
-
 // Create invoice
 exports.createInvoice = async (req, res) => {
   try {
-    const invoiceId = await generateInvoiceId();
-    const invoiceData = { ...req.body, invoiceId };
+    // ✅ Use the full data sent from the frontend, including profit and invoiceId
+    const invoiceData = { ...req.body };
+
+    // Optional: log to debug
+    console.log('Received invoice data:', invoiceData);
+
     const newInvoice = new Invoice(invoiceData);
     await newInvoice.save();
+
     res.status(201).json(newInvoice);
   } catch (err) {
     console.error("Error saving invoice:", err.message);

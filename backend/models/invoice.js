@@ -7,6 +7,7 @@ const ItemSchema = new mongoose.Schema({
   buyingPrice: String,
   quantity: Number,
   discount: Number,
+  profit: String,
 });
 
 const InvoiceSchema = new mongoose.Schema({
@@ -22,6 +23,7 @@ const InvoiceSchema = new mongoose.Schema({
   amount: String,
   cashReceived: String,
   balance: String,
+  profit: String,
 }, {
   timestamps: true,
 });
