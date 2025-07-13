@@ -1,35 +1,60 @@
+/* Reset default margin/padding */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  margin-top: 0;
+}
 
-/* Sidebar layout */
+/* Layout wrapper */
 .layout-container {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 }
 
-/* Sidebar styling */
+/* Fixed sidebar */
 .sidebar {
+  position: fixed;
+  top: 0px; /* Navbar height (adjust if needed) */
+  left: 0;
+  bottom: 0;
+  width: 260px;
   background-color: #343a40;
   color: white;
-  width: 260px;
-  overflow-y: auto;
-  padding: 10px 15px;
-
+  padding: 10px 15px 0 15px;
+  box-sizing: border-box;
+  z-index: 999;
 }
 
-/* Heading */
+/* Main content next to sidebar and below navbar */
+.main-content {
+  margin-left: 260px; /* Same as sidebar width */
+  margin-top: 56px;   /* Same as navbar height */
+  padding: 20px;
+  height: calc(100vh - 56px);
+  background-color: #f8f9fa;
+  box-sizing: border-box;
+}
+
+
+
+/* Sidebar heading */
 .sidebar .custom-heading {
   font-size: 14px;
-  margin-bottom: 20px;
+  margin: 20px 0;
   text-align: center;
 }
 
-/* All links inside sidebar */
+/* Top-level nav link */
 .sidebar .nav-link {
   font-size: 13px;
   padding: 6px 10px;
   color: white;
 }
 
-/* Button dropdowns */
+/* Dropdown button styling */
 .sidebar button.nav-link {
   font-size: 13px;
   padding: 6px 10px;
@@ -40,35 +65,25 @@
   color: white;
 }
 
-
-/* Inner dropdown items */
+/* Inner dropdown links */
 .sidebar .nav .nav-item .nav-link {
   font-size: 12px;
   padding: 6px 15px;
-
+  color: white;
 }
-
-/* Main content area */
-.main-content {
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto;
-  background-color: #f8f9fa;
-}
-
 
 
 /* Navbar */
 .navbar {
   height: 60px;
-  width: calc(100% - 198px); /* Ensure width adjusts based on sidebar width */
+  width: calc(100% - 260px); /* Ensure width adjusts based on sidebar width */
   background-color: #343a40;
   color: #fff;
   display: flex;
   padding: 0 20px;
   position: fixed;
   top: 0;
-  left: 198px; /* Offset to accommodate sidebar width */
+  left: 260px; /* Offset to accommodate sidebar width */
   z-index: 1000;
 }
 
@@ -207,6 +222,4 @@ h4{
   color: #043870;
   margin-bottom: 20px;
 }
-
-
 

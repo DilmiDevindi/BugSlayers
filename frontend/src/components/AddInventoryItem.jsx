@@ -21,6 +21,7 @@ const AddInventoryItem = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
+  const [ProductStatus, setProductStatus] = useState('');
 
   // Load categories
   useEffect(() => {
@@ -91,11 +92,25 @@ const AddInventoryItem = () => {
     formData.append('buyingPrice', parseFloat(buyingPrice).toFixed(2));
     formData.append('sellingPrice', parseFloat(sellingPrice).toFixed(2));
     formData.append('dateAdded', dateAdded);
-    formData.append('image', image);
+    formData.append('image', image); // Should be file, not image.name
     formData.append('availableForOffer', availableForOffer);
+    formData.append('ProductStatus', ProductStatus);
+
+    console.log('Submitting with the following data:');
+    console.log('productName:', productName);
+    console.log('category:', category);
+    console.log('subcategory:', subcategory);
+    console.log('quantity:', Number(quantity));
+    console.log('buyingPrice:', parseFloat(buyingPrice).toFixed(2));
+    console.log('sellingPrice:', parseFloat(sellingPrice).toFixed(2));
+    console.log('dateAdded:', dateAdded);
+    console.log('image:', image);
+    console.log('availableForOffer:', availableForOffer);
+    console.log('ProductStatus:', ProductStatus);
+
 
     try {
-      const response = await axios.post('/api/inventory/add', formData, {
+      const response = await axios.post('http://localhost:5000/api/inventory/add', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       const addedItem = response.data;
@@ -111,6 +126,7 @@ const AddInventoryItem = () => {
       setDateAdded('');
       setImage(null);
       setAvailableForOffer('no');
+      // setProductStatus('');
       alert('Item added successfully!');
     } catch (err) {
       console.error('Error adding item:', err);
@@ -152,6 +168,20 @@ const AddInventoryItem = () => {
             ))}
           </select>
           {fieldErrors.category && <div className="text-danger">{fieldErrors.category}</div>}
+        </div>
+
+        <div className="form-group-i">
+          <select
+            className="form-control-i"
+            value={ProductStatus}
+            onChange={(e) => setProductStatus(e.target.value)} // <-- fix here
+          >
+            <option value="0">Select Option</option>
+            <option value="In-Side">In-Side</option>
+            <option value="Out-Side">Out-Side</option>
+          </select>
+
+
         </div>
 
         <div className="form-group-i">
