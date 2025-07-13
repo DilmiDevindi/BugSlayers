@@ -21,17 +21,16 @@ const SupplierSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-
   },
   address: {
     type: String,
   },
   supplyProducts: {
-    type: [String], // Array of product names
+    type: [String], // Array of product names (usually single item per entry)
+    required: true,
   },
   paymentTerms: {
     type: String,
-
   },
 });
 

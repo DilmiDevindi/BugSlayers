@@ -21,6 +21,7 @@ const Sidebar = () => {
       <h6 className='custom-heading'>New Sisira Furniture</h6>
       <ul className="nav flex-column">
 
+        {/* Dashboard */}
         <li className="nav-item mb-3">
           <Link to="/dashboard" className="nav-link text-white d-flex align-items-center">
             <i className="bi bi-speedometer2 me-2"></i> Dashboard
@@ -48,7 +49,9 @@ const Sidebar = () => {
           )}
         </li>
 
-        {/* Purchases */}
+
+        {/* Purchases & Reports */}
+
         <li className="nav-item mb-3">
           <button 
             className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
@@ -93,7 +96,9 @@ const Sidebar = () => {
           )}
         </li>
 
-        {/* Returns */}
+
+        {/* Returns & Refunds */}
+
         <li className="nav-item mb-3">
           <button
             className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start"
@@ -107,6 +112,11 @@ const Sidebar = () => {
               <li className="nav-item mb-2">
                 <Link to="/dashboard/returns/manage" className="nav-link text-white">Manage Returns</Link>
               </li>
+
+              <li className="nav-item mb-2">
+                <Link to="/dashboard/refunds/manage" className="nav-link text-white">Manage Refunds</Link>
+              </li>
+
             </ul>
           )}
         </li>
@@ -177,7 +187,9 @@ const Sidebar = () => {
           )}
         </li>
 
-        {/* Sales */}
+
+        {/* Sales & Reports */}
+
         <li className="nav-item mb-3">
           <button 
             className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
@@ -226,7 +238,9 @@ const Sidebar = () => {
           </Link>
         </li>
 
+
         {/* Inventory Summary Report Only (Low Stock Removed) */}
+
         <li className="nav-item mb-3">
           <button 
             className="nav-link text-white d-flex align-items-center bg-dark border-0 w-100 text-start" 
