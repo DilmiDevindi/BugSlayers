@@ -238,9 +238,7 @@ const Sidebar = () => {
           </button>
           {isInventoryReportOpen && (
             <ul className="nav flex-column ms-3">
-              <li className="nav-item mb-2">
-                <Link to="/dashboard/inventory/reports/low-stock" className="nav-link text-white">Low Stock Report</Link>
-              </li>
+              {/* Removed Low Stock Report */}
               <li className="nav-item mb-2">
                 <Link to="/dashboard/inventory/reports/summary" className="nav-link text-white">Inventory Summary</Link>
               </li>
