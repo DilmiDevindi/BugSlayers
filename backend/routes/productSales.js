@@ -1,17 +1,15 @@
-// routes/productSalesRoutes.js
 const express = require('express');
 const router = express.Router();
-const ProductSales = require('../models/productSalesModel');
+const ProductSale = require('../models/ProductSale');
 
-router.post('/productsales', async (req, res) => {
-  const salesArray = req.body; // expect array of sales items
-
+router.post('/import', async (req, res) => {
   try {
-    // Add salesId in schema with pre-save hook (like I showed you earlier)
-    const savedSales = await ProductSales.insertMany(salesArray);
-    res.status(201).json(savedSales);
+    await ProductSale.deleteMany(); // optional: clear old data
+    await ProductSale.insertMany(req.body);
+    res.status(201).json({ message: 'Imported successfully!' });
   } catch (err) {
-    res.status(500).json({ message: 'Failed to save product sales', error: err.message });
+    console.error(err);
+    res.status(500).json({ message: 'Import failed' });
   }
 });
 

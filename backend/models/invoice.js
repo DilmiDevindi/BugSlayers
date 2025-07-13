@@ -4,12 +4,13 @@ const ItemSchema = new mongoose.Schema({
   itemCode: String,
   itemName: String,
   itemPrice: String,
+  buyingPrice: String,
   quantity: Number,
   discount: Number,
 });
 
 const InvoiceSchema = new mongoose.Schema({
-  invoiceId: String, // ✅ Add this line
+  invoiceId: String, 
   date: String,
   time: String,
   contact: String,
