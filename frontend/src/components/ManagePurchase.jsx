@@ -4,58 +4,48 @@ import "./ManagePurchases.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash, faClipboardList } from "@fortawesome/free-solid-svg-icons";
 
+const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+
 const ManagePurchases = () => {
   const [purchases, setPurchases] = useState([]);
   const [editingPurchase, setEditingPurchase] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchTermDate, setSearchTermDate] = useState("");
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
-
-  const fetchPurchases = async () => {
-    try {
-      const response = await axios.get("/api/purchase");
-      setPurchases(response.data);
-    } catch (error) {
-      console.error("Error fetching purchases:", error);
-    }
-  };
+  const [allSubcategories, setAllSubcategories] = useState([]);
+  const [suppliers, setSuppliers] = useState([]);
 
   useEffect(() => {
     fetchPurchases();
-
-    const fetchCategories = async () => {
-      try {
-        const res = await axios.get("/api/category");
-        setCategories(res.data);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
-    fetchCategories();
+    axios.get(`${BASE_URL}/api/category`).then(res => setCategories(res.data));
+    axios.get(`${BASE_URL}/api/suppliers`).then(res => setSuppliers(res.data));
+    axios.get(`${BASE_URL}/api/subcategories`).then(res => setAllSubcategories(res.data));
   }, []);
 
   useEffect(() => {
-    const fetchSubcategories = async () => {
-      if (editingPurchase && editingPurchase.category) {
-        try {
-          const res = await axios.get(`/api/subcategories/by-category/${editingPurchase.category}`);
-          setSubcategories(res.data || []);
-        } catch (error) {
-          console.error("Error fetching subcategories:", error);
-          setSubcategories([]);
-        }
-      } else {
-        setSubcategories([]);
-      }
-    };
-    fetchSubcategories();
+    if (editingPurchase?.category) {
+      axios
+        .get(`${BASE_URL}/api/subcategories/by-category/${editingPurchase.category}`)
+        .then((res) => setSubcategories(res.data))
+        .catch(() => setSubcategories([]));
+    } else {
+      setSubcategories([]);
+    }
   }, [editingPurchase?.category]);
+
+  const fetchPurchases = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/api/purchase`);
+      setPurchases(res.data);
+    } catch (err) {
+      console.error("Error fetching purchases:", err);
+    }
+  };
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this purchase?")) return;
     try {
-      await axios.delete(`/api/purchase/${id}`);
+      await axios.delete(`${BASE_URL}/api/purchase/${id}`);
       setPurchases(purchases.filter((p) => p._id !== id));
     } catch (error) {
       console.error("Error deleting purchase:", error);
@@ -67,46 +57,56 @@ const ManagePurchases = () => {
     setEditingPurchase({
       ...purchase,
       date: dateStr,
-      discount: purchase.discount ?? "",
-      discountType: purchase.discountType || "%"
+      discount: purchase.discount?.replace("%", "") ?? 0,
     });
   };
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
-
     setEditingPurchase((prev) => ({
       ...prev,
       [name]: value,
-      ...(name === "category" ? { subcategory: "" } : {})
+      ...(name === "category" ? { subcategory: "" } : {}),
     }));
   };
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     const {
-      supplierName,
-      productName,
+      supplier,
+      product,
       category,
       subcategory,
       quantity,
       price,
       discount,
-      discountType,
       date,
       _id,
     } = editingPurchase;
 
-    if (!supplierName || !productName || !category || !subcategory || !quantity || !price || !date) {
+    if (!supplier || !product || !category || !subcategory || !quantity || !price || !date) {
       alert("Please fill in all required fields.");
       return;
     }
 
+    const qty = Number(quantity);
+    const unitPrice = Number(price);
+    const discountValue = Number(discount) || 0;
+    const subtotal = qty * unitPrice;
+    const discountAmount = (subtotal * discountValue) / 100;
+    const total = subtotal - discountAmount;
+
     try {
-      await axios.put(`/api/purchase/${_id}`, {
-        ...editingPurchase,
-        discount: discount ? Number(discount) : 0,
-        discountType
+      await axios.put(`${BASE_URL}/api/purchase/${_id}`, {
+        supplier,
+        product,
+        category,
+        subcategory,
+        quantity: qty,
+        price: unitPrice,
+        discount: `${discountValue}%`,
+        total,
+        date,
       });
       setEditingPurchase(null);
       fetchPurchases();
@@ -116,27 +116,22 @@ const ManagePurchases = () => {
     }
   };
 
-  const getCategoryName = (id) => {
-    const cat = categories.find((c) => c._id === id);
-    return cat ? cat.categoryName : id;
+  const calculateTotal = (purchase) => {
+    const qty = Number(purchase.quantity) || 0;
+    const price = Number(purchase.price) || 0;
+    const discount = Number(purchase.discount?.replace("%", "")) || 0;
+    const subtotal = qty * price;
+    const discountAmount = (subtotal * discount) / 100;
+    return Math.max(0, subtotal - discountAmount);
   };
 
-  const getSubcategoryName = (id) => {
-    const sub = subcategories.find((s) => s._id === id);
-    return sub ? sub.subcategoryName : id;
-  };
-
+  // Remove filtering by date here, only filter by searchTerm (supplier/product)
   const filteredPurchases = purchases.filter((purchase) => {
     const searchLower = searchTerm.toLowerCase();
-    const matchText =
-      purchase.supplierName.toLowerCase().includes(searchLower) ||
-      purchase.productName.toLowerCase().includes(searchLower);
-
-    const matchDate = searchTermDate
-      ? new Date(purchase.date).toISOString().slice(0, 10) === searchTermDate
-      : true;
-
-    return matchText && matchDate;
+    return (
+      purchase.supplier?.toLowerCase().includes(searchLower) ||
+      purchase.product?.toLowerCase().includes(searchLower)
+    );
   });
 
   return (
@@ -154,53 +149,40 @@ const ManagePurchases = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
-      <div className="mb-3">
-        <input
-          type="date"
-          className="form-control"
-          value={searchTermDate}
-          onChange={(e) => setSearchTermDate(e.target.value)}
-        />
-      </div>
+
+      {/* Removed date filter input */}
 
       <table className="purchases-table table table-striped table-bordered text-center">
         <thead>
           <tr>
+            <th>Purchase ID</th>
             <th>Supplier</th>
             <th>Product</th>
             <th>Category</th>
             <th>Subcategory</th>
             <th>Quantity</th>
             <th>Price (Rs.)</th>
-            <th>Discount</th>
+            <th>Discount (%)</th>
             <th>Total Purchase (Rs.)</th>
             <th>Date</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {filteredPurchases.map((purchase) => {
-            const qty = Number(purchase.quantity) || 0;
-            const price = Number(purchase.price) || 0;
-            const discount = Number(purchase.discount) || 0;
-            const isPercentage = purchase.discountType === "%";
-
-            const discountAmount = isPercentage ? (price * qty * discount) / 100 : discount;
-            const total = price * qty - discountAmount;
+          {filteredPurchases.map((purchase, index) => {
+            const total = calculateTotal(purchase);
+            const discount = purchase.discount?.replace("%", "") || 0;
 
             return (
               <tr key={purchase._id}>
-                <td>{purchase.supplierName}</td>
-                <td>{purchase.productName}</td>
-                <td>{getCategoryName(purchase.category)}</td>
-                <td>{getSubcategoryName(purchase.subcategory)}</td>
-                <td>{qty}</td>
-                <td>{price.toFixed(2)}</td>
-                <td>
-                  {discount > 0
-                    ? `${discount}${purchase.discountType || ""}`
-                    : "-"}
-                </td>
+                <td>{purchase.purchaseId || `PUR-${String(index + 1).padStart(3, "0")}`}</td>
+                <td>{purchase.supplier}</td>
+                <td>{purchase.product}</td>
+                <td>{categories.find(c => c._id === purchase.category)?.categoryName || purchase.category}</td>
+                <td>{allSubcategories.find(s => s._id === purchase.subcategory)?.subcategoryName || purchase.subcategory}</td>
+                <td>{purchase.quantity}</td>
+                <td>{Number(purchase.price).toFixed(2)}</td>
+                <td>{discount > 0 ? `${discount}%` : "-"}</td>
                 <td>{total.toFixed(2)}</td>
                 <td>{new Date(purchase.date).toLocaleDateString()}</td>
                 <td>
@@ -224,7 +206,7 @@ const ManagePurchases = () => {
           })}
           {filteredPurchases.length === 0 && (
             <tr>
-              <td colSpan="10" className="text-center">
+              <td colSpan="11" className="text-center">
                 No purchases found.
               </td>
             </tr>
@@ -242,21 +224,27 @@ const ManagePurchases = () => {
             <div className="grid grid-cols-2 gap-6">
               <div className="flex flex-col">
                 <label>Supplier Name</label>
-                <input
-                  type="text"
-                  name="supplierName"
-                  value={editingPurchase.supplierName}
+                <select
+                  name="supplier"
+                  value={editingPurchase.supplier}
                   onChange={handleEditChange}
                   required
-                />
+                >
+                  <option value="">Select Supplier</option>
+                  {suppliers.map((s) => (
+                    <option key={s._id} value={s.supplierName}>
+                      {s.supplierName}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className="flex flex-col">
                 <label>Product Name</label>
                 <input
                   type="text"
-                  name="productName"
-                  value={editingPurchase.productName}
+                  name="product"
+                  value={editingPurchase.product}
                   onChange={handleEditChange}
                   required
                 />
@@ -308,7 +296,7 @@ const ManagePurchases = () => {
               </div>
 
               <div className="flex flex-col">
-                <label>Price (Rs.)</label>
+                <label>Price</label>
                 <input
                   type="number"
                   name="price"
@@ -319,22 +307,15 @@ const ManagePurchases = () => {
               </div>
 
               <div className="flex flex-col">
-                <label>Discount</label>
+                <label>Discount (%)</label>
                 <input
                   type="number"
                   name="discount"
                   value={editingPurchase.discount}
                   onChange={handleEditChange}
                   min="0"
+                  max="100"
                 />
-                <select
-                  name="discountType"
-                  value={editingPurchase.discountType}
-                  onChange={handleEditChange}
-                >
-                  <option value="%">%</option>
-                  <option value="Rs">Rs</option>
-                </select>
               </div>
 
               <div className="flex flex-col">
@@ -349,11 +330,19 @@ const ManagePurchases = () => {
               </div>
             </div>
 
-            <div className="flex justify-end gap-3 mt-6">
+            <div className="total mt-3">
+              <strong>Total:</strong> Rs. {calculateTotal(editingPurchase).toFixed(2)}
+            </div>
+
+            <div className="flex justify-end gap-3 mt-4">
               <button type="submit" className="btnUpdate">
                 Update
               </button>
-              <button type="button" onClick={() => setEditingPurchase(null)} className="btnClose">
+              <button
+                type="button"
+                className="btnClose"
+                onClick={() => setEditingPurchase(null)}
+              >
                 Cancel
               </button>
             </div>
