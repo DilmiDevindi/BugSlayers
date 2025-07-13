@@ -30,7 +30,6 @@ import AddSubcategory from "./components/AddSubcategory";
 import ManageCategories from "./components/ManageCategory";
 
 // Sales
-import AddSalesRecord from "./components/AddSalesRecord";
 import ManageSales from "./components/ManageSales";
 import SalesReport from "./components/SalesReport";
 
@@ -93,7 +92,6 @@ function App() {
           <Route path="category/add1" element={<ManageCategories />} />
 
           {/* Sales */}
-          <Route path="sales/add" element={<AddSalesRecord />} />
           <Route path="sales/manage" element={<ManageSales />} />
           <Route path="sales/report" element={<SalesReport />} />
 

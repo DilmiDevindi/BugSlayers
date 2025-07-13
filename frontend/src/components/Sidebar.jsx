@@ -200,9 +200,7 @@ const Sidebar = () => {
           </button>
           {isSalesOpen && (
             <ul className="nav flex-column ms-3">
-              <li className="nav-item mb-2">
-                <Link to="/dashboard/sales/add" className="nav-link text-white">Add Sales Record</Link>
-              </li>
+              
               <li className="nav-item mb-2">
                 <Link to="/dashboard/sales/manage" className="nav-link text-white">Manage Sales</Link>
               </li>
