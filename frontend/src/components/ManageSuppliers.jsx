@@ -19,7 +19,6 @@ const ManageSuppliers = () => {
     fax: "",
     email: "",
     address: "",
-    supplyProducts: "",
     paymentTerms: "",
   });
   const [loading, setLoading] = useState(false);
@@ -71,7 +70,6 @@ const ManageSuppliers = () => {
       fax: supplier.fax || "",
       email: supplier.email || "",
       address: supplier.address || "",
-      supplyProducts: supplier.supplyProducts || "",
       paymentTerms: supplier.paymentTerms || "",
     });
   };
@@ -88,7 +86,6 @@ const ManageSuppliers = () => {
         fax: "",
         email: "",
         address: "",
-        supplyProducts: "",
         paymentTerms: "",
       });
       fetchSuppliers();
@@ -101,7 +98,18 @@ const ManageSuppliers = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // ✅ Fax number validation
+    if (name === "fax") {
+      let cleaned = value.replace(/\D/g, "");
+      if (cleaned.length > 10) {
+        alert("Fax number must not exceed 10 digits");
+        cleaned = cleaned.slice(0, 10);
+      }
+      setFormData((prev) => ({ ...prev, [name]: cleaned }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   return (
@@ -130,7 +138,6 @@ const ManageSuppliers = () => {
               <th>Fax</th>
               <th>Email</th>
               <th>Address</th>
-              <th>Products</th>
               <th>Payment Terms</th>
               <th>Actions</th>
             </tr>
@@ -145,7 +152,6 @@ const ManageSuppliers = () => {
                   <td>{supplier.fax || "-"}</td>
                   <td>{supplier.email || "-"}</td>
                   <td>{supplier.address || "-"}</td>
-                  <td>{supplier.supplyProducts || "-"}</td>
                   <td>{supplier.paymentTerms || "-"}</td>
                   <td>
                     <button
@@ -165,7 +171,7 @@ const ManageSuppliers = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="9" className="text-center text-danger">
+                <td colSpan="8" className="text-center text-danger">
                   No Matching Supplier Found!
                 </td>
               </tr>
@@ -181,9 +187,8 @@ const ManageSuppliers = () => {
               <FontAwesomeIcon icon={faEditIcon} /> Edit Supplier
             </h4>
 
-            {/* Two-column layout */}
             <div className="grid grid-cols-2 gap-6">
-              {Object.entries(formData).map(([key, value], index) => (
+              {Object.entries(formData).map(([key, value]) => (
                 <div key={key} className="flex flex-col">
                   <label className="text-sm font-medium mb-1">
                     {key.charAt(0).toUpperCase() + key.slice(1)}
@@ -200,7 +205,6 @@ const ManageSuppliers = () => {
               ))}
             </div>
 
-            {/* Action buttons */}
             <div className="flex justify-end gap-3 mt-6">
               <button
                 type="submit"
