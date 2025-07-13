@@ -75,9 +75,11 @@ function BillForm() {
         updatedItems[index].itemPrice = parseFloat(res.data.price).toFixed(2) || '';
         updatedItems[index].buyingPrice = parseFloat(res.data.buyingPrice).toFixed(2) || '';
       } catch {
+       
         updatedItems[index].itemName = '';
         updatedItems[index].itemPrice = '';
         updatedItems[index].buyingPrice = '';
+            
       }
     }
 
@@ -136,21 +138,35 @@ function BillForm() {
     const generatedId = 'INV-' + Date.now();
     setInvoiceId(generatedId);
 
-    const invoiceData = {
-      invoiceId: generatedId,
-      date,
-      time,
-      contact,
-      name,
-      address,
-      email,
-      items,
-      subtotal: calculateSubtotal(),
-      amount: calculateAmount(),
-      cashReceived: String(cashReceived),
-      balance: balance.toFixed(2),
-      profit: calculateTotalProfit(),
+    // ✅ Add profit field to each item
+  const itemsWithProfit = items.map((item) => {
+    const selling = parseFloat(item.itemPrice || 0);
+    const buying = parseFloat(item.buyingPrice || 0);
+    const qty = parseInt(item.quantity || 1);
+    const disc = parseFloat(item.discount || 0);
+    const profit = ((selling - buying) * qty - disc).toFixed(2);
+
+    return {
+      ...item,
+      profit: profit
     };
+  });
+
+  const invoiceData = {
+    invoiceId: generatedId,
+    date,
+    time,
+    contact,
+    name,
+    address,
+    email,
+    items: itemsWithProfit, // updated items with profit
+    subtotal: calculateSubtotal(),
+    amount: calculateAmount(),
+    cashReceived: String(cashReceived),
+    balance: balance.toFixed(2),
+    profit: calculateTotalProfit(), // total profit
+  };
 
     try {
       await axios.post('http://localhost:5000/api/invoices', invoiceData);
