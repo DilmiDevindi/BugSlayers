@@ -1,18 +1,11 @@
 const express = require("express");
 const router = express.Router();
+const PurchaseController = require("../controllers/purchaseController");
 
-const {
-  createPurchase,
-  getAllPurchases,
-  getPurchaseById,
-  updatePurchase,
-  deletePurchase,
-} = require("../controllers/purchaseController");
-
-router.post("/", createPurchase);
-router.get("/", getAllPurchases);
-router.get("/:id", getPurchaseById);
-router.put("/:id", updatePurchase);
-router.delete("/:id", deletePurchase);
+// Use the correct exported function names here:
+router.get("/", PurchaseController.getPurchases);
+router.post("/", PurchaseController.createPurchase);
+router.put("/:id", PurchaseController.updatePurchase);
+router.delete("/:id", PurchaseController.deletePurchase);
 
 module.exports = router;

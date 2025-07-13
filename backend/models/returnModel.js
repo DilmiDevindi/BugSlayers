@@ -3,8 +3,10 @@ const mongoose = require("mongoose");
 const ReturnSchema = new mongoose.Schema(
   {
     returnId: { type: String, required: true, unique: true, trim: true },
-    companyName: { type: String, required: true, trim: true },
+    supplierName: { type: String, required: true, trim: true },
     date: { type: Date, required: true },
+    category: { type: String, required: true, trim: true },
+    subcategory: { type: String, required: true, trim: true },
     product: { type: String, required: true, trim: true },
     quantity: { type: Number, required: true, min: 1 },
     productPrice: { type: Number, required: true, min: 0 },
