@@ -68,7 +68,7 @@ function App() {
         {/* Public Routes */}
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
+        
 
         {/* Protected Routes inside Dashboard Layout */}
         <Route path="/dashboard" element={<Layout />}>
