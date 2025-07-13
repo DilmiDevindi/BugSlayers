@@ -13,11 +13,15 @@ import "./ManageOrders.css";
 
 function ManageOrders() {
   const [orders, setOrders] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [subcategories, setSubcategories] = useState([]);
+  const [editSubcategories, setEditSubcategories] = useState([]);
+  const [suppliers, setSuppliers] = useState([]); // New: suppliers list
   const [loading, setLoading] = useState(true);
   const [editId, setEditId] = useState(null);
   const [editForm, setEditForm] = useState({
     orderId: "",
-    companyName: "",
+    companyName: "",  // This will now be selected supplier's companyName
     productName: "",
     category: "",
     subcategory: "",
@@ -31,17 +35,58 @@ function ManageOrders() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchOrders();
+    fetchInitialData();
   }, []);
 
-  const fetchOrders = async () => {
+  const fetchInitialData = async () => {
+    setLoading(true);
     try {
-      const res = await axios.get(`${BASE_URL}/api/orders`);
-      setOrders(res.data);
-    } catch (error) {
-      console.error("Error fetching orders:", error);
+      const [ordersRes, categoriesRes, subcategoriesRes, suppliersRes] =
+        await Promise.all([
+          axios.get(`${BASE_URL}/api/orders`),
+          axios.get(`${BASE_URL}/api/category`),
+          axios.get(`${BASE_URL}/api/subcategories`),
+          axios.get(`${BASE_URL}/api/suppliers`), // Fetch suppliers
+        ]);
+
+      setOrders(ordersRes.data);
+      setCategories(categoriesRes.data);
+      setSubcategories(subcategoriesRes.data);
+      setSuppliers(suppliersRes.data); // Set suppliers here
+    } catch (err) {
+      console.error("Fetch error:", err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const getCategoryName = (cat) => {
+    if (!cat) return "-";
+    if (typeof cat === "string") {
+      const found = categories.find((c) => c._id === cat);
+      return found ? found.categoryName : "-";
+    }
+    return cat.categoryName || "-";
+  };
+
+  const getSubcategoryName = (subcat) => {
+    if (!subcat) return "-";
+    if (typeof subcat === "string") {
+      const found = subcategories.find((s) => s._id === subcat);
+      return found ? found.subcategoryName : "-";
+    }
+    return subcat.subcategoryName || "-";
+  };
+
+  const fetchSubcategoriesByCategory = async (categoryId) => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}/api/subcategories/by-category/${categoryId}`
+      );
+      setEditSubcategories(res.data);
+    } catch (err) {
+      console.error("Fetch edit subcategories failed:", err);
+      setEditSubcategories([]);
     }
   };
 
@@ -50,7 +95,7 @@ function ManageOrders() {
       try {
         await axios.delete(`${BASE_URL}/api/orders/${id}`);
         setOrders((prev) => prev.filter((o) => o._id !== id));
-      } catch (error) {
+      } catch {
         alert("Delete failed.");
       }
     }
@@ -60,23 +105,32 @@ function ManageOrders() {
     setEditId(order._id);
     setEditForm({
       orderId: order.orderId,
-      companyName: order.companyName,
+      companyName: order.companyName, // will match supplier name in dropdown
       productName: order.productName,
-      category: order.category,
-      subcategory: order.subcategory,
+      category: order.category?._id || order.category || "",
+      subcategory: order.subcategory?._id || order.subcategory || "",
       quantity: order.quantity,
-      date: order.date?.slice(0, 10),
+      date: order.date?.slice(0, 10) || "",
       status: order.status || "Pending",
     });
+
+    fetchSubcategoriesByCategory(order.category?._id || order.category);
+
     setSuccessMsg("");
   };
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
+
     setEditForm((prev) => ({
       ...prev,
       [name]: value,
+      ...(name === "category" ? { subcategory: "" } : {}),
     }));
+
+    if (name === "category") {
+      fetchSubcategoriesByCategory(value);
+    }
   };
 
   const handleEditSubmit = async (e) => {
@@ -88,11 +142,8 @@ function ManageOrders() {
       });
 
       setOrders((prevOrders) =>
-        prevOrders.map((order) =>
-          order._id === editId ? res.data : order
-        )
+        prevOrders.map((order) => (order._id === editId ? res.data : order))
       );
-
       setEditId(null);
       setSuccessMsg("Order updated successfully!");
       setTimeout(() => setSuccessMsg(""), 3000);
@@ -142,12 +193,21 @@ function ManageOrders() {
                         />
                       </td>
                       <td>
-                        <input
+                        {/* Supplier select dropdown */}
+                        <select
                           name="companyName"
                           value={editForm.companyName}
                           onChange={handleEditChange}
                           className="form-control"
-                        />
+                          required
+                        >
+                          <option value="">Select Supplier</option>
+                          {suppliers.map((sup) => (
+                            <option key={sup._id} value={sup.companyName || sup.supplierName}>
+                              {sup.companyName || sup.supplierName}
+                            </option>
+                          ))}
+                        </select>
                       </td>
                       <td>
                         <input
@@ -158,20 +218,36 @@ function ManageOrders() {
                         />
                       </td>
                       <td>
-                        <input
+                        <select
                           name="category"
                           value={editForm.category}
                           onChange={handleEditChange}
                           className="form-control"
-                        />
+                          required
+                        >
+                          <option value="">Select Category</option>
+                          {categories.map((c) => (
+                            <option key={c._id} value={c._id}>
+                              {c.categoryName}
+                            </option>
+                          ))}
+                        </select>
                       </td>
                       <td>
-                        <input
+                        <select
                           name="subcategory"
                           value={editForm.subcategory}
                           onChange={handleEditChange}
                           className="form-control"
-                        />
+                          required
+                        >
+                          <option value="">Select Subcategory</option>
+                          {editSubcategories.map((s) => (
+                            <option key={s._id} value={s._id}>
+                              {s.subcategoryName}
+                            </option>
+                          ))}
+                        </select>
                       </td>
                       <td>
                         <input
@@ -180,7 +256,7 @@ function ManageOrders() {
                           value={editForm.quantity}
                           onChange={handleEditChange}
                           className="form-control"
-                          min={0}
+                          min={1}
                         />
                       </td>
                       <td>
@@ -228,8 +304,8 @@ function ManageOrders() {
                       <td>{order.orderId}</td>
                       <td>{order.companyName}</td>
                       <td>{order.productName}</td>
-                      <td>{order.category}</td>
-                      <td>{order.subcategory}</td>
+                      <td>{getCategoryName(order.category)}</td>
+                      <td>{getSubcategoryName(order.subcategory)}</td>
                       <td>{order.quantity}</td>
                       <td>{order.date?.slice(0, 10)}</td>
                       <td>{order.status}</td>
