@@ -1,19 +1,19 @@
-const Purchase = require("../models/Purchase");
+const Purchase = require("../models/purchase");
 
-// controllers/purchaseController.js
+// Get purchases by date range (or all if no dates provided)
 exports.getPurchases = async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
 
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    end.setHours(23, 59, 59, 999);
+    let filter = {};
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      end.setHours(23, 59, 59, 999);
+      filter.date = { $gte: start, $lte: end };
+    }
 
-    const purchases = await Purchase.find({
-      date: { $gte: start, $lte: end }
-      // If using soft-delete:
-      // isDeleted: false
-    }).sort({ date: 1 });
+    const purchases = await Purchase.find(filter).sort({ date: 1 });
 
     res.json(purchases);
   } catch (error) {
@@ -21,7 +21,6 @@ exports.getPurchases = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch purchases" });
   }
 };
-
 
 exports.createPurchase = async (req, res) => {
   try {
@@ -34,7 +33,7 @@ exports.createPurchase = async (req, res) => {
       price,
       discount,
       total,
-      date
+      date,
     } = req.body;
 
     if (!supplier || !product || !category || !subcategory || !quantity || !price || !date) {
@@ -50,7 +49,7 @@ exports.createPurchase = async (req, res) => {
       price: Number(price),
       discount: discount || "0%",
       total: total || Number(quantity) * Number(price),
-      date: new Date(date)
+      date: new Date(date),
     });
 
     await newPurchase.save();
@@ -72,7 +71,7 @@ exports.updatePurchase = async (req, res) => {
       price,
       discount,
       total,
-      date
+      date,
     } = req.body;
 
     const updateData = {
@@ -84,11 +83,11 @@ exports.updatePurchase = async (req, res) => {
       price: Number(price),
       discount: discount || "0%",
       total: total || Number(quantity) * Number(price),
-      date: new Date(date)
+      date: new Date(date),
     };
 
     const updated = await Purchase.findByIdAndUpdate(req.params.id, updateData, {
-      new: true
+      new: true,
     });
 
     if (!updated) return res.status(404).json({ message: "Purchase not found" });
