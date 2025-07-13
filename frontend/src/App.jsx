@@ -5,7 +5,7 @@ import "./App.css";
 // Auth
 import Login from "./components/Login";
 import Signup from "./components/Signup";
-import ForgotPassword from "./components/ForgotPassword";
+
 
 // Layout & Dashboard
 import Layout from "./components/Layout";
@@ -68,7 +68,7 @@ function App() {
         {/* Public Routes */}
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
+        
 
         {/* Protected Routes inside Dashboard Layout */}
         <Route path="/dashboard" element={<Layout />}>
