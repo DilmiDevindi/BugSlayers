@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; // ✅ Added 'Link' here
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import './Login.css';
 import myImage from '../assets/furniture-log.png';
-import backgroundImage from '../assets/furniture.png'; 
+import backgroundImage from '../assets/furniture.png';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -17,7 +17,7 @@ const Login = () => {
 
     if (!emailRegex.test(email)) {
       alert('Please enter a valid email address');
-      return; 
+      return;
     }
 
     try {
@@ -67,14 +67,9 @@ const Login = () => {
             </div>
             <button type="submit" className="btn">Login</button>
           </form>
-          <p className='para'>Don&apos;t have an account? <a href="/signup">Sign up</a></p>
-
-          {/* 🔽 Moved inside the login container for better layout */}
-          <div className="mt-2 text-center">
-          <Link to="/forgot-password" className="forgot-password-link">
-          Forgot Password?
-        </Link>
-           </div>
+          <p className='para'>
+            Don&apos;t have an account? <Link to="/signup">Sign up</Link>
+          </p>
         </div>
       </div>
     </div>
