@@ -34,7 +34,6 @@ html, body {
   margin-top: 56px;   /* Same as navbar height */
   padding: 20px;
   height: calc(100vh - 56px);
-  overflow-y: auto;
   background-color: #f8f9fa;
   box-sizing: border-box;
 }
