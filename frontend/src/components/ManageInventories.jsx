@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBarsProgress, faEdit, faRemove } from '@fortawesome/free-solid-svg-icons';
 import '../Inventory.css';
 
+// (Imports remain the same)
+
 const ManageInventories = () => {
   const [items, setItems] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -11,11 +13,14 @@ const ManageInventories = () => {
   const [editItem, setEditItem] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [newImage, setNewImage] = useState(null); // for updating image
+  const [newImage, setNewImage] = useState(null);
+
+  const [productStatusOptions, setProductStatusOptions] = useState([]);
 
   useEffect(() => {
     fetchItems();
-    fetchCategories(); 
+    fetchCategories();
+    fetchProductStatuses();
   }, []);
 
   const fetchItems = async () => {
@@ -26,7 +31,7 @@ const ManageInventories = () => {
       setItems(Array.isArray(response.data) ? response.data.reverse() : []);
     } catch (err) {
       setError('Error fetching inventory items');
-      console.error('Error fetching inventory items:', err);
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -38,6 +43,15 @@ const ManageInventories = () => {
       setCategories(response.data);
     } catch (err) {
       console.error('Error fetching categories:', err);
+    }
+  };
+
+  const fetchProductStatuses = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/product-status');
+      setProductStatusOptions(response.data);
+    } catch (err) {
+      console.error('Error fetching product statuses:', err);
     }
   };
 
@@ -54,18 +68,17 @@ const ManageInventories = () => {
       alert('Item deleted successfully!');
     } catch (err) {
       setError('Error deleting item');
-      console.error('Error deleting item:', err);
+      console.error(err);
     }
   };
 
   const handleEdit = (item) => {
     setEditItem(item);
-    setNewImage(null); // Reset image
+    setNewImage(null);
   };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-
     const formData = new FormData();
     formData.append('productName', editItem.productName);
     formData.append('category', editItem.category);
@@ -73,22 +86,19 @@ const ManageInventories = () => {
     formData.append('buyingPrice', parseFloat(editItem.buyingPrice).toFixed(2));
     formData.append('sellingPrice', parseFloat(editItem.sellingPrice).toFixed(2));
     formData.append('dateAdded', editItem.dateAdded);
-    if (newImage) {
-      formData.append('image', newImage);
-    }
+    formData.append('ProductStatus', editItem.ProductStatus || '');
+    if (newImage) formData.append('image', newImage);
 
     try {
       await axios.put(`http://localhost:5000/api/inventory/${editItem._id}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
-      fetchItems(); // Refresh items
+      fetchItems();
       setEditItem(null);
       alert('Item updated successfully!');
     } catch (err) {
       setError('Error updating item');
-      console.error('Error updating item:', err);
+      console.error(err);
     }
   };
 
@@ -132,6 +142,7 @@ const ManageInventories = () => {
                   <th>Buying Price</th>
                   <th>Selling Price</th>
                   <th>Date Added</th>
+                  <th>Status</th>
                   <th>Image</th>
                   <th>Actions</th>
                 </tr>
@@ -147,9 +158,8 @@ const ManageInventories = () => {
                     <td>{parseFloat(item.buyingPrice).toFixed(2)}</td>
                     <td>{parseFloat(item.sellingPrice).toFixed(2)}</td>
                     <td>{item.dateAdded ? new Date(item.dateAdded).toLocaleDateString() : 'N/A'}</td>
-                    
-                    <td>{item.image ? item.image : 'No image'}</td>
-
+                    <td>{item.ProductStatus || 'N/A'}</td>
+                    <td>{item.image || 'No image'}</td>
                     <td>
                       <span className='inventory-edit-icon' onClick={() => handleEdit(item)}>
                         <FontAwesomeIcon icon={faEdit} />
@@ -176,9 +186,7 @@ const ManageInventories = () => {
                 type="text"
                 className="inventory-form-control"
                 value={editItem.productName}
-                onChange={(e) =>
-                  setEditItem({ ...editItem, productName: e.target.value })
-                }
+                onChange={(e) => setEditItem({ ...editItem, productName: e.target.value })}
                 required
               />
             </div>
@@ -188,9 +196,7 @@ const ManageInventories = () => {
               <select
                 className="inventory-form-control"
                 value={editItem.category}
-                onChange={(e) =>
-                  setEditItem({ ...editItem, category: e.target.value })
-                }
+                onChange={(e) => setEditItem({ ...editItem, category: e.target.value })}
                 required
               >
                 <option value="">Select Category</option>
@@ -201,14 +207,26 @@ const ManageInventories = () => {
             </div>
 
             <div className="inventory-row">
+              <label className="inventory-form-label">Product Status</label>
+              <select
+                className="inventory-form-control"
+                value={editItem.ProductStatus || ''}
+                onChange={(e) => setEditItem({ ...editItem, ProductStatus: e.target.value })}
+              >
+                <option value="">Select Status</option>
+                {productStatusOptions.map((status, index) => (
+                  <option key={index} value={status}>{status}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="inventory-row">
               <label className="inventory-form-label">Quantity</label>
               <input
                 type="number"
                 className="inventory-form-control"
                 value={editItem.quantity}
-                onChange={(e) =>
-                  setEditItem({ ...editItem, quantity: Number(e.target.value) })
-                }
+                onChange={(e) => setEditItem({ ...editItem, quantity: Number(e.target.value) })}
                 required
               />
             </div>
@@ -220,7 +238,7 @@ const ManageInventories = () => {
                 className="inventory-form-control"
                 min="0"
                 step="0.01"
-                value={editItem.buyingPrice.toFixed(2)}
+                value={parseFloat(editItem.buyingPrice).toFixed(2)}
                 onChange={(e) => setEditItem({ ...editItem, buyingPrice: Number(e.target.value) })}
                 required
               />
@@ -259,14 +277,10 @@ const ManageInventories = () => {
             </div>
 
             <div className="inventory-row">
-            <button type="submit" className="btn btn-success">Update Item</button>
-            <button
-              type="button"
-              className="btn btn-secondary ms-2"
-              onClick={() => setEditItem(null)}
-            >
-              Cancel
-            </button>
+              <button type="submit" className="btn btn-success">Update Item</button>
+              <button type="button" className="btn btn-secondary ms-2" onClick={() => setEditItem(null)}>
+                Cancel
+              </button>
             </div>
           </form>
         </div>
