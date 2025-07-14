@@ -1,18 +1,38 @@
-// controllers/invoiceController.js
 const Invoice = require('../models/invoice');
+const InventoryItem = require('../models/InventoryItem'); // Make sure this path is correct
 
 // Generate a numeric invoice ID
 const generateInvoiceId = async () => {
   return Date.now().toString();
 };
 
-// Create invoice
+// Create invoice and update inventory quantities
 exports.createInvoice = async (req, res) => {
   try {
     const invoiceId = await generateInvoiceId();
     const invoiceData = { ...req.body, invoiceId };
+
+    // Check and reduce inventory quantities
+    for (const item of invoiceData.items) {
+      const inventory = await InventoryItem.findOne({ code: item.itemCode });
+
+      if (!inventory) {
+        return res.status(400).json({ error: `Inventory item not found: ${item.itemCode}` });
+      }
+
+      if (inventory.quantity < item.quantity) {
+        return res.status(400).json({ error: `Insufficient stock for item: ${item.itemName}` });
+      }
+
+      // Reduce inventory quantity
+      inventory.quantity -= item.quantity;
+      await inventory.save();
+    }
+
+    // Save the invoice
     const newInvoice = new Invoice(invoiceData);
     await newInvoice.save();
+
     res.status(201).json(newInvoice);
   } catch (err) {
     console.error("Error saving invoice:", err.message);
@@ -69,4 +89,3 @@ exports.deleteInvoice = async (req, res) => {
     res.status(500).json({ error: 'Failed to delete invoice' });
   }
 };
-
