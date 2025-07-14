@@ -16,7 +16,8 @@ const SalesReport = () => {
   const [endDate, setEndDate] = useState('');
   const [report, setReport] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false); 
+  const [submitted, setSubmitted] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (new Date(startDate) > new Date(endDate)) {
@@ -24,29 +25,31 @@ const SalesReport = () => {
       return;
     }
     setLoading(true);
-    setSubmitted(true);  // Mark as submitted
+    setSubmitted(true);
     try {
       const response = await axios.get('http://localhost:5000/api/reports/sales-report', {
         params: { startDate, endDate },
       });
       if (response.data.length === 0) {
-        setReport([]);  // No data, reset report state to empty
+        setReport([]);
       } else {
-        setReport(response.data);  // Set report with data
+        setReport(response.data);
       }
     } catch (error) {
       console.error('Error generating report:', error);
-      setReport([]); // In case of an error, set report to empty
+      setReport([]);
     }
     setLoading(false);
   };
 
   const totalQuantity = report.reduce((sum, item) => sum + item.totalQuantity, 0);
-  const totalAmountOfSales = report.reduce((sum, item) => sum + item.totalQuantity*item.totalSales, 0);
+  const totalAmountOfSales = report.reduce((sum, item) => sum + item.totalQuantity * item.totalSales, 0);
+  const totalProfit = report.reduce((sum, item) => sum + (item.totalProfit || 0), 0);
 
-  // Find the most popular item (with the highest total sales)
-  const mostPopularItem = report.reduce((maxItem, item) => 
-    item.totalSales > maxItem.totalSales ? item : maxItem, report[0]);
+  const mostPopularItem = report.reduce(
+    (maxItem, item) => (item.totalSales > maxItem.totalSales ? item : maxItem),
+    report[0] || {}
+  );
 
   const generatePDF = (isDownload) => {
     const doc = new jsPDF();
@@ -90,15 +93,17 @@ const SalesReport = () => {
     doc.setFont(undefined, 'bold');
     doc.setFillColor(230, 230, 230);
     const col1X = margin + 2;
-    const col2X = pageWidth / 3;
-    const col3X = (pageWidth / 3) * 2;
-    const col4X = pageWidth - margin - 2;
+    const col2X = pageWidth / 5;           // Adjusted for 5 columns
+    const col3X = (pageWidth / 5) * 2;
+    const col4X = (pageWidth / 5) * 3;
+    const col5X = (pageWidth / 5) * 4;
 
     doc.rect(margin, y - 5, pageWidth - margin * 2, 8, 'F');
     doc.text('Product Name', col1X, y);
     doc.text('Quantity', col2X, y, { align: 'center' });
     doc.text('Price', col3X, y, { align: 'right' });
     doc.text('Sales (Rs.)', col4X, y, { align: 'right' });
+    doc.text('Profit (Rs.)', col5X, y, { align: 'right' });
     y += 8;
 
     doc.setFont(undefined, 'normal');
@@ -107,11 +112,13 @@ const SalesReport = () => {
       const quantity = item.totalQuantity.toString();
       const sales = item.totalSales.toFixed(2).toString();
       const amount = (item.totalQuantity * item.totalSales).toFixed(2).toString();
+      const profit = (item.totalProfit || 0).toFixed(2).toString();
 
       doc.text(productName, col1X, y);
       doc.text(quantity, col2X, y, { align: 'center' });
-      doc.text(sales, col3X, y, { align: 'center' });
+      doc.text(sales, col3X, y, { align: 'right' });
       doc.text(amount, col4X, y, { align: 'right' });
+      doc.text(profit, col5X, y, { align: 'right' });
 
       y += 8;
       if (y > pageHeight - 30) {
@@ -125,6 +132,8 @@ const SalesReport = () => {
     doc.text(`Total Quantity: ${totalQuantity}`, margin, y);
     y += 6;
     doc.text(`Total Sales: Rs. ${totalAmountOfSales.toFixed(2)}`, margin, y);
+    y += 6;
+    doc.text(`Total Profit: Rs. ${totalProfit.toFixed(2)}`, margin, y);
 
     const footerY = pageHeight - 10;
     doc.setFontSize(9);
@@ -146,7 +155,7 @@ const SalesReport = () => {
     datasets: [
       {
         label: 'Total Sales',
-        data: report.map((item) => item.totalQuantity*item.totalSales),
+        data: report.map((item) => item.totalQuantity * item.totalSales),
         backgroundColor: [
           '#4e73df',
           '#1cc88a',
@@ -245,6 +254,7 @@ const SalesReport = () => {
                 <th>Total Quantity</th>
                 <th>Price</th>
                 <th>Total Sales</th>
+                <th>Profit</th> {/* new column */}
               </tr>
             </thead>
             <tbody>
@@ -254,6 +264,7 @@ const SalesReport = () => {
                   <td>{item.totalQuantity}</td>
                   <td>Rs. {item.totalSales.toFixed(2)}</td>
                   <td>Rs. {(item.totalQuantity * item.totalSales).toFixed(2)}</td>
+                  <td>Rs. {item.totalProfit ? item.totalProfit.toFixed(2) : '0.00'}</td> {/* new cell */}
                 </tr>
               ))}
             </tbody>
@@ -261,11 +272,15 @@ const SalesReport = () => {
 
           <div className="mt-3">
             <strong>Total Quantity Sold:</strong> {totalQuantity} <br />
-            <strong>Total Amount of Sales:</strong> Rs. {totalAmountOfSales.toFixed(2)}
+            <strong>Total Amount of Sales:</strong> Rs. {totalAmountOfSales.toFixed(2)} <br />
+            <strong>Total Profit:</strong> Rs. {totalProfit.toFixed(2)} {/* new total */}
           </div>
 
           <div className="d-flex justify-content-between mt-4">
-          <div className="text-center" style={{ width: '350px', height: '350px', margin: '20px 0 0 100px' }}>
+            <div
+              className="text-center"
+              style={{ width: '350px', height: '350px', margin: '20px 0 0 100px' }}
+            >
               <Pie data={pieData} options={pieOptions} />
             </div>
 
@@ -283,18 +298,21 @@ const SalesReport = () => {
                 marginTop: '60px',
               }}
             >
-            
-             <h6 className="most-popular-title">Most Popular Item</h6>
-             <div className="most-popular-item">
-             <h5 className="item-name">{mostPopularItem._id}</h5>
-             <p className="item-sales">Total Sales: Rs. {mostPopularItem.totalSales.toFixed(2)}</p>
-             <p className="item-quantity">Total Quantity: {mostPopularItem.totalQuantity}</p>
-             </div>
+              <h6 className="most-popular-title">Most Popular Item</h6>
+              <div className="most-popular-item">
+                <h5 className="item-name">{mostPopularItem._id}</h5>
+                <p className="item-sales">Total Sales: Rs. {mostPopularItem.totalSales?.toFixed(2)}</p>
+                <p className="item-quantity">Total Quantity: {mostPopularItem.totalQuantity}</p>
+              </div>
             </div>
           </div>
 
           <div className="d-flex justify-content-between mt-4">
-            <button className="btn btn-danger custom-btn" style={{ marginLeft: '530px' }} onClick={() => generatePDF(false)}>
+            <button
+              className="btn btn-danger custom-btn"
+              style={{ marginLeft: '530px' }}
+              onClick={() => generatePDF(false)}
+            >
               <FontAwesomeIcon icon={faFilePdf} className="me-2" /> View PDF
             </button>
             <button className="btn btn-success custom-btn" onClick={() => generatePDF(true)}>
@@ -306,6 +324,5 @@ const SalesReport = () => {
     </div>
   );
 };
-
 
 export default SalesReport;

@@ -1,16 +1,17 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose');  // <-- add this line at the top
 
 const ItemSchema = new mongoose.Schema({
   itemCode: String,
   itemName: String,
-  itemPrice: String,
-  buyingPrice: String,
+  itemPrice: Number,
+  buyingPrice: Number,
   quantity: Number,
   discount: Number,
+  profit: Number
 });
 
 const InvoiceSchema = new mongoose.Schema({
-  invoiceId: String, 
+  invoiceId: String,
   date: String,
   time: String,
   contact: String,
@@ -18,10 +19,11 @@ const InvoiceSchema = new mongoose.Schema({
   address: String,
   email: String,
   items: [ItemSchema],
-  subtotal: String,
-  amount: String,
-  cashReceived: String,
-  balance: String,
+  subtotal: Number,
+  amount: Number,
+  cashReceived: Number,
+  balance: Number,
+  profit: Number
 }, {
   timestamps: true,
 });

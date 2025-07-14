@@ -1,4 +1,4 @@
-const Invoice = require('../models/invoice'); // adjust the path if different
+const Invoice = require('../models/invoice'); // adjust path as needed
 
 exports.getSalesReport = async (req, res) => {
   try {
@@ -23,6 +23,14 @@ exports.getSalesReport = async (req, res) => {
               $multiply: [
                 '$items.quantity',
                 { $toDouble: '$items.itemPrice' }
+              ]
+            }
+          },
+          totalProfit: {
+            $sum: {
+              $multiply: [
+                '$items.quantity',
+                { $toDouble: '$items.profit' }
               ]
             }
           }

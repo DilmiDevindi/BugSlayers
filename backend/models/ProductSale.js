@@ -9,7 +9,7 @@ const ProductSaleSchema = new mongoose.Schema({
   quantity: Number,
   discount: Number,
   total: Number,
-  profit: Number,
+  profit: Number,  // changed to Number
   date: String
 }, { timestamps: true });
 
