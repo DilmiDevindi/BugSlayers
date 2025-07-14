@@ -1,53 +1,67 @@
-// ✅ backend/models/Purchase.js
+const mongoose = require('mongoose');
 
-const mongoose = require("mongoose");
-
-const purchaseSchema = new mongoose.Schema({
-  supplier: {
+const inventoryItemSchema = new mongoose.Schema({
+  code: {
     type: String,
     required: true,
-    trim: true
+    unique: true,  // ensure unique product codes
   },
-  product: {
+  productName: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
   },
   category: {
-    type: String,
-    required: true
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category',
+    required: true,
   },
   subcategory: {
-    type: String,
-    required: true
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Subcategory',
+    required: true,
   },
   quantity: {
     type: Number,
     required: true,
-    min: 1
+    min: 0,
   },
-  price: {
+  buyingPrice: {
     type: Number,
     required: true,
-    min: 0
+    min: 0,
   },
-  discount: {
-    type: String,
-    default: "0%"
-  },
-  total: {
+  sellingPrice: {
     type: Number,
     required: true,
-    min: 0
+    min: 0,
   },
-  date: {
+  dateAdded: {
     type: Date,
     required: true,
-    default: Date.now
-  }
+  },
+  image: {
+    type: String,  // will store filename or path
+    default: null,
+  },
+  ProductStatus: {
+    type: String,
+    default: 'Available',
+    trim: true,
+  },
+  availableForOffer: {
+    type: String,
+    enum: ['yes', 'no'],
+    default: 'no',
+  },
+  supplier: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Supplier',
+    required: true,
+  },
 }, {
-  timestamps: true
+  timestamps: true,  // automatically add createdAt, updatedAt fields
 });
 
-const Purchase = mongoose.models.Purchase || mongoose.model("Purchase", purchaseSchema);
-module.exports = Purchase;
+const InventoryItem = mongoose.model('InventoryItem', inventoryItemSchema);
+module.exports = InventoryItem;
