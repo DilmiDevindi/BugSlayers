@@ -1,230 +1,245 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { FaEdit, FaTrash } from "react-icons/fa";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faTruck,
-  faEdit as faEditIcon,
-} from "@fortawesome/free-solid-svg-icons";
-import "./Supplier.css";
+import { Table, Form, Button, Alert } from "react-bootstrap";
 
-const ManageSuppliers = () => {
-  const [suppliers, setSuppliers] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [editingSupplier, setEditingSupplier] = useState(null);
+const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+
+const ManageReturn = () => {
   const [formData, setFormData] = useState({
-    supplierName: "",
-    phone1: "",
-    phone2: "",
-    fax: "",
-    email: "",
-    address: "",
-    paymentTerms: "",
+    supplier: "",
+    date: "",
+    product: "",
+    category: "",
+    subcategory: "",
+    quantity: "",
+    price: "",
+    status: "Pending",
+    note: ""
   });
-  const [loading, setLoading] = useState(false);
+  const [returnId, setReturnId] = useState("RET-001");
+  const [suppliers, setSuppliers] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [subcategories, setSubcategories] = useState([]);
+  const [returns, setReturns] = useState([]);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [editingId, setEditingId] = useState(null);
 
   useEffect(() => {
-    fetchSuppliers();
+    fetchInitialData();
   }, []);
 
-  const fetchSuppliers = async () => {
-    setLoading(true);
+  const fetchInitialData = async () => {
     try {
-      const response = await axios.get("/api/suppliers");
-      setSuppliers(response.data.reverse());
+      const [supplierRes, categoryRes, returnRes] = await Promise.all([
+        axios.get(`${BASE_URL}/api/suppliers`),
+        axios.get(`${BASE_URL}/categories`),
+        axios.get(`${BASE_URL}/returns`)
+      ]);
+
+      setSuppliers(supplierRes.data);
+      setCategories(categoryRes.data);
+      setReturns(returnRes.data);
+
+      if (returnRes.data.length > 0) {
+        const last = returnRes.data[0].returnId;
+        const lastNum = parseInt(last.split("-")[1]) + 1;
+        setReturnId(`RET-${lastNum.toString().padStart(3, "0")}`);
+      }
     } catch (error) {
-      console.error("Error fetching suppliers:", error);
-      alert("Failed to fetch suppliers");
-    }
-    setLoading(false);
-  };
-
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
-  const filteredSuppliers = suppliers.filter((supplier) => {
-    return (supplier.supplierName || "")
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-  });
-
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this supplier?"))
-      return;
-    try {
-      await axios.delete(`/api/suppliers/${id}`);
-      fetchSuppliers();
-    } catch (error) {
-      console.error("Error deleting supplier:", error);
-      alert("Failed to delete supplier");
+      console.error("Failed to load data:", error);
     }
   };
 
-  const handleEdit = (supplier) => {
-    setEditingSupplier(supplier._id);
-    setFormData({
-      supplierName: supplier.supplierName || "",
-      phone1: supplier.phone1 || "",
-      phone2: supplier.phone2 || "",
-      fax: supplier.fax || "",
-      email: supplier.email || "",
-      address: supplier.address || "",
-      paymentTerms: supplier.paymentTerms || "",
-    });
-  };
-
-  const handleUpdate = async (e) => {
-    e.preventDefault();
+  const handleCategoryChange = async (e) => {
+    const selectedCategory = e.target.value;
+    setFormData({ ...formData, category: selectedCategory, subcategory: "" });
     try {
-      await axios.put(`/api/suppliers/${editingSupplier}`, formData);
-      setEditingSupplier(null);
-      setFormData({
-        supplierName: "",
-        phone1: "",
-        phone2: "",
-        fax: "",
-        email: "",
-        address: "",
-        paymentTerms: "",
-      });
-      fetchSuppliers();
-      alert("Supplier updated successfully!");
-    } catch (error) {
-      console.error("Error updating supplier:", error);
-      alert("Failed to update supplier");
+      const res = await axios.get(`${BASE_URL}/subcategories/byCategory/${selectedCategory}`);
+      setSubcategories(res.data);
+    } catch (err) {
+      console.error("Error fetching subcategories:", err);
     }
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-    // ✅ Fax number validation
-    if (name === "fax") {
-      let cleaned = value.replace(/\D/g, "");
-      if (cleaned.length > 10) {
-        alert("Fax number must not exceed 10 digits");
-        cleaned = cleaned.slice(0, 10);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (editingId) {
+        await axios.put(`${BASE_URL}/returns/${editingId}`, formData);
+        setSuccessMessage("Return updated successfully.");
+      } else {
+        await axios.post(`${BASE_URL}/returns`, formData);
+        setSuccessMessage("Return added successfully.");
       }
-      setFormData((prev) => ({ ...prev, [name]: cleaned }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
+
+      setFormData({
+        supplier: "",
+        date: "",
+        product: "",
+        category: "",
+        subcategory: "",
+        quantity: "",
+        price: "",
+        status: "Pending",
+        note: ""
+      });
+      setEditingId(null);
+      fetchInitialData();
+      setTimeout(() => setSuccessMessage(""), 3000);
+    } catch (error) {
+      console.error("Error saving return:", error);
+      alert("Failed to save return.");
+    }
+  };
+
+  const handleEdit = (ret) => {
+    setFormData({
+      supplier: ret.supplier,
+      date: ret.date?.substring(0, 10),
+      product: ret.product,
+      category: ret.category.categoryName,
+      subcategory: ret.subcategory.subcategoryName,
+      quantity: ret.quantity,
+      price: ret.price,
+      status: ret.status,
+      note: ret.note
+    });
+    setEditingId(ret._id);
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this return?")) {
+      await axios.delete(`${BASE_URL}/returns/${id}`);
+      fetchInitialData();
     }
   };
 
   return (
-    <div className="container1">
-      <h4 className="manage-title">
-        <FontAwesomeIcon icon={faTruck} className="cus-icon" /> Manage Suppliers
-      </h4>
+    <div className="container mt-4">
+      <h3 className="mb-3">Manage Returns</h3>
+      {successMessage && <Alert variant="success">{successMessage}</Alert>}
 
-      <input
-        type="text"
-        className="form-control mb-3"
-        placeholder="Search by name"
-        value={searchTerm}
-        onChange={handleSearch}
-      />
+      <Form onSubmit={handleSubmit} className="border p-4 rounded mb-4 bg-light">
+        <Form.Group className="mb-2">
+          <Form.Label>Return ID</Form.Label>
+          <Form.Control type="text" value={editingId ? "Editing..." : returnId} readOnly />
+        </Form.Group>
 
-      {loading ? (
-        <p>Loading suppliers...</p>
-      ) : (
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Phone 1</th>
-              <th>Phone 2</th>
-              <th>Fax</th>
-              <th>Email</th>
-              <th>Address</th>
-              <th>Payment Terms</th>
-              <th>Actions</th>
+        <Form.Group className="mb-2">
+          <Form.Label>Supplier</Form.Label>
+          <Form.Select name="supplier" value={formData.supplier} onChange={handleChange} required>
+            <option value="">Select Supplier</option>
+            {suppliers.map((s) => (
+              <option key={s._id} value={s.supplierName}>{s.supplierName}</option>
+            ))}
+          </Form.Select>
+        </Form.Group>
+
+        <Form.Group className="mb-2">
+          <Form.Label>Date</Form.Label>
+          <Form.Control type="date" name="date" value={formData.date} onChange={handleChange} required />
+        </Form.Group>
+
+        <Form.Group className="mb-2">
+          <Form.Label>Product</Form.Label>
+          <Form.Control type="text" name="product" value={formData.product} onChange={handleChange} required />
+        </Form.Group>
+
+        <Form.Group className="mb-2">
+          <Form.Label>Category</Form.Label>
+          <Form.Select name="category" value={formData.category} onChange={handleCategoryChange} required>
+            <option value="">Select Category</option>
+            {categories.map((c) => (
+              <option key={c._id} value={c.categoryName}>{c.categoryName}</option>
+            ))}
+          </Form.Select>
+        </Form.Group>
+
+        <Form.Group className="mb-2">
+          <Form.Label>Subcategory</Form.Label>
+          <Form.Select name="subcategory" value={formData.subcategory} onChange={handleChange} required>
+            <option value="">Select Subcategory</option>
+            {subcategories.map((s) => (
+              <option key={s._id} value={s.subcategoryName}>{s.subcategoryName}</option>
+            ))}
+          </Form.Select>
+        </Form.Group>
+
+        <Form.Group className="mb-2">
+          <Form.Label>Quantity</Form.Label>
+          <Form.Control type="number" name="quantity" value={formData.quantity} onChange={handleChange} required />
+        </Form.Group>
+
+        <Form.Group className="mb-2">
+          <Form.Label>Product Price (LKR)</Form.Label>
+          <Form.Control type="number" name="price" value={formData.price} onChange={handleChange} required />
+        </Form.Group>
+
+        <Form.Group className="mb-2">
+          <Form.Label>Status</Form.Label>
+          <Form.Select name="status" value={formData.status} onChange={handleChange}>
+            <option value="Pending">Pending</option>
+            <option value="Returned">Returned</option>
+            <option value="Cancel">Cancel</option>
+          </Form.Select>
+        </Form.Group>
+
+        <Form.Group className="mb-3">
+          <Form.Label>Note (Optional)</Form.Label>
+          <Form.Control as="textarea" name="note" value={formData.note} onChange={handleChange} />
+        </Form.Group>
+
+        <Button variant="primary" type="submit">
+          {editingId ? "Update Return" : "Add Return"}
+        </Button>
+      </Form>
+
+      <h4>Return Records</h4>
+      <Table striped bordered hover responsive>
+        <thead>
+          <tr>
+            <th>Return ID</th>
+            <th>Supplier</th>
+            <th>Date</th>
+            <th>Product</th>
+            <th>Category</th>
+            <th>Subcategory</th>
+            <th>Qty</th>
+            <th>Price (LKR)</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Note</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {returns.map((ret) => (
+            <tr key={ret._id}>
+              <td>{ret.returnId}</td>
+              <td>{ret.supplier}</td>
+              <td>{new Date(ret.date).toLocaleDateString()}</td>
+              <td>{ret.product}</td>
+              <td>{ret.category?.categoryName}</td>
+              <td>{ret.subcategory?.subcategoryName}</td>
+              <td>{ret.quantity}</td>
+              <td>{ret.price}</td>
+              <td>{ret.quantity * ret.price}</td>
+              <td>{ret.status}</td>
+              <td>{ret.note}</td>
+              <td>
+                <Button variant="warning" size="sm" onClick={() => handleEdit(ret)}>Edit</Button>{" "}
+                <Button variant="danger" size="sm" onClick={() => handleDelete(ret._id)}>Delete</Button>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {filteredSuppliers.length > 0 ? (
-              filteredSuppliers.map((supplier) => (
-                <tr key={supplier._id}>
-                  <td>{supplier.supplierName || "-"}</td>
-                  <td>{supplier.phone1 || "-"}</td>
-                  <td>{supplier.phone2 || "-"}</td>
-                  <td>{supplier.fax || "-"}</td>
-                  <td>{supplier.email || "-"}</td>
-                  <td>{supplier.address || "-"}</td>
-                  <td>{supplier.paymentTerms || "-"}</td>
-                  <td>
-                    <button
-                      className="btn1"
-                      onClick={() => handleEdit(supplier)}
-                    >
-                      <FaEdit />
-                    </button>
-                    <button
-                      className="btn2"
-                      onClick={() => handleDelete(supplier._id)}
-                    >
-                      <FaTrash />
-                    </button>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="8" className="text-center text-danger">
-                  No Matching Supplier Found!
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      )}
-
-      {editingSupplier && (
-        <div className="edit-form-container">
-          <form onSubmit={handleUpdate} className="form">
-            <h4 className="form-title mb-4 text-lg font-semibold">
-              <FontAwesomeIcon icon={faEditIcon} /> Edit Supplier
-            </h4>
-
-            <div className="grid grid-cols-2 gap-6">
-              {Object.entries(formData).map(([key, value]) => (
-                <div key={key} className="flex flex-col">
-                  <label className="text-sm font-medium mb-1">
-                    {key.charAt(0).toUpperCase() + key.slice(1)}
-                  </label>
-                  <input
-                    type={key === "email" ? "email" : "text"}
-                    name={key}
-                    value={value}
-                    onChange={handleChange}
-                    required={key === "supplierName" || key === "email"}
-                    className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-              ))}
-            </div>
-
-            <div className="flex justify-end gap-3 mt-6">
-              <button
-                type="submit"
-                className="btnUpdate px-5 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700"
-              >
-                Update
-              </button>
-              <button
-                type="button"
-                onClick={() => setEditingSupplier(null)}
-                className="btnClose px-5 py-2 rounded-md bg-gray-300 text-gray-800 hover:bg-gray-400"
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
+          ))}
+        </tbody>
+      </Table>
     </div>
   );
 };
 
-export default ManageSuppliers;
+export default ManageReturn;
