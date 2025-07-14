@@ -7,6 +7,7 @@ import '../Inventory.css';
 const ManageInventories = () => {
   const [items, setItems] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [subcategories, setSubcategories] = useState([]);
   const [search, setSearch] = useState('');
   const [editItem, setEditItem] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -18,6 +19,7 @@ const ManageInventories = () => {
   useEffect(() => {
     fetchItems();
     fetchCategories();
+    fetchSubcategories();
     fetchProductStatuses();
     fetchSuppliers();
   }, []);
@@ -45,6 +47,15 @@ const ManageInventories = () => {
     }
   };
 
+  const fetchSubcategories = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/subcategory');
+      setSubcategories(response.data);
+    } catch (err) {
+      console.error('Error fetching subcategories:', err);
+    }
+  };
+
   const fetchProductStatuses = async () => {
     try {
       const response = await axios.get('http://localhost:5000/api/product-status');
@@ -66,6 +77,11 @@ const ManageInventories = () => {
   const getCategoryName = (categoryId) => {
     const category = categories.find(cat => cat._id === categoryId);
     return category ? category.categoryName : 'Unknown';
+  };
+
+  const getSubcategoryName = (subcategoryId) => {
+    const subcategory = subcategories.find(sub => sub._id === subcategoryId);
+    return subcategory ? subcategory.subcategoryName : 'Unknown';
   };
 
   const handleDelete = async (id) => {
@@ -90,6 +106,7 @@ const ManageInventories = () => {
     const formData = new FormData();
     formData.append('productName', editItem.productName);
     formData.append('category', editItem.category);
+    formData.append('subcategory', editItem.subcategory); // added subcategory
     formData.append('quantity', Number(editItem.quantity));
     formData.append('buyingPrice', parseFloat(editItem.buyingPrice).toFixed(2));
     formData.append('sellingPrice', parseFloat(editItem.sellingPrice).toFixed(2));
@@ -146,7 +163,8 @@ const ManageInventories = () => {
                   <th>ID</th>
                   <th>Product Name</th>
                   <th>Category</th>
-                  <th>Supplier</th> {/* 👈 Added */}
+                  <th>Subcategory</th> {/* Added */}
+                  <th>Supplier</th>
                   <th>Product Code</th>
                   <th>Quantity</th>
                   <th>Buying Price</th>
@@ -163,7 +181,8 @@ const ManageInventories = () => {
                     <td>{index + 1}</td>
                     <td>{item.productName}</td>
                     <td>{getCategoryName(item.category)}</td>
-                    <td>{item.supplier?.supplierName || 'No Supplier'}</td> {/* 👈 Added */}
+                    <td>{getSubcategoryName(item.subcategory)}</td> {/* Added */}
+                    <td>{item.supplier?.supplierName || 'No Supplier'}</td>
                     <td>{item.code || 'N/A'}</td>
                     <td>{item.quantity}</td>
                     <td>{parseFloat(item.buyingPrice).toFixed(2)}</td>
@@ -207,12 +226,29 @@ const ManageInventories = () => {
               <select
                 className="inventory-form-control"
                 value={editItem.category}
-                onChange={(e) => setEditItem({ ...editItem, category: e.target.value })}
+                onChange={(e) => setEditItem({ ...editItem, category: e.target.value, subcategory: '' })} // reset subcategory on category change
                 required
               >
                 <option value="">Select Category</option>
                 {categories.map((cat) => (
                   <option key={cat._id} value={cat._id}>{cat.categoryName}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="inventory-row">
+              <label className="inventory-form-label">Subcategory</label>
+              <select
+                className="inventory-form-control"
+                value={editItem.subcategory || ''}
+                onChange={(e) => setEditItem({ ...editItem, subcategory: e.target.value })}
+                required
+              >
+                <option value="">Select Subcategory</option>
+                {subcategories
+                  .filter(sub => sub.parentCategoryId === editItem.category) // Adjust property name as needed
+                  .map((sub) => (
+                    <option key={sub._id} value={sub._id}>{sub.subcategoryName}</option>
                 ))}
               </select>
             </div>

@@ -40,12 +40,17 @@ const generateItemCode = async () => {
   return String(nextCode).padStart(3, '0');
 };
 
-// Get all inventory items
+// Get all inventory items with populated category, subcategory, and supplier
 const getInventoryItems = async (req, res) => {
   try {
-    const items = await InventoryItem.find();
+    const items = await InventoryItem.find()
+      .populate('category', 'categoryName')
+      .populate('subcategory', 'subcategoryName parentCategoryId') // include parentCategoryId if needed
+      .populate('supplier', 'supplierName');
+
     res.json(items);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Error fetching inventory items' });
   }
 };
@@ -63,16 +68,14 @@ const addInventoryItem = async (req, res) => {
       dateAdded,
       availableForOffer,
       ProductStatus,
-      supplier // Added supplier
+      supplier,
     } = req.body;
-
-    console.log('Received data:', req.body);
 
     const image = req.file ? req.file.filename : null;
 
-    // Validate required fields
-    if (!productName || !category || !subcategory || !quantity || !buyingPrice || !sellingPrice || !dateAdded) {
-      return res.status(400).json({ error: 'All fields are required!' });
+    // Validate inputs
+    if (!productName || !category || !subcategory || !quantity || !buyingPrice || !sellingPrice || !dateAdded || !supplier) {
+      return res.status(400).json({ error: 'All fields including supplier are required!' });
     }
     if (isNaN(quantity) || quantity <= 0) {
       return res.status(400).json({ error: 'Quantity must be a positive number!' });
@@ -84,7 +87,7 @@ const addInventoryItem = async (req, res) => {
       return res.status(400).json({ error: 'Invalid date format!' });
     }
 
-    // Check if product exists
+    // Check if product exists (with same name, category, and subcategory)
     const existingItem = await InventoryItem.findOne({ productName, category, subcategory });
     if (existingItem) {
       return res.status(409).json({
@@ -98,7 +101,7 @@ const addInventoryItem = async (req, res) => {
     // Generate code
     const code = await generateItemCode();
 
-    // Create new inventory item with supplier included
+    // Create item
     const newItem = new InventoryItem({
       code,
       productName,
@@ -111,17 +114,21 @@ const addInventoryItem = async (req, res) => {
       image,
       availableForOffer: availableForOffer || 'no',
       ProductStatus,
-      supplier // Save supplier
+      supplier,
     });
 
-    console.log('New item data:', newItem);
-
     const savedItem = await newItem.save();
+
+    // Return saved item with populated fields
+    const populatedItem = await InventoryItem.findById(savedItem._id)
+      .populate('category', 'categoryName')
+      .populate('subcategory', 'subcategoryName parentCategoryId')
+      .populate('supplier', 'supplierName');
 
     return res.status(201).json({
       message: 'New item added successfully!',
       code: savedItem.code,
-      item: savedItem,
+      item: populatedItem,
     });
   } catch (err) {
     console.error('Error adding item: ' + err.message);
@@ -152,7 +159,7 @@ const updateInventoryItem = async (req, res) => {
     dateAdded,
     availableForOffer,
     ProductStatus,
-    supplier
+    supplier,
   } = req.body;
 
   const updateData = {
@@ -165,7 +172,7 @@ const updateInventoryItem = async (req, res) => {
     dateAdded,
     availableForOffer,
     ProductStatus,
-    supplier
+    supplier,
   };
 
   if (req.file) {
@@ -177,7 +184,14 @@ const updateInventoryItem = async (req, res) => {
       new: true,
       runValidators: true,
     });
-    res.json(updatedItem);
+
+    // Return updated item with populated fields
+    const populatedUpdatedItem = await InventoryItem.findById(updatedItem._id)
+      .populate('category', 'categoryName')
+      .populate('subcategory', 'subcategoryName parentCategoryId')
+      .populate('supplier', 'supplierName');
+
+    res.json(populatedUpdatedItem);
   } catch (error) {
     console.error(`Error updating item: ${error.message}`);
     res.status(500).json({ error: `Failed to update item: ${error.message}` });
