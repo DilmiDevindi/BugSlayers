@@ -96,11 +96,14 @@ const ManageRefunds = () => {
       return;
     }
 
-    const selectedReturn = returns.find((r) => r.returnId === form.returnId);
+    const selectedReturn = returns.find((r) => r.return_id === form.returnId);
+
+    console.log("Selected Return:", selectedReturn);
+
     if (selectedReturn) {
       setForm((prev) => ({
         ...prev,
-        companyName: selectedReturn.companyName,
+        companyName: selectedReturn.supplier,
         returnDate: selectedReturn.date ? selectedReturn.date.split("T")[0] : "",
         // refundDate remains as is
       }));
@@ -155,20 +158,20 @@ const ManageRefunds = () => {
     }
 
     // Validate returnId exists in returns
-    const returnExists = returns.find((r) => r.returnId === form.returnId);
+    const returnExists = returns.find((r) => r.return_id === form.returnId);
     if (!returnExists) {
       setMessage("Selected return ID does not exist.");
       return;
     }
 
     // Validate companyName matches return
-    if (returnExists.companyName !== form.companyName) {
+    if (returnExists.supplier !== form.companyName) {
       setMessage("Supplier does not match the return's supplier.");
       return;
     }
 
     // Check for duplicate returnId
-    if (!editingId && refunds.some((r) => r.returnId === form.returnId)) {
+    if (!editingId && refunds.some((r) => r.return_id === form.returnId)) {
       setMessage("This return ID is already used in a refund.");
       return;
     }
@@ -264,8 +267,8 @@ const ManageRefunds = () => {
             >
               <option value="">-- Select Return ID --</option>
               {returns.map((ret) => (
-                <option key={ret._id} value={ret.returnId}>
-                  {ret.returnId}
+                <option key={ret._id} value={ret.return_id}>
+                  {ret.return_id}
                 </option>
               ))}
             </select>
