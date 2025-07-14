@@ -9,6 +9,8 @@ const ManageReturn = () => {
   const [suppliers, setSuppliers] = useState([]);
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
+  const [subAllcategories, setSubAllcategories] = useState([]);
+
   const [formData, setFormData] = useState({
     return_id: '',
     supplier: '',
@@ -34,6 +36,7 @@ const ManageReturn = () => {
   useEffect(() => {
     fetchSuppliers();
     fetchCategories();
+    fetchAllSubcategories();
     fetchReturns();
     generateReturnId();
   }, []);
@@ -74,6 +77,20 @@ const ManageReturn = () => {
     }
     setLoading(false);
   };
+
+   const fetchAllSubcategories = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${BASE_URL}/api/subcategories`);
+      setSubAllcategories(response.data);
+    } catch (error) {
+      console.error('Error fetching subcategories:', error.message);
+      setSubAllcategories([]);
+      setError('Failed to fetch subcategories');
+    }
+    setLoading(false);
+  };
+  
 
   const fetchReturns = async () => {
     setLoading(true);
@@ -130,8 +147,8 @@ const ManageReturn = () => {
             const validReturns = returns.filter(r => /^RET-\d{3}$/.test(r.return_id));
             const lastNumber = validReturns.length > 0
               ? validReturns
-                  .map(r => parseInt(r.return_id.split('-')[1]))
-                  .reduce((max, num) => Math.max(max, num), 0)
+                .map(r => parseInt(r.return_id.split('-')[1]))
+                .reduce((max, num) => Math.max(max, num), 0)
               : 0;
             const newId = `RET-${String(lastNumber + 1).padStart(3, '0')}`;
             setFormData((prev) => ({ ...prev, return_id: newId }));
@@ -163,6 +180,7 @@ const ManageReturn = () => {
     setError('');
     const { supplier, product, category, subcategory, quantity, product_price, date, status, note } = formData;
 
+
     if (!supplier || !product || !category || !subcategory || !quantity || !product_price || !date) {
       setError('Please fill all required fields');
       setLoading(false);
@@ -186,6 +204,8 @@ const ManageReturn = () => {
       setLoading(false);
       return;
     }
+
+    console.log('Submitting form data:', formData);
 
     try {
       if (editingId) {
@@ -215,6 +235,7 @@ const ManageReturn = () => {
     } catch (error) {
       console.error(`Error ${editingId ? 'updating' : 'adding'} return:`, error.message);
       if (error.response?.data?.message.includes('E11000 duplicate key')) {
+
         setError('Return ID already exists. Generating a new ID.');
         generateReturnId();
       } else {
@@ -223,6 +244,7 @@ const ManageReturn = () => {
     }
     setLoading(false);
   };
+
 
   const handleEdit = (returnItem) => {
     setFormData({
@@ -461,7 +483,7 @@ const ManageReturn = () => {
                       {categories.find((c) => c._id === returnItem.category)?.categoryName || '-'}
                     </td>
                     <td className="border p-2">
-                      {subcategories.find((s) => s._id === returnItem.subcategory)?.subcategoryName || '-'}
+                      {subAllcategories.find((s) => s._id === returnItem.subcategory)?.subcategoryName || '-'}
                     </td>
                     <td className="border p-2">{returnItem.quantity}</td>
                     <td className="border p-2">{returnItem.product_price}</td>
