@@ -11,7 +11,7 @@ const ManageInventories = () => {
   const [search, setSearch] = useState('');
   const [editItem, setEditItem] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
   const [newImage, setNewImage] = useState(null);
   const [productStatusOptions, setProductStatusOptions] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
@@ -49,7 +49,7 @@ const ManageInventories = () => {
 
   const fetchSubcategories = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/subcategory');
+      const response = await axios.get('http://localhost:5000/api/subcategories');
       setSubcategories(response.data);
     } catch (err) {
       console.error('Error fetching subcategories:', err);
@@ -74,21 +74,32 @@ const ManageInventories = () => {
     }
   };
 
-  const getCategoryName = (categoryId) => {
-    const category = categories.find(cat => cat._id === categoryId);
-    return category ? category.categoryName : 'Unknown';
+  // Get category name by ID (fallback to populated data)
+  const getCategoryName = (category) => {
+    // category can be populated object or ID string
+    if (!category) return 'Unknown';
+    if (typeof category === 'string') {
+      const found = categories.find(cat => cat._id === category);
+      return found ? found.categoryName : 'Unknown';
+    }
+    return category.categoryName || 'Unknown';
   };
 
-  const getSubcategoryName = (subcategoryId) => {
-    const subcategory = subcategories.find(sub => sub._id === subcategoryId);
-    return subcategory ? subcategory.subcategoryName : 'Unknown';
+  // Get subcategory name by ID (fallback to populated data)
+  const getSubcategoryName = (subcategory) => {
+    if (!subcategory) return 'Unknown';
+    if (typeof subcategory === 'string') {
+      const found = subcategories.find(sub => sub._id === subcategory);
+      return found ? found.subcategoryName : 'Unknown';
+    }
+    return subcategory.subcategoryName || 'Unknown';
   };
 
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this item?')) return;
     try {
       await axios.delete(`http://localhost:5000/api/inventory/${id}`);
-      setItems((prevItems) => prevItems.filter((item) => item._id !== id));
+      setItems(prevItems => prevItems.filter(item => item._id !== id));
       alert('Item deleted successfully!');
     } catch (err) {
       setError('Error deleting item');
@@ -104,15 +115,17 @@ const ManageInventories = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     const formData = new FormData();
+
     formData.append('productName', editItem.productName);
-    formData.append('category', editItem.category);
-    formData.append('subcategory', editItem.subcategory); // added subcategory
+    formData.append('category', editItem.category._id || editItem.category);
+    formData.append('subcategory', editItem.subcategory._id || editItem.subcategory);
     formData.append('quantity', Number(editItem.quantity));
     formData.append('buyingPrice', parseFloat(editItem.buyingPrice).toFixed(2));
     formData.append('sellingPrice', parseFloat(editItem.sellingPrice).toFixed(2));
     formData.append('dateAdded', editItem.dateAdded);
     formData.append('ProductStatus', editItem.ProductStatus || '');
-    formData.append('supplier', editItem.supplier || '');
+    formData.append('supplier', editItem.supplier._id || editItem.supplier || '');
+
     if (newImage) formData.append('image', newImage);
 
     try {
@@ -128,14 +141,14 @@ const ManageInventories = () => {
     }
   };
 
-  const filteredItems = items.filter((item) =>
+  const filteredItems = items.filter(item =>
     item.productName.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
     <div className="container-fluid mt-4 inventory-container">
-      <div className='inventory-title'>
-        <span className='inventory-title-icon'><FontAwesomeIcon icon={faBarsProgress} /></span> Manage Inventory
+      <div className="inventory-title">
+        <span className="inventory-title-icon"><FontAwesomeIcon icon={faBarsProgress} /></span> Manage Inventory
       </div>
 
       {error && <div className="alert alert-danger">{error}</div>}
@@ -147,7 +160,7 @@ const ManageInventories = () => {
             className="form-control mb-3"
             placeholder="Search items..."
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={e => setSearch(e.target.value)}
           />
         </div>
 
@@ -155,7 +168,7 @@ const ManageInventories = () => {
           {loading ? (
             <div>Loading...</div>
           ) : filteredItems.length === 0 ? (
-            <div className='no-items'>No items found</div>
+            <div className="no-items">No items found</div>
           ) : (
             <table className="table table-striped table-bordered inventory-table">
               <thead>
@@ -163,7 +176,7 @@ const ManageInventories = () => {
                   <th>ID</th>
                   <th>Product Name</th>
                   <th>Category</th>
-                  <th>Subcategory</th> {/* Added */}
+                  <th>Subcategory</th>
                   <th>Supplier</th>
                   <th>Product Code</th>
                   <th>Quantity</th>
@@ -176,12 +189,12 @@ const ManageInventories = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredItems.map((item, index) => (
+                {filteredItems.map((item, idx) => (
                   <tr key={item._id}>
-                    <td>{index + 1}</td>
+                    <td>{idx + 1}</td>
                     <td>{item.productName}</td>
                     <td>{getCategoryName(item.category)}</td>
-                    <td>{getSubcategoryName(item.subcategory)}</td> {/* Added */}
+                    <td>{getSubcategoryName(item.subcategory)}</td>
                     <td>{item.supplier?.supplierName || 'No Supplier'}</td>
                     <td>{item.code || 'N/A'}</td>
                     <td>{item.quantity}</td>
@@ -189,12 +202,22 @@ const ManageInventories = () => {
                     <td>{parseFloat(item.sellingPrice).toFixed(2)}</td>
                     <td>{item.dateAdded ? new Date(item.dateAdded).toLocaleDateString() : 'N/A'}</td>
                     <td>{item.ProductStatus || 'N/A'}</td>
-                    <td>{item.image || 'No image'}</td>
                     <td>
-                      <span className='inventory-edit-icon' onClick={() => handleEdit(item)}>
+                      {item.image ? (
+                        <img
+                          src={`http://localhost:5000/uploads/${item.image}`}
+                          alt={item.productName}
+                          style={{ width: '50px', height: '50px', objectFit: 'cover' }}
+                        />
+                      ) : (
+                        'No image'
+                      )}
+                    </td>
+                    <td>
+                      <span className="inventory-edit-icon" onClick={() => handleEdit(item)}>
                         <FontAwesomeIcon icon={faEdit} />
                       </span>
-                      <span className='inventory-delete-icon' onClick={() => handleDelete(item._id)}>
+                      <span className="inventory-delete-icon" onClick={() => handleDelete(item._id)}>
                         <FontAwesomeIcon icon={faRemove} />
                       </span>
                     </td>
@@ -208,7 +231,7 @@ const ManageInventories = () => {
 
       {editItem && (
         <div className="inventory-form-container edit-form mt-4">
-          <span className="form-icon-i"><FontAwesomeIcon icon={faEdit} /></span>Update Product
+          <span className="form-icon-i"><FontAwesomeIcon icon={faEdit} /></span> Update Product
           <form onSubmit={handleUpdate}>
             <div className="inventory-row">
               <label className="inventory-form-label">Product Name</label>
@@ -216,7 +239,7 @@ const ManageInventories = () => {
                 type="text"
                 className="inventory-form-control"
                 value={editItem.productName}
-                onChange={(e) => setEditItem({ ...editItem, productName: e.target.value })}
+                onChange={e => setEditItem({ ...editItem, productName: e.target.value })}
                 required
               />
             </div>
@@ -225,12 +248,12 @@ const ManageInventories = () => {
               <label className="inventory-form-label">Category</label>
               <select
                 className="inventory-form-control"
-                value={editItem.category}
-                onChange={(e) => setEditItem({ ...editItem, category: e.target.value, subcategory: '' })} // reset subcategory on category change
+                value={editItem.category._id || editItem.category}
+                onChange={e => setEditItem({ ...editItem, category: e.target.value })}
                 required
               >
                 <option value="">Select Category</option>
-                {categories.map((cat) => (
+                {categories.map(cat => (
                   <option key={cat._id} value={cat._id}>{cat.categoryName}</option>
                 ))}
               </select>
@@ -240,16 +263,16 @@ const ManageInventories = () => {
               <label className="inventory-form-label">Subcategory</label>
               <select
                 className="inventory-form-control"
-                value={editItem.subcategory || ''}
-                onChange={(e) => setEditItem({ ...editItem, subcategory: e.target.value })}
+                value={editItem.subcategory._id || editItem.subcategory}
+                onChange={e => setEditItem({ ...editItem, subcategory: e.target.value })}
                 required
               >
                 <option value="">Select Subcategory</option>
                 {subcategories
-                  .filter(sub => sub.parentCategoryId === editItem.category) // Adjust property name as needed
-                  .map((sub) => (
+                  .filter(sub => (editItem.category._id || editItem.category) === sub.parentCategoryId)
+                  .map(sub => (
                     <option key={sub._id} value={sub._id}>{sub.subcategoryName}</option>
-                ))}
+                  ))}
               </select>
             </div>
 
@@ -257,12 +280,12 @@ const ManageInventories = () => {
               <label className="inventory-form-label">Supplier</label>
               <select
                 className="inventory-form-control"
-                value={editItem.supplier || ''}
-                onChange={(e) => setEditItem({ ...editItem, supplier: e.target.value })}
+                value={editItem.supplier._id || editItem.supplier || ''}
+                onChange={e => setEditItem({ ...editItem, supplier: e.target.value })}
               >
                 <option value="">Select Supplier</option>
-                {suppliers.map((supplier) => (
-                  <option key={supplier._id} value={supplier._id}>{supplier.supplierName}</option>
+                {suppliers.map(sup => (
+                  <option key={sup._id} value={sup._id}>{sup.supplierName}</option>
                 ))}
               </select>
             </div>
@@ -272,11 +295,11 @@ const ManageInventories = () => {
               <select
                 className="inventory-form-control"
                 value={editItem.ProductStatus || ''}
-                onChange={(e) => setEditItem({ ...editItem, ProductStatus: e.target.value })}
+                onChange={e => setEditItem({ ...editItem, ProductStatus: e.target.value })}
               >
                 <option value="">Select Status</option>
-                {productStatusOptions.map((status, index) => (
-                  <option key={index} value={status}>{status}</option>
+                {productStatusOptions.map((status, i) => (
+                  <option key={i} value={status}>{status}</option>
                 ))}
               </select>
             </div>
@@ -287,7 +310,7 @@ const ManageInventories = () => {
                 type="number"
                 className="inventory-form-control"
                 value={editItem.quantity}
-                onChange={(e) => setEditItem({ ...editItem, quantity: Number(e.target.value) })}
+                onChange={e => setEditItem({ ...editItem, quantity: Number(e.target.value) })}
                 required
               />
             </div>
@@ -300,7 +323,7 @@ const ManageInventories = () => {
                 min="0"
                 step="0.01"
                 value={parseFloat(editItem.buyingPrice).toFixed(2)}
-                onChange={(e) => setEditItem({ ...editItem, buyingPrice: Number(e.target.value) })}
+                onChange={e => setEditItem({ ...editItem, buyingPrice: Number(e.target.value) })}
                 required
               />
             </div>
@@ -311,7 +334,7 @@ const ManageInventories = () => {
                 type="number"
                 className="inventory-form-control"
                 value={editItem.sellingPrice}
-                onChange={(e) => setEditItem({ ...editItem, sellingPrice: Number(e.target.value) })}
+                onChange={e => setEditItem({ ...editItem, sellingPrice: Number(e.target.value) })}
                 required
               />
             </div>
@@ -322,7 +345,7 @@ const ManageInventories = () => {
                 type="date"
                 className="inventory-form-control"
                 value={editItem.dateAdded ? editItem.dateAdded.substring(0, 10) : ''}
-                onChange={(e) => setEditItem({ ...editItem, dateAdded: e.target.value })}
+                onChange={e => setEditItem({ ...editItem, dateAdded: e.target.value })}
                 required
               />
             </div>
@@ -333,7 +356,7 @@ const ManageInventories = () => {
                 type="file"
                 accept="image/*"
                 className="inventory-form-control"
-                onChange={(e) => setNewImage(e.target.files[0])}
+                onChange={e => setNewImage(e.target.files[0])}
               />
             </div>
 
