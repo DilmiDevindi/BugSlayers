@@ -4,8 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBarsProgress, faEdit, faRemove } from '@fortawesome/free-solid-svg-icons';
 import '../Inventory.css';
 
-// (Imports remain the same)
-
 const ManageInventories = () => {
   const [items, setItems] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -14,13 +12,14 @@ const ManageInventories = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [newImage, setNewImage] = useState(null);
-
   const [productStatusOptions, setProductStatusOptions] = useState([]);
+  const [suppliers, setSuppliers] = useState([]);
 
   useEffect(() => {
     fetchItems();
     fetchCategories();
     fetchProductStatuses();
+    fetchSuppliers();
   }, []);
 
   const fetchItems = async () => {
@@ -52,6 +51,15 @@ const ManageInventories = () => {
       setProductStatusOptions(response.data);
     } catch (err) {
       console.error('Error fetching product statuses:', err);
+    }
+  };
+
+  const fetchSuppliers = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/supplier');
+      setSuppliers(response.data);
+    } catch (err) {
+      console.error('Error fetching suppliers:', err);
     }
   };
 
@@ -87,6 +95,7 @@ const ManageInventories = () => {
     formData.append('sellingPrice', parseFloat(editItem.sellingPrice).toFixed(2));
     formData.append('dateAdded', editItem.dateAdded);
     formData.append('ProductStatus', editItem.ProductStatus || '');
+    formData.append('supplier', editItem.supplier || '');
     if (newImage) formData.append('image', newImage);
 
     try {
@@ -137,6 +146,7 @@ const ManageInventories = () => {
                   <th>ID</th>
                   <th>Product Name</th>
                   <th>Category</th>
+                  <th>Supplier</th> {/* 👈 Added */}
                   <th>Product Code</th>
                   <th>Quantity</th>
                   <th>Buying Price</th>
@@ -153,6 +163,7 @@ const ManageInventories = () => {
                     <td>{index + 1}</td>
                     <td>{item.productName}</td>
                     <td>{getCategoryName(item.category)}</td>
+                    <td>{item.supplier?.supplierName || 'No Supplier'}</td> {/* 👈 Added */}
                     <td>{item.code || 'N/A'}</td>
                     <td>{item.quantity}</td>
                     <td>{parseFloat(item.buyingPrice).toFixed(2)}</td>
@@ -202,6 +213,20 @@ const ManageInventories = () => {
                 <option value="">Select Category</option>
                 {categories.map((cat) => (
                   <option key={cat._id} value={cat._id}>{cat.categoryName}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="inventory-row">
+              <label className="inventory-form-label">Supplier</label>
+              <select
+                className="inventory-form-control"
+                value={editItem.supplier || ''}
+                onChange={(e) => setEditItem({ ...editItem, supplier: e.target.value })}
+              >
+                <option value="">Select Supplier</option>
+                {suppliers.map((supplier) => (
+                  <option key={supplier._id} value={supplier._id}>{supplier.supplierName}</option>
                 ))}
               </select>
             </div>

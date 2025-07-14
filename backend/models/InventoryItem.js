@@ -23,8 +23,14 @@ const inventoryItemSchema = new mongoose.Schema({
     type: String,
     enum: ['yes', 'no'],
     default: 'no'
+  },
+  supplier: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Supplier',
+    required: true
   }
 });
+
 
 const InventoryItem = mongoose.model('InventoryItem', inventoryItemSchema);
 module.exports = InventoryItem;

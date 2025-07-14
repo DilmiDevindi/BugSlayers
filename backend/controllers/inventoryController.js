@@ -62,17 +62,15 @@ const addInventoryItem = async (req, res) => {
       sellingPrice,
       dateAdded,
       availableForOffer,
-      ProductStatus
+      ProductStatus,
+      supplier // Added supplier
     } = req.body;
 
     console.log('Received data:', req.body);
 
     const image = req.file ? req.file.filename : null;
 
-    console.log('Uploaded image:', image);
-    console.log('req.file.filename:', req.file.filename);
-
-    // Validate inputs
+    // Validate required fields
     if (!productName || !category || !subcategory || !quantity || !buyingPrice || !sellingPrice || !dateAdded) {
       return res.status(400).json({ error: 'All fields are required!' });
     }
@@ -100,8 +98,7 @@ const addInventoryItem = async (req, res) => {
     // Generate code
     const code = await generateItemCode();
 
-
-    // Create item
+    // Create new inventory item with supplier included
     const newItem = new InventoryItem({
       code,
       productName,
@@ -113,7 +110,8 @@ const addInventoryItem = async (req, res) => {
       dateAdded,
       image,
       availableForOffer: availableForOffer || 'no',
-      ProductStatus, // Default to 0 if not provided
+      ProductStatus,
+      supplier // Save supplier
     });
 
     console.log('New item data:', newItem);
@@ -152,7 +150,9 @@ const updateInventoryItem = async (req, res) => {
     buyingPrice,
     sellingPrice,
     dateAdded,
-    availableForOffer
+    availableForOffer,
+    ProductStatus,
+    supplier
   } = req.body;
 
   const updateData = {
@@ -164,6 +164,8 @@ const updateInventoryItem = async (req, res) => {
     sellingPrice,
     dateAdded,
     availableForOffer,
+    ProductStatus,
+    supplier
   };
 
   if (req.file) {
