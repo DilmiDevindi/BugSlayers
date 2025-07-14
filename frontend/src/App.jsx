@@ -44,7 +44,6 @@ import InventorySummary from "./components/InventorySummary";
 
 // Purchases
 import ManagePurchase from "./components/ManagePurchase";
-import PurchaseReports from "./components/PurchaseReports";
 
 
 // Orders
@@ -107,7 +106,7 @@ function App() {
 
           {/* Purchases */}
           <Route path="purchases/manage" element={<ManagePurchase />} />
-          <Route path="purchases/report" element={<PurchaseReports />} />
+          
 
           {/* Orders */}
           <Route path="orders/add" element={<AddOrder />} />

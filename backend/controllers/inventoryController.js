@@ -40,17 +40,15 @@ const generateItemCode = async () => {
   return String(nextCode).padStart(3, '0');
 };
 
-// Get all inventory items with populated category, subcategory, and supplier
+// Get all inventory items with populated references
 const getInventoryItems = async (req, res) => {
   try {
     const items = await InventoryItem.find()
-      .populate('category', 'categoryName')
-      .populate('subcategory', 'subcategoryName parentCategoryId') // include parentCategoryId if needed
-      .populate('supplier', 'supplierName');
-
+      .populate('category')
+      .populate('subcategory')
+      .populate('supplier');  // <-- populate supplier too
     res.json(items);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Error fetching inventory items' });
   }
 };
@@ -68,10 +66,15 @@ const addInventoryItem = async (req, res) => {
       dateAdded,
       availableForOffer,
       ProductStatus,
-      supplier,
+      supplier,  // <--- added supplier here
     } = req.body;
 
+    console.log('Received data:', req.body);
+
     const image = req.file ? req.file.filename : null;
+
+    console.log('Uploaded image:', image);
+    console.log('req.file.filename:', req.file?.filename);
 
     // Validate inputs
     if (!productName || !category || !subcategory || !quantity || !buyingPrice || !sellingPrice || !dateAdded || !supplier) {
@@ -87,7 +90,7 @@ const addInventoryItem = async (req, res) => {
       return res.status(400).json({ error: 'Invalid date format!' });
     }
 
-    // Check if product exists (with same name, category, and subcategory)
+    // Check if product exists
     const existingItem = await InventoryItem.findOne({ productName, category, subcategory });
     if (existingItem) {
       return res.status(409).json({
@@ -113,22 +116,18 @@ const addInventoryItem = async (req, res) => {
       dateAdded,
       image,
       availableForOffer: availableForOffer || 'no',
-      ProductStatus,
-      supplier,
+      ProductStatus, // Default to 0 if not provided
+      supplier,  // <--- set supplier here
     });
 
-    const savedItem = await newItem.save();
+    console.log('New item data:', newItem);
 
-    // Return saved item with populated fields
-    const populatedItem = await InventoryItem.findById(savedItem._id)
-      .populate('category', 'categoryName')
-      .populate('subcategory', 'subcategoryName parentCategoryId')
-      .populate('supplier', 'supplierName');
+    const savedItem = await newItem.save();
 
     return res.status(201).json({
       message: 'New item added successfully!',
       code: savedItem.code,
-      item: populatedItem,
+      item: savedItem,
     });
   } catch (err) {
     console.error('Error adding item: ' + err.message);
@@ -158,8 +157,8 @@ const updateInventoryItem = async (req, res) => {
     sellingPrice,
     dateAdded,
     availableForOffer,
+    supplier,  // <--- added supplier here
     ProductStatus,
-    supplier,
   } = req.body;
 
   const updateData = {
@@ -171,8 +170,8 @@ const updateInventoryItem = async (req, res) => {
     sellingPrice,
     dateAdded,
     availableForOffer,
+    supplier,  // <--- set supplier here
     ProductStatus,
-    supplier,
   };
 
   if (req.file) {
@@ -184,14 +183,7 @@ const updateInventoryItem = async (req, res) => {
       new: true,
       runValidators: true,
     });
-
-    // Return updated item with populated fields
-    const populatedUpdatedItem = await InventoryItem.findById(updatedItem._id)
-      .populate('category', 'categoryName')
-      .populate('subcategory', 'subcategoryName parentCategoryId')
-      .populate('supplier', 'supplierName');
-
-    res.json(populatedUpdatedItem);
+    res.json(updatedItem);
   } catch (error) {
     console.error(`Error updating item: ${error.message}`);
     res.status(500).json({ error: `Failed to update item: ${error.message}` });
