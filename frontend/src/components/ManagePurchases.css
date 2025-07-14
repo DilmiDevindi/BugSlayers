@@ -1,118 +1,143 @@
-.manage-purchases-container {
+/* --- Container & Title --- */
+.inventory-container {
   padding: 20px;
   background-color: #ffffff;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.manage-purchases-container h2 {
-  margin-bottom: 20px;
+.inventory-title {
   font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
   color: #333;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.purchases-table {
+.inventory-title-icon {
+  color: #2563eb;
+  font-size: 20px;
+}
+
+/* --- Table Styles --- */
+.inventory-table-container {
+  margin-top: 20px;
+  overflow-x: auto;
+}
+
+.inventory-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
+  min-width: 900px; /* ensure wide table doesn't shrink too much */
 }
 
-.purchases-table th,
-.purchases-table td {
-  border: 1px solid #dee2e6;
+.inventory-table th,
+.inventory-table td {
   padding: 10px;
+  border: 1px solid #dee2e6;
   text-align: center;
   vertical-align: middle;
 }
 
-.purchases-table th {
+.inventory-table th {
   background-color: #f8f9fa;
   font-weight: 600;
 }
 
-.purchases-table td {
-  background-color: #ffffff;
+.inventory-table td {
+  background-color: #fff;
 }
 
-/* Smaller Edit and Delete buttons */
-.purchases-table .btn {
-  font-size: 14px;
-  padding: 5px 8px;
-  min-width: 70px;
-  line-height: 1.2;
+.inventory-edit-icon,
+.inventory-delete-icon {
+  cursor: pointer;
+  margin: 0 5px;
+  font-size: 16px;
+  color: #2563eb;
+  transition: color 0.2s ease;
 }
 
-/* Action button container */
-.d-flex.gap-2 {
-  display: flex;
-  gap: 4px;
-  justify-content: center;
+.inventory-delete-icon {
+  color: #dc3545;
 }
 
-/* EDIT FORM CONTAINER */
-.edit-form-container {
-  margin-top: 30px;
-  padding: 30px;
-  border-radius: 10px;
-  background-color: #000000;  /* Black background */
-  max-width: 900px; /* Increased width */
-  color: #fff; /* White text */
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
-  margin-left: auto;
-  margin-right: auto; /* Center horizontally */
-
-  /* Added to prevent overflow and force children to wrap */
-  box-sizing: border-box;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  hyphens: auto;
+.inventory-edit-icon:hover {
+  color: #1e40af;
 }
 
-/* FORM */
-.form {
-  display: block;
-  width: 100%;
-  box-sizing: border-box; /* ensure full width inside container */
+.inventory-delete-icon:hover {
+  color: #a71d2a;
 }
 
-/* FORM TITLE */
-.form-title {
-  margin-bottom: 20px;
-  font-size: 24px;
+/* --- No items message --- */
+.no-items {
+  text-align: center;
+  font-weight: bold;
+  color: #888;
+  padding: 20px 0;
+}
+
+/* --- Edit Form Container --- */
+.inventory-form-container.edit-form {
+  background-color: #000000; /* Black background */
   color: #ffffff;
-  font-weight: 600;
+  padding: 30px 30px 40px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+  max-width: 950px;
+  margin: 40px auto 0;
 }
 
-/* Grid layout */
-.grid.grid-cols-2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px; /* bigger gap */
+/* Edit form header icon */
+.form-icon-i {
+  font-size: 22px;
+  color: #3b82f6; /* blue */
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+/* --- Form layout --- */
+.inventory-form-container.edit-form form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+/* Each form field wrapper */
+.inventory-row {
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  box-sizing: border-box;
 }
 
-/* Ensure grid items don’t overflow */
-.grid.grid-cols-2 > * {
-  min-width: 0; /* prevent overflow on flex/grid children */
+/* Two columns on medium+ screens */
+@media (min-width: 768px) {
+  .inventory-row {
+    width: calc(50% - 12px); /* 2 columns with gap of 24px total */
+  }
+
+  /* Last row with buttons spans full width */
+  .inventory-row:last-child {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 12px;
+  }
 }
 
-/* LABELS */
-.edit-form-container label,
-.form label {
-  font-size: 14px;
+/* --- Labels --- */
+.inventory-form-label {
   font-weight: 600;
   margin-bottom: 6px;
+  font-size: 14px;
   color: #ddd;
-  display: block;
-  word-break: break-word; /* prevent label overflow */
+  user-select: none;
 }
 
-/* INPUTS & SELECTS */
-.edit-form-container input,
-.edit-form-container select,
-.form input,
-.form select {
+/* --- Inputs & selects --- */
+.inventory-form-control {
   padding: 10px 12px;
   font-size: 16px;
   border-radius: 6px;
@@ -121,76 +146,56 @@
   color: #fff;
   outline: none;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  width: 100%; /* make inputs fill their grid cell */
+  width: 100%;
   box-sizing: border-box;
-  min-width: 0; /* prevent overflow */
-  word-break: break-word; /* for long input content */
 }
 
-.edit-form-container input::placeholder,
-.edit-form-container select::placeholder,
-.form input::placeholder,
-.form select::placeholder {
+.inventory-form-control::placeholder {
   color: #888;
 }
 
-.edit-form-container input:focus,
-.edit-form-container select:focus,
-.form input:focus,
-.form select:focus {
-  border-color: #3b82f6; /* blue ring */
+.inventory-form-control:focus {
+  border-color: #3b82f6;
   box-shadow: 0 0 8px #3b82f6;
 }
 
-/* BUTTONS CONTAINER */
-.edit-form-container .flex.justify-end,
-.form .flex.justify-end {
-  display: flex;
-  justify-content: flex-end;
-  gap: 16px;
-  margin-top: 30px;
-}
-
-/* BUTTONS */
-.btnUpdate,
-.btnClose,
-button[type="submit"],
-button[type="button"] {
+/* --- Buttons --- */
+.btn {
   cursor: pointer;
-  padding: 10px 20px;
   font-weight: 600;
   border-radius: 8px;
+  padding: 10px 20px;
+  min-width: 140px;
+  white-space: nowrap;
   border: none;
   transition: background-color 0.3s ease;
   font-size: 16px;
-  min-width: 120px;
-  white-space: nowrap; /* prevent button text wrapping */
 }
 
-.btnUpdate,
-button[type="submit"] {
-  background-color: #2563eb; /* blue-600 */
+/* Green submit button */
+.btn-success {
+  background-color: #198754;
   color: #fff;
 }
 
-.btnUpdate:hover,
-button[type="submit"]:hover {
-  background-color: #1e40af; /* blue-700 */
+.btn-success:hover {
+  background-color: #157347;
 }
 
-.btnClose,
-button[type="button"] {
-  background-color: #4b5563; /* gray-600 */
+/* Gray cancel button */
+.btn-secondary {
+  background-color: #6c757d;
   color: #fff;
 }
 
-.btnClose:hover,
-button[type="button"]:hover {
-  background-color: #6b7280; /* gray-500 */
+.btn-secondary:hover {
+  background-color: #5a6268;
 }
 
-/* Change edit form labels to black */
-.edit-form-container label,
-.form label {
-  color: #000000; /* black */
+/* --- Responsive Image in Table --- */
+.inventory-table img {
+  border-radius: 6px;
+  object-fit: cover;
+  width: 50px;
+  height: 50px;
 }
