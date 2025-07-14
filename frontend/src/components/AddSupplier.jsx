@@ -5,13 +5,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import "./AddSupplier.css";
 
-const AddSupplier = ({ onSupplierSelected }) => {
-  const [existingSuppliers, setExistingSuppliers] = useState([]);
+// eslint-disable-next-line no-empty-pattern
+const AddSupplier = ({ }) => {
+  const [, setExistingSuppliers] = useState([]);
   const [isAddingNew, setIsAddingNew] = useState(false);
   const [searchName, setSearchName] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [showAddButton, setShowAddButton] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [, setIsLoading] = useState(false);
   const [supplier, setSupplier] = useState({
     date: new Date().toISOString().split("T")[0],
     supplierName: "",

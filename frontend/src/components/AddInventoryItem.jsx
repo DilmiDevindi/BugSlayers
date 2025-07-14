@@ -15,13 +15,17 @@ const AddInventoryItem = () => {
   const [dateAdded, setDateAdded] = useState('');
   const [image, setImage] = useState(null);
   const [availableForOffer, setAvailableForOffer] = useState('no');
+  const [ProductStatus, setProductStatus] = useState('');
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
   const [generatedCode, setGeneratedCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
-  const [ProductStatus, setProductStatus] = useState('');
+
+  // Supplier
+  const [supplier, setSupplier] = useState('');
+  const [suppliers, setSuppliers] = useState([]);
 
   // Load categories
   useEffect(() => {
@@ -36,14 +40,14 @@ const AddInventoryItem = () => {
     fetchCategories();
   }, []);
 
-  // Load subcategories when category changes, reset subcategory selection
+  // Load subcategories when category changes
   useEffect(() => {
     const fetchSubcategories = async () => {
       if (category) {
         try {
           const response = await axios.get(`/api/subcategories/by-category/${category}`);
           setSubcategories(response.data);
-          setSubcategory(''); // reset subcategory when category changes
+          setSubcategory('');
         } catch (err) {
           console.error('Failed to fetch subcategories', err);
           setSubcategories([]);
@@ -57,7 +61,19 @@ const AddInventoryItem = () => {
     fetchSubcategories();
   }, [category]);
 
-  // Validate inputs
+  // Load suppliers
+  useEffect(() => {
+    const fetchSuppliers = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/suppliers');
+        setSuppliers(response.data);
+      } catch (err) {
+        console.error('Failed to fetch suppliers', err);
+      }
+    };
+    fetchSuppliers();
+  }, []);
+
   const validateFields = () => {
     const errors = {};
     if (!productName.trim()) errors.productName = 'Product name is required';
@@ -71,10 +87,10 @@ const AddInventoryItem = () => {
       errors.sellingPrice = 'Enter a valid selling price';
     if (!dateAdded) errors.dateAdded = 'Date is required';
     if (!image) errors.image = 'Product image is required';
+    if (!supplier) errors.supplier = 'Supplier is required';
     return errors;
   };
 
-  // Submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
     setGeneratedCode('');
@@ -92,22 +108,10 @@ const AddInventoryItem = () => {
     formData.append('buyingPrice', parseFloat(buyingPrice).toFixed(2));
     formData.append('sellingPrice', parseFloat(sellingPrice).toFixed(2));
     formData.append('dateAdded', dateAdded);
-    formData.append('image', image); // Should be file, not image.name
+    formData.append('image', image);
     formData.append('availableForOffer', availableForOffer);
     formData.append('ProductStatus', ProductStatus);
-
-    console.log('Submitting with the following data:');
-    console.log('productName:', productName);
-    console.log('category:', category);
-    console.log('subcategory:', subcategory);
-    console.log('quantity:', Number(quantity));
-    console.log('buyingPrice:', parseFloat(buyingPrice).toFixed(2));
-    console.log('sellingPrice:', parseFloat(sellingPrice).toFixed(2));
-    console.log('dateAdded:', dateAdded);
-    console.log('image:', image);
-    console.log('availableForOffer:', availableForOffer);
-    console.log('ProductStatus:', ProductStatus);
-
+    formData.append('supplier', supplier); // <-- added
 
     try {
       const response = await axios.post('http://localhost:5000/api/inventory/add', formData, {
@@ -126,7 +130,7 @@ const AddInventoryItem = () => {
       setDateAdded('');
       setImage(null);
       setAvailableForOffer('no');
-      // setProductStatus('');
+      setSupplier('');
       alert('Item added successfully!');
     } catch (err) {
       console.error('Error adding item:', err);
@@ -155,33 +159,21 @@ const AddInventoryItem = () => {
         </div>
 
         <div className="form-group-i">
-          <select
-            className="form-control-i"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          >
+          <select className="form-control-i" value={category} onChange={(e) => setCategory(e.target.value)}>
             <option value="">Select Category</option>
             {categories.map((cat) => (
-              <option key={cat._id} value={cat._id}>
-                {cat.categoryName}
-              </option>
+              <option key={cat._id} value={cat._id}>{cat.categoryName}</option>
             ))}
           </select>
           {fieldErrors.category && <div className="text-danger">{fieldErrors.category}</div>}
         </div>
 
         <div className="form-group-i">
-          <select
-            className="form-control-i"
-            value={ProductStatus}
-            onChange={(e) => setProductStatus(e.target.value)} // <-- fix here
-          >
+          <select className="form-control-i" value={ProductStatus} onChange={(e) => setProductStatus(e.target.value)}>
             <option value="0">Select Option</option>
             <option value="In-Side">In-Side</option>
             <option value="Out-Side">Out-Side</option>
           </select>
-
-
         </div>
 
         <div className="form-group-i">
@@ -194,12 +186,26 @@ const AddInventoryItem = () => {
           >
             <option value="">Select Subcategory</option>
             {subcategories.map((sub) => (
-              <option key={sub._id} value={sub._id}>
-                {sub.subcategoryName}
-              </option>
+              <option key={sub._id} value={sub._id}>{sub.subcategoryName}</option>
             ))}
           </select>
           {fieldErrors.subcategory && <div className="text-danger">{fieldErrors.subcategory}</div>}
+        </div>
+
+        {/* Supplier Dropdown */}
+        <div className="form-group-i">
+          <select
+            className="form-control-i"
+            value={supplier}
+            onChange={(e) => setSupplier(e.target.value)}
+            required
+          >
+            <option value="">Select Supplier</option>
+            {suppliers.map((sup) => (
+              <option key={sup._id} value={sup._id}>{sup.supplierName}</option>
+            ))}
+          </select>
+          {fieldErrors.supplier && <div className="text-danger">{fieldErrors.supplier}</div>}
         </div>
 
         <div className="form-row-i">
@@ -280,9 +286,7 @@ const AddInventoryItem = () => {
                 checked={availableForOffer === 'yes'}
                 onChange={(e) => setAvailableForOffer(e.target.value)}
               />
-              <label className="form-check-label" htmlFor="offerYes">
-                Yes
-              </label>
+              <label className="form-check-label" htmlFor="offerYes">Yes</label>
             </div>
             <div className="form-check form-check-inline">
               <input
@@ -294,9 +298,7 @@ const AddInventoryItem = () => {
                 checked={availableForOffer === 'no'}
                 onChange={(e) => setAvailableForOffer(e.target.value)}
               />
-              <label className="form-check-label" htmlFor="offerNo">
-                No
-              </label>
+              <label className="form-check-label" htmlFor="offerNo">No</label>
             </div>
           </div>
         </div>
