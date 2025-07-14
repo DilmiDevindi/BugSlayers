@@ -28,6 +28,8 @@ const COLORS = [
 const InventorySummary = () => {
   const [inventoryItems, setInventoryItems] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [subcategories, setSubcategories] = useState([]);
+  const [suppliers, setSuppliers] = useState([]);
 
   const [reportMonth, setReportMonth] = useState(() => {
     const now = new Date();
@@ -37,6 +39,8 @@ const InventorySummary = () => {
   useEffect(() => {
     fetchInventoryItems();
     fetchCategories();
+    fetchSubcategories();
+    fetchSuppliers();
   }, []);
 
   const fetchInventoryItems = async () => {
@@ -59,6 +63,26 @@ const InventorySummary = () => {
     }
   };
 
+  const fetchSubcategories = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/api/subcategories');
+      const data = await res.json();
+      setSubcategories(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error('Error fetching subcategories:', err);
+    }
+  };
+
+  const fetchSuppliers = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/api/supplier');
+      const data = await res.json();
+      setSuppliers(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error('Error fetching suppliers:', err);
+    }
+  };
+
   const filteredItems = useMemo(() => {
     if (!reportMonth) return inventoryItems;
     const [year, month] = reportMonth.split('-').map(Number);
@@ -69,9 +93,31 @@ const InventorySummary = () => {
     });
   }, [inventoryItems, reportMonth]);
 
-  const getCategoryName = (id) => {
-    const cat = categories.find((c) => c._id === id);
-    return cat ? cat.categoryName : 'Unknown';
+  const getCategoryName = (category) => {
+    if (!category) return 'Unknown';
+    if (typeof category === 'string') {
+      const cat = categories.find(c => c._id === category);
+      return cat ? cat.categoryName : 'Unknown';
+    }
+    return category.categoryName || 'Unknown';
+  };
+
+  const getSubcategoryName = (subcategory) => {
+    if (!subcategory) return 'Unknown';
+    if (typeof subcategory === 'string') {
+      const sub = subcategories.find(s => s._id === subcategory);
+      return sub ? sub.subcategoryName : 'Unknown';
+    }
+    return subcategory.subcategoryName || 'Unknown';
+  };
+
+  const getSupplierName = (supplier) => {
+    if (!supplier) return 'Unknown';
+    if (typeof supplier === 'string') {
+      const sup = suppliers.find(s => s._id === supplier);
+      return sup ? sup.supplierName : 'Unknown';
+    }
+    return supplier.supplierName || 'Unknown';
   };
 
   const totalValue = filteredItems.reduce(
@@ -83,9 +129,12 @@ const InventorySummary = () => {
   const outOfStock = filteredItems.filter(it => (it.quantity || 0) === 0).length;
   const lowStock = filteredItems.filter(it => (it.quantity || 0) < 5 && (it.quantity || 0) > 0).length;
 
+  // Pie chart data grouped by category ID with proper names
   const pieData = Object.entries(
     filteredItems.reduce((acc, it) => {
-      acc[it.category] = (acc[it.category] || 0) + (it.quantity || 0);
+      const key = (typeof it.category === 'string') ? it.category : it.category?._id;
+      if (!key) return acc;
+      acc[key] = (acc[key] || 0) + (it.quantity || 0);
       return acc;
     }, {})
   ).map(([catId, val]) => ({
@@ -101,29 +150,27 @@ const InventorySummary = () => {
     .sort((a, b) => a.quantity - b.quantity)
     .slice(-5);
 
-  // 🎯 Inventory Value Trends by individual item date (Snake-Like)
   const inventoryValueTrends = useMemo(() => {
-  return inventoryItems
-    .filter(it => {
-      const qty = Number(it.quantity);
-      const price = Number(it.sellingPrice);
-      return it.dateAdded && qty > 0 && price > 0;
-    })
-    .map(it => {
-      const d = new Date(it.dateAdded);
-      const formattedDate = d.toISOString().split('T')[0];
-      return {
-        date: formattedDate,
-        value: Number((it.quantity * it.sellingPrice).toFixed(2))
-      };
-    })
-    .sort((a, b) => new Date(a.date) - new Date(b.date));
-}, [inventoryItems]);
-
+    return inventoryItems
+      .filter(it => {
+        const qty = Number(it.quantity);
+        const price = Number(it.sellingPrice);
+        return it.dateAdded && qty > 0 && price > 0;
+      })
+      .map(it => {
+        const d = new Date(it.dateAdded);
+        const formattedDate = d.toISOString().split('T')[0];
+        return {
+          date: formattedDate,
+          value: Number((it.quantity * it.sellingPrice).toFixed(2))
+        };
+      })
+      .sort((a, b) => new Date(a.date) - new Date(b.date));
+  }, [inventoryItems]);
 
   const generateCSVData = () => {
     const headers = [
-      'No', 'Product', 'Item Code', 'Category', 'Date', 'Supplier',
+      'No', 'Product', 'Item Code', 'Category', 'Subcategory', 'Date', 'Supplier',
       'Quantity', 'Unit Price (Rs)', 'Total Value (Rs)',
     ];
     const rows = filteredItems.map((item, i) => {
@@ -133,8 +180,9 @@ const InventorySummary = () => {
         item.productName || 'N/A',
         item.code || 'N/A',
         getCategoryName(item.category),
+        getSubcategoryName(item.subcategory),
         item.dateAdded || 'N/A',
-        item.supplier || 'N/A',
+        getSupplierName(item.supplier),
         item.quantity || 0,
         (item.sellingPrice || 0).toFixed(2),
         total.toFixed(2),
@@ -169,7 +217,7 @@ const InventorySummary = () => {
       doc.text(`Date Generated: ${generationDate}`, pageWidth - 14, 45, { align: 'right' });
 
       const tableColumn = [
-        'No', 'Product', 'Item Code', 'Category', 'Date', 'Supplier',
+        'No', 'Product', 'Item Code', 'Category', 'Subcategory', 'Date', 'Supplier',
         'Quantity', 'Unit Price (Rs)', 'Total Value (Rs)',
       ];
 
@@ -180,8 +228,9 @@ const InventorySummary = () => {
           item.productName || 'N/A',
           item.code || 'N/A',
           getCategoryName(item.category),
+          getSubcategoryName(item.subcategory),
           item.dateAdded || 'N/A',
-          item.supplier || 'N/A',
+          getSupplierName(item.supplier),
           item.quantity || 0,
           (item.sellingPrice || 0).toFixed(2),
           total.toFixed(2),
@@ -329,7 +378,7 @@ const InventorySummary = () => {
         <table className="inventory-table">
           <thead>
             <tr>
-              <th>No</th><th>Product</th><th>Item Code</th><th>Category</th>
+              <th>No</th><th>Product</th><th>Item Code</th><th>Category</th><th>Subcategory</th>
               <th>Date</th><th>Supplier</th><th>Quantity</th>
               <th>Unit Price (Rs)</th><th>Total Value (Rs)</th>
             </tr>
@@ -343,8 +392,9 @@ const InventorySummary = () => {
                   <td>{item.productName || 'N/A'}</td>
                   <td>{item.code || 'N/A'}</td>
                   <td>{getCategoryName(item.category)}</td>
+                  <td>{getSubcategoryName(item.subcategory)}</td>
                   <td>{item.dateAdded || 'N/A'}</td>
-                  <td>{item.supplier || 'N/A'}</td>
+                  <td>{getSupplierName(item.supplier)}</td>
                   <td>{item.quantity || 0}</td>
                   <td>{(item.sellingPrice || 0).toFixed(2)}</td>
                   <td>{total.toFixed(2)}</td>
