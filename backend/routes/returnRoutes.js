@@ -37,7 +37,9 @@ router.post('/', async (req, res) => {
     }
     const returnData = new Return(req.body);
     await returnData.save();
-    console.log(`Created return: ${returnData.return_id}`);
+
+    // console.log(`Created return: ${returnData.return_id}`);
+
     res.status(201).json(returnData);
   } catch (error) {
     console.error('Error creating return:', error.message);
