@@ -59,9 +59,7 @@ const Sidebar = () => {
           </button>
           {isPurchasesOpen && (
             <ul className="nav flex-column ms-3">
-              <li className="nav-item mb-2">
-                <Link to="/dashboard/purchases/add" className="nav-link text-white">Add Purchase Record</Link>
-              </li>
+              
               <li className="nav-item mb-2">
                 <Link to="/dashboard/purchases/manage" className="nav-link text-white">Manage Purchase Record</Link>
               </li>

@@ -194,38 +194,60 @@
     background-color: #f1f1f1;
   }
 
+  /* UPDATED: Two-column Edit Form */
   .inventory-form-container {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background: #ffffff; /* Clean white background */
-    padding: 20px;
+    padding: 20px 30px;
     border-radius: 8px;
     box-shadow: 0 32px 64px rgba(0, 0, 0, 0.3); /* Professional shadow */
-    width: 500px;
-   
+    width: 700px; /* wider to accommodate two columns */
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    box-sizing: border-box;
   }
 
+  /* Each form row = one field, flex column */
   .inventory-row {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
-  }
-  
-  .inventory-form-label {
-    max-width: 300px;
-    color: #333;
+    flex-direction: column;
+    width: calc(50% - 10px); /* two columns with 20px gap */
   }
 
-  .inventory-form-control{
-    max-width: 220px;
+  /* On small screens, full width */
+  @media (max-width: 767px) {
+    .inventory-form-container {
+      width: 90vw;
+      padding: 15px 20px;
+    }
+    .inventory-row {
+      width: 100%;
+    }
+  }
+
+  /* Labels */
+  .inventory-form-label {
+    max-width: 100%;
+    color: #333;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  /* Inputs & selects full width inside form row */
+  .inventory-form-control {
+    max-width: 100%;
     border: 1px solid #ced4da;
     border-radius: 8px;
     padding: 12px;
     font-size: 16px;
-    width: 250px;
+    width: 100%;
     transition: all 0.3s ease;
     color: #333333; 
   }
@@ -249,4 +271,18 @@
     font-size: 18px;
     color: #666;
     padding: 20px;
+  }  
+
+  /* Buttons container: full width row spanning two columns */
+  .inventory-form-container form > .inventory-row:last-child {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 10px;
+  }
+
+  /* Buttons styling to fit nicely */
+  .inventory-form-container form > .inventory-row:last-child button {
+    min-width: 120px;
   }
