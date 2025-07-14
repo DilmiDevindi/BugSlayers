@@ -18,43 +18,29 @@ exports.createRefund = async (req, res) => {
       companyName,
       returnDate,
       refundDate,
-      product,
-      quantity,
-      refundAmount,
       status,
-      note,
     } = req.body;
 
     if (
       !returnId ||
       !companyName ||
       !returnDate ||
-      !product ||
-      !quantity ||
-      !refundAmount ||
       !status
     ) {
       return res.status(400).json({ message: "All required fields must be provided" });
     }
-
-    if (isNaN(quantity) || quantity < 1) {
-      return res.status(400).json({ message: "Quantity must be a positive number" });
-    }
-    if (isNaN(refundAmount) || refundAmount < 0) {
-      return res.status(400).json({ message: "Refund amount cannot be negative" });
-    }
-
+   
     // Validate return exists and companyName matches
-    const returnExists = await Return.findOne({ returnId });
+    const returnExists = await Return.findOne({ return_id: returnId });
     if (!returnExists) {
       return res.status(400).json({ message: "Invalid return ID: Return does not exist" });
     }
-    if (returnExists.companyName !== companyName) {
+    if (returnExists.supplier !== companyName) {
       return res.status(400).json({ message: "Company name does not match the return's supplier" });
     }
 
     // Check duplicate refund for returnId
-    const exists = await Refund.findOne({ returnId });
+    const exists = await Refund.findOne({ return_id: returnId });
     if (exists) {
       return res.status(400).json({ message: "Refund for this return ID already exists" });
     }
@@ -72,11 +58,7 @@ exports.createRefund = async (req, res) => {
       companyName,
       returnDate,
       refundDate: refundDate || null,
-      product,
-      quantity,
-      refundAmount,
-      status,
-      note: note || "",
+      status
     });
 
     const saved = await newRefund.save();
@@ -89,48 +71,35 @@ exports.createRefund = async (req, res) => {
 
 exports.updateRefund = async (req, res) => {
   try {
-    const {
+    let {
       returnId,
       companyName,
       returnDate,
       refundDate,
-      product,
-      quantity,
-      refundAmount,
-      status,
-      note,
+      status
+
     } = req.body;
 
     if (
       !returnId ||
       !companyName ||
       !returnDate ||
-      !product ||
-      !quantity ||
-      !refundAmount ||
       !status
     ) {
       return res.status(400).json({ message: "All required fields must be provided" });
     }
 
-    if (isNaN(quantity) || quantity < 1) {
-      return res.status(400).json({ message: "Quantity must be a positive number" });
-    }
-    if (isNaN(refundAmount) || refundAmount < 0) {
-      return res.status(400).json({ message: "Refund amount cannot be negative" });
-    }
-
     // Validate return exists and companyName matches
-    const returnExists = await Return.findOne({ returnId });
+    const returnExists = await Return.findOne({ return_id: returnId });
     if (!returnExists) {
       return res.status(400).json({ message: "Invalid return ID: Return does not exist" });
     }
-    if (returnExists.companyName !== companyName) {
+    if (returnExists.supplier !== companyName) {
       return res.status(400).json({ message: "Company name does not match the return's supplier" });
     }
 
     // Check duplicate refund for returnId excluding current doc
-    const existing = await Refund.findOne({ returnId, _id: { $ne: req.params.id } });
+    const existing = await Refund.findOne({ return_id: returnId, _id: { $ne: req.params.id } });
     if (existing) {
       return res.status(400).json({ message: "Refund for this return ID already exists" });
     }
@@ -139,8 +108,13 @@ exports.updateRefund = async (req, res) => {
     if (isNaN(new Date(returnDate).getTime())) {
       return res.status(400).json({ message: "Invalid return date" });
     }
+
     if (refundDate && isNaN(new Date(refundDate).getTime())) {
       return res.status(400).json({ message: "Invalid refund date" });
+    }
+
+    if (status == "Not Refund") {
+      refundDate = null; 
     }
 
     const updatedRefund = await Refund.findByIdAndUpdate(
@@ -150,11 +124,7 @@ exports.updateRefund = async (req, res) => {
         companyName,
         returnDate,
         refundDate: refundDate || null,
-        product,
-        quantity,
-        refundAmount,
-        status,
-        note: note || "",
+        status
       },
       { new: true, runValidators: true }
     );
