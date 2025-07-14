@@ -109,6 +109,7 @@ exports.deleteReturn = async (req, res) => {
     console.error('DeleteReturn Error:', err);
     res.status(500).json({ error: err.message });
   }
+<<<<<<< Updated upstream
 };
 
 // Get the last return_id to help generate next ID
@@ -121,3 +122,6 @@ exports.getLastReturnId = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+=======
+};
+>>>>>>> Stashed changes
