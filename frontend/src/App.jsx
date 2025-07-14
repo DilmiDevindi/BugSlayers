@@ -43,9 +43,9 @@ import LowStockReport from "./components/LowStockReport";
 import InventorySummary from "./components/InventorySummary";
 
 // Purchases
-
 import ManagePurchase from "./components/ManagePurchase";
-//import PurchaseReport from "./components/PurchaseReports";
+import PurchaseReports from "./components/PurchaseReports";
+
 
 // Orders
 import AddOrder from "./components/AddOrder";
@@ -58,7 +58,7 @@ import SaveInvoice from "./components/SaveInvoice";
 // Returns
 import ManageReturn from "./components/ManageReturn";
 
-// ✅ Refunds (new)
+// Refunds (new)
 import ManageRefunds from "./components/ManageRefunds";
 
 function App() {
@@ -71,7 +71,7 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
 
         {/* Protected Routes inside Dashboard Layout */}
-        <Route path="/dashboard" element={<Layout />}>
+        <Route path="/dashboard/*" element={<Layout />}>
           <Route index element={<Dashboard />} />
 
           {/* Suppliers */}
@@ -106,9 +106,9 @@ function App() {
           <Route path="inventory/reports/summary" element={<InventorySummary />} />
 
           {/* Purchases */}
-         
           <Route path="purchases/manage" element={<ManagePurchase />} />
-          
+          <Route path="purchases/report" element={<PurchaseReports />} />
+
           {/* Orders */}
           <Route path="orders/add" element={<AddOrder />} />
           <Route path="orders/manage" element={<ManageOrders />} />
@@ -120,7 +120,7 @@ function App() {
           {/* Returns */}
           <Route path="returns/manage" element={<ManageReturn />} />
 
-          {/* ✅ Refunds */}
+          {/* Refunds */}
           <Route path="refunds/manage" element={<ManageRefunds />} />
         </Route>
       </Routes>

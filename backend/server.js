@@ -31,7 +31,7 @@ const salesRoutes = require('./routes/salesRoutes');
 const catalogRoutes = require('./routes/catalogRoutes');
 
 const purchasesRoutes = require('./routes/purchasesRoutes');
-//const purchaseReportRoutes = require('./routes/purchasereportRoutes');
+const purchasereportRoutes = require('./routes/purchasereportRoutes');
 
 const billRoutes = require('./routes/billRoutes');
 const invoiceRoutes = require('./routes/invoiceRoutes');
@@ -54,7 +54,7 @@ app.use('/api/reports', reportRoutes);
 app.use('/api/sales', salesRoutes);
 app.use('/api/catalog', catalogRoutes);
 app.use('/api/purchase', purchasesRoutes);
-//app.use('/api/purchase-report', purchaseReportRoutes);
+app.use('/api/purchase-report', purchasereportRoutes);
 app.use('/api/bill', billRoutes);
 app.use('/api/invoices', invoiceRoutes);
 app.use('/api/orders', orderRoutes);
